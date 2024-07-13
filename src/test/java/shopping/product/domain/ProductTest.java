@@ -17,7 +17,7 @@ class ProductTest {
 
         // when
         // then
-        assertThatCode(() -> new Product(name, "https://github.com/SeolYoungKim/spring-shopping"))
+        assertThatCode(() -> new Product(name, "https://github.com/SeolYoungKim/spring-shopping", 0))
                 .doesNotThrowAnyException();
     }
 
@@ -29,7 +29,7 @@ class ProductTest {
 
         // when
         // then
-        assertThatThrownBy(() -> new Product(name, "https://github.com/SeolYoungKim/spring-shopping"))
+        assertThatThrownBy(() -> new Product(name, "https://github.com/SeolYoungKim/spring-shopping", 0))
                 .isInstanceOf(InvalidProductNameLengthException.class);
     }
 
@@ -40,7 +40,7 @@ class ProductTest {
         // given
         // when
         // then
-        assertThatCode(() -> new Product(name, "https://github.com/SeolYoungKim/spring-shopping"))
+        assertThatCode(() -> new Product(name, "https://github.com/SeolYoungKim/spring-shopping", 0))
                 .doesNotThrowAnyException();
     }
 
@@ -51,7 +51,7 @@ class ProductTest {
         // given
         // when
         // then
-        assertThatThrownBy(() -> new Product(name, "https://github.com/SeolYoungKim/spring-shopping"))
+        assertThatThrownBy(() -> new Product(name, "https://github.com/SeolYoungKim/spring-shopping", 0))
                 .isInstanceOf(InvalidProductNamePatternException.class);
     }
 }

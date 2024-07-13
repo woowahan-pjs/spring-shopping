@@ -15,19 +15,21 @@ public class Product {
     private Long id;
     private String name;
     private String imageUrl;
+    private Integer price;
 
     protected Product() {
     }
 
-    Product(final String name, final String imageUrl) {
+    Product(final String name, final String imageUrl, final Integer price) {
         validateLength(name);
         validatePattern(name);
         this.name = name;
         this.imageUrl = imageUrl;
+        this.price = price;
     }
 
-    public static Product from(ProductCreate productCreate) {
-        return new Product(productCreate.name(), productCreate.imageUrl());
+    public static Product from(final ProductCreate productCreate) {
+        return new Product(productCreate.name(), productCreate.imageUrl(), productCreate.price());
     }
 
     private void validateLength(final String name) {
