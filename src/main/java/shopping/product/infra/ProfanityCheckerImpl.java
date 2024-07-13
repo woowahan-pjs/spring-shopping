@@ -24,19 +24,19 @@ public class ProfanityCheckerImpl implements ProfanityChecker {
      */
     @Override
     public boolean check(String value) {
-        Boolean responseBody = purgomalumRestClient.get()
+        String responseBody = purgomalumRestClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/containsprofanity")
                         .queryParam("text", value)
                         .build())
                 .retrieve()
                 .onStatus(HttpStatusCode::is5xxServerError,
                         ((request, response) -> log.error("[Purgomalum] Internal Server Error")))
-                .body(Boolean.class);
+                .body(String.class);
 
         if (Objects.isNull(responseBody)) {
             log.warn("[Purgomalum] body 응답이 null입니다.");
         }
 
-        return Objects.nonNull(responseBody) && responseBody;
+        return Boolean.parseBoolean(responseBody);
     }
 }
