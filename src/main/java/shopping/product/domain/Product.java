@@ -17,11 +17,18 @@ public class Product {
     }
 
     Product(final String name, final String imageUrl) {
+        validateLength(name);
         this.name = name;
         this.imageUrl = imageUrl;
     }
 
     public static Product from(ProductCreate productCreate) {
         return new Product(productCreate.name(), productCreate.imageUrl());
+    }
+
+    private void validateLength(final String name) {
+        if (name.length() > 15) {
+            throw new InvalidProductNameLengthException();
+        }
     }
 }
