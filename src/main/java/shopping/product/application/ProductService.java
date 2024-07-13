@@ -14,7 +14,7 @@ public class ProductService {
         this.profanityChecker = profanityChecker;
     }
 
-    public void save(final ProductCreate productCreate) {
+    public void create(final ProductCreate productCreate) {
         validateContainsProfanity(productCreate.name());
         Product product = Product.from(productCreate);
         productRepository.save(product);
