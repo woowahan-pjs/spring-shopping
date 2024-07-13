@@ -1,4 +1,11 @@
 package shopping.product.domain;
 
-public record ProductCreate(String name, String imageUrl, Integer price) {
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
+public record ProductCreate(
+        @NotNull @NotBlank String name,
+        @NotNull @NotBlank String imageUrl,
+        @NotNull Integer price
+) {
 }
