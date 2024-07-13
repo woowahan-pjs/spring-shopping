@@ -43,4 +43,8 @@ public class Product {
             throw new InvalidProductNamePatternException();
         }
     }
+
+    public Long getId() {
+        return id;
+    }
 }

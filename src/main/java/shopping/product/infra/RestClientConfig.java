@@ -1,4 +1,4 @@
-package shopping.product.application;
+package shopping.product.infra;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -3,16 +3,15 @@ package shopping.product.application;
 import org.springframework.stereotype.Service;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductCreate;
-import shopping.product.repository.ProductRepository;
 
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final ProfanityCheckService profanityCheckService;
+    private final ProfanityChecker profanityChecker;
 
-    public ProductService(final ProductRepository productRepository, ProfanityCheckService profanityCheckService) {
+    public ProductService(final ProductRepository productRepository, ProfanityChecker profanityChecker) {
         this.productRepository = productRepository;
-        this.profanityCheckService = profanityCheckService;
+        this.profanityChecker = profanityChecker;
     }
 
     public void save(final ProductCreate productCreate) {
@@ -22,7 +21,7 @@ public class ProductService {
     }
 
     private void validateContainsProfanity(String value) {
-        if (profanityCheckService.containsProfanity(value)) {
+        if (profanityChecker.check(value)) {
             throw new ContainsProfanityException();
         }
     }
