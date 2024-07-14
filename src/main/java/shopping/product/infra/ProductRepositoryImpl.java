@@ -1,5 +1,6 @@
 package shopping.product.infra;
 
+import java.util.Optional;
 import org.springframework.stereotype.Repository;
 import shopping.product.application.ProductRepository;
 import shopping.product.domain.Product;
@@ -15,5 +16,10 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public void save(Product product) {
         productJpaRepository.save(product);
+    }
+
+    @Override
+    public Optional<Product> findById(Long id) {
+        return productJpaRepository.findById(id);
     }
 }

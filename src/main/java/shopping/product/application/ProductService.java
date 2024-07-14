@@ -25,4 +25,9 @@ public class ProductService {
             throw new ContainsProfanityException();
         }
     }
+
+    public Product getById(Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+    }
 }
