@@ -1,6 +1,7 @@
 package shopping.product.controller
 
 import jakarta.validation.Valid
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
@@ -30,6 +31,15 @@ class ProductController(
         @PathVariable(name = "productId") productId: Long,
     ): ApiResponse<UpdateProductResponse> {
         val response = productService.updateProduct(productId = productId, request = request)
+
+        return ApiResponse.success(response)
+    }
+
+    @GetMapping("/{productId}")
+    fun getProduct(
+        @PathVariable(name = "productId") productId: Long,
+    ): ApiResponse<ProductDetailResponse> {
+        val response = productService.getProduct(productId)
 
         return ApiResponse.success(response)
     }

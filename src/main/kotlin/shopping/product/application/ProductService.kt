@@ -37,6 +37,12 @@ class ProductService(
         return UpdateProductResponse(product)
     }
 
+    fun getProduct(productId: Long): ProductDetailResponse {
+        val product = productRepository.findByIdOrNull(productId) ?: throw ProductNotFoundException(productId)
+
+        return ProductDetailResponse(product)
+    }
+
     private fun checkProductNameIsNotBadWord(name: String) {
         if (badWordValidator.isBadWord(name)) {
             throw ProductNameContainBadWordException(name)
