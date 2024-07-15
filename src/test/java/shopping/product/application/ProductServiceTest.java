@@ -11,7 +11,7 @@ class ProductServiceTest {
     @Test
     void create() {
         // given
-        ProductService productService = new ProductService(new TestProductRepository(), new StubProfanityChecker(true));
+        ProductService productService = new ProductService(new ProductWriter(new TestProductRepository()), new ProductReader(new TestProductRepository()), new StubProfanityChecker(true));
 
         // when
         // then

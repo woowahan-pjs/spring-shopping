@@ -43,4 +43,8 @@ public class ProductService {
         validateContainsProfanity(productUpdate.name());
         productWriter.update(id, productUpdate);
     }
+
+    public void delete(Long id) {
+        productWriter.delete(id);
+    }
 }

@@ -24,4 +24,11 @@ public class ProductWriter {
                 .orElseThrow(ProductNotFoundException::new);
         product.update(productUpdate);
     }
+
+    @Transactional
+    public void delete(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+        productRepository.delete(product);
+    }
 }

@@ -11,4 +11,6 @@ public interface ProductRepository {
     Optional<Product> findById(Long id);
 
     Page<Product> findAllBy(Pageable pageable);
+
+    void delete(Product product);
 }

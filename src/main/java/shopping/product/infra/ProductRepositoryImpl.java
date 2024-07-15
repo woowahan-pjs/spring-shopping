@@ -29,4 +29,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     public Page<Product> findAllBy(Pageable pageable) {
         return productJpaRepository.findAll(pageable);
     }
+
+    @Override
+    public void delete(Product product) {
+        productJpaRepository.delete(product);
+    }
 }
