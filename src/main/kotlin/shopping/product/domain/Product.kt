@@ -24,4 +24,14 @@ class Product(
     @Column
     var imageUrl: String = imageUrl
         protected set
+
+    fun update(
+        name: String,
+        price: Int,
+        imageUrl: String,
+    ) {
+        this.name = name
+        this.price = price
+        this.imageUrl = imageUrl
+    }
 }
