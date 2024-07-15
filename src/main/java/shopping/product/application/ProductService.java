@@ -5,21 +5,24 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductCreate;
+import shopping.product.domain.ProductUpdate;
 
 @Service
 public class ProductService {
-    private final ProductRepository productRepository;
+    private final ProductWriter productWriter;
+    private final ProductReader productReader;
     private final ProfanityChecker profanityChecker;
 
-    public ProductService(final ProductRepository productRepository, ProfanityChecker profanityChecker) {
-        this.productRepository = productRepository;
+    public ProductService(ProductWriter productWriter, ProductReader productReader, ProfanityChecker profanityChecker) {
+        this.productWriter = productWriter;
+        this.productReader = productReader;
         this.profanityChecker = profanityChecker;
     }
 
-    public void create(final ProductCreate productCreate) {
+    public void create(ProductCreate productCreate) {
         validateContainsProfanity(productCreate.name());
         Product product = Product.from(productCreate);
-        productRepository.save(product);
+        productWriter.write(product);
     }
 
     private void validateContainsProfanity(String value) {
@@ -29,11 +32,15 @@ public class ProductService {
     }
 
     public Product getById(Long id) {
-        return productRepository.findById(id)
-                .orElseThrow(ProductNotFoundException::new);
+        return productReader.readById(id);
     }
 
     public Page<Product> getAllBy(Pageable pageable) {
-        return productRepository.findAllBy(pageable);
+        return productReader.readAllBy(pageable);
+    }
+
+    public void update(Long id, ProductUpdate productUpdate) {
+        validateContainsProfanity(productUpdate.name());
+        productWriter.update(id, productUpdate);
     }
 }

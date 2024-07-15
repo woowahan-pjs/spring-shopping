@@ -31,8 +31,7 @@ public class Product {
     }
 
     Product(final String name, final String imageUrl, final Integer price) {
-        validateLength(name);
-        validatePattern(name);
+        validateName(name);
         this.name = name;
         this.imageUrl = imageUrl;
         this.price = price;
@@ -40,6 +39,11 @@ public class Product {
 
     public static Product from(final ProductCreate productCreate) {
         return new Product(productCreate.name(), productCreate.imageUrl(), productCreate.price());
+    }
+
+    private void validateName(String name) {
+        validateLength(name);
+        validatePattern(name);
     }
 
     private void validateLength(final String name) {
@@ -52,6 +56,13 @@ public class Product {
         if (!NAME_PATTERN.matcher(name).matches()) {
             throw new InvalidProductNamePatternException();
         }
+    }
+
+    public void update(ProductUpdate productUpdate) {
+        validateName(productUpdate.name());
+        this.name = productUpdate.name();
+        this.imageUrl = productUpdate.imageUrl();
+        this.price = productUpdate.price();
     }
 
     public Long getId() {

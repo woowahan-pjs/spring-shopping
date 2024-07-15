@@ -7,12 +7,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shopping.product.application.ProductService;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductCreate;
+import shopping.product.domain.ProductUpdate;
 
 @RequestMapping("/products")
 @RestController
@@ -39,5 +41,11 @@ public class ProductController {
     public ResponseEntity<ProductsResponse> getAllBy(Pageable pageable) {
         Page<Product> products = productService.getAllBy(pageable);
         return ResponseEntity.ok(ProductsResponse.from(products));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ProductUpdate productUpdate) {
+        productService.update(id, productUpdate);
+        return ResponseEntity.ok().build();
     }
 }
