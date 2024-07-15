@@ -1,6 +1,7 @@
 package shopping.product.controller
 
 import jakarta.validation.Valid
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -42,5 +43,14 @@ class ProductController(
         val response = productService.getProduct(productId)
 
         return ApiResponse.success(response)
+    }
+
+    @DeleteMapping("/{productId}")
+    fun deleteProduct(
+        @PathVariable(name = "productId") productId: Long,
+    ): ApiResponse<Unit> {
+        productService.deleteProduct(productId)
+
+        return ApiResponse.success()
     }
 }

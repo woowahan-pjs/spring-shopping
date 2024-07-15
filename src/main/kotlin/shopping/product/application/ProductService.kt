@@ -43,6 +43,11 @@ class ProductService(
         return ProductDetailResponse(product)
     }
 
+    fun deleteProduct(productId: Long) {
+        val product = productRepository.findByIdOrNull(productId) ?: throw ProductNotFoundException(productId)
+        productRepository.delete(product)
+    }
+
     private fun checkProductNameIsNotBadWord(name: String) {
         if (badWordValidator.isBadWord(name)) {
             throw ProductNameContainBadWordException(name)
