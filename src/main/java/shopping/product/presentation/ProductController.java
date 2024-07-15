@@ -3,6 +3,8 @@ package shopping.product.presentation;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +40,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductsResponse> getAllBy(Pageable pageable) {
+    public ResponseEntity<ProductsResponse> getAllBy(@
+            PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable
+    ) {
         Page<Product> products = productService.getAllBy(pageable);
         return ResponseEntity.ok(ProductsResponse.from(products));
     }
