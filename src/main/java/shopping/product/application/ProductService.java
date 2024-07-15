@@ -1,5 +1,7 @@
 package shopping.product.application;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductCreate;
@@ -29,5 +31,9 @@ public class ProductService {
     public Product getById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
+    }
+
+    public Page<Product> getAllBy(Pageable pageable) {
+        return productRepository.findAllBy(pageable);
     }
 }

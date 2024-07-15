@@ -1,6 +1,9 @@
 package shopping.product.infra;
 
+import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import shopping.product.application.ProductRepository;
 import shopping.product.domain.Product;
@@ -21,5 +24,10 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public Optional<Product> findById(Long id) {
         return productJpaRepository.findById(id);
+    }
+
+    @Override
+    public Page<Product> findAllBy(Pageable pageable) {
+        return productJpaRepository.findAll(pageable);
     }
 }

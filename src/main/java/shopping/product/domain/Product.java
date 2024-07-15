@@ -1,11 +1,17 @@
 package shopping.product.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.regex.Pattern;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+@EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Product {
     private static final Pattern NAME_PATTERN = Pattern.compile("^[\\w\\s가-힣()\\[\\]+\\-&/_]*$");
@@ -16,6 +22,10 @@ public class Product {
     private String name;
     private String imageUrl;
     private Integer price;
+    @CreatedDate
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime modifiedAt;
 
     protected Product() {
     }

@@ -1,6 +1,8 @@
 package shopping.product.presentation;
 
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,5 +33,11 @@ public class ProductController {
     public ResponseEntity<ProductResponse> getById(@PathVariable Long id) {
         Product product = productService.getById(id);
         return ResponseEntity.ok(ProductResponse.from(product));
+    }
+
+    @GetMapping
+    public ResponseEntity<ProductsResponse> getAllBy(Pageable pageable) {
+        Page<Product> products = productService.getAllBy(pageable);
+        return ResponseEntity.ok(ProductsResponse.from(products));
     }
 }
