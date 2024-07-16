@@ -6,6 +6,11 @@ spring:
     hibernate:
       ddl-auto: none
 
+jwt:
+  secret-key: "spring-shopping-user-k!@#@!#@!#!@#!@#!@#!@#!@y"
+  # 1week = 1000 * 60 * 60 * 24 * 7
+  expiration-millis-second: 604800000
+
 ---
 
 spring:
