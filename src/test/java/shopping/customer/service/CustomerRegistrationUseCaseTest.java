@@ -75,6 +75,14 @@ public class CustomerRegistrationUseCaseTest {
         assertThatThrownBy(() -> new CustomerCommand(EMAIL, NAME, "1234", BIRTH, ADDRESS, PHONE))
                 .isExactlyInstanceOf(ConstraintViolationException.class);
     }
+
+    @DisplayName("이미 존재하는 이메일을 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotRegisterDuplicatedEmail() {
+        customerRepository.save(new CustomerRegistration(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
+        assertThatThrownBy(() -> customerRegistrationUseCase.register(new CustomerCommand(EMAIL, OTHER_NAME, OTHER_PASSWORD, OTHER_BIRTH, OTHER_ADDRESS, OTHER_PHONE)))
+                .isExactlyInstanceOf(IllegalArgumentException.class);
+    }
 }
 
 interface CustomerRegistrationUseCase {
