@@ -5,6 +5,8 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,10 +26,15 @@ public class CustomerRegistrationUseCaseTest {
 
     public static final String EMAIL = "test@email.com";
     public static final String NAME = "JOHN DOE";
-    public static final String PASSWORD = "123482123";
+    public static final String PASSWORD = "hell!wor2dssfF";
     public static final String BIRTH = "19960911";
     public static final String ADDRESS = "1234 Elm Street, Springfield, IL 62704";
     public static final String PHONE = "555-123-4567";
+    public static final String OTHER_NAME = "FOO BAR";
+    public static final String OTHER_PASSWORD = "hell!woR2dssf";
+    public static final String OTHER_BIRTH = "19970204";
+    public static final String OTHER_ADDRESS = "1235 Elvis Street, GreenHil, IL 21704";
+    public static final String OTHER_PHONE = "520-124-3567";
 
     private CustomerRepository customerRepository;
     private CustomerRegistrationUseCase customerRegistrationUseCase;
@@ -59,6 +66,13 @@ public class CustomerRegistrationUseCaseTest {
     @Test
     void doNotRegisterInvalidEmail() {
         assertThatThrownBy(() -> new CustomerCommand("test@", NAME, PASSWORD, BIRTH, ADDRESS, PHONE))
+                .isExactlyInstanceOf(ConstraintViolationException.class);
+    }
+
+    @DisplayName("비유효한 패스워드를 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotRegisterInvalidPassword() {
+        assertThatThrownBy(() -> new CustomerCommand(EMAIL, NAME, "1234", BIRTH, ADDRESS, PHONE))
                 .isExactlyInstanceOf(ConstraintViolationException.class);
     }
 }
@@ -129,7 +143,9 @@ interface CommandValidating<T> {
 class CustomerCommand implements CommandValidating {
     @Email
     private final String email;
+    @NotBlank
     private final String name;
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*]).{12,}$")
     private final String password;
     private final String birth;
     private final String address;
@@ -240,3 +256,4 @@ class Customer {
         return phone;
     }
 }
+
