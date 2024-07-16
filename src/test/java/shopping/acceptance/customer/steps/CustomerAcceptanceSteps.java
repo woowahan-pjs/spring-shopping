@@ -29,11 +29,11 @@ public class CustomerAcceptanceSteps {
     }
 
     public static void validateCustomerRegistrationInvalidEmail(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     public static void validateCustomerRegistrationInvalidPassword(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     public static void validateCustomerRegistrationDuplicatedEmail(final ExtractableResponse<Response> response) {
