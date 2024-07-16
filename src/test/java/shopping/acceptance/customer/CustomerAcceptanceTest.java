@@ -36,4 +36,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final var response = CustomerAcceptanceSteps.register(EMAIL, NAME, "1234", BIRTH, ADDRESS, PHONE);
         CustomerAcceptanceSteps.validateCustomerRegistrationInvalidPassword(response);
     }
+
+    @DisplayName("이미 존재하는 이메일을 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotRegisterDuplicatedEmail() {
+        final var response = CustomerAcceptanceSteps.register(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        CustomerAcceptanceSteps.validateCustomerRegistration(response);
+
+        final var secondResponse = CustomerAcceptanceSteps.register(EMAIL, OTHER_NAME, OTHER_PASSWORD, OTHER_BIRTH, OTHER_ADDRESS, OTHER_PHONE);
+        CustomerAcceptanceSteps.validateCustomerRegistrationDuplicatedEmail(secondResponse);
+    }
 }

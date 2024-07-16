@@ -35,4 +35,8 @@ public class CustomerAcceptanceSteps {
     public static void validateCustomerRegistrationInvalidPassword(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
+
+    public static void validateCustomerRegistrationDuplicatedEmail(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+    }
 }
