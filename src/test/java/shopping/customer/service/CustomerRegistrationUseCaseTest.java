@@ -1,14 +1,21 @@
 package shopping.customer.service;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.Email;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -48,6 +55,12 @@ public class CustomerRegistrationUseCaseTest {
         );
     }
 
+    @DisplayName("비유효한 이메일을 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotRegisterInvalidEmail() {
+        assertThatThrownBy(() -> new CustomerCommand("test@", NAME, PASSWORD, BIRTH, ADDRESS, PHONE))
+                .isExactlyInstanceOf(ConstraintViolationException.class);
+    }
 }
 
 interface CustomerRegistrationUseCase {
@@ -100,7 +113,21 @@ class CustomerService implements CustomerRegistrationUseCase {
     }
 }
 
-class CustomerCommand {
+interface CommandValidating<T> {
+    Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
+    default void validateSelf(T t) {
+        final Set<ConstraintViolation<T>> violations = validator.validate(t);
+        if (violations.isEmpty()) {
+            return;
+        }
+        throw new ConstraintViolationException(violations);
+    }
+}
+
+
+class CustomerCommand implements CommandValidating {
+    @Email
     private final String email;
     private final String name;
     private final String password;
@@ -115,6 +142,7 @@ class CustomerCommand {
         this.birth = birth;
         this.address = address;
         this.phone = phone;
+        validateSelf(this);
     }
 
     public CustomerRegistration toDomain() {
