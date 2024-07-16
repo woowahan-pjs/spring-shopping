@@ -1,12 +1,10 @@
 spring:
-  profiles:
-    active: local
   application:
     name: spring-shopping
   jpa:
-    generate-ddl: false
+    generate-ddl: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
   datasource:
     url: jdbc:mysql://localhost:3306/shopping
     username: root

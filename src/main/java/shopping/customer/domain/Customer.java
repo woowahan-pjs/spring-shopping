@@ -1,0 +1,45 @@
+package shopping.customer.domain;
+
+public class Customer {
+    private final long id;
+    private final String email;
+    private final String name;
+    private final String password;
+    private final String birth;
+    private final String address;
+    private final String phone;
+
+    public Customer(final long id, final String email, final String name, final String password, final String birth, final String address, final String phone) {
+        this.id = id;
+        this.email = email;
+        this.name = name;
+        this.password = password;
+        this.birth = birth;
+        this.address = address;
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getBirth() {
+        return birth;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+}
