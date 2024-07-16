@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 import shopping.common.util.JwtProvider
 import shopping.user.domain.EncryptedPassword
+import shopping.user.domain.PasswordMismatchException
 import shopping.user.domain.User
 import shopping.user.domain.UserAlreadyRegisteredException
 import shopping.user.domain.UserRepository
@@ -27,5 +28,19 @@ class UserService(
         val jwt = jwtProvider.createToken(request.email)
 
         return UserRegistResponse(accessToken = jwt)
+    }
+
+    fun login(request: UserLoginRequest): UserLoginResponse {
+        val user =
+            userRepository.findByEmail(request.email)
+                ?: throw UserNotFoundException(request.email)
+
+        if (user.password != EncryptedPassword.from(request.password)) {
+            throw PasswordMismatchException()
+        }
+
+        val jwt = jwtProvider.createToken(request.email)
+
+        return UserLoginResponse(accessToken = jwt)
     }
 }

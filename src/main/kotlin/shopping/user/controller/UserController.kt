@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import shopping.common.api.ApiResponse
+import shopping.user.application.UserLoginRequest
+import shopping.user.application.UserLoginResponse
 import shopping.user.application.UserRegistRequest
 import shopping.user.application.UserRegistResponse
 import shopping.user.application.UserService
@@ -20,6 +22,15 @@ class UserController(
         @Valid @RequestBody request: UserRegistRequest,
     ): ApiResponse<UserRegistResponse> {
         val response = userService.regist(request)
+
+        return ApiResponse.success(response)
+    }
+
+    @PostMapping("/login")
+    fun login(
+        @Valid @RequestBody request: UserLoginRequest,
+    ): ApiResponse<UserLoginResponse> {
+        val response = userService.login(request)
 
         return ApiResponse.success(response)
     }
