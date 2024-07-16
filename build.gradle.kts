@@ -33,6 +33,10 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // JWT and Lombok
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("org.projectlombok:lombok:1.18.22")
 }
 
 kotlin {
