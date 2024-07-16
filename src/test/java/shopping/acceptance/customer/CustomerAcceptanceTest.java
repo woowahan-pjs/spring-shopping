@@ -22,4 +22,11 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final var response = CustomerAcceptanceSteps.register(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
         CustomerAcceptanceSteps.validateCustomerRegistration(response);
     }
+
+    @DisplayName("비유효한 이메일을 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotRegisterInvalidEmail() {
+        final var response = CustomerAcceptanceSteps.register("test@", NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        CustomerAcceptanceSteps.validateCustomerRegistrationDuplicateEmail(response);
+    }
 }
