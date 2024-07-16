@@ -11,6 +11,7 @@ import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @EntityListeners(AuditingEntityListener.class)
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
@@ -28,13 +29,13 @@ public class Member {
     protected Member() {
     }
 
-    Member(Email email, String password) {
+    private Member(Email email, String password) {
         this.email = email;
         this.password = password;
     }
 
-    public static Member from(MemberCreate memberCreate) {
-        return new Member(Email.from(memberCreate.email()), memberCreate.password());
+    public static Member of(MemberCreate memberCreate, PasswordEncoder passwordEncoder) {
+        return new Member(Email.from(memberCreate.email()), passwordEncoder.encode(memberCreate.password()));
     }
 
     public boolean hasEqualEmail(Email email) {
@@ -43,5 +44,9 @@ public class Member {
 
     public Long getId() {
         return id;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
