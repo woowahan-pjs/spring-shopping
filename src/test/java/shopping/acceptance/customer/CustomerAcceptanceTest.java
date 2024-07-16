@@ -27,6 +27,13 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
     @Test
     void doNotRegisterInvalidEmail() {
         final var response = CustomerAcceptanceSteps.register("test@", NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
-        CustomerAcceptanceSteps.validateCustomerRegistrationDuplicateEmail(response);
+        CustomerAcceptanceSteps.validateCustomerRegistrationInvalidEmail(response);
+    }
+
+    @DisplayName("비유효한 패스워드를 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotRegisterInvalidPassword() {
+        final var response = CustomerAcceptanceSteps.register(EMAIL, NAME, "1234", BIRTH, ADDRESS, PHONE);
+        CustomerAcceptanceSteps.validateCustomerRegistrationInvalidPassword(response);
     }
 }
