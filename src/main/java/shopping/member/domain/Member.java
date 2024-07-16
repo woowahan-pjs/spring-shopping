@@ -6,11 +6,14 @@ import jakarta.persistence.EntityListeners;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @EntityListeners(AuditingEntityListener.class)
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 @Entity
 public class Member {
     @Id

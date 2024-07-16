@@ -1,7 +1,9 @@
 package shopping.member.infra;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.member.application.AlreadyRegisteredEmailException;
 import shopping.member.application.MemberRepository;
 import shopping.member.domain.Email;
 import shopping.member.domain.Member;
@@ -23,6 +25,10 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Transactional
     @Override
     public void save(Member member) {
-        memberJpaRepository.save(member);
+        try {
+            memberJpaRepository.save(member);
+        } catch (DataIntegrityViolationException e) {
+            throw new AlreadyRegisteredEmailException();
+        }
     }
 }
