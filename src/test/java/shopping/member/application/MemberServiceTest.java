@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import shopping.member.domain.Member;
 import shopping.member.domain.MemberCreate;
 
@@ -14,8 +16,9 @@ class MemberServiceTest {
         // given
         String duplicatedEmail = "email@email.com";
         MemberRepository memberRepository = new TestMemberRepository();
-        memberRepository.save(Member.from(new MemberCreate(duplicatedEmail, "password")));
-        MemberService memberService = new MemberService(memberRepository);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        memberRepository.save(Member.of(new MemberCreate(duplicatedEmail, "password"), passwordEncoder));
+        MemberService memberService = new MemberService(memberRepository, passwordEncoder);
 
         // when
         MemberCreate newMemberCreate = new MemberCreate(duplicatedEmail, "password");
