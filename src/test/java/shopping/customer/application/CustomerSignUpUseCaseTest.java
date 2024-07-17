@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static shopping.utils.fixture.CustomerFixture.*;
 
-@DisplayName("고객 가입 테스트")
+@DisplayName("고객 회원가입 테스트")
 public class CustomerSignUpUseCaseTest {
 
     private CustomerRepository customerRepository;

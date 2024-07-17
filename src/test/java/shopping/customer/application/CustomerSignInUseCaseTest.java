@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static shopping.utils.fixture.CustomerFixture.*;
 
-@DisplayName("고객 가입 테스트")
+@DisplayName("고객 로그인 테스트")
 public class CustomerSignInUseCaseTest {
 
     private CustomerRepository customerRepository;
@@ -27,7 +27,7 @@ public class CustomerSignInUseCaseTest {
         customerSignInUseCase = new CustomerSignInService(customerRepository);
     }
 
-    @DisplayName("일반 사용자는 회원 가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")
+    @DisplayName("회원 가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")
     @Test
     void signIn() {
         customerRepository.save(new CustomerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
@@ -38,10 +38,20 @@ public class CustomerSignInUseCaseTest {
         assertThat(accessToken.accessToken()).isNotBlank();
     }
 
-    @DisplayName("일반 사용자는 회원 가입 되어있지 않은 이메일로 로그인을 할 수 없다.")
+    @DisplayName("회원 가입이 되어있지만 이메일을 잘못 입력하면 로그인을 할 수 없다.")
     @Test
     void doNotSignInNotRegisteredEmail() {
-        final CustomerSignInCommand customerSignInCommand = new CustomerSignInCommand(EMAIL, PASSWORD);
+        customerRepository.save(new CustomerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
+        final CustomerSignInCommand customerSignInCommand = new CustomerSignInCommand(OTHER_EMAIL, PASSWORD);
+        assertThatThrownBy(() -> customerSignInUseCase.signIn(customerSignInCommand))
+                .isExactlyInstanceOf(RuntimeException.class);
+    }
+
+    @DisplayName("회원 가입이 되어있지만 비밀번호를 잘못 입력하면 로그인을 할 수 없다.")
+    @Test
+    void doNotSignInWrongPassword() {
+        customerRepository.save(new CustomerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
+        final CustomerSignInCommand customerSignInCommand = new CustomerSignInCommand(EMAIL, OTHER_PASSWORD);
         assertThatThrownBy(() -> customerSignInUseCase.signIn(customerSignInCommand))
                 .isExactlyInstanceOf(RuntimeException.class);
     }
