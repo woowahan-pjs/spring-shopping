@@ -10,12 +10,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+import shopping.common.domain.BaseEntity;
 
 @Entity
 @Table(name = "members")
 @DiscriminatorColumn
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Member {
+public abstract class Member extends BaseEntity {
 
     @Id
     @Column(name = "email", nullable = false)
