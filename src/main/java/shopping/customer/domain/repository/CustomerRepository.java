@@ -5,4 +5,5 @@ import shopping.customer.domain.CustomerSignUpRequest;
 
 public interface CustomerRepository {
     Customer save(CustomerSignUpRequest customerSignUpRequest);
+    Customer findByEmail(final String email);
 }

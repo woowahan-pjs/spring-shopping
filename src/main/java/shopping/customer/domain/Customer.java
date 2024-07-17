@@ -42,4 +42,8 @@ public class Customer {
     public String getPhone() {
         return phone;
     }
+
+    public boolean isSamePassword(final String password) {
+        return this.password.equals(password);
+    }
 }

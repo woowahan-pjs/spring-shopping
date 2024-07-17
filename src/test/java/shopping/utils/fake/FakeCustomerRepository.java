@@ -33,4 +33,12 @@ public class FakeCustomerRepository implements CustomerRepository {
         storage.put(id, customer);
         return customer;
     }
+
+    @Override
+    public Customer findByEmail(final String email) {
+        return storage.values().stream()
+                .filter(it -> it.getEmail().equals(email))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException());
+    }
 }

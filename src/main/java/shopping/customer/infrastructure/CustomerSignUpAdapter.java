@@ -24,6 +24,13 @@ public class CustomerSignUpAdapter implements CustomerRepository {
         return entityToDomain(customerEntity);
     }
 
+    @Transactional(readOnly = true)
+    @Override
+    public Customer findByEmail(final String email) {
+        final CustomerEntity customerEntity = repository.findByEmail(email);
+        return entityToDomain(customerEntity);
+    }
+
     private CustomerEntity domainToEntity(final CustomerSignUpRequest customerSignUpRequest) {
         return new CustomerEntity(
                 customerSignUpRequest.email(),
