@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import shopping.common.CommandValidating;
 
-public record CustomerCommand(
+public record CustomerSignUpCommand(
         @Email String email,
         @NotBlank String name,
         @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*]).{12,}$") String password,
@@ -13,7 +13,7 @@ public record CustomerCommand(
         String address,
         String phone
 ) implements CommandValidating {
-    public CustomerCommand(final String email, final String name, final String password, final String birth, final String address, final String phone) {
+    public CustomerSignUpCommand(final String email, final String name, final String password, final String birth, final String address, final String phone) {
         this.email = email;
         this.name = name;
         this.password = password;

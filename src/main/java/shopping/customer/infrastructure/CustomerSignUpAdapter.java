@@ -3,35 +3,35 @@ package shopping.customer.infrastructure;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.customer.domain.Customer;
-import shopping.customer.domain.CustomerRegistration;
+import shopping.customer.domain.CustomerSignUpRequest;
 import shopping.customer.domain.repository.CustomerRepository;
 import shopping.customer.infrastructure.persistence.CustomerEntity;
 import shopping.customer.infrastructure.persistence.CustomerEntityJpaRepository;
 
 @Component
-public class CustomerRepositoryAdapter implements CustomerRepository {
+public class CustomerSignUpAdapter implements CustomerRepository {
 
     private final CustomerEntityJpaRepository repository;
 
-    public CustomerRepositoryAdapter(final CustomerEntityJpaRepository repository) {
+    public CustomerSignUpAdapter(final CustomerEntityJpaRepository repository) {
         this.repository = repository;
     }
 
     @Transactional
     @Override
-    public Customer save(final CustomerRegistration customerRegistration) {
-        final CustomerEntity customerEntity = repository.save(domainToEntity(customerRegistration));
+    public Customer save(final CustomerSignUpRequest customerSignUpRequest) {
+        final CustomerEntity customerEntity = repository.save(domainToEntity(customerSignUpRequest));
         return entityToDomain(customerEntity);
     }
 
-    private CustomerEntity domainToEntity(final CustomerRegistration customerRegistration) {
+    private CustomerEntity domainToEntity(final CustomerSignUpRequest customerSignUpRequest) {
         return new CustomerEntity(
-                customerRegistration.email(),
-                customerRegistration.name(),
-                customerRegistration.address(),
-                customerRegistration.birth(),
-                customerRegistration.phone(),
-                customerRegistration.password());
+                customerSignUpRequest.email(),
+                customerSignUpRequest.name(),
+                customerSignUpRequest.address(),
+                customerSignUpRequest.birth(),
+                customerSignUpRequest.phone(),
+                customerSignUpRequest.password());
     }
 
     private Customer entityToDomain(final CustomerEntity customerEntity) {
