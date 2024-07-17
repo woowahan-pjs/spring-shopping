@@ -1,7 +1,8 @@
 package shopping.utils.fixture;
 
 public class CustomerFixture {
-    public static final String EMAIL = "test@email.com";
+    public static final String EMAIL = "test1234@email.com";
+    public static final String OTHER_EMAIL = "test1235@email.com";
     public static final String NAME = "JOHN DOE";
     public static final String PASSWORD = "hell!wor2dssfF";
     public static final String BIRTH = "19960911";

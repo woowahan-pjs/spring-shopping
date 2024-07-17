@@ -61,4 +61,8 @@ public class CustomerAcceptanceSteps {
                 () -> assertThat(response.jsonPath().getString("access_token")).isNotBlank()
         );
     }
+
+    public static void validateCustomerSignInInvalidEmail(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 }

@@ -23,4 +23,13 @@ public class CustomerSignInAcceptanceTest extends AcceptanceTest {
         final var response = CustomerAcceptanceSteps.signIn(EMAIL, PASSWORD);
         CustomerAcceptanceSteps.validateCustomerSignIn(response);
     }
+
+    @DisplayName("일반 사용자는 회원 가입 되어있지 않은 이메일로 로그인을 할 수 없다.")
+    @Test
+    void doNotSignInInvalidEmail() {
+        CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+
+        final var response = CustomerAcceptanceSteps.signIn(OTHER_EMAIL, PASSWORD);
+        CustomerAcceptanceSteps.validateCustomerSignInInvalidEmail(response);
+    }
 }
