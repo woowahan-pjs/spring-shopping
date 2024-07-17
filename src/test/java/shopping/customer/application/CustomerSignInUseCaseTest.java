@@ -49,14 +49,14 @@ public class CustomerSignInUseCaseTest {
     @DisplayName("비유효한 이메일을 입력하면 로그인 할 수 없다")
     @Test
     void doNotSignInInvalidEmail() {
-        assertThatThrownBy(() -> new CustomerSignUpCommand("test@", NAME, PASSWORD, BIRTH, ADDRESS, PHONE))
+        assertThatThrownBy(() -> new CustomerSignInCommand("test@", PASSWORD))
                 .isExactlyInstanceOf(ConstraintViolationException.class);
     }
 
     @DisplayName("비유효한 패스워드를 입력하면 로그인 할 수 없다")
     @Test
     void doNotSignInInvalidPassword() {
-        assertThatThrownBy(() -> new CustomerSignUpCommand(EMAIL, NAME, "1234", BIRTH, ADDRESS, PHONE))
+        assertThatThrownBy(() -> new CustomerSignInCommand(EMAIL, "1234"))
                 .isExactlyInstanceOf(ConstraintViolationException.class);
     }
 }
