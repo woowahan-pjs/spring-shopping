@@ -38,6 +38,14 @@ public class CustomerSignInUseCaseTest {
         assertThat(accessToken.accessToken()).isNotBlank();
     }
 
+    @DisplayName("일반 사용자는 회원 가입 되어있지 않은 이메일로 로그인을 할 수 없다.")
+    @Test
+    void doNotSignInNotRegisteredEmail() {
+        final CustomerSignInCommand customerSignInCommand = new CustomerSignInCommand(EMAIL, PASSWORD);
+        assertThatThrownBy(() -> customerSignInUseCase.signIn(customerSignInCommand))
+                .isExactlyInstanceOf(RuntimeException.class);
+    }
+
     @DisplayName("비유효한 이메일을 입력하면 로그인 할 수 없다")
     @Test
     void doNotSignInInvalidEmail() {
