@@ -10,7 +10,7 @@ import shopping.customer.application.CustomerSignUpUseCase;
 
 import java.net.URI;
 
-@RequestMapping("/api/customers")
+@RequestMapping("/api/customers/sign-up")
 @RestController
 public class CustomerSignUpApi {
 
