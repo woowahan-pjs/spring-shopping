@@ -8,7 +8,7 @@ import shopping.acceptance.customer.steps.CustomerAcceptanceSteps;
 import static shopping.utils.fixture.CustomerFixture.*;
 import static shopping.utils.fixture.CustomerFixture.PHONE;
 
-@DisplayName("일반 사용자 인수 테스트")
+@DisplayName("고객 회원가입 인수 테스트")
 public class CustomerSignUpAcceptanceTest extends AcceptanceTest {
 
     @Test

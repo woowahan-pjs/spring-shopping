@@ -7,7 +7,7 @@ import shopping.acceptance.customer.steps.CustomerAcceptanceSteps;
 
 import static shopping.utils.fixture.CustomerFixture.*;
 
-@DisplayName("일반 사용자 로그인 인수 테스트")
+@DisplayName("고객 로그인 인수 테스트")
 public class CustomerSignInAcceptanceTest extends AcceptanceTest {
 
     @Test
@@ -15,7 +15,7 @@ public class CustomerSignInAcceptanceTest extends AcceptanceTest {
 
     }
 
-    @DisplayName("일반 사용자는 회원 가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")
+    @DisplayName("회원가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")
     @Test
     void signIn() {
         CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
@@ -24,7 +24,7 @@ public class CustomerSignInAcceptanceTest extends AcceptanceTest {
         CustomerAcceptanceSteps.validateCustomerSignIn(response);
     }
 
-    @DisplayName("회원 가입이 되어있지만 이메일을 잘못 입력하면 로그인을 할 수 없다.")
+    @DisplayName("회원가입이 되어있지만 이메일을 잘못 입력하면 로그인을 할 수 없다.")
     @Test
     void doNotSignInNotRegisteredEmail() {
         CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
@@ -34,7 +34,7 @@ public class CustomerSignInAcceptanceTest extends AcceptanceTest {
     }
 
 
-    @DisplayName("회원 가입이 되어있지만 비밀번호를 잘못 입력하면 로그인을 할 수 없다.")
+    @DisplayName("회원가입이 되어있지만 비밀번호를 잘못 입력하면 로그인을 할 수 없다.")
     @Test
     void doNotSignInWrongPassword() {
         CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
@@ -58,6 +58,6 @@ public class CustomerSignInAcceptanceTest extends AcceptanceTest {
         CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
 
         final var response = CustomerAcceptanceSteps.signIn(EMAIL, "1234");
-        CustomerAcceptanceSteps.validateCustomerSignInInvalidEmail(response);
+        CustomerAcceptanceSteps.validateCustomerSignInInvalidPassword(response);
     }
 }

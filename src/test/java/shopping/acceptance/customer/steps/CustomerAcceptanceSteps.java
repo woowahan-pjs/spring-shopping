@@ -52,7 +52,7 @@ public class CustomerAcceptanceSteps {
     }
 
     public static void validateCustomerSignUpDuplicatedEmail(final ExtractableResponse<Response> response) {
-        assertThat(response.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
     public static void validateCustomerSignIn(final ExtractableResponse<Response> response) {

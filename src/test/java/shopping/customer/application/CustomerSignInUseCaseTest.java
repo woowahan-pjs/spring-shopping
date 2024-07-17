@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shopping.customer.application.command.CustomerSignInCommand;
 import shopping.customer.application.command.CustomerSignUpCommand;
+import shopping.customer.application.exception.PasswordMissMatchException;
 import shopping.customer.domain.AccessToken;
 import shopping.customer.domain.CustomerSignUpRequest;
 import shopping.customer.domain.repository.CustomerRepository;
@@ -27,7 +28,7 @@ public class CustomerSignInUseCaseTest {
         customerSignInUseCase = new CustomerSignInService(customerRepository);
     }
 
-    @DisplayName("회원 가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")
+    @DisplayName("회원가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")
     @Test
     void signIn() {
         customerRepository.save(new CustomerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
@@ -38,7 +39,7 @@ public class CustomerSignInUseCaseTest {
         assertThat(accessToken.accessToken()).isNotBlank();
     }
 
-    @DisplayName("회원 가입이 되어있지만 이메일을 잘못 입력하면 로그인을 할 수 없다.")
+    @DisplayName("회원가입이 되어있지만 이메일을 잘못 입력하면 로그인을 할 수 없다.")
     @Test
     void doNotSignInNotRegisteredEmail() {
         customerRepository.save(new CustomerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
@@ -47,13 +48,13 @@ public class CustomerSignInUseCaseTest {
                 .isExactlyInstanceOf(RuntimeException.class);
     }
 
-    @DisplayName("회원 가입이 되어있지만 비밀번호를 잘못 입력하면 로그인을 할 수 없다.")
+    @DisplayName("회원가입이 되어있지만 비밀번호를 잘못 입력하면 로그인을 할 수 없다.")
     @Test
     void doNotSignInWrongPassword() {
         customerRepository.save(new CustomerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
         final CustomerSignInCommand customerSignInCommand = new CustomerSignInCommand(EMAIL, OTHER_PASSWORD);
         assertThatThrownBy(() -> customerSignInUseCase.signIn(customerSignInCommand))
-                .isExactlyInstanceOf(RuntimeException.class);
+                .isExactlyInstanceOf(PasswordMissMatchException.class);
     }
 
     @DisplayName("비유효한 이메일을 입력하면 로그인 할 수 없다")
