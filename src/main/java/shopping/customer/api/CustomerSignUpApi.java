@@ -21,7 +21,7 @@ public class CustomerSignUpApi {
     }
 
     @PostMapping
-    public ResponseEntity<?> signUp(@RequestBody final CustomerSignUpRequest request) {
+    public ResponseEntity<URI> signUp(@RequestBody final CustomerSignUpRequest request) {
         customerSignUpUseCase.signUp(request.toCommand());
         return ResponseEntity.created(URI.create("")).build();
     }

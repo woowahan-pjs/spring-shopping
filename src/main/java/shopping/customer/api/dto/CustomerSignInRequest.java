@@ -1,5 +1,7 @@
 package shopping.customer.api.dto;
 
+import shopping.customer.application.command.CustomerSignInCommand;
+
 public class CustomerSignInRequest {
     private String email;
     private String password;
@@ -18,5 +20,9 @@ public class CustomerSignInRequest {
 
     public String getPassword() {
         return password;
+    }
+
+    public CustomerSignInCommand toCommand() {
+        return new CustomerSignInCommand(email, password);
     }
 }

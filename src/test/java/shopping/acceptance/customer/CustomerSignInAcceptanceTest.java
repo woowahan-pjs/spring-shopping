@@ -24,12 +24,40 @@ public class CustomerSignInAcceptanceTest extends AcceptanceTest {
         CustomerAcceptanceSteps.validateCustomerSignIn(response);
     }
 
-    @DisplayName("일반 사용자는 회원 가입 되어있지 않은 이메일로 로그인을 할 수 없다.")
+    @DisplayName("회원 가입이 되어있지만 이메일을 잘못 입력하면 로그인을 할 수 없다.")
+    @Test
+    void doNotSignInNotRegisteredEmail() {
+        CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+
+        final var response = CustomerAcceptanceSteps.signIn(OTHER_EMAIL, PASSWORD);
+        CustomerAcceptanceSteps.validateCustomerSignInNotRegisteredEmail(response);
+    }
+
+
+    @DisplayName("회원 가입이 되어있지만 비밀번호를 잘못 입력하면 로그인을 할 수 없다.")
+    @Test
+    void doNotSignInWrongPassword() {
+        CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+
+        final var response = CustomerAcceptanceSteps.signIn(EMAIL, OTHER_PASSWORD);
+        CustomerAcceptanceSteps.validateCustomerSignInWrongPassword(response);
+    }
+
+    @DisplayName("비유효한 이메일을 입력하면 로그인 할 수 없다")
     @Test
     void doNotSignInInvalidEmail() {
         CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
 
-        final var response = CustomerAcceptanceSteps.signIn(OTHER_EMAIL, PASSWORD);
+        final var response = CustomerAcceptanceSteps.signIn("test@", OTHER_PASSWORD);
+        CustomerAcceptanceSteps.validateCustomerSignInInvalidEmail(response);
+    }
+
+    @DisplayName("비유효한 패스워드를 입력하면 로그인 할 수 없다")
+    @Test
+    void doNotSignInInvalidPassword() {
+        CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+
+        final var response = CustomerAcceptanceSteps.signIn(EMAIL, "1234");
         CustomerAcceptanceSteps.validateCustomerSignInInvalidEmail(response);
     }
 }

@@ -1,5 +1,6 @@
 package shopping.customer.infrastructure;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.customer.domain.Customer;
@@ -27,7 +28,8 @@ public class CustomerSignUpAdapter implements CustomerRepository {
     @Transactional(readOnly = true)
     @Override
     public Customer findByEmail(final String email) {
-        final CustomerEntity customerEntity = repository.findByEmail(email);
+        final CustomerEntity customerEntity = repository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException());
         return entityToDomain(customerEntity);
     }
 

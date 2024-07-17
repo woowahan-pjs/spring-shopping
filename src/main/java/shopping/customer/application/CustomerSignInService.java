@@ -2,12 +2,13 @@ package shopping.customer.application;
 
 import org.springframework.stereotype.Service;
 import shopping.customer.application.command.CustomerSignInCommand;
+import shopping.customer.application.exception.PasswordMissMatchException;
 import shopping.customer.domain.AccessToken;
 import shopping.customer.domain.Customer;
 import shopping.customer.domain.repository.CustomerRepository;
 
 @Service
-class CustomerSignInService implements CustomerSignInUseCase {
+public class CustomerSignInService implements CustomerSignInUseCase {
 
     private final CustomerRepository customerRepository;
 
@@ -21,6 +22,6 @@ class CustomerSignInService implements CustomerSignInUseCase {
         if (customer.isSamePassword(customerSignInCommand.password())) {
             return new AccessToken("1234");
         }
-        throw new RuntimeException();
+        throw new PasswordMissMatchException();
     }
 }

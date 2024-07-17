@@ -1,11 +1,13 @@
 package shopping.customer.api;
 
+import jakarta.persistence.PersistenceException;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import shopping.customer.application.exception.BusinessRuntimeException;
 
 @RestControllerAdvice
 public class CustomerExceptionHandler {
@@ -13,8 +15,20 @@ public class CustomerExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(CustomerExceptionHandler.class);
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<ErrorMessage> test(final ConstraintViolationException exception) {
+    public ResponseEntity<ErrorMessage> constraintViolation(final ConstraintViolationException exception) {
         logger.info("ConstraintViolationException = {}", exception.getMessage());
+        return ResponseEntity.badRequest().body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(BusinessRuntimeException.class)
+    public ResponseEntity<ErrorMessage> businessRuntime(final BusinessRuntimeException exception) {
+        logger.info("BusinessRuntimeException = {}", exception.getMessage());
+        return ResponseEntity.badRequest().body(new ErrorMessage(exception.getMessage()));
+    }
+
+    @ExceptionHandler(PersistenceException.class)
+    public ResponseEntity<ErrorMessage> persistence(final PersistenceException exception) {
+        logger.info("PersistenceException = {}", exception.getMessage());
         return ResponseEntity.badRequest().body(new ErrorMessage(exception.getMessage()));
     }
 
