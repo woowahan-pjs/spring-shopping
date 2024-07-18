@@ -88,13 +88,16 @@
 - `이메일(Email)`은 다른 회원과 중복될 수 없다.
 - `비밀번호(Password)`는 암호화되어야한다.
 - `회원 권한(Member Priority)`은 `사장님(Owner)`, `손님(Client)`이 있다.
+> `회원 권한(Member Priority)`에 따라 행위가 다르며 이는 아래에서 설명한다.
 
 #### 행위
 
-### 사장님(Owner)
+#### 사장님(Owner)
+- `사장님(Owner)`는 `이메일(Email)`, `비밀번호(Password)`, `회원 이름(Member Name)`을 입력하여 가입한다.
+    - 기본적으로 갖는 권한은 `사장님(Owner)`이다.
 - `사장님(Owner)`는 `이메일(Email)`과 `비밀번호(Password)`를 입력하여 로그인한다.
 
-### 손님(Client)
+#### 손님(Client)
 - `손님(Client)`는 `이메일(Email)`, `비밀번호(Password)`, `회원 이름(Member Name)`을 입력하여 가입한다.
     - 기본적으로 갖는 권한은 `손님(Client)`이다.
 - `손님(Client)`는 `이메일(Email)`과 `비밀번호(Password)`를 입력하여 로그인한다.
