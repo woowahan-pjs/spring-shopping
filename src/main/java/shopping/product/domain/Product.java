@@ -6,7 +6,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import shopping.common.domain.AuditableBaseEntity;
-import shopping.common.domain.BaseEntity;
 
 @Entity
 public class Product extends AuditableBaseEntity {
