@@ -1,12 +1,12 @@
 package shopping.auth.ui;
 
-import nextstep.subway.auth.application.AuthService;
-import nextstep.subway.auth.dto.TokenRequest;
-import nextstep.subway.auth.dto.TokenResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import shopping.auth.application.AuthService;
+import shopping.auth.dto.TokenRequest;
+import shopping.auth.dto.TokenResponse;
 
 @RestController
 public class AuthController {
@@ -18,7 +18,8 @@ public class AuthController {
 
     @PostMapping("/login/token")
     public ResponseEntity<TokenResponse> login(@RequestBody TokenRequest request) {
-        TokenResponse token = authService.login(request);
+//        TokenResponse token = authService.login(request);
+        TokenResponse token = null;
         return ResponseEntity.ok().body(token);
     }
 }
