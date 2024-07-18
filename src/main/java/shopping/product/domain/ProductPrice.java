@@ -3,6 +3,7 @@ package shopping.product.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
+import shopping.product.exception.InvalidProductPriceException;
 
 @Embeddable
 public class ProductPrice {

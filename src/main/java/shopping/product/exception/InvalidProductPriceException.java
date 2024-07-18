@@ -1,4 +1,4 @@
-package shopping.product.domain;
+package shopping.product.exception;
 
 public class InvalidProductPriceException extends IllegalArgumentException {
 

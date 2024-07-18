@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import shopping.product.exception.InvalidProductNameException;
 
 @Embeddable
 public class ProductName {
