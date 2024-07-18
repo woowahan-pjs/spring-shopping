@@ -29,4 +29,13 @@ class JwtProvider(
             .signWith(signingKey)
             .compact()
     }
+
+    fun getSubject(token: String): String =
+        Jwts
+            .parser()
+            .verifyWith(signingKey)
+            .build()
+            .parseSignedClaims(token)
+            .payload
+            .subject
 }

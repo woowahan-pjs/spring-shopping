@@ -33,7 +33,7 @@ class UserService(
     fun login(request: UserLoginRequest): UserLoginResponse {
         val user =
             userRepository.findByEmail(request.email)
-                ?: throw UserNotFoundException(request.email)
+                ?: throw UserNotFoundException.fromEmail(request.email)
 
         if (user.password != EncryptedPassword.from(request.password)) {
             throw PasswordMismatchException()
