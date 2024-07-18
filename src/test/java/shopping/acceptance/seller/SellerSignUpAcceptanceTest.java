@@ -20,5 +20,4 @@ public class SellerSignUpAcceptanceTest extends AcceptanceTest {
         final var response = SellerAcceptanceTest.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
         SellerAcceptanceTest.validateSellerSignUp(response);
     }
-
 }

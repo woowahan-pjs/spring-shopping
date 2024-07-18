@@ -5,6 +5,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import shopping.seller.api.dto.SellerSignUpRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -26,51 +27,5 @@ public class SellerAcceptanceTest {
 
     public static void validateSellerSignUp(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
-}
-
-class SellerSignUpRequest {
-
-    private String email;
-    private String name;
-    private String password;
-    private String brith;
-    private String address;
-    private String phone;
-
-    public SellerSignUpRequest() {
-    }
-
-    public SellerSignUpRequest(final String email, final String name, final String password, final String brith, final String address, final String phone) {
-        this.email = email;
-        this.name = name;
-        this.password = password;
-        this.brith = brith;
-        this.address = address;
-        this.phone = phone;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getBrith() {
-        return brith;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getPhone() {
-        return phone;
     }
 }
