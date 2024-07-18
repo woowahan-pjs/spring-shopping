@@ -9,7 +9,7 @@ import static shopping.utils.fixture.CustomerFixture.*;
 import static shopping.utils.fixture.CustomerFixture.PHONE;
 
 @DisplayName("고객 회원가입 인수 테스트")
-public class SellerSignUpAcceptanceTest extends AcceptanceTest {
+public class CustomerSignUpAcceptanceTest extends AcceptanceTest {
 
     @Test
     void scenario() {
