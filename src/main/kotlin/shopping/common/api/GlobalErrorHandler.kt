@@ -14,10 +14,25 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import shopping.common.error.ApiException
 import shopping.common.error.ErrorCode
 import shopping.common.error.ErrorMessage
+import shopping.common.error.LoginFailedException
 
 @RestControllerAdvice
 class GlobalErrorHandler {
     private val logger: Logger = LoggerFactory.getLogger(GlobalErrorHandler::class.java)
+
+    @ExceptionHandler(LoginFailedException::class)
+    fun loginFailedExceptionHandler(e: LoginFailedException): ResponseEntity<ApiResponse<Unit>> {
+        logger.error("LoginFailedException: {}", e.message, e)
+        val errorMessage =
+            ErrorMessage(
+                errorCode = ErrorCode.LOGIN_FAILED,
+                message = e.message,
+            )
+
+        return ResponseEntity
+            .status(HttpStatus.UNAUTHORIZED)
+            .body(ApiResponse.error(errorMessage))
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun httpMessageNotReadableExceptionHandler(e: HttpMessageNotReadableException): ResponseEntity<ApiResponse<Unit>> {
@@ -30,7 +45,7 @@ class GlobalErrorHandler {
 
         val errorMessage =
             ErrorMessage(
-                code = ErrorCode.VALIDATION_ERROR,
+                errorCode = ErrorCode.VALIDATION_ERROR,
                 message = e.message ?: "Missing field error",
                 data = data,
             )
@@ -45,7 +60,7 @@ class GlobalErrorHandler {
         logger.error("MethodArgumentNotValidException: {}", e.message, e)
         val errorMessage =
             ErrorMessage(
-                code = ErrorCode.VALIDATION_ERROR,
+                errorCode = ErrorCode.VALIDATION_ERROR,
                 message = e.message,
                 data = e.bindingResult.fieldErrors.map { it.toData() },
             )
@@ -60,13 +75,13 @@ class GlobalErrorHandler {
         logger.warn("ApiException: {}", e.message, e)
         val errorMessage =
             ErrorMessage(
-                code = e.errorCode,
+                errorCode = e.errorCode,
                 message = e.message,
                 data = e.data,
             )
 
         return ResponseEntity
-            .ok()
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
             .body(ApiResponse.error(errorMessage))
     }
 
@@ -75,7 +90,7 @@ class GlobalErrorHandler {
         logger.error("Exception: {}", e.message, e)
         val errorMessage =
             ErrorMessage(
-                code = ErrorCode.UNKNOWN_ERROR,
+                errorCode = ErrorCode.UNKNOWN_ERROR,
                 message = e.message ?: "Unknown Error",
             )
 
