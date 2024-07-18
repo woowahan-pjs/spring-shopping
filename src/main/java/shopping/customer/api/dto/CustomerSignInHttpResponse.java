@@ -2,15 +2,15 @@ package shopping.customer.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class CustomerSignInResponse {
+public class CustomerSignInHttpResponse {
 
     @JsonProperty("access_token")
     private String accessToken;
 
-    public CustomerSignInResponse() {
+    public CustomerSignInHttpResponse() {
     }
 
-    public CustomerSignInResponse(final String accessToken) {
+    public CustomerSignInHttpResponse(final String accessToken) {
         this.accessToken = accessToken;
     }
 

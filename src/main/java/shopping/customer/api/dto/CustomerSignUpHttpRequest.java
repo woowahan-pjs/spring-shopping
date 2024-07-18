@@ -1,7 +1,8 @@
-package shopping.seller.api.dto;
+package shopping.customer.api.dto;
 
-public class SellerSignUpRequest {
+import shopping.customer.application.command.CustomerSignUpCommand;
 
+public class CustomerSignUpHttpRequest {
     private String email;
     private String name;
     private String password;
@@ -9,10 +10,10 @@ public class SellerSignUpRequest {
     private String address;
     private String phone;
 
-    public SellerSignUpRequest() {
+    public CustomerSignUpHttpRequest() {
     }
 
-    public SellerSignUpRequest(final String email, final String name, final String password, final String brith, final String address, final String phone) {
+    public CustomerSignUpHttpRequest(final String email, final String name, final String password, final String brith, final String address, final String phone) {
         this.email = email;
         this.name = name;
         this.password = password;
@@ -43,5 +44,16 @@ public class SellerSignUpRequest {
 
     public String getPhone() {
         return phone;
+    }
+
+    public CustomerSignUpCommand toCommand() {
+        return new CustomerSignUpCommand(
+                this.email,
+                this.name,
+                this.password,
+                this.brith,
+                this.address,
+                this.phone
+        );
     }
 }

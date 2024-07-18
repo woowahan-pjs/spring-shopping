@@ -5,8 +5,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import shopping.customer.api.dto.CustomerSignInRequest;
-import shopping.customer.api.dto.CustomerSignUpRequest;
+import shopping.customer.api.dto.CustomerSignInHttpRequest;
+import shopping.customer.api.dto.CustomerSignUpHttpRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -21,7 +21,7 @@ public class CustomerAcceptanceSteps {
         return RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerSignUpRequest(email, name, password, birth, address, phone))
+                .body(new CustomerSignUpHttpRequest(email, name, password, birth, address, phone))
                 .when()
                 .post(USER_BASE_URL + SIGN_UP)
                 .then()
@@ -32,7 +32,7 @@ public class CustomerAcceptanceSteps {
         return RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new CustomerSignInRequest(email, password))
+                .body(new CustomerSignInHttpRequest(email, password))
                 .when()
                 .post(USER_BASE_URL + SIGN_IN)
                 .then()

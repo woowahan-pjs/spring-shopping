@@ -2,14 +2,14 @@ package shopping.customer.api.dto;
 
 import shopping.customer.application.command.CustomerSignInCommand;
 
-public class CustomerSignInRequest {
+public class CustomerSignInHttpRequest {
     private String email;
     private String password;
 
-    public CustomerSignInRequest() {
+    public CustomerSignInHttpRequest() {
     }
 
-    public CustomerSignInRequest(final String email, final String password) {
+    public CustomerSignInHttpRequest(final String email, final String password) {
         this.email = email;
         this.password = password;
     }

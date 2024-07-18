@@ -5,7 +5,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shopping.customer.application.command.CustomerSignInCommand;
-import shopping.customer.application.command.CustomerSignUpCommand;
 import shopping.customer.application.exception.PasswordMissMatchException;
 import shopping.customer.domain.AccessToken;
 import shopping.customer.domain.CustomerSignUpRequest;

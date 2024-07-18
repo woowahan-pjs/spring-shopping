@@ -9,7 +9,7 @@ public class MySQLTestContainerExtension implements Extension, BeforeAllCallback
 
     private static final String DOCKER_IMAGE = "mysql:8.0.32";
     private static final MySQLContainer MYSQL_CONTAINER = new MySQLContainer<>(DOCKER_IMAGE)
-            .withDatabaseName("banking")
+            .withDatabaseName("shopping")
             .withUsername("root")
             .withPassword("1234");
 

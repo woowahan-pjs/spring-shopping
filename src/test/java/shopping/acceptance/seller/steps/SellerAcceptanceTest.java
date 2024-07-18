@@ -5,7 +5,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import shopping.seller.api.dto.SellerSignUpRequest;
+import shopping.seller.api.dto.SellerSignUpHttpRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,7 +18,7 @@ public class SellerAcceptanceTest {
         return RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .body(new SellerSignUpRequest(email, name, password, birth, address, phone))
+                .body(new SellerSignUpHttpRequest(email, name, password, birth, address, phone))
                 .when()
                 .post(SELLER_BASE_URL + SIGN_UP)
                 .then()
@@ -27,5 +27,13 @@ public class SellerAcceptanceTest {
 
     public static void validateSellerSignUp(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    public static void validateCustomerSignUpInvalidEmail(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    public static void validateCustomerSignUpInvalidPassword(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 }

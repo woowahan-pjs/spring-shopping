@@ -8,7 +8,7 @@ import shopping.acceptance.customer.steps.CustomerAcceptanceSteps;
 import static shopping.utils.fixture.CustomerFixture.*;
 
 @DisplayName("고객 로그인 인수 테스트")
-public class CustomerSignInAcceptanceTest extends AcceptanceTest {
+public class SellerSignInAcceptanceTest extends AcceptanceTest {
 
     @Test
     void scenario() {
