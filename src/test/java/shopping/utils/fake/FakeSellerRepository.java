@@ -33,4 +33,11 @@ public class FakeSellerRepository implements SellerRepository {
         storage.put(id, seller);
         return seller;
     }
+
+    @Override
+    public Seller findByEmail(final String email) {
+        return storage.values().stream().filter(it -> it.getEmail().equals(email))
+                .findAny()
+                .orElseThrow(RuntimeException::new);
+    }
 }

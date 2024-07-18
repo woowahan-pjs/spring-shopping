@@ -2,7 +2,7 @@ package shopping.customer.application;
 
 import org.springframework.stereotype.Service;
 import shopping.customer.application.command.CustomerSignInCommand;
-import shopping.customer.application.exception.PasswordMissMatchException;
+import shopping.common.exception.PasswordMissMatchException;
 import shopping.customer.domain.AccessToken;
 import shopping.customer.domain.Customer;
 import shopping.customer.domain.repository.CustomerRepository;

@@ -1,5 +1,6 @@
 package shopping.seller.infrastructure;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.seller.domain.Seller;
@@ -19,6 +20,13 @@ public class SellerSignUpAdapter implements SellerRepository {
     @Override
     public Seller save(final SellerSignUpRequest sellerSignUpRequest) {
         final SellerEntity sellerEntity = repository.save(domainToEntity(sellerSignUpRequest));
+        return entityToDomain(sellerEntity);
+    }
+
+    @Override
+    public Seller findByEmail(final String email) {
+        final SellerEntity sellerEntity = repository.findByEmail(email)
+                .orElseThrow(() -> new EntityNotFoundException());
         return entityToDomain(sellerEntity);
     }
 

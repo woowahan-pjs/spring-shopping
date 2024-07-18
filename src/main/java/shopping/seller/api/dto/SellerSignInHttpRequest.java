@@ -1,5 +1,7 @@
 package shopping.seller.api.dto;
 
+import shopping.seller.application.command.SellerSignInCommand;
+
 public class SellerSignInHttpRequest {
 
     private String email;
@@ -19,5 +21,9 @@ public class SellerSignInHttpRequest {
 
     public String getPassword() {
         return password;
+    }
+
+    public SellerSignInCommand toCommand() {
+        return new SellerSignInCommand(email, password);
     }
 }

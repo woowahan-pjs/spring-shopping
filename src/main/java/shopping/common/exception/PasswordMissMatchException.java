@@ -1,4 +1,4 @@
-package shopping.customer.application.exception;
+package shopping.common.exception;
 
 public class PasswordMissMatchException extends BusinessRuntimeException {
 }
