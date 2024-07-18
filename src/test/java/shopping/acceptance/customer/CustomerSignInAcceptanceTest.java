@@ -33,7 +33,6 @@ public class CustomerSignInAcceptanceTest extends AcceptanceTest {
         CustomerAcceptanceSteps.validateCustomerSignInNotRegisteredEmail(response);
     }
 
-
     @DisplayName("회원가입이 되어있지만 비밀번호를 잘못 입력하면 로그인을 할 수 없다.")
     @Test
     void doNotSignInWrongPassword() {
