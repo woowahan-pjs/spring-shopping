@@ -10,7 +10,8 @@ import shopping.product.exception.InvalidProductNameException;
 public class ProductName {
 
     private static final Pattern PRODUCT_NAME_PATTERN = Pattern.compile(
-            "^[a-zA-Z0-9()\\[\\]+\\-&/_]*$\n");
+            "^[a-zA-Z0-9()\\[\\]+\\-&/_가-힣]*$");
+
 
     @Column(name = "product_name", nullable = false)
     private String name;
@@ -19,6 +20,10 @@ public class ProductName {
     }
 
     public ProductName(final String name, final ProfanityChecker profanityChecker) {
+        if (name == null || profanityChecker == null) {
+            throw new InvalidProductNameException("상품 이름은 필수값 입니다");
+        }
+
         validateName(name, profanityChecker);
         this.name = name;
     }
@@ -29,10 +34,9 @@ public class ProductName {
         validateProfanity(name, profanityChecker);
     }
 
-    private static void validateProfanity(final String name,
-            final ProfanityChecker profanityChecker) {
-        if (profanityChecker.isProfanity(name)) {
-            throw new InvalidProductNameException("상품 이름에 비속어를 사용할 수 없습니다. " + name);
+    private static void validateNameLength(final String name) {
+        if (name.length() > 15) {
+            throw new InvalidProductNameException("상품 이름은 최대 15글자까지 입력가능합니다. " + name);
         }
     }
 
@@ -44,9 +48,10 @@ public class ProductName {
         }
     }
 
-    private static void validateNameLength(final String name) {
-        if (name.length() > 15) {
-            throw new InvalidProductNameException("상품 이름은 최대 15글자까지 입력가능합니다. " + name);
+    private static void validateProfanity(final String name,
+            final ProfanityChecker profanityChecker) {
+        if (profanityChecker.isProfanity(name)) {
+            throw new InvalidProductNameException("상품 이름에 비속어를 사용할 수 없습니다. " + name);
         }
     }
 }
