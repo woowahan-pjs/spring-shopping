@@ -42,11 +42,19 @@ public class ProductService {
         return ProductResponse.ProductDetail.from(persistProduct);
     }
 
+    @Transactional
+    public ProductResponse.ProductDetail updateProductById(Long id, ProductRequest.ModProduct request) {
+        Product persistProduct = findProductByPrdctSn(id);
+        persistProduct.updateNameOrImage(request.getPrdctNm(), request.getImage());
+        return ProductResponse.ProductDetail.from(persistProduct);
+    }
+
 
     private Product findProductByPrdctSn(Long sn) {
         return productRepository.findById(sn)
                 .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
     }
+
 
 
 }

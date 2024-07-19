@@ -33,4 +33,14 @@ public class ProductRequest {
                     .build();
         }
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class ModProduct {
+        private String prdctNm;
+
+        private String image;
+    }
 }

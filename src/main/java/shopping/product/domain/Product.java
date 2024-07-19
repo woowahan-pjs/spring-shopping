@@ -51,4 +51,21 @@ public class Product extends BaseEntity {
         String formattedNumber = String.format("%04d", prdctSn);
         return prefix + formattedNumber;
     }
+
+    public void updateNameOrImage(String prdctNm, String image) {
+        updateName(prdctNm);
+        updateImage(image);
+    }
+
+    private void updateImage(String image) {
+        if(!image.isBlank()) {
+            this.image = image;
+        }
+    }
+
+    private void updateName(String prdctNm) {
+        if(!prdctNm.isBlank()) {
+            this.prdctNm = new Name(prdctNm);
+        }
+    }
 }
