@@ -2,6 +2,7 @@ package shopping.wishlist.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.exception.BadRequestException;
 import shopping.exception.NotFoundException;
 import shopping.product.application.ProductService;
 import shopping.product.domain.Product;
@@ -29,6 +30,7 @@ public class WishService {
     @Transactional
     public WishResponse.WishDetail addWishList(WishRequest.RegWishList request) {
         Product product = productService.findProductByPrdctSn(request.getPrdctSn());
+        checkExistWish(request.getMbrSn(), product);
         Wish persistWishList = wishRepository.save(request.toWishList(product));
 
         return WishResponse.WishDetail.from(persistWishList);
@@ -46,40 +48,11 @@ public class WishService {
         return WishResponse.WishDetail.from(wish);
     }
 
-
-
-
-//
-//    public ProductResponse.Products findAllProducts() {
-//        List<Product> products = productRepository.findAll();
-//
-//        return ProductResponse.Products.from(products);
-//    }
-//
-//
-//    public ProductResponse.ProductDetail findProductDetailResponseBySn(Long id) {
-//        Product persistProduct = findProductByPrdctSn(id);
-//        return ProductResponse.ProductDetail.from(persistProduct);
-//    }
-//
-//    @Transactional
-//    public ProductResponse.ProductDetail updateProductById(Long id, ProductRequest.ModProduct request) {
-//        Product persistProduct = findProductByPrdctSn(id);
-//        persistProduct.updateNameOrImage(request.getPrdctNm(), request.getImage());
-//        return ProductResponse.ProductDetail.from(persistProduct);
-//    }
-//
-//    @Transactional
-//    public void deleteProductById(Long id) {
-//        Product persistProduct = findProductByPrdctSn(id);
-//        persistProduct.updateDelYn(YesNo.Y);
-//    }
-//
-//
-//    private Product findProductByPrdctSn(Long sn) {
-//        return productRepository.findById(sn)
-//                .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
-//    }
+    @Transactional
+    public void deleteWishById(Long id) {
+        Wish persistWish = findWishById(id);
+        wishRepository.delete(persistWish);
+    }
 
 
     private WishList findWishListByMbrSn(Long mbrSn) {
@@ -92,5 +65,11 @@ public class WishService {
                 .orElseThrow(() -> new NotFoundException("해당 위시 리스트가 존재하지 않습니다."));
     }
 
+    private void checkExistWish(Long mbrSn, Product product) {
+        boolean isExist = wishRepository.existsByMbrSnAndProduct(mbrSn, product);
+        if(isExist) {
+            throw new BadRequestException("이미 등록된 위시리스트 입니다.");
+        }
+    }
 
 }

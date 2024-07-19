@@ -41,10 +41,10 @@ public class WishController {
         return ResponseEntity.ok().body(wish);
     }
 
-//    @DeleteMapping("/{id}")
-//    public ResponseEntity deleteProduct(@PathVariable Long id) {
-//        productService.deleteProductById(id);
-//        return ResponseEntity.noContent().build();
-//    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteWish(@PathVariable Long id) {
+        wishService.deleteWishById(id);
+        return ResponseEntity.noContent().build();
+    }
 
 }
