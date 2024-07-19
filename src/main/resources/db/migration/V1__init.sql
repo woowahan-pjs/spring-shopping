@@ -1,6 +1,6 @@
-create table product (
+create table if not exists product (
                          prdct_sn bigint auto_increment primary key comment '상품 일련번호',
-                         prdct_id varchar(20) not null comment '상품 아이디',
+                         prdct_id varchar(20) null comment '상품 아이디',
                          prdct_nm varchar(45) not null comment '상품 명',
                          image varchar(2000) null comment '상품 이미지',
                          del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',
@@ -9,7 +9,7 @@ create table product (
 )
     comment '상품';
 
-create table member (
+create table if not exists member (
                         mbr_sn bigint auto_increment primary key comment '회원 일련번호',
                         email varchar(200) unique not null comment '회원 이메일',
                         password varchar(2000) not null comment '회원 비밀번호',
@@ -20,7 +20,7 @@ create table member (
 )
     comment '회원';
 
-create table token (
+create table if not exists token (
                        token_sn bigint auto_increment primary key comment '토큰 일련번호',
                        mbr_sn bigint not null comment '회원 일련번호',
                        token varchar(2000) not null comment '토큰',
@@ -30,7 +30,7 @@ create table token (
 )
     comment '토큰';
 
-create table wish_list (
+create table if not exists wish (
                            wish_sn bigint auto_increment primary key comment '위시 일련번호',
                            mbr_sn bigint not null comment '회원 일련번호',
                            prdct_sn bigint not null comment '상품 일련번호',

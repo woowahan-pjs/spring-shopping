@@ -4,38 +4,36 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import shopping.product.application.ProductService;
-import shopping.product.dto.ProductRequest;
 import shopping.product.dto.ProductResponse;
-import shopping.wishlist.application.WishListService;
-import shopping.wishlist.dto.WishListRequest;
-import shopping.wishlist.dto.WishListResponse;
+import shopping.wishlist.application.WishService;
+import shopping.wishlist.dto.WishRequest;
+import shopping.wishlist.dto.WishResponse;
 
 import java.net.URI;
 
 @Slf4j
 @RestController
-@RequestMapping("/wishLists")
-public class WishListController {
+@RequestMapping("/wish")
+public class WishController {
 
-    private WishListService wishListService;
+    private WishService wishService;
 
-    public WishListController(WishListService wishListService) {
-        this.wishListService = wishListService;
+    public WishController(WishService wishService) {
+        this.wishService = wishService;
     }
 
     @PostMapping()
-    public ResponseEntity<WishListResponse.WishDetail> addWishList(@RequestBody @Valid WishListRequest.RegWishList request) {
-        WishListResponse.WishDetail wishList = wishListService.addWishList(request);
-        return ResponseEntity.created(URI.create("/wishLists/" + wishList.getWishSn())).body(wishList);
+    public ResponseEntity<WishResponse.WishDetail> addWishList(@RequestBody @Valid WishRequest.RegWishList request) {
+        WishResponse.WishDetail wishList = wishService.addWishList(request);
+        return ResponseEntity.created(URI.create("/wish/" + wishList.getWishSn())).body(wishList);
     }
 
-//    @GetMapping()
-//    public ResponseEntity<ProductResponse.Products> findAllProducts() {
-//        ProductResponse.Products products = productService.findAllProducts();
-//        return ResponseEntity.ok().body(products);
-//    }
-//
+    @GetMapping()
+    public ResponseEntity<WishResponse.WishList> findAllWishList() {
+        WishResponse.WishList wishList = wishService.findAllWishList();
+        return ResponseEntity.ok().body(wishList);
+    }
+
 //    @GetMapping("/{id}")
 //    public ResponseEntity<ProductResponse.ProductDetail> findProductBySn(@PathVariable Long id) {
 //        return ResponseEntity.ok().body(productService.findProductDetailResponseBySn(id));

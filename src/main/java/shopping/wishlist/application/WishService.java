@@ -2,40 +2,39 @@ package shopping.wishlist.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.constant.enums.YesNo;
-import shopping.exception.NotFoundException;
 import shopping.product.application.ProductService;
 import shopping.product.domain.Product;
-import shopping.product.domain.ProductRepository;
-import shopping.product.dto.ProductRequest;
-import shopping.product.dto.ProductResponse;
-import shopping.wishlist.domain.WishList;
-import shopping.wishlist.domain.WishListRepository;
-import shopping.wishlist.dto.WishListRequest;
-import shopping.wishlist.dto.WishListResponse;
+import shopping.wishlist.domain.Wish;
+import shopping.wishlist.domain.WishRepository;
+import shopping.wishlist.dto.WishRequest;
+import shopping.wishlist.dto.WishResponse;
 
 import java.util.List;
 
 
 @Service
 @Transactional(readOnly = true)
-public class WishListService {
-    private WishListRepository wishListRepository;
+public class WishService {
+    private WishRepository wishRepository;
     private ProductService productService;
 
-    public WishListService(ProductService productService, WishListRepository wishListRepository) {
+    public WishService(ProductService productService, WishRepository wishRepository) {
         this.productService = productService;
-        this.wishListRepository = wishListRepository;
+        this.wishRepository = wishRepository;
     }
 
 
-
     @Transactional
-    public WishListResponse.WishDetail addWishList(WishListRequest.RegWishList request) {
+    public WishResponse.WishDetail addWishList(WishRequest.RegWishList request) {
         Product product = productService.findProductByPrdctSn(request.getPrdctSn());
-        WishList persistWishList = wishListRepository.save(request.toWishList(product));
+        Wish persistWishList = wishRepository.save(request.toWishList(product));
 
-        return WishListResponse.WishDetail.from(persistWishList);
+        return WishResponse.WishDetail.from(persistWishList);
+    }
+
+    public WishResponse.WishList findAllWishList() {
+        List<Wish> wishList = wishRepository.findAll();
+        return WishResponse.WishList.from(wishList);
     }
 
 //

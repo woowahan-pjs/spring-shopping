@@ -1,17 +1,14 @@
 package shopping.wishlist.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import shopping.exception.BadRequestException;
-import shopping.member.domain.Member;
 import shopping.product.domain.Product;
-import shopping.wishlist.domain.WishList;
+import shopping.wishlist.domain.Wish;
 
 @Data
-public class WishListRequest {
+public class WishRequest {
 
     @Data
     @Builder
@@ -19,15 +16,13 @@ public class WishListRequest {
     @AllArgsConstructor
     public static class RegWishList {
 
-
         private Long mbrSn;
-
 
         private Long prdctSn;
 
 
-        public WishList toWishList(Product product) {
-            return WishList.builder()
+        public Wish toWishList(Product product) {
+            return Wish.builder()
                     .mbrSn(mbrSn)
                     .product(product)
                     .build();
