@@ -3,10 +3,7 @@ package shopping.product.ui;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import shopping.member.dto.MemberRequest;
 import shopping.member.dto.MemberResponse;
 import shopping.product.application.ProductService;
@@ -30,5 +27,11 @@ public class ProductController {
     public ResponseEntity<ProductResponse.ProductDetail> createMember(@RequestBody @Valid ProductRequest.RegProduct request) {
         ProductResponse.ProductDetail product = productService.createProduct(request);
         return ResponseEntity.created(URI.create("/products/" + product.getPrdctSn())).body(product);
+    }
+
+    @GetMapping()
+    public ResponseEntity<ProductResponse.Products> findAllProducts() {
+        ProductResponse.Products products = productService.findAllProducts();
+        return ResponseEntity.ok().body(products);
     }
 }

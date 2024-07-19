@@ -8,6 +8,8 @@ import shopping.product.domain.ProductRepository;
 import shopping.product.dto.ProductRequest;
 import shopping.product.dto.ProductResponse;
 
+import java.util.List;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -28,11 +30,17 @@ public class ProductService {
     }
 
 
+    public ProductResponse.Products findAllProducts() {
+        List<Product> products = productRepository.findAll();
+
+        return ProductResponse.Products.from(products);
+    }
+
+
     private Product findProductByPrdctSn(Long sn) {
         return productRepository.findById(sn)
                 .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
     }
-
 
 
 }

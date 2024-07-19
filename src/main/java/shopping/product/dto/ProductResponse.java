@@ -20,6 +20,19 @@ public class ProductResponse {
     public static class Products {
         private int totalCnt;
         private List<ProductDetail> products;
+
+        public static Products from(List<Product> products) {
+            return Products.builder()
+                    .totalCnt(products.size())
+                    .products(addProducts(products))
+                    .build();
+        }
+
+        private static List<ProductDetail> addProducts(List<Product> products) {
+            return products.stream()
+                    .map(ProductDetail::from)
+                    .toList();
+        }
     }
 
     @Data
