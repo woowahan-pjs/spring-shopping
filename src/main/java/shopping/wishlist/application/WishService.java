@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.exception.BadRequestException;
 import shopping.exception.NotFoundException;
+import shopping.member.application.MemberService;
 import shopping.product.application.ProductService;
 import shopping.product.domain.Product;
 import shopping.wishlist.domain.Wish;
@@ -20,20 +21,31 @@ import java.util.List;
 public class WishService {
     private WishRepository wishRepository;
     private ProductService productService;
+    private MemberService memberService;
 
-    public WishService(ProductService productService, WishRepository wishRepository) {
+    public WishService(ProductService productService, WishRepository wishRepository
+            , MemberService memberService) {
         this.productService = productService;
         this.wishRepository = wishRepository;
+        this.memberService = memberService;
     }
 
 
     @Transactional
     public WishResponse.WishDetail addWishList(WishRequest.RegWishList request) {
         Product product = productService.findProductByPrdctSn(request.getPrdctSn());
+        checkExistMember(request.getMbrSn());
         checkExistWish(request.getMbrSn(), product);
         Wish persistWishList = wishRepository.save(request.toWishList(product));
 
         return WishResponse.WishDetail.from(persistWishList);
+    }
+
+    private void checkExistMember(Long mbrSn) {
+        boolean isExist = memberService.isExistMemberById(mbrSn);
+        if(!isExist) {
+            throw new BadRequestException("해당 회원이 존재하지 않습니다.");
+        }
     }
 
     public WishResponse.WishListRes findAllWishList(Long mbrSn) {
@@ -67,7 +79,7 @@ public class WishService {
 
     private void checkExistWish(Long mbrSn, Product product) {
         boolean isExist = wishRepository.existsByMbrSnAndProduct(mbrSn, product);
-        if(isExist) {
+        if (isExist) {
             throw new BadRequestException("이미 등록된 위시리스트 입니다.");
         }
     }

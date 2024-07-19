@@ -60,7 +60,7 @@ public class WishResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class WishWithProductDetail {
-
+        private Long wishSn;
         private Long mbrSn;
         private Long prdctSn;
         private String prdctId;
@@ -68,6 +68,7 @@ public class WishResponse {
         private String image;
         public static WishWithProductDetail from(Wish persistWish) {
             return WishWithProductDetail.builder()
+                    .wishSn(persistWish.getWishSn())
                     .mbrSn(persistWish.getMbrSn())
                     .prdctSn(persistWish.getProductSn())
                     .prdctId(persistWish.getPrdctId())

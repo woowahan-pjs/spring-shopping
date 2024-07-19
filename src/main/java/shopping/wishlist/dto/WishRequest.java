@@ -37,7 +37,8 @@ public class WishRequest {
     @NoArgsConstructor
     public static class ModWishProductCnt {
         @Min(1)
-        private Long cnt;
+        @Builder.Default
+        private Long cnt = 1L;
 
         @JsonProperty("isAdd")
         @Builder.Default

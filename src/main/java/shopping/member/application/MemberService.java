@@ -3,6 +3,7 @@ package shopping.member.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.constant.enums.YesNo;
+import shopping.exception.BadRequestException;
 import shopping.exception.NotFoundException;
 import shopping.member.domain.Member;
 import shopping.member.domain.MemberRepository;
@@ -25,6 +26,7 @@ public class MemberService {
 
     @Transactional
     public MemberResponse.MemberDetail createMember(MemberRequest.RegMember request) {
+        checkEmailExists(request.getEmail());
         Member persistMember = memberRepository.save(request.toMember());
         return MemberResponse.MemberDetail.from(persistMember);
     }
@@ -42,7 +44,7 @@ public class MemberService {
     }
 
     public MemberResponse.ValidEmail validateNoneExistEmailToValidEmail(String email) {
-        boolean isExists = checkEmailExists(email);
+        boolean isExists = isEmailExists(email);
         return MemberResponse.ValidEmail.of(isExists, email);
     }
 
@@ -70,8 +72,14 @@ public class MemberService {
                 .orElseThrow(() -> new NotFoundException("해당 회원이 존재하지 않습니다."));
     }
 
-    private boolean checkEmailExists(String email) {
+    private boolean isEmailExists(String email) {
         return memberRepository.existsByEmail(email);
+    }
+
+    private void checkEmailExists(String email) {
+        if(isEmailExists(email)) {
+            throw new BadRequestException("이미 가입된 이메일 입니다.");
+        }
     }
 
     private Members findAllMembersToMembers() {
@@ -79,4 +87,7 @@ public class MemberService {
     }
 
 
+    public boolean isExistMemberById(Long mbrSn) {
+        return memberRepository.existsById(mbrSn);
+    }
 }
