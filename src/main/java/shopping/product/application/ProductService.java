@@ -57,7 +57,7 @@ public class ProductService {
     }
 
 
-    private Product findProductByPrdctSn(Long sn) {
+    public Product findProductByPrdctSn(Long sn) {
         return productRepository.findById(sn)
                 .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
     }

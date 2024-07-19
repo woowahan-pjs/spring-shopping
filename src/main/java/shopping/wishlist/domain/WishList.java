@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import shopping.BaseEntity;
+import shopping.product.domain.Product;
 
 
 @EqualsAndHashCode(callSuper = true)
@@ -21,9 +22,14 @@ public class WishList extends BaseEntity {
     @Column(nullable = false)
     private Long mbrSn;
 
-    @Column(nullable = false)
-    private Long prdctSn;
-
     @Column(nullable = false, columnDefinition = "int default 1")
     private int cnt;
+
+    @OneToOne
+    @JoinColumn(name = "prdctSn")
+    private Product product;
+
+    public Long getProductSn() {
+        return product.getPrdctSn();
+    }
 }
