@@ -23,8 +23,7 @@ class WishlistService(
 
         val wishlistProduct =
             WishlistProduct(productId = request.productId, userId = currentUser.id).let {
-                wishlistProductRepository.findByIdOrNull(it.id)
-                    ?: wishlistProductRepository.save(it)
+                wishlistProductRepository.findByIdOrNull(it.id) ?: wishlistProductRepository.save(it)
             }
 
         return AddWishlistResponse(
