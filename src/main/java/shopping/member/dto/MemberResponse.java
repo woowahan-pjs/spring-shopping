@@ -13,15 +13,19 @@ public class MemberResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class RegMemberResponse {
+    public static class MemberDetail {
 
         private Long mbrSn;
         private String email;
+        private String name;
+        private String delYn;
 
-        public static RegMemberResponse from(Member persistMember) {
-            return RegMemberResponse.builder()
+        public static MemberDetail from(Member persistMember) {
+            return MemberDetail.builder()
                     .mbrSn(persistMember.getMbrSn())
                     .email(persistMember.getEmail())
+                    .name(persistMember.getMbrNm())
+                    .delYn(persistMember.getDelYnStr())
                     .build();
         }
     }

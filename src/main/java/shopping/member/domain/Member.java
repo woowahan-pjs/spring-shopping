@@ -32,4 +32,8 @@ public class Member extends BaseEntity {
     @Column
     @Builder.Default
     private YesNo delYn = YesNo.N;
+
+    public String getDelYnStr() {
+        return delYn.name();
+    }
 }
