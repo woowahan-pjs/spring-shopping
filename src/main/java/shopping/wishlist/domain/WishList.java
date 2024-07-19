@@ -23,7 +23,8 @@ public class WishList extends BaseEntity {
     private Long mbrSn;
 
     @Column(nullable = false, columnDefinition = "int default 1")
-    private int cnt;
+    @Builder.Default
+    private int cnt = 1;
 
     @OneToOne
     @JoinColumn(name = "prdctSn")
