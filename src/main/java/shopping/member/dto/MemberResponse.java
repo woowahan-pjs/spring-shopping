@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import shopping.member.domain.Member;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +45,7 @@ public class MemberResponse {
         private String email;
         private String name;
         private String delYn;
+        private LocalDateTime regDt;
 
         public static MemberDetail from(Member persistMember) {
             return MemberDetail.builder()
@@ -51,6 +53,7 @@ public class MemberResponse {
                     .email(persistMember.getEmail())
                     .name(persistMember.getMbrNm())
                     .delYn(persistMember.getDelYnStr())
+                    .regDt(persistMember.getRegDt())
                     .build();
         }
     }
