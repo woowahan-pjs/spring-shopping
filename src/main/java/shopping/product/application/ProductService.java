@@ -2,6 +2,7 @@ package shopping.product.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.constant.enums.YesNo;
 import shopping.exception.NotFoundException;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductRepository;
@@ -47,6 +48,12 @@ public class ProductService {
         Product persistProduct = findProductByPrdctSn(id);
         persistProduct.updateNameOrImage(request.getPrdctNm(), request.getImage());
         return ProductResponse.ProductDetail.from(persistProduct);
+    }
+
+    @Transactional
+    public void deleteProductById(Long id) {
+        Product persistProduct = findProductByPrdctSn(id);
+        persistProduct.updateDelYn(YesNo.Y);
     }
 
 

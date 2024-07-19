@@ -68,4 +68,8 @@ public class Product extends BaseEntity {
             this.prdctNm = new Name(prdctNm);
         }
     }
+
+    public void updateDelYn(YesNo yesNo) {
+        this.delYn = yesNo;
+    }
 }
