@@ -2,6 +2,7 @@ package shopping.wishlist.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.exception.NotFoundException;
 import shopping.product.application.ProductService;
 import shopping.product.domain.Product;
 import shopping.wishlist.domain.Wish;
@@ -37,6 +38,14 @@ public class WishService {
         WishList wishList = findWishListByMbrSn(mbrSn);
         return WishResponse.WishListRes.from(wishList);
     }
+
+    @Transactional
+    public WishResponse.WishDetail updateWishProductCntById(Long wishSn, WishRequest.ModWishProductCnt request) {
+        Wish wish = findWishById(wishSn);
+        wish.updateCnt(request.isAdd(), request.getCnt());
+        return WishResponse.WishDetail.from(wish);
+    }
+
 
 
 
@@ -77,5 +86,11 @@ public class WishService {
         List<Wish> wishList = wishRepository.findAllByMbrSn(mbrSn);
         return new WishList(wishList);
     }
+
+    private Wish findWishById(Long wishSn) {
+        return wishRepository.findById(wishSn)
+                .orElseThrow(() -> new NotFoundException("해당 위시 리스트가 존재하지 않습니다."));
+    }
+
 
 }

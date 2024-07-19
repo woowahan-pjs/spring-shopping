@@ -1,5 +1,7 @@
 package shopping.wishlist.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,11 +33,14 @@ public class WishRequest {
 
     @Data
     @Builder
-    @NoArgsConstructor
     @AllArgsConstructor
-    public static class ModWishList {
+    @NoArgsConstructor
+    public static class ModWishProductCnt {
+        @Min(1)
+        private Long cnt;
 
-        private int cnt;
-
+        @JsonProperty("isAdd")
+        @Builder.Default
+        private boolean isAdd = true;
     }
 }

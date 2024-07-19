@@ -45,12 +45,12 @@ public class WishResponse {
         private Long prdctSn;
         private Long cnt;
 
-        public static WishDetail from(Wish wishList) {
+        public static WishDetail from(Wish wish) {
             return WishDetail.builder()
-                    .wishSn(wishList.getWishSn())
-                    .mbrSn(wishList.getMbrSn())
-                    .prdctSn(wishList.getProductSn())
-                    .cnt(wishList.getCnt())
+                    .wishSn(wish.getWishSn())
+                    .mbrSn(wish.getMbrSn())
+                    .prdctSn(wish.getProductSn())
+                    .cnt(wish.getCnt())
                     .build();
         }
     }

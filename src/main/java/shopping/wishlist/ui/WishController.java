@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import shopping.product.dto.ProductRequest;
 import shopping.product.dto.ProductResponse;
 import shopping.wishlist.application.WishService;
 import shopping.wishlist.dto.WishRequest;
@@ -24,8 +25,8 @@ public class WishController {
 
     @PostMapping()
     public ResponseEntity<WishResponse.WishDetail> addWishList(@RequestBody @Valid WishRequest.RegWishList request) {
-        WishResponse.WishDetail wishList = wishService.addWishList(request);
-        return ResponseEntity.created(URI.create("/wishList/" + wishList.getWishSn())).body(wishList);
+        WishResponse.WishDetail wish = wishService.addWishList(request);
+        return ResponseEntity.created(URI.create("/wishList/" + wish.getWishSn())).body(wish);
     }
 
     @GetMapping("member/{id}")
@@ -34,17 +35,12 @@ public class WishController {
         return ResponseEntity.ok().body(wishList);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<ProductResponse.ProductDetail> findProductBySn(@PathVariable Long id) {
-//        return ResponseEntity.ok().body(productService.findProductDetailResponseBySn(id));
-//    }
-//
-//    @PutMapping("/{id}")
-//    public ResponseEntity<ProductResponse.ProductDetail> updateProduct(@PathVariable Long id, @RequestBody @Valid ProductRequest.ModProduct request) {
-//        ProductResponse.ProductDetail product = productService.updateProductById(id, request);
-//        return ResponseEntity.ok().body(product);
-//    }
-//
+    @PutMapping("/cnt/{id}")
+    public ResponseEntity<WishResponse.WishDetail> updateWishProductCnt(@PathVariable Long id, @RequestBody @Valid WishRequest.ModWishProductCnt request) {
+        WishResponse.WishDetail wish = wishService.updateWishProductCntById(id, request);
+        return ResponseEntity.ok().body(wish);
+    }
+
 //    @DeleteMapping("/{id}")
 //    public ResponseEntity deleteProduct(@PathVariable Long id) {
 //        productService.deleteProductById(id);

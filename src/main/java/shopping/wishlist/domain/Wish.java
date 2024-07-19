@@ -45,4 +45,26 @@ public class Wish extends BaseEntity {
     public String getPrdctImage() {
         return product.getImage();
     }
+
+    public void updateCnt(boolean isAdd, Long cnt) {
+        if (isAdd) {
+            addCnt(cnt);
+        }
+
+        if (!isAdd) {
+            subtractCnt(cnt);
+        }
+
+    }
+
+    private void subtractCnt(Long cnt) {
+        this.cnt -= cnt;
+        if (this.cnt < 1) {
+            this.cnt = 1L;
+        }
+    }
+
+    private void addCnt(Long cnt) {
+        this.cnt += cnt;
+    }
 }
