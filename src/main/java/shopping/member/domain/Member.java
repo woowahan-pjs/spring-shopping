@@ -3,11 +3,8 @@ package shopping.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
 import shopping.BaseEntity;
 import shopping.constant.enums.YesNo;
-
-import java.time.LocalDateTime;
 
 
 @EqualsAndHashCode(callSuper = true)
@@ -22,16 +19,17 @@ public class Member extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long mbrSn;
 
-    @Column(length = 200, nullable = false)
+    @Column
     private String email;
 
-    @Column(length = 2000, nullable = false)
+    @Column
     private String password;
 
-    @Column(length = 100)
+    @Column
     private String mbrNm;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, columnDefinition = "ENUM('Y', 'N')")
-    private YesNo delYn;
+    @Column
+    @Builder.Default
+    private YesNo delYn = YesNo.N;
 }

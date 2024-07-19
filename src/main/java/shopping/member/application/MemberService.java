@@ -2,11 +2,10 @@ package shopping.member.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.constant.enums.YesNo;
 import shopping.member.domain.Member;
 import shopping.member.domain.MemberRepository;
-
-import java.util.List;
+import shopping.member.dto.MemberRequest;
+import shopping.member.dto.MemberResponse;
 
 
 @Service
@@ -18,19 +17,10 @@ public class MemberService {
         this.memberRepository = memberRepository;
     }
 
+
     @Transactional
-    public void test() {
-        Member member = Member.builder()
-                .email("jtt@12cm.co.kr")
-                .password("1234")
-                .mbrNm("테스트")
-                .delYn(YesNo.N)
-                .build();
-
-        memberRepository.save(member);
-
-        List<Member> temp = memberRepository.findAll();
-
+    public MemberResponse.RegMemberResponse createMember(MemberRequest.RegMember request) {
+        Member persistMember = memberRepository.save(request.toMember());
+        return MemberResponse.RegMemberResponse.from(persistMember);
     }
-
 }

@@ -8,10 +8,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shopping.member.application.MemberService;
+import shopping.member.dto.MemberRequest;
+import shopping.member.dto.MemberResponse;
+
+import java.net.URI;
 
 @Slf4j
 @RestController
-@RequestMapping("/member")
+@RequestMapping("/members")
 public class MemberController {
 
     private MemberService memberService;
@@ -21,9 +25,11 @@ public class MemberController {
     }
 
 
-    @PostMapping("test")
-    public void test() {
-        memberService.test();
+    @PostMapping()
+    public ResponseEntity<MemberResponse.RegMemberResponse> createMember(@RequestBody @Valid MemberRequest.RegMember request) {
+        request.validate();
+        MemberResponse.RegMemberResponse member = memberService.createMember(request);
+        return ResponseEntity.created(URI.create("/members/" + member.getMbrSn())).body(member);
     }
 
 }
