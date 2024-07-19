@@ -6,6 +6,7 @@ import shopping.common.domain.CurrentUser
 import shopping.product.application.ProductNotFoundException
 import shopping.product.domain.ProductRepository
 import shopping.wishlist.domain.WishlistProduct
+import shopping.wishlist.domain.WishlistProductId
 import shopping.wishlist.domain.WishlistProductRepository
 
 @Service
@@ -29,5 +30,15 @@ class WishlistService(
         return AddWishlistResponse(
             wishlistProduct,
         )
+    }
+
+    fun deleteWishlist(
+        productId: Long,
+        currentUser: CurrentUser,
+    ) {
+        val id = WishlistProductId(productId, currentUser.id)
+        val wishlistProduct = wishlistProductRepository.findByIdOrNull(id) ?: return
+
+        wishlistProductRepository.delete(wishlistProduct)
     }
 }
