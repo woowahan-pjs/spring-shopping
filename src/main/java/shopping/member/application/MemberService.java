@@ -2,11 +2,14 @@ package shopping.member.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.constant.enums.YesNo;
 import shopping.exception.NotFoundException;
 import shopping.member.domain.Member;
 import shopping.member.domain.MemberRepository;
 import shopping.member.dto.MemberRequest;
 import shopping.member.dto.MemberResponse;
+
+import java.util.List;
 
 
 @Service
@@ -25,17 +28,28 @@ public class MemberService {
         return MemberResponse.MemberDetail.from(persistMember);
     }
 
+    public MemberResponse.Members findAllMembers() {
+        List<Member> members = memberRepository.findAll();
+        return MemberResponse.Members.from(members);
+    }
+
     public MemberResponse.MemberDetail findMemberDetailResponseBySn(Long sn) {
         Member persistMember = findMemberByMbrSn(sn);
         return MemberResponse.MemberDetail.from(persistMember);
     }
 
     @Transactional
-    public MemberResponse.MemberDetail updateMember(Long id, MemberRequest.ModMember request) {
+    public MemberResponse.MemberDetail updateMemberById(Long id, MemberRequest.ModMember request) {
         Member persistMember = findMemberByMbrSn(id);
 
         persistMember.updatePwdOrName(request.getPassword(), request.getName());
         return MemberResponse.MemberDetail.from(persistMember);
+    }
+
+    @Transactional
+    public void deleteMemberById(Long id) {
+        Member persistMember = findMemberByMbrSn(id);
+        persistMember.updateDelYn(YesNo.Y);
     }
 
 
@@ -45,4 +59,7 @@ public class MemberService {
         return memberRepository.findById(sn)
                 .orElseThrow(() -> new NotFoundException("해당 회원이 존재하지 않습니다."));
     }
+
+
+
 }

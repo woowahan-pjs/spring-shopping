@@ -53,4 +53,8 @@ public class Member extends BaseEntity {
             this.password = password;
         }
     }
+
+    public void updateDelYn(YesNo delYn) {
+        this.delYn = delYn;
+    }
 }

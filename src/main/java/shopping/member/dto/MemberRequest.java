@@ -52,7 +52,7 @@ public class MemberRequest {
         private String password;
 
         private String name;
-        
+
         public Member toMember() {
             return Member.builder()
                     .password(password) //todo 암호화
