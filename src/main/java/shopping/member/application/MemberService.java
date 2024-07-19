@@ -6,6 +6,7 @@ import shopping.constant.enums.YesNo;
 import shopping.exception.NotFoundException;
 import shopping.member.domain.Member;
 import shopping.member.domain.MemberRepository;
+import shopping.member.domain.Members;
 import shopping.member.dto.MemberRequest;
 import shopping.member.dto.MemberResponse;
 
@@ -28,10 +29,12 @@ public class MemberService {
         return MemberResponse.MemberDetail.from(persistMember);
     }
 
-    public MemberResponse.Members findAllMembers() {
-        List<Member> members = memberRepository.findAll();
-        return MemberResponse.Members.from(members);
+    public MemberResponse.MembersRes findAllMembers() {
+        Members members = findAllMembersToMembers();
+        return MemberResponse.MembersRes.from(members);
     }
+
+
 
     public MemberResponse.MemberDetail findMemberDetailResponseBySn(Long sn) {
         Member persistMember = findMemberByMbrSn(sn);
@@ -71,6 +74,9 @@ public class MemberService {
         return memberRepository.existsByEmail(email);
     }
 
+    private Members findAllMembersToMembers() {
+        return new Members(memberRepository.findAll());
+    }
 
 
 }

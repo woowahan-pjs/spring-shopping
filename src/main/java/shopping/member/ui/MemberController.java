@@ -29,8 +29,8 @@ public class MemberController {
     }
 
     @GetMapping()
-    public ResponseEntity<MemberResponse.Members> findAllMembers() {
-        MemberResponse.Members members = memberService.findAllMembers();
+    public ResponseEntity<MemberResponse.MembersRes> findAllMembers() {
+        MemberResponse.MembersRes members = memberService.findAllMembers();
         return ResponseEntity.ok().body(members);
     }
 

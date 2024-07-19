@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import shopping.member.domain.Member;
+import shopping.member.domain.Members;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,14 +18,14 @@ public class MemberResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Members {
+    public static class MembersRes {
         private int totalCnt;
         private List<MemberDetail> members;
 
-        public static Members from(List<Member> members) {
-            return Members.builder()
-                    .totalCnt(members.size())
-                    .members(addMembers(members))
+        public static MembersRes from(Members members) {
+            return MembersRes.builder()
+                    .totalCnt(members.getTotCnt())
+                    .members(addMembers(members.getMembers()))
                     .build();
         }
 
