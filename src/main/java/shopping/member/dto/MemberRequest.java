@@ -42,4 +42,22 @@ public class MemberRequest {
                     .build();
         }
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ModMember {
+
+        private String password;
+
+        private String name;
+        
+        public Member toMember() {
+            return Member.builder()
+                    .password(password) //todo 암호화
+                    .mbrNm(name)
+                    .build();
+        }
+    }
 }

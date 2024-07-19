@@ -28,9 +28,15 @@ public class MemberController {
         return ResponseEntity.created(URI.create("/members/" + member.getMbrSn())).body(member);
     }
 
-    @GetMapping("/{sn}")
-    public ResponseEntity<MemberResponse.MemberDetail> findMemberBySn(@PathVariable Long sn) {
-        return ResponseEntity.ok().body(memberService.findMemberDetailResponseBySn(sn));
+    @GetMapping("/{id}")
+    public ResponseEntity<MemberResponse.MemberDetail> findMemberBySn(@PathVariable Long id) {
+        return ResponseEntity.ok().body(memberService.findMemberDetailResponseBySn(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MemberResponse.MemberDetail> updateMember(@PathVariable Long id, @RequestBody @Valid MemberRequest.ModMember request) {
+        MemberResponse.MemberDetail member = memberService.updateMember(id, request);
+        return ResponseEntity.ok().body(member);
     }
 
 }

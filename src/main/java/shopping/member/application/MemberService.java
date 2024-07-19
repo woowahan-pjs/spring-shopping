@@ -30,6 +30,17 @@ public class MemberService {
         return MemberResponse.MemberDetail.from(persistMember);
     }
 
+    @Transactional
+    public MemberResponse.MemberDetail updateMember(Long id, MemberRequest.ModMember request) {
+        Member persistMember = findMemberByMbrSn(id);
+
+        persistMember.updatePwdOrName(request.getPassword(), request.getName());
+        return MemberResponse.MemberDetail.from(persistMember);
+    }
+
+
+
+
     private Member findMemberByMbrSn(Long sn) {
         return memberRepository.findById(sn)
                 .orElseThrow(() -> new NotFoundException("해당 회원이 존재하지 않습니다."));
