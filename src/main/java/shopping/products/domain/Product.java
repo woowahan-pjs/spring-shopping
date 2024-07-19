@@ -1,4 +1,4 @@
-package shopping.member.domain;
+package shopping.products.domain;
 
 
 import jakarta.persistence.*;
@@ -7,29 +7,26 @@ import lombok.experimental.SuperBuilder;
 import shopping.BaseEntity;
 import shopping.constant.enums.YesNo;
 
-import java.time.LocalDateTime;
-
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "member")
-public class Member extends BaseEntity {
+public class Product extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long mbrSn;
+    private Long prdctSn;
 
-    @Column(length = 200, nullable = false)
-    private String email;
+    @Column(length = 20, nullable = false)
+    private String prdctId;
 
-    @Column(length = 2000, nullable = false)
-    private String password;
+    @Column(length = 45, nullable = false)
+    private String prdctNm;
 
-    @Column(length = 100)
-    private String mbrNm;
+    @Column(length = 2000)
+    private String image;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, columnDefinition = "ENUM('Y', 'N')")
