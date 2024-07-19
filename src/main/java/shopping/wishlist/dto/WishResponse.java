@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import shopping.wishlist.domain.Wish;
+import shopping.wishlist.domain.WishList;
 
 import java.util.List;
 
@@ -15,14 +16,14 @@ public class WishResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class WishList {
+    public static class WishListRes {
         private int totalCnt;
         private List<WishWithProductDetail> wishList;
 
-        public static WishList from(List<Wish> wishList) {
-            return WishList.builder()
-                    .totalCnt(wishList.size())
-                    .wishList(addWishList(wishList))
+        public static WishListRes from(WishList wishList) {
+            return WishListRes.builder()
+                    .totalCnt(wishList.getTotCnt())
+                    .wishList(addWishList(wishList.getWishList()))
                     .build();
         }
 

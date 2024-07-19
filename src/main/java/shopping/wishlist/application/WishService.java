@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shopping.product.application.ProductService;
 import shopping.product.domain.Product;
 import shopping.wishlist.domain.Wish;
+import shopping.wishlist.domain.WishList;
 import shopping.wishlist.domain.WishRepository;
 import shopping.wishlist.dto.WishRequest;
 import shopping.wishlist.dto.WishResponse;
@@ -32,10 +33,12 @@ public class WishService {
         return WishResponse.WishDetail.from(persistWishList);
     }
 
-    public WishResponse.WishList findAllWishList() {
-        List<Wish> wishList = wishRepository.findAll();
-        return WishResponse.WishList.from(wishList);
+    public WishResponse.WishListRes findAllWishList(Long mbrSn) {
+        WishList wishList = findWishListByMbrSn(mbrSn);
+        return WishResponse.WishListRes.from(wishList);
     }
+
+
 
 //
 //    public ProductResponse.Products findAllProducts() {
@@ -70,5 +73,9 @@ public class WishService {
 //    }
 
 
+    private WishList findWishListByMbrSn(Long mbrSn) {
+        List<Wish> wishList = wishRepository.findAllByMbrSn(mbrSn);
+        return new WishList(wishList);
+    }
 
 }

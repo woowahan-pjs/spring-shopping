@@ -13,7 +13,7 @@ import java.net.URI;
 
 @Slf4j
 @RestController
-@RequestMapping("/wish")
+@RequestMapping("/wishList")
 public class WishController {
 
     private WishService wishService;
@@ -25,12 +25,12 @@ public class WishController {
     @PostMapping()
     public ResponseEntity<WishResponse.WishDetail> addWishList(@RequestBody @Valid WishRequest.RegWishList request) {
         WishResponse.WishDetail wishList = wishService.addWishList(request);
-        return ResponseEntity.created(URI.create("/wish/" + wishList.getWishSn())).body(wishList);
+        return ResponseEntity.created(URI.create("/wishList/" + wishList.getWishSn())).body(wishList);
     }
 
-    @GetMapping()
-    public ResponseEntity<WishResponse.WishList> findAllWishList() {
-        WishResponse.WishList wishList = wishService.findAllWishList();
+    @GetMapping("member/{id}")
+    public ResponseEntity<WishResponse.WishListRes> findAllWishList(@PathVariable Long id) {
+        WishResponse.WishListRes wishList = wishService.findAllWishList(id);
         return ResponseEntity.ok().body(wishList);
     }
 
