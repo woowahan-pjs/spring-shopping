@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import shopping.member.domain.Member;
 import shopping.product.domain.Product;
+import shopping.product.domain.Products;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,14 +18,14 @@ public class ProductResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Products {
+    public static class ProductsRes {
         private int totalCnt;
         private List<ProductDetail> products;
 
-        public static Products from(List<Product> products) {
-            return Products.builder()
-                    .totalCnt(products.size())
-                    .products(addProducts(products))
+        public static ProductsRes from(Products products) {
+            return ProductsRes.builder()
+                    .totalCnt(products.getTotCnt())
+                    .products(addProducts(products.getProducts()))
                     .build();
         }
 

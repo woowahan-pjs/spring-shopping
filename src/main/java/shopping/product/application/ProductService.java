@@ -6,6 +6,7 @@ import shopping.constant.enums.YesNo;
 import shopping.exception.NotFoundException;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductRepository;
+import shopping.product.domain.Products;
 import shopping.product.dto.ProductRequest;
 import shopping.product.dto.ProductResponse;
 
@@ -31,11 +32,13 @@ public class ProductService {
     }
 
 
-    public ProductResponse.Products findAllProducts() {
-        List<Product> products = productRepository.findAll();
+    public ProductResponse.ProductsRes findAllProducts() {
+        Products products = findAllToProducts();
 
-        return ProductResponse.Products.from(products);
+        return ProductResponse.ProductsRes.from(products);
     }
+
+
 
 
     public ProductResponse.ProductDetail findProductDetailResponseBySn(Long id) {
@@ -62,6 +65,10 @@ public class ProductService {
                 .orElseThrow(() -> new NotFoundException("해당 상품이 존재하지 않습니다."));
     }
 
+    private Products findAllToProducts() {
+        List<Product> products = productRepository.findAll();
+        return new Products(products);
+    }
 
 
 }

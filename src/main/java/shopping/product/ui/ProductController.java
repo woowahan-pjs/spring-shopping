@@ -30,8 +30,8 @@ public class ProductController {
     }
 
     @GetMapping()
-    public ResponseEntity<ProductResponse.Products> findAllProducts() {
-        ProductResponse.Products products = productService.findAllProducts();
+    public ResponseEntity<ProductResponse.ProductsRes> findAllProducts() {
+        ProductResponse.ProductsRes products = productService.findAllProducts();
         return ResponseEntity.ok().body(products);
     }
 
