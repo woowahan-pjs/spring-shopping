@@ -39,6 +39,11 @@ public class MemberController {
         return ResponseEntity.ok().body(memberService.findMemberDetailResponseBySn(id));
     }
 
+    @GetMapping("/valid/{email}")
+    public ResponseEntity<MemberResponse.ValidEmail> validateNoneExistEmail(@PathVariable String email) {
+        return ResponseEntity.ok().body(memberService.validateNoneExistEmailToValidEmail(email));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<MemberResponse.MemberDetail> updateMember(@PathVariable Long id, @RequestBody @Valid MemberRequest.ModMember request) {
         MemberResponse.MemberDetail member = memberService.updateMemberById(id, request);

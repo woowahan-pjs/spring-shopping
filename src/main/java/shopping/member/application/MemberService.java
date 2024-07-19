@@ -38,6 +38,13 @@ public class MemberService {
         return MemberResponse.MemberDetail.from(persistMember);
     }
 
+    public MemberResponse.ValidEmail validateNoneExistEmailToValidEmail(String email) {
+        boolean isExists = checkEmailExists(email);
+        return MemberResponse.ValidEmail.of(isExists, email);
+    }
+
+
+
     @Transactional
     public MemberResponse.MemberDetail updateMemberById(Long id, MemberRequest.ModMember request) {
         Member persistMember = findMemberByMbrSn(id);
@@ -58,6 +65,10 @@ public class MemberService {
     private Member findMemberByMbrSn(Long sn) {
         return memberRepository.findById(sn)
                 .orElseThrow(() -> new NotFoundException("해당 회원이 존재하지 않습니다."));
+    }
+
+    private boolean checkEmailExists(String email) {
+        return memberRepository.existsByEmail(email);
     }
 
 

@@ -44,7 +44,7 @@ public class WishListResponse {
         private Long wishSn;
         private Long mbrSn;
         private Long prdctSn;
-        private int cnt;
+        private Long cnt;
 
         public static WishDetail from(WishList wishList) {
             return WishDetail.builder()

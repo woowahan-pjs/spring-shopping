@@ -57,4 +57,20 @@ public class MemberResponse {
                     .build();
         }
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ValidEmail {
+        private boolean isValid;
+        private String email;
+
+        public static ValidEmail of(boolean isExists, String email) {
+            return  ValidEmail.builder()
+                    .isValid(!isExists)
+                    .email(email)
+                    .build();
+        }
+    }
 }
