@@ -8,6 +8,8 @@ import shopping.auth.acceptance.AuthAcceptanceTest;
 import shopping.member.domain.Member;
 import shopping.member.repository.MemberRepository;
 
+import static shopping.auth.acceptance.AuthSteps.로그인_요청;
+
 @AcceptanceTest
 public abstract class AcceptanceTestAuthBase {
 
@@ -22,7 +24,7 @@ public abstract class AcceptanceTestAuthBase {
     @BeforeEach
     void acceptanceTestAuthBaseSetUp() {
         memberRepository.save(new Member(EMAIL, PASSWORD));
-        final ExtractableResponse<Response> response = AuthAcceptanceTest.로그인_요청(EMAIL, PASSWORD);
+        final ExtractableResponse<Response> response = 로그인_요청(EMAIL, PASSWORD);
         accessToken = response.jsonPath().getString("accessToken");
     }
 }

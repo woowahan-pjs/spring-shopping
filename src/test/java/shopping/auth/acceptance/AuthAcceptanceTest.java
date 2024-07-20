@@ -1,18 +1,15 @@
 package shopping.auth.acceptance;
 
-import io.restassured.RestAssured;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import shopping.core.AcceptanceTest;
 import shopping.core.AcceptanceTestAuthBase;
 
-import java.util.Map;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static shopping.auth.acceptance.AuthSteps.로그인_요청;
 
 @DisplayName("로그인 관련 기능")
 @AcceptanceTest
@@ -41,16 +38,6 @@ public class AuthAcceptanceTest extends AcceptanceTestAuthBase {
 
         토큰_발급_실패(response);
     }
-
-    public static ExtractableResponse<Response> 로그인_요청(final String email, final String password) {
-        return RestAssured
-                .given()
-                .body(Map.of("email", email, "password", password))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .when().post("/auth/login")
-                .then().extract();
-    }
-
 
     private static void 토큰_발급_성공(final ExtractableResponse<Response> response) {
         assertThat(response.jsonPath().getString("accessToken")).isNotBlank();
