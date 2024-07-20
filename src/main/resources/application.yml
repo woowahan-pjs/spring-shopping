@@ -1,4 +1,7 @@
 spring:
+  profiles:
+    include: jwt
+
   application:
     name: spring-shopping
 

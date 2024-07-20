@@ -1,0 +1,5 @@
+jwt:
+  secret: 51d68a77edc9a7a87ad4c3bc8d2a7612335cf8d4f1bbbcbfcf214c127a5ef3fcd28cba2a646610d8ab96848b6d9dce8aa0017f0ece5f013ac4586cbe866e292d
+
+  access:
+    expiration: 60
