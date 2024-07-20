@@ -15,6 +15,10 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static shopping.core.AcceptanceTestUtils.등록_식별자_추출;
+import static shopping.core.AcceptanceTestUtils.등록요청_성공;
+import static shopping.core.AcceptanceTestUtils.삭제요청_성공;
+import static shopping.core.AcceptanceTestUtils.수정요청_성공;
 
 @DisplayName("상품 관련 기능")
 @AcceptanceTest
@@ -39,11 +43,13 @@ public class ProductAcceptanceTest {
         final ExtractableResponse<Response> response = 상품_등록_요청();
 
         // then
+        등록요청_성공(response);
         상품_등록_요청이_성공한다(response);
 
         // then
         상품_목록_조회_시_상품을_찾을_수_있다(상품이름);
     }
+
 
     /**
      * Given 상품을 등록하고
@@ -78,8 +84,10 @@ public class ProductAcceptanceTest {
         final ExtractableResponse<Response> response = 상품_수정_요청(상품_식별자(상품_등록_응답));
 
         // then
+        수정요청_성공(response);
         상품_목록_조회_시_상품을_찾을_수_있다(수정된_상품이름);
     }
+
 
     /**
      * Given 상품을 등록하고
@@ -96,8 +104,10 @@ public class ProductAcceptanceTest {
         final ExtractableResponse<Response> response = 상품_삭제_요청(상품_식별자(상품_등록_응답));
 
         // then
+        삭제요청_성공(response);
         상품_목록_조회_시_상품을_찾을_수_없다(상품이름);
     }
+
 
     public ExtractableResponse<Response> 상품_등록_요청() {
         final Map<String, ?> body = Map.of("name", 상품이름, "imagePath", 상품_이미지_경로, "amount", 상품_수량, "price", 상품_가격);
@@ -111,7 +121,6 @@ public class ProductAcceptanceTest {
 
     private static void 상품_등록_요청이_성공한다(final ExtractableResponse<Response> response) {
         assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
             final ProductResponse productResponse = response.as(ProductResponse.class);
             softly.assertThat(productResponse.getName()).isEqualTo(상품이름);
             softly.assertThat(productResponse.getImagePath()).isEqualTo(상품_이미지_경로);
@@ -131,9 +140,8 @@ public class ProductAcceptanceTest {
         assertThat(lineNames).containsAnyOf(name);
     }
 
-    private static String 상품_식별자(final ExtractableResponse<Response> 상품_등록_응답) {
-        final String[] split = 상품_등록_응답.header("Location").split("/");
-        return split[split.length - 1];
+    private static String 상품_식별자(final ExtractableResponse<Response> response) {
+        return 등록_식별자_추출(response);
     }
 
     private ExtractableResponse<Response> 상품_상세_조회_요청(final String id) {

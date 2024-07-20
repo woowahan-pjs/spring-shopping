@@ -1,0 +1,30 @@
+package shopping.core;
+
+import io.restassured.response.ExtractableResponse;
+import io.restassured.response.Response;
+import org.springframework.http.HttpStatus;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class AcceptanceTestUtils {
+    private AcceptanceTestUtils() {
+    }
+
+    public static void 등록요청_성공(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    public static String 등록_식별자_추출(final ExtractableResponse<Response> response) {
+        final String[] split = response.header("Location").split("/");
+        return split[split.length - 1];
+    }
+
+    public static void 수정요청_성공(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
+
+    public static void 삭제요청_성공(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NO_CONTENT.value());
+    }
+
+}
