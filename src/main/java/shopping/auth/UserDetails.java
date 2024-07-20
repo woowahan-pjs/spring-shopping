@@ -1,9 +1,4 @@
 package shopping.auth;
 
-public class UserDetails {
-    private final String email;
-
-    public UserDetails(String email) {
-        this.email = email;
-    }
+public record UserDetails(String email) {
 }

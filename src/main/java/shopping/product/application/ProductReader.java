@@ -23,4 +23,8 @@ public class ProductReader {
     public Page<Product> readAllBy(Pageable pageable) {
         return productRepository.findAllBy(pageable);
     }
+
+    public boolean existsById(Long id) {
+        return productRepository.existsById(id);
+    }
 }
