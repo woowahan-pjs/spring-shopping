@@ -1,5 +1,6 @@
 package shopping.member.application;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.member.application.dto.MemberRequest;
@@ -13,19 +14,24 @@ import shopping.member.repository.MemberRepository;
 @Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public MemberService(final MemberRepository memberRepository) {
+    public MemberService(final MemberRepository memberRepository, final PasswordEncoder passwordEncoder) {
         this.memberRepository = memberRepository;
+        this.passwordEncoder = passwordEncoder;
+
     }
 
     @Transactional
     public MemberResponse save(final MemberRequest request) {
-        memberRepository.findByEmail(request.getEmail())
+        final String email = request.getEmail();
+        memberRepository.findByEmail(email)
                 .ifPresent(member -> {
                     throw new InvalidMemberException("중복된 email 입니다.");
                 });
 
-        final Member member = memberRepository.save(request.toEntity());
+        final String encodedPassword = passwordEncoder.encode(request.getPassword());
+        final Member member = memberRepository.save(new Member(email, encodedPassword));
 
         return MemberResponse.from(member);
     }

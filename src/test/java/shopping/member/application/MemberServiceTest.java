@@ -3,6 +3,7 @@ package shopping.member.application;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import shopping.member.application.dto.MemberRequest;
 import shopping.member.application.dto.MemberResponse;
 import shopping.member.domain.Member;
@@ -24,11 +25,13 @@ public class MemberServiceTest {
 
     private MemberService memberService;
     private MemberRepository memberRepository;
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
         memberRepository = mock(MemberRepository.class);
-        memberService = new MemberService(memberRepository);
+        passwordEncoder = mock(PasswordEncoder.class);
+        memberService = new MemberService(memberRepository, passwordEncoder);
     }
 
     @Test
@@ -38,6 +41,7 @@ public class MemberServiceTest {
         final Member member = new Member(request.getEmail(), request.getPassword());
 
         when(memberRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+        when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(memberRepository.save(any(Member.class))).thenReturn(member);
 
         final MemberResponse response = memberService.save(request);
