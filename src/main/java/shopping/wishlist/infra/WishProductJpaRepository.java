@@ -5,9 +5,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import shopping.member.domain.Member;
+import shopping.product.domain.Product;
 import shopping.wishlist.domain.WishProduct;
 
 public interface WishProductJpaRepository extends JpaRepository<WishProduct, Long> {
+    boolean existsByMemberAndProduct(Member member, Product product);
+
     @Query("select w from WishProduct w join fetch w.product where w.member = :member")
     List<WishProduct> findAllByMemberWithProduct(Member member);
 

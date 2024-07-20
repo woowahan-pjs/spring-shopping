@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import org.springframework.data.annotation.CreatedDate;
@@ -17,6 +19,9 @@ import shopping.member.domain.Member;
 import shopping.product.domain.Product;
 
 @EntityListeners(AuditingEntityListener.class)
+@Table(uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"memberId", "productId"})
+})
 @Entity
 public class WishProduct {
     @Id
@@ -39,13 +44,46 @@ public class WishProduct {
     protected WishProduct() {
     }
 
-    private WishProduct(Member member, Product product) {
+    WishProduct(Member member, Product product) {
+        this(null, member, product);
+    }
+
+    WishProduct(Long id, Member member, Product product) {
+        this.id = id;
         this.member = member;
         this.product = product;
     }
 
     public static WishProduct of(Member member, Product product) {
         return new WishProduct(member, product);
+    }
+
+    public Long getProductId() {
+        return product.getId();
+    }
+
+    public String getName() {
+        return product.getName();
+    }
+
+    public String getImageUrl() {
+        return product.getImageUrl();
+    }
+
+    public Integer getPrice() {
+        return product.getPrice();
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     @Override
@@ -63,21 +101,5 @@ public class WishProduct {
     @Override
     public int hashCode() {
         return Objects.hashCode(id);
-    }
-
-    public Long getProductId() {
-        return product.getId();
-    }
-
-    public String getName() {
-        return product.getName();
-    }
-
-    public String getImageUrl() {
-        return product.getImageUrl();
-    }
-
-    public Integer getPrice() {
-        return product.getPrice();
     }
 }

@@ -23,6 +23,9 @@ public class WishProductService {
     public void add(String email, Long productId) {
         Member member = memberService.getByEmail(email);
         Product product = productService.getById(productId);
+        if (wishProductRepository.existsByMemberAndProduct(member, product)) {
+            throw new AlreadyRegisteredWishProductException();
+        }
 
         WishProduct wishProduct = WishProduct.of(member, product);
         wishProductRepository.save(wishProduct);

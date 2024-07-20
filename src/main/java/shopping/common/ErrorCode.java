@@ -8,6 +8,7 @@ public enum ErrorCode {
     INVALID_INPUT_ARGUMENTS(400, "입력 값이 비었거나 null일 수 없습니다."),
     PRODUCT_NOT_FOUND(400, "id에 해당하는 상품이 없습니다."),
     ALREADY_REGISTERED_EMAIL(400, "이미 가입된 이메일입니다."),
+    ALREADY_REGISTERED_WISH_PRODUCT(400, "위시 리스트에 이미 등록된 상품입니다."),
 
     // 401
     NOT_MATCHED_PASSWORD(401, "비밀번호가 일치하지 않습니다."),
