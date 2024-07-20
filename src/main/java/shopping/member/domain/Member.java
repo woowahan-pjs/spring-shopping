@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import shopping.BaseEntity;
 import shopping.constant.enums.YesNo;
+import shopping.exception.AuthorizationException;
 
 
 @EqualsAndHashCode(callSuper = true)
@@ -56,5 +57,15 @@ public class Member extends BaseEntity {
 
     public void updateDelYn(YesNo delYn) {
         this.delYn = delYn;
+    }
+
+    public void checkPassword(String password) {
+        if(isNotEqualPassword(password)) {
+            throw new AuthorizationException("비밀번호가 일치하지 않습니다.");
+        }
+    }
+
+    private boolean isNotEqualPassword(String password) {
+        return this.password.equals(password);
     }
 }

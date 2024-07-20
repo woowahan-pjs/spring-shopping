@@ -3,6 +3,7 @@ package shopping.member.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.constant.enums.YesNo;
+import shopping.exception.AuthorizationException;
 import shopping.exception.BadRequestException;
 import shopping.exception.NotFoundException;
 import shopping.member.domain.Member;
@@ -12,6 +13,7 @@ import shopping.member.dto.MemberRequest;
 import shopping.member.dto.MemberResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -89,5 +91,11 @@ public class MemberService {
 
     public boolean isExistMemberById(Long mbrSn) {
         return memberRepository.existsById(mbrSn);
+    }
+
+    public Member findMemberByEmailAndDelYn(String email, YesNo delYn) {
+        Member member = Optional.ofNullable(memberRepository.findByEmailAndDelYn(email, delYn))
+                .orElseThrow(() -> new AuthorizationException("해당 회원이 존재하지 않습니다."));
+        return  member;
     }
 }

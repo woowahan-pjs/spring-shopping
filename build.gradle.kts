@@ -47,7 +47,10 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // JWT and Lombok
-    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation ("io.jsonwebtoken:jjwt-api:0.11.2")
+    implementation ("io.jsonwebtoken:jjwt-impl:0.11.2")
+    implementation ("io.jsonwebtoken:jjwt-jackson:0.11.2")
+//    implementation("io.jsonwebtoken:jjwt:0.9.1")
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
