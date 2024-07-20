@@ -9,4 +9,6 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
     List<Wish> findAllByMbrSn(Long mbrSn);
 
     boolean existsByMbrSnAndProduct(Long mbrSn, Product product);
+
+    Wish findByWishSnAndMbrSn(Long wishSn, Long mbrSn);
 }

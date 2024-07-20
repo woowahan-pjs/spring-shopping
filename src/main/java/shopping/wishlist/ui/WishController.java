@@ -38,8 +38,8 @@ public class WishController {
     }
 
     @PutMapping("/cnt/{id}")
-    public ResponseEntity<WishResponse.WishDetail> updateWishProductCnt(@PathVariable Long id, @RequestBody @Valid WishRequest.ModWishProductCnt request) {
-        WishResponse.WishDetail wish = wishService.updateWishProductCntById(id, request);
+    public ResponseEntity<WishResponse.WishDetail> updateWishProductCnt(@AuthenticationPrincipal LoginMember loginMember, @PathVariable Long id, @RequestBody @Valid WishRequest.ModWishProductCnt request) {
+        WishResponse.WishDetail wish = wishService.updateWishProductCntById(loginMember, id, request);
         return ResponseEntity.ok().body(wish);
     }
 

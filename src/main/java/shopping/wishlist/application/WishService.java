@@ -15,6 +15,7 @@ import shopping.wishlist.dto.WishRequest;
 import shopping.wishlist.dto.WishResponse;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -54,8 +55,8 @@ public class WishService {
     }
 
     @Transactional
-    public WishResponse.WishDetail updateWishProductCntById(Long wishSn, WishRequest.ModWishProductCnt request) {
-        Wish wish = findWishById(wishSn);
+    public WishResponse.WishDetail updateWishProductCntById(LoginMember loginMember, Long wishSn, WishRequest.ModWishProductCnt request) {
+        Wish wish = findWishByIdAndMbrSn(wishSn, loginMember.getId());
         wish.updateCnt(request.isAdd(), request.getCnt());
         return WishResponse.WishDetail.from(wish);
     }
@@ -75,6 +76,11 @@ public class WishService {
     private Wish findWishById(Long wishSn) {
         return wishRepository.findById(wishSn)
                 .orElseThrow(() -> new NotFoundException("해당 위시 리스트가 존재하지 않습니다."));
+    }
+
+    private Wish findWishByIdAndMbrSn(Long wishSn, Long mbrSn) {
+        return Optional.ofNullable(wishRepository.findByWishSnAndMbrSn(wishSn, mbrSn))
+                .orElseThrow(() -> new NotFoundException("로그인 한 회원의 위시리스트 정보가 아닙니다."));
     }
 
     private void checkExistWish(Long mbrSn, Product product) {
