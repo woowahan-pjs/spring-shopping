@@ -11,6 +11,13 @@ public class ProductCreateRequest {
     public ProductCreateRequest() {
     }
 
+    public ProductCreateRequest(final String name, final String imagePath, final int amount, final int price) {
+        this.name = name;
+        this.imagePath = imagePath;
+        this.amount = amount;
+        this.price = price;
+    }
+
     public static Product toEntity(final ProductCreateRequest createRequest) {
         return new Product(createRequest.name, createRequest.imagePath, createRequest.amount, createRequest.price);
     }

@@ -9,6 +9,13 @@ public class ProductModifyRequest {
     public ProductModifyRequest() {
     }
 
+    public ProductModifyRequest(final String name, final String imagePath, final int amount, final int price) {
+        this.name = name;
+        this.imagePath = imagePath;
+        this.amount = amount;
+        this.price = price;
+    }
+
     public String getName() {
         return name;
     }
