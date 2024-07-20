@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import shopping.product.application.dto.ProductRequest;
 import shopping.product.application.dto.ProductResponse;
 import shopping.product.domain.Product;
+import shopping.product.exception.ProductNotExistException;
 import shopping.product.repository.ProductRepository;
 
 import java.util.List;
@@ -31,7 +32,9 @@ public class ProductService {
     }
 
     public ProductResponse findById(final Long id) {
-        return null;
+        return productRepository.findById(id)
+                .map(ProductResponse::from)
+                .orElseThrow(()-> new ProductNotExistException("상품이 존재하지 않습니다."));
     }
 
     public void update(final Long id, final ProductRequest request) {

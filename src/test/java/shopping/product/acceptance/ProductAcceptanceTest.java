@@ -132,19 +132,20 @@ public class ProductAcceptanceTest {
     }
 
     private static String 상품_식별자(final ExtractableResponse<Response> 상품_등록_응답) {
-        return 상품_등록_응답.header("Location").split("/")[1];
+        final String[] split = 상품_등록_응답.header("Location").split("/");
+        return split[split.length - 1];
     }
 
     private ExtractableResponse<Response> 상품_상세_조회_요청(final String id) {
         return RestAssured
                 .given().pathParam("id", id)
-                .when().get("/products")
+                .when().get("/products/{id}")
                 .then().extract();
     }
 
     private void 상품이_상세_조회_된다(final ExtractableResponse<Response> response) {
         assertSoftly(softly -> {
-            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+            softly.assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
             final ProductResponse productResponse = response.as(ProductResponse.class);
             softly.assertThat(productResponse.getId()).isEqualTo(상품_식별자);
         });
