@@ -1,35 +1,37 @@
 package shopping.token.application;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import java.util.Date;
-import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import shopping.token.domain.JwtToken;
+import shopping.member.application.MemberService;
+import shopping.member.domain.Member;
 import shopping.token.domain.Token;
+import shopping.token.domain.TokenProvider;
 
 @Service
 public class TokenService {
-    private static final String TOKEN_SUBJECT = "AccessToken";
-    private static final String USERNAME_CLAIM = "email";
+    private final MemberService memberService;
+    private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
 
-    private final SecretKey secretKey;
-    private final long tokenExpirationSeconds;
-
-    public TokenService(@Value("${jwt.secret}") String secret, @Value("${jwt.access.expiration}") long tokenExpirationSeconds) {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
-        this.tokenExpirationSeconds = tokenExpirationSeconds;
+    public TokenService(MemberService memberService, PasswordEncoder passwordEncoder, TokenProvider tokenProvider) {
+        this.memberService = memberService;
+        this.passwordEncoder = passwordEncoder;
+        this.tokenProvider = tokenProvider;
     }
 
-    public Token generate(String email) {
-        Date expiredAt = new Date(System.currentTimeMillis() + tokenExpirationSeconds * 1000L);
-        String jwtToken = Jwts.builder()
-                .subject(TOKEN_SUBJECT)
-                .expiration(expiredAt)
-                .claim(USERNAME_CLAIM, email)
-                .signWith(secretKey)
-                .compact();
-        return JwtToken.from(jwtToken);
+    public Token generate(LoginRequest loginRequest) {
+        Member member = memberService.getByEmail(loginRequest.email());
+        validatePassword(loginRequest, member);
+        return tokenProvider.generate(member.getEmail());
+    }
+
+    private void validatePassword(LoginRequest loginRequest, Member member) {
+        if (isNotMatchedPassword(loginRequest, member)) {
+            throw new NotMatchedPasswordException();
+        }
+    }
+
+    private boolean isNotMatchedPassword(LoginRequest loginRequest, Member member) {
+        return !passwordEncoder.matches(loginRequest.password(), member.getPassword());
     }
 }

@@ -1,4 +1,4 @@
-package shopping.auth.application;
+package shopping.token.application;
 
 import shopping.common.BusinessException;
 import shopping.common.ErrorCode;

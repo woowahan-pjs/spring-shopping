@@ -1,4 +1,4 @@
-package shopping.auth.application;
+package shopping.token.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -12,13 +12,13 @@ import shopping.member.application.MemberNotFoundException;
 import shopping.member.application.MemberService;
 import shopping.member.application.TestMemberRepository;
 import shopping.member.domain.MemberCreate;
-import shopping.token.application.TokenService;
 import shopping.token.domain.Token;
+import shopping.token.domain.TokenProvider;
 
-class AuthenticationServiceTest {
+class TokenServiceTest {
     private static final String JWT_SECRET = "dGVzdA==dGVzdA==dGVzdA==dGVzdA==dGVzdA==dGVzdA==dGVzdA==dGVzdA==dGVzdA==dGVzdA==dGVzdA==dGVzdA==dGVzdA==";
 
-    private AuthenticationService authenticationService;
+    private TokenService tokenService;
     private MemberService memberService;
 
     @BeforeEach
@@ -26,10 +26,10 @@ class AuthenticationServiceTest {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         memberService = new MemberService(new TestMemberRepository(), passwordEncoder);
 
-        authenticationService = new AuthenticationService(
+        tokenService = new TokenService(
                 memberService,
                 passwordEncoder,
-                new TokenService(JWT_SECRET, 60)
+                new TokenProvider(JWT_SECRET, 60)
         );
     }
 
@@ -42,7 +42,7 @@ class AuthenticationServiceTest {
         memberService.register(new MemberCreate(email, password));
 
         // when
-        Token token = authenticationService.authenticate(new LoginRequest(email, password));
+        Token token = tokenService.generate(new LoginRequest(email, password));
 
         // then
         assertThat(token).isNotNull();
@@ -59,7 +59,7 @@ class AuthenticationServiceTest {
         // when
         // then
         String invalidPassword = "invalid";
-        assertThatThrownBy(() -> authenticationService.authenticate(new LoginRequest(email, invalidPassword)))
+        assertThatThrownBy(() -> tokenService.generate(new LoginRequest(email, invalidPassword)))
                 .isInstanceOf(NotMatchedPasswordException.class);
     }
 
@@ -73,7 +73,7 @@ class AuthenticationServiceTest {
         // when
         // then
         String invalidEmail = "invalid@invalid.com";
-        assertThatThrownBy(() -> authenticationService.authenticate(new LoginRequest(invalidEmail, "password")))
+        assertThatThrownBy(() -> tokenService.generate(new LoginRequest(invalidEmail, "password")))
                 .isInstanceOf(MemberNotFoundException.class);
     }
 }

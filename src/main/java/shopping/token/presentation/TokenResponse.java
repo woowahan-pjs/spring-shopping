@@ -1,4 +1,4 @@
-package shopping.auth.presentation;
+package shopping.token.presentation;
 
 import shopping.token.domain.Token;
 
