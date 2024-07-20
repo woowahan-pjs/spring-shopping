@@ -11,6 +11,8 @@ public enum ErrorCode {
 
     // 401
     NOT_MATCHED_PASSWORD(401, "비밀번호가 일치하지 않습니다."),
+    REQUIRES_TOKEN(401, "토큰이 필요합니다."),
+    INVALID_TOKEN(401, "유효하지 않은 토큰 형식입니다."),
 
     // 404
     MEMBER_NOT_FOUND(404, "가입되지 않은 이메일 입니다."),

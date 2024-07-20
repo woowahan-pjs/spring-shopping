@@ -76,4 +76,21 @@ class TokenServiceTest {
         assertThatThrownBy(() -> tokenService.generate(new LoginRequest(invalidEmail, "password")))
                 .isInstanceOf(MemberNotFoundException.class);
     }
+
+    @DisplayName("authorizationHeader 값으로 부터 email을 추출할 수 있다.")
+    @Test
+    void test4() {
+        // given
+        String email = "email@email.com";
+        String password = "password";
+        memberService.register(new MemberCreate(email, password));
+        Token token = tokenService.generate(new LoginRequest(email, password));
+
+        // when
+        String extractedEmail = tokenService.extractEmail("Bearer " + token.getValue());
+
+        // then
+        assertThat(extractedEmail).isEqualTo(email);
+    }
+
 }

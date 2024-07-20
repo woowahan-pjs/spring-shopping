@@ -34,4 +34,8 @@ public class TokenService {
     private boolean isNotMatchedPassword(LoginRequest loginRequest, Member member) {
         return !passwordEncoder.matches(loginRequest.password(), member.getPassword());
     }
+
+    public String extractEmail(String authorizationHeader) {
+        return tokenProvider.extractEmail(authorizationHeader);
+    }
 }
