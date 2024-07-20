@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import org.springframework.util.StringUtils;
 import shopping.product.exception.InvalidProductException;
 
+import java.util.Objects;
+
 @Entity
 public class Product {
     @Id
@@ -87,4 +89,16 @@ public class Product {
         this.price = product.getPrice();
     }
 
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final Product product = (Product) o;
+        return Objects.equals(id, product.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }
