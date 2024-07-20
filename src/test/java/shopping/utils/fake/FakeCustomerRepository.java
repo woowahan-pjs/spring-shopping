@@ -15,7 +15,7 @@ public class FakeCustomerRepository implements CustomerRepository {
     @Override
     public Customer save(final CustomerSignUpRequest customerSignUpRequest) {
         final boolean exist = storage.values().stream()
-                .map(Customer::getEmail)
+                .map(Customer::email)
                 .anyMatch(it -> it.equals(customerSignUpRequest.email()));
         if (exist) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
@@ -37,7 +37,7 @@ public class FakeCustomerRepository implements CustomerRepository {
     @Override
     public Customer findByEmail(final String email) {
         return storage.values().stream()
-                .filter(it -> it.getEmail().equals(email))
+                .filter(it -> it.email().equals(email))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException());
     }

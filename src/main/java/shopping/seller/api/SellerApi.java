@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shopping.customer.domain.AccessToken;
+import shopping.auth.AccessToken;
 import shopping.seller.api.dto.SellerSignInHttpRequest;
 import shopping.seller.api.dto.SellerSignInHttpResponse;
 import shopping.seller.api.dto.SellerSignUpHttpRequest;
@@ -32,8 +32,8 @@ public class SellerApi {
     }
 
     @PostMapping("/sign-in")
-    public ResponseEntity<?> signIn(@RequestBody final SellerSignInHttpRequest sellerSignInHttpRequest) {
-        final AccessToken accessToken = sellerSignInUseCase.signIn(sellerSignInHttpRequest.toCommand());
-        return ResponseEntity.ok(new SellerSignInHttpResponse(accessToken.accessToken()));
+    public ResponseEntity<SellerSignInHttpResponse> signIn(@RequestBody final SellerSignInHttpRequest sellerSignInHttpRequest) {
+        final String accessToken = sellerSignInUseCase.signIn(sellerSignInHttpRequest.toCommand());
+        return ResponseEntity.ok(new SellerSignInHttpResponse(accessToken));
     }
 }

@@ -15,7 +15,7 @@ public class FakeSellerRepository implements SellerRepository {
     @Override
     public Seller save(final SellerSignUpRequest sellerSignUpRequest) {
         final boolean exist = storage.values().stream()
-                .map(Seller::getEmail)
+                .map(Seller::email)
                 .anyMatch(it -> it.equals(sellerSignUpRequest.email()));
         if (exist) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
@@ -36,7 +36,7 @@ public class FakeSellerRepository implements SellerRepository {
 
     @Override
     public Seller findByEmail(final String email) {
-        return storage.values().stream().filter(it -> it.getEmail().equals(email))
+        return storage.values().stream().filter(it -> it.email().equals(email))
                 .findAny()
                 .orElseThrow(RuntimeException::new);
     }

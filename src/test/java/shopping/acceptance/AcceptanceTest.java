@@ -8,9 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import shopping.utils.testcontainer.MySQLTestContainerExtension;
+import shopping.utils.testcontainer.RedisTestContainerExtension;
 
 
-@Extensions({@ExtendWith(MySQLTestContainerExtension.class)})
+@Extensions({
+        @ExtendWith(MySQLTestContainerExtension.class),
+        @ExtendWith(RedisTestContainerExtension.class)
+})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class AcceptanceTest {
 

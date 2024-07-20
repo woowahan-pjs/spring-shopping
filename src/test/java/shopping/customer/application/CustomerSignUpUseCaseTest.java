@@ -36,12 +36,12 @@ public class CustomerSignUpUseCaseTest {
 
         assertAll(
                 () -> assertNotNull(customer),
-                () -> assertThat(customer.getEmail()).isEqualTo(EMAIL),
-                () -> assertThat(customer.getName()).isEqualTo(NAME),
-                () -> assertThat(customer.getPassword()).isEqualTo(PASSWORD),
-                () -> assertThat(customer.getBirth()).isEqualTo(BIRTH),
-                () -> assertThat(customer.getAddress()).isEqualTo(ADDRESS),
-                () -> assertThat(customer.getPhone()).isEqualTo(PHONE)
+                () -> assertThat(customer.email()).isEqualTo(EMAIL),
+                () -> assertThat(customer.name()).isEqualTo(NAME),
+                () -> assertThat(customer.password()).isEqualTo(PASSWORD),
+                () -> assertThat(customer.birth()).isEqualTo(BIRTH),
+                () -> assertThat(customer.address()).isEqualTo(ADDRESS),
+                () -> assertThat(customer.phone()).isEqualTo(PHONE)
         );
     }
 

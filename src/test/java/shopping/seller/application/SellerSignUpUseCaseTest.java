@@ -36,12 +36,12 @@ public class SellerSignUpUseCaseTest {
 
         assertAll(
                 () -> assertNotNull(seller),
-                () -> assertThat(seller.getEmail()).isEqualTo(EMAIL),
-                () -> assertThat(seller.getName()).isEqualTo(NAME),
-                () -> assertThat(seller.getPassword()).isEqualTo(PASSWORD),
-                () -> assertThat(seller.getBirth()).isEqualTo(BIRTH),
-                () -> assertThat(seller.getAddress()).isEqualTo(ADDRESS),
-                () -> assertThat(seller.getPhone()).isEqualTo(PHONE)
+                () -> assertThat(seller.email()).isEqualTo(EMAIL),
+                () -> assertThat(seller.name()).isEqualTo(NAME),
+                () -> assertThat(seller.password()).isEqualTo(PASSWORD),
+                () -> assertThat(seller.birth()).isEqualTo(BIRTH),
+                () -> assertThat(seller.address()).isEqualTo(ADDRESS),
+                () -> assertThat(seller.phone()).isEqualTo(PHONE)
         );
     }
 

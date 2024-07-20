@@ -4,11 +4,12 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import shopping.auth.AccessTokenRepository;
 import shopping.common.exception.PasswordMissMatchException;
-import shopping.customer.domain.AccessToken;
 import shopping.seller.application.command.SellerSignInCommand;
 import shopping.seller.domain.SellerRepository;
 import shopping.seller.domain.SellerSignUpRequest;
+import shopping.utils.fake.FakeAccessTokenRepository;
 import shopping.utils.fake.FakeSellerRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,13 +19,15 @@ import static shopping.utils.fixture.SellerFixture.*;
 @DisplayName("고객 로그인 테스트")
 public class SellerSignInUseCaseTest {
 
+    private AccessTokenRepository accessTokenRepository;
     private SellerRepository sellerRepository;
     private SellerSignInUseCase sellerSignInUseCase;
 
     @BeforeEach
     void setUp() {
         sellerRepository = new FakeSellerRepository();
-        sellerSignInUseCase = new SellerSignInService(sellerRepository);
+        accessTokenRepository = new FakeAccessTokenRepository();
+        sellerSignInUseCase = new SellerSignInService(accessTokenRepository, sellerRepository);
     }
 
     @DisplayName("회원가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")
@@ -33,9 +36,9 @@ public class SellerSignInUseCaseTest {
         sellerRepository.save(new SellerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
 
         final SellerSignInCommand SellerSignInCommand = new SellerSignInCommand(EMAIL, PASSWORD);
-        final AccessToken accessToken = sellerSignInUseCase.signIn(SellerSignInCommand);
+        final String accessToken = sellerSignInUseCase.signIn(SellerSignInCommand);
 
-        assertThat(accessToken.accessToken()).isNotBlank();
+        assertThat(accessToken).isNotBlank();
     }
 
     @DisplayName("회원가입이 되어있지만 이메일을 잘못 입력하면 로그인을 할 수 없다.")

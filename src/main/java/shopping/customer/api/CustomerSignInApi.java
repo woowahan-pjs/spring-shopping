@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import shopping.customer.api.dto.CustomerSignInHttpRequest;
 import shopping.customer.api.dto.CustomerSignInHttpResponse;
 import shopping.customer.application.CustomerSignInUseCase;
-import shopping.customer.domain.AccessToken;
 
 @RequestMapping("/api/customers/sign-in")
 @RestController
@@ -22,13 +21,7 @@ public class CustomerSignInApi {
 
     @PostMapping
     public ResponseEntity<CustomerSignInHttpResponse> signIn(@RequestBody final CustomerSignInHttpRequest request) {
-        final AccessToken accessToken = customerSignInUseCase.signIn(request.toCommand());
-        return ResponseEntity.ok(new CustomerSignInHttpResponse(accessToken.accessToken()));
+        final String accessToken = customerSignInUseCase.signIn(request.toCommand());
+        return ResponseEntity.ok(new CustomerSignInHttpResponse(accessToken));
     }
 }
-
-
-
-
-
-
