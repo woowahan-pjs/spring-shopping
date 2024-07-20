@@ -4,6 +4,8 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import shopping.auth.domain.AuthenticationPrincipal;
+import shopping.auth.domain.LoginMember;
 import shopping.product.dto.ProductRequest;
 import shopping.product.dto.ProductResponse;
 import shopping.wishlist.application.WishService;
@@ -29,9 +31,9 @@ public class WishController {
         return ResponseEntity.created(URI.create("/wishList/" + wish.getWishSn())).body(wish);
     }
 
-    @GetMapping("member/{id}")
-    public ResponseEntity<WishResponse.WishListRes> findAllWishList(@PathVariable Long id) {
-        WishResponse.WishListRes wishList = wishService.findAllWishList(id);
+    @GetMapping("member")
+    public ResponseEntity<WishResponse.WishListRes> findAllWishList(@AuthenticationPrincipal LoginMember loginMember) {
+        WishResponse.WishListRes wishList = wishService.findAllWishList(loginMember.getId());
         return ResponseEntity.ok().body(wishList);
     }
 

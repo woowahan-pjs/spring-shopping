@@ -66,6 +66,6 @@ public class Member extends BaseEntity {
     }
 
     private boolean isNotEqualPassword(String password) {
-        return this.password.equals(password);
+        return !this.password.equals(password);
     }
 }
