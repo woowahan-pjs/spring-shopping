@@ -1,6 +1,8 @@
 package shopping.product.exception;
 
-public class PurgoMalumRetrieveFailException extends RuntimeException {
+import shopping.common.exception.InternalServerException;
+
+public class PurgoMalumRetrieveFailException extends InternalServerException {
     public PurgoMalumRetrieveFailException(final String message) {
         super(message);
     }

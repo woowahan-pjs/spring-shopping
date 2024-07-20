@@ -1,6 +1,8 @@
 package shopping.product.exception;
 
-public class InvalidProductException extends RuntimeException {
+import shopping.common.exception.BadRequestException;
+
+public class InvalidProductException extends BadRequestException {
     public InvalidProductException(final String message) {
         super(message);
     }

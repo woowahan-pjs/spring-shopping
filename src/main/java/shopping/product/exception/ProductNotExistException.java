@@ -1,6 +1,8 @@
 package shopping.product.exception;
 
-public class ProductNotExistException extends RuntimeException {
+import shopping.common.exception.NotFoundException;
+
+public class ProductNotExistException extends NotFoundException {
     public ProductNotExistException(final String message) {
         super(message);
     }
