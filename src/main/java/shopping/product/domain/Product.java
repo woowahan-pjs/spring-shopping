@@ -36,14 +36,26 @@ public class Product {
     }
 
     private void validate(final String imagePath, final int amount, final long price) {
-        if (!StringUtils.hasText(imagePath)) {
-            throw new ProductCreateException("상품 이미지는 필수값 입니다.");
+        validateImagePath(imagePath);
+        validateAmount(amount);
+        validatePrice(price);
+    }
+
+    private void validatePrice(final long price) {
+        if (price < 0) {
+            throw new ProductCreateException("상품 가격은 0보다 커야합니다.");
         }
+    }
+
+    private void validateAmount(final int amount) {
         if (amount < 0) {
             throw new ProductCreateException("상품 수량은 0보다 커야합니다.");
         }
-        if (price < 0) {
-            throw new ProductCreateException("상품 가격은 0보다 커야합니다.");
+    }
+
+    private void validateImagePath(final String imagePath) {
+        if (!StringUtils.hasText(imagePath)) {
+            throw new ProductCreateException("상품 이미지는 필수값 입니다.");
         }
     }
 
@@ -66,4 +78,24 @@ public class Product {
     public long getPrice() {
         return price;
     }
+
+    public void modifyName(final String name) {
+        this.name = new ProductName(name);
+    }
+
+    public void modifyImagePath(final String imagePath) {
+        validateImagePath(imagePath);
+        this.imagePath = imagePath;
+    }
+
+    public void modifyAmount(final int amount) {
+        validateAmount(amount);
+        this.amount = amount;
+    }
+
+    public void modifyPrice(final long price) {
+        validatePrice(price);
+        this.price = price;
+    }
+
 }

@@ -1,7 +1,9 @@
 package shopping.product.application;
 
 import org.springframework.stereotype.Service;
-import shopping.product.application.dto.ProductRequest;
+import org.springframework.transaction.annotation.Transactional;
+import shopping.product.application.dto.ProductCreateRequest;
+import shopping.product.application.dto.ProductModifyRequest;
 import shopping.product.application.dto.ProductResponse;
 import shopping.product.domain.Product;
 import shopping.product.exception.ProductNotExistException;
@@ -18,8 +20,8 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public ProductResponse save(final ProductRequest createRequest) {
-        final Product product = productRepository.save(ProductRequest.toEntity(createRequest));
+    public ProductResponse save(final ProductCreateRequest createRequest) {
+        final Product product = productRepository.save(ProductCreateRequest.toEntity(createRequest));
 
         return ProductResponse.from(product);
     }
@@ -32,13 +34,20 @@ public class ProductService {
     }
 
     public ProductResponse findById(final Long id) {
-        return productRepository.findById(id)
-                .map(ProductResponse::from)
-                .orElseThrow(()-> new ProductNotExistException("상품이 존재하지 않습니다."));
+        final Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotExistException("상품이 존재하지 않습니다."));
+        return ProductResponse.from(product);
     }
 
-    public void update(final Long id, final ProductRequest request) {
+    @Transactional
+    public void update(final Long id, final ProductModifyRequest request) {
+        final Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotExistException("상품이 존재하지 않습니다."));
 
+        product.modifyName(request.getName());
+        product.modifyImagePath(request.getImagePath());
+        product.modifyAmount(request.getAmount());
+        product.modifyPrice(request.getPrice());
     }
 
     public void delete(final Long id) {

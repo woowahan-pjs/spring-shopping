@@ -156,7 +156,8 @@ public class ProductAcceptanceTest {
         return RestAssured
                 .given().pathParam("id", 상품_식별자)
                 .body(body)
-                .when().put("/products")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().put("/products/{id}")
                 .then().extract();
     }
 

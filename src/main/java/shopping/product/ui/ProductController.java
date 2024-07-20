@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shopping.product.application.ProductService;
-import shopping.product.application.dto.ProductRequest;
+import shopping.product.application.dto.ProductCreateRequest;
+import shopping.product.application.dto.ProductModifyRequest;
 import shopping.product.application.dto.ProductResponse;
 
 import java.net.URI;
@@ -27,7 +28,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody final ProductRequest request) {
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody final ProductCreateRequest request) {
         final ProductResponse productResponse = productService.save(request);
         return ResponseEntity.created(URI.create("/products/" + productResponse.getId())).body(productResponse);
     }
@@ -43,7 +44,7 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> modifyProduct(@PathVariable final Long id, @RequestBody final ProductRequest request) {
+    public ResponseEntity<ProductResponse> modifyProduct(@PathVariable("id") final Long id, @RequestBody final ProductModifyRequest request) {
         productService.update(id, request);
         return ResponseEntity.ok().build();
     }
