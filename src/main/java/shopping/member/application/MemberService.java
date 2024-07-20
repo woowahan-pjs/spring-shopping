@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shopping.member.application.dto.MemberRequest;
 import shopping.member.application.dto.MemberResponse;
 import shopping.member.domain.Member;
+import shopping.member.exception.InvalidMemberException;
 import shopping.member.exception.MemberNotFoundException;
 import shopping.member.repository.MemberRepository;
 
@@ -19,6 +20,11 @@ public class MemberService {
 
     @Transactional
     public MemberResponse save(final MemberRequest request) {
+        memberRepository.findByEmail(request.getEmail())
+                .ifPresent(member -> {
+                    throw new InvalidMemberException("중복된 email 입니다.");
+                });
+
         final Member member = memberRepository.save(request.toEntity());
 
         return MemberResponse.from(member);
