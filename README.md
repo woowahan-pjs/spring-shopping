@@ -21,12 +21,12 @@
 
 ### 회원
 
-| 한글명  | 영문명       | 설명        |
-|------|-----------|-----------|
-| 회원   | Member    | 회원        |
-| 식별자  | Id        | 회원의 고유번호  |
-| 이메일  | Email     | 회원의 이메일   |
-| 비밀번호 | Password  | 회원의 비밀번호  |
+| 한글명  | 영문명      | 설명       |
+|------|----------|----------|
+| 회원   | Member   | 회원       |
+| 식별자  | Id       | 회원의 고유번호 |
+| 이메일  | Email    | 회원의 이메일  |
+| 비밀번호 | Password | 회원의 비밀번호 |
 
 ### 위시 리스트
 
@@ -38,6 +38,8 @@
 | 회원    | Member   | 상품을 담은 회원            |
 
 ## 인수조건
+
+### 상품
 
 - Feature: 상품 등록
 
@@ -99,4 +101,31 @@ public class ProductRequest {
 
 ```java
 // DELETE /products/{id}
+```
+
+### 회원
+
+- Feature: 회원 등록
+
+> Scenario: 회원가입 함<br>
+> When 회원가입을 하면<br>
+> Then 정상처리 된다<br>
+
+```java
+// POST /members
+public class MemberRequest {
+    private String email;
+    private String password;
+}
+```
+
+- Feature: 회원 탈퇴
+
+> Scenario: 회원 탈퇴함<br>
+> Given 회원가입을 하고<br>
+> When 회원 탈퇴를 하면<br>
+> Then 회원이 탈퇴된다.<br>
+
+```java
+// DELETE /members/{id}
 ```
