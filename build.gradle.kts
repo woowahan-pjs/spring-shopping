@@ -39,6 +39,9 @@ dependencies {
 
     // rest-assured
     testImplementation("io.rest-assured:rest-assured:5.5.0")
+
+    // crypto
+    implementation("org.springframework.security:spring-security-crypto")
 }
 
 kotlin {
