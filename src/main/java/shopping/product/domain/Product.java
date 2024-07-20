@@ -30,7 +30,12 @@ public class Product {
     }
 
     public Product(final String name, final String imagePath, final int amount, final long price) {
+        this(null, name, imagePath, amount, price);
+    }
+
+    public Product(final Long id, final String name, final String imagePath, final int amount, final long price) {
         validate(imagePath, amount, price);
+        this.id = id;
         this.name = new ProductName(name);
         this.imagePath = imagePath;
         this.amount = amount;

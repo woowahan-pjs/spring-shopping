@@ -18,8 +18,8 @@ public class WishlistItemsTest {
     @BeforeEach
     void setUp() {
         wishlistItems = new WishlistItems();
-        첫번째_상품 = new Product("첫번째상품", "/path/image1", 100, 10_000);
-        두번째_상품 = new Product("두번째상품", "/path/image2", 200, 20_000);
+        첫번째_상품 = new Product(1L, "첫번째상품", "/path/image1", 100, 10_000);
+        두번째_상품 = new Product(2L, "두번째상품", "/path/image2", 200, 20_000);
     }
 
     @Test
