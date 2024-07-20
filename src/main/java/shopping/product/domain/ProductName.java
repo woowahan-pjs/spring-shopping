@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 public class ProductName {
     public static final int MIN_LENGTH = 15;
-    private static final Pattern ALLOWED_SPECIAL_CHARACTERS_PATTERN = Pattern.compile("^[a-zA-Z0-9 ()\\[\\]+\\-&/_]*$");
+    private static final Pattern ALLOWED_SPECIAL_CHARACTERS_PATTERN = Pattern.compile("^[a-zA-Z0-9ㄱ-ㅎ가-힣 ()\\[\\]+\\-&/_]*$");
 
     private final String name;
 
