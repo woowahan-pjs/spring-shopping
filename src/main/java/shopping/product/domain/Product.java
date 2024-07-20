@@ -46,4 +46,24 @@ public class Product {
             throw new ProductCreateException("상품 가격은 0보다 커야합니다.");
         }
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name.getName();
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public long getPrice() {
+        return price;
+    }
 }

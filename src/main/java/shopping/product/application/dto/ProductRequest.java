@@ -1,5 +1,7 @@
 package shopping.product.application.dto;
 
+import shopping.product.domain.Product;
+
 public class ProductRequest {
     private String name;
     private String imagePath;
@@ -7,6 +9,10 @@ public class ProductRequest {
     private long price;
 
     public ProductRequest() {
+    }
+
+    public static Product toEntity(final ProductRequest createRequest) {
+        return new Product(createRequest.name, createRequest.imagePath, createRequest.amount, createRequest.price);
     }
 
     public String getName() {
