@@ -1,4 +1,4 @@
-package shopping.auth;
+package shopping.common.auth;
 
 public class AuthorizationContext {
     private static final ThreadLocal<AuthorizationUser> authorizationContext = new InheritableThreadLocal<>();

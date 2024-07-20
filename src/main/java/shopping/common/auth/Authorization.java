@@ -1,4 +1,4 @@
-package shopping.auth;
+package shopping.common.auth;
 
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;

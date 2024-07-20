@@ -77,4 +77,15 @@ public class CustomerAcceptanceSteps {
     public static void validateCustomerSignInInvalidPassword(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
+
+    public static void 회원가입됨(final String email, final String name, final String password, final String birth, final String address, final String phone) {
+        final ExtractableResponse<Response> response = signUp(email, name, password, birth, address, phone);
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
+    public static String 로그인됨(final String email, final String password) {
+        final ExtractableResponse<Response> responseExtractableResponse = signIn(email, password);
+        validateCustomerSignIn(responseExtractableResponse);
+        return responseExtractableResponse.body().jsonPath().getString("access_token");
+    }
 }

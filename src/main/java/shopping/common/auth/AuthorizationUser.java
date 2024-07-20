@@ -1,4 +1,4 @@
-package shopping.auth;
+package shopping.common.auth;
 
 public class AuthorizationUser {
     private final long userId;

@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shopping.auth.Authorization;
-import shopping.auth.AuthorizationType;
-import shopping.auth.AuthorizationUser;
+import shopping.common.auth.Authorization;
+import shopping.common.auth.AuthorizationType;
+import shopping.common.auth.AuthorizationUser;
 import shopping.shop.api.dto.ShopRegistrationRequest;
 import shopping.shop.application.ShopRegistrationUseCase;
 

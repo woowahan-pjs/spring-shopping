@@ -4,7 +4,7 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import shopping.auth.AccessTokenRepository;
+import shopping.common.auth.AccessTokenRepository;
 import shopping.common.exception.PasswordMissMatchException;
 import shopping.seller.application.command.SellerSignInCommand;
 import shopping.seller.domain.SellerRepository;

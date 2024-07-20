@@ -1,4 +1,4 @@
-package shopping.auth;
+package shopping.common.auth;
 
 public interface AccessTokenRepository {
     boolean exists(AuthorizationType authorizationType, String accessToken);

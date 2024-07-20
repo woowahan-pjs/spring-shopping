@@ -1,7 +1,7 @@
 package shopping.utils.fake;
 
-import shopping.auth.AccessTokenRepository;
-import shopping.auth.AuthorizationType;
+import shopping.common.auth.AccessTokenRepository;
+import shopping.common.auth.AuthorizationType;
 
 import java.util.HashMap;
 import java.util.Map;

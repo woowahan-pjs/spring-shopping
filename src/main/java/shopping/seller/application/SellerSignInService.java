@@ -1,8 +1,8 @@
 package shopping.seller.application;
 
 import org.springframework.stereotype.Service;
-import shopping.auth.AccessTokenRepository;
-import shopping.auth.AuthorizationType;
+import shopping.common.auth.AccessTokenRepository;
+import shopping.common.auth.AuthorizationType;
 import shopping.common.exception.PasswordMissMatchException;
 import shopping.seller.application.command.SellerSignInCommand;
 import shopping.seller.domain.Seller;

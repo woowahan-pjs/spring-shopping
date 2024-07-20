@@ -29,4 +29,8 @@ public class ShopAcceptanceSteps {
     public static void validateRegistration(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
+
+    public static void validateRegistrationInvalidCustomer(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 }

@@ -5,7 +5,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shopping.auth.AccessToken;
 import shopping.seller.api.dto.SellerSignInHttpRequest;
 import shopping.seller.api.dto.SellerSignInHttpResponse;
 import shopping.seller.api.dto.SellerSignUpHttpRequest;

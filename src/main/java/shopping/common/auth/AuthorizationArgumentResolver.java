@@ -1,4 +1,4 @@
-package shopping.auth;
+package shopping.common.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.coyote.BadRequestException;
