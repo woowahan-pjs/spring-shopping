@@ -79,23 +79,12 @@ public class Product {
         return price;
     }
 
-    public void modifyName(final String name) {
-        this.name = new ProductName(name);
-    }
-
-    public void modifyImagePath(final String imagePath) {
-        validateImagePath(imagePath);
-        this.imagePath = imagePath;
-    }
-
-    public void modifyAmount(final int amount) {
-        validateAmount(amount);
-        this.amount = amount;
-    }
-
-    public void modifyPrice(final long price) {
-        validatePrice(price);
-        this.price = price;
+    public void modify(final Product product) {
+        validate(product.imagePath, product.amount, product.price);
+        this.name = new ProductName(product.getName());
+        this.imagePath = product.getImagePath();
+        this.amount = product.getAmount();
+        this.price = product.getPrice();
     }
 
 }

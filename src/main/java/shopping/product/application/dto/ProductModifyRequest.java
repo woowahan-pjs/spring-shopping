@@ -1,5 +1,7 @@
 package shopping.product.application.dto;
 
+import shopping.product.domain.Product;
+
 public class ProductModifyRequest {
     private String name;
     private String imagePath;
@@ -30,5 +32,9 @@ public class ProductModifyRequest {
 
     public long getPrice() {
         return price;
+    }
+
+    public Product toEntity() {
+        return new Product(name, imagePath, amount, price);
     }
 }

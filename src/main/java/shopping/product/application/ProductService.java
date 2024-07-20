@@ -52,10 +52,7 @@ public class ProductService {
 
         final Product product = findProductById(id);
 
-        product.modifyName(request.getName());
-        product.modifyImagePath(request.getImagePath());
-        product.modifyAmount(request.getAmount());
-        product.modifyPrice(request.getPrice());
+        product.modify(request.toEntity());
     }
 
     private void validateProfanity(final String name) {
