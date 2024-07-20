@@ -22,20 +22,13 @@ public class ProductName {
             throw new InvalidProductException("상품 이름은 필수값 입니다.");
         }
 
-        // 이름 길이 검증
         if (name.length() > MIN_LENGTH) {
             throw new InvalidProductException("상품 이름은 15자 이하여야 합니다.");
         }
 
-        // 특수 문자 검증
         if (!ALLOWED_SPECIAL_CHARACTERS_PATTERN.matcher(name).matches()) {
             throw new InvalidProductException("상품 이름에 허용되지 않는 특수 문자가 포함되어 있습니다.");
         }
-
-//        // 비속어 필터링 (PurgoMalum API 사용)
-//        if (containsProfanity(name)) {
-//            throw new ProductCreateException("상품 이름에 비속어가 포함될 수 없습니다.");
-//        }
     }
 
     public String getName() {
