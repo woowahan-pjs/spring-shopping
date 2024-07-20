@@ -129,3 +129,13 @@ public class MemberRequest {
 ```java
 // DELETE /members/{id}
 ```
+
+- Feature: 로그인
+
+> Scenario: 회원이 로그인 함<br>
+> When email 과 password 으로 로그인 요청시 유효한 회원이면<br>
+> Then 토큰을 발급 받을 수 있다
+
+```java
+// POST /auth/login
+```
