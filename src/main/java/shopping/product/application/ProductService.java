@@ -33,8 +33,7 @@ public class ProductService {
     }
 
     public ProductResponse findById(final Long id) {
-        final Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotExistException("상품이 존재하지 않습니다."));
+        final Product product = findProductById(id);
 
         return ProductResponse.from(product);
     }
@@ -51,8 +50,7 @@ public class ProductService {
     public void update(final Long id, final ProductModifyRequest request) {
         validateProfanity(request.getName());
 
-        final Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotExistException("상품이 존재하지 않습니다."));
+        final Product product = findProductById(id);
 
         product.modifyName(request.getName());
         product.modifyImagePath(request.getImagePath());
@@ -68,9 +66,13 @@ public class ProductService {
 
     @Transactional
     public void delete(final Long id) {
-        final Product product = productRepository.findById(id)
-                .orElseThrow(() -> new ProductNotExistException("상품이 존재하지 않습니다."));
+        final Product product = findProductById(id);
 
         productRepository.delete(product);
+    }
+
+    private Product findProductById(final Long id) {
+        return productRepository.findById(id)
+                .orElseThrow(() -> new ProductNotExistException("상품이 존재하지 않습니다."));
     }
 }
