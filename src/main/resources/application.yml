@@ -12,3 +12,9 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.hibernate.type: trace
+
+security:
+  jwt:
+    token:
+      secret-key: gPKyL4QNaWOsz3aezarP76HonPC57hfErC0hmGpb5wO50VG5XKCQhMBbcB6fRFvq
+      expire-length: 3600000 # 60 * 60 * 1000

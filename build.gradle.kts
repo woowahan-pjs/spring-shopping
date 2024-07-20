@@ -34,6 +34,9 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
+    // jwt
+    implementation("io.jsonwebtoken:jjwt:0.12.6")
+
     // rest-assured
     testImplementation("io.rest-assured:rest-assured:5.5.0")
 }
