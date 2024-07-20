@@ -6,6 +6,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import java.util.ArrayList;
 import java.util.List;
+import shopping.member.client.exception.NotFoundWishProductException;
 
 @Embeddable
 public class WishProducts {
@@ -14,14 +15,29 @@ public class WishProducts {
     @JoinColumn(name = "email", nullable = false)
     private List<WishProduct> wishProducts = new ArrayList<>();
 
-    protected WishProducts(){
+    protected WishProducts() {
     }
 
-    public void wish(WishProduct wishProduct) {
-        this.wishProducts.add(wishProduct);
+    public void wish(WishProduct addWishProduct) {
+        validateAddWishItem(addWishProduct);
+        this.wishProducts.add(addWishProduct);
     }
 
-    public void unWish(WishProduct wishProduct) {
-        this.wishProducts.removeIf(delWishProduct -> delWishProduct.isSameProduct(wishProduct));
+    private void validateAddWishItem(final WishProduct addWishProduct) {
+        final boolean match = this.wishProducts.stream()
+                .anyMatch(wishProduct -> wishProduct.isSameProduct(addWishProduct));
+        if (match) {
+            throw new DuplicateWishProductException(
+                    "중복되는 상품에 하트를 누를 수 없습니다. " + addWishProduct.getProductId());
+        }
+    }
+
+    public void unWish(WishProduct delWishProduct) {
+        final boolean removed = this.wishProducts.removeIf(
+                wishProduct -> wishProduct.isSameProduct(delWishProduct));
+        if (!removed) {
+            throw new NotFoundWishProductException(
+                    "해당 위시상품을 찾을 수 없습니다. " + delWishProduct.getProductId());
+        }
     }
 }

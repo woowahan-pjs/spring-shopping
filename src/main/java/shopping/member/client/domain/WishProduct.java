@@ -28,4 +28,8 @@ public class WishProduct extends BaseEntity {
     public boolean isSameProduct(WishProduct wishProduct){
         return this.productId.equals(wishProduct.productId);
     }
+
+    public Long getProductId() {
+        return productId;
+    }
 }
