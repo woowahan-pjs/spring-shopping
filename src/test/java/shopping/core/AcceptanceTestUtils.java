@@ -18,6 +18,14 @@ public class AcceptanceTestUtils {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
+    public static void 존재하지_않는_리소스_요청(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    public static void 인증_부족_요청(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+    }
+
     public static String 등록_식별자_추출(final ExtractableResponse<Response> response) {
         final String[] split = response.header("Location").split("/");
         return split[split.length - 1];
