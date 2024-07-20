@@ -41,7 +41,7 @@ public class ProductAcceptanceTest {
     @Test
     void 상품_등록_테스트() {
         // when
-        final ExtractableResponse<Response> response = 상품_등록_요청();
+        final var response = 상품_등록_요청();
 
         // then
         등록요청_성공(response);
@@ -59,7 +59,7 @@ public class ProductAcceptanceTest {
     @Test
     void 상품_비속어_등록_테스트() {
         // when
-        final ExtractableResponse<Response> response = 상품_비속어_등록_요청();
+        final var response = 상품_비속어_등록_요청();
 
         // then
         잘못된_요청(response);
@@ -75,10 +75,10 @@ public class ProductAcceptanceTest {
     @Test
     void 상품_상세_조회_테스트() {
         // given
-        final ExtractableResponse<Response> 상품_등록_응답 = 상품_등록_요청();
+        final var 상품_등록_응답 = 상품_등록_요청();
 
         // when
-        final ExtractableResponse<Response> response = 상품_상세_조회_요청(상품_식별자(상품_등록_응답));
+        final var response = 상품_상세_조회_요청(상품_식별자(상품_등록_응답));
 
         // then
         상품이_상세_조회_된다(response);
@@ -93,10 +93,10 @@ public class ProductAcceptanceTest {
     @Test
     void 상품_수정_테스트() {
         // given
-        final ExtractableResponse<Response> 상품_등록_응답 = 상품_등록_요청();
+        final var 상품_등록_응답 = 상품_등록_요청();
 
         // when
-        final ExtractableResponse<Response> response = 상품_수정_요청(상품_식별자(상품_등록_응답));
+        final var response = 상품_수정_요청(상품_식별자(상품_등록_응답));
 
         // then
         수정요청_성공(response);
@@ -113,10 +113,10 @@ public class ProductAcceptanceTest {
     @Test
     void 상품_삭제_테스트() {
         // given
-        final ExtractableResponse<Response> 상품_등록_응답 = 상품_등록_요청();
+        final var 상품_등록_응답 = 상품_등록_요청();
 
         // when
-        final ExtractableResponse<Response> response = 상품_삭제_요청(상품_식별자(상품_등록_응답));
+        final var response = 상품_삭제_요청(상품_식별자(상품_등록_응답));
 
         // then
         삭제요청_성공(response);
