@@ -2,6 +2,7 @@ package shopping.wishlist.presesntation;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +23,8 @@ public class WishProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> add(@AuthenticationPrincipal UserDetails userDetails, @RequestBody WishProductRequest wishProductRequest) {
-        wishProductService.add(userDetails.email(), wishProductRequest.productId());
+    public ResponseEntity<Void> add(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ProductIdRequest productIdRequest) {
+        wishProductService.add(userDetails.email(), productIdRequest.productId());
         return ResponseEntity.ok().build();
     }
 
@@ -31,5 +32,11 @@ public class WishProductController {
     public ResponseEntity<WishProductsResponse> getAll(@AuthenticationPrincipal UserDetails userDetails) {
         List<WishProduct> wishProducts = wishProductService.getAll(userDetails.email());
         return ResponseEntity.ok(WishProductsResponse.from(wishProducts));
+    }
+
+    @DeleteMapping
+    public ResponseEntity<Void> remove(@AuthenticationPrincipal UserDetails userDetails, @RequestBody ProductIdRequest productIdRequest) {
+        wishProductService.remove(userDetails.email(), productIdRequest.productId());
+        return ResponseEntity.ok().build();
     }
 }

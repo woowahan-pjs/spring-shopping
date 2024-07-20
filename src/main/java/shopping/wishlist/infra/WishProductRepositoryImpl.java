@@ -26,4 +26,10 @@ public class WishProductRepositoryImpl implements WishProductRepository {
     public List<WishProduct> findAllByMember(Member member) {
         return wishProductJpaRepository.findAllByMemberWithProduct(member);
     }
+
+    @Transactional
+    @Override
+    public void remove(Member member, Long productId) {
+        wishProductJpaRepository.deleteByMemberAndProductId(member, productId);
+    }
 }

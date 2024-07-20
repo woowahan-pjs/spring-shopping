@@ -32,4 +32,9 @@ public class WishProductService {
         Member member = memberService.getByEmail(email);
         return wishProductRepository.findAllByMember(member);
     }
+
+    public void remove(String email, Long productId) {
+        Member member = memberService.getByEmail(email);
+        wishProductRepository.remove(member, productId);
+    }
 }
