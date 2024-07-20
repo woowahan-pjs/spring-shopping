@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 class ProductServiceTest {
 
     @InjectMocks
-    private ProductService productService;
+    private ProductServiceImpl productService;
 
     @Mock
     private ProductRepository productRepository;
