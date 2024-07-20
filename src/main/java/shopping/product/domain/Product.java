@@ -6,7 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.springframework.util.StringUtils;
-import shopping.product.exception.ProductCreateException;
+import shopping.product.exception.InvalidProductException;
 
 @Entity
 public class Product {
@@ -43,19 +43,19 @@ public class Product {
 
     private void validatePrice(final long price) {
         if (price < 0) {
-            throw new ProductCreateException("상품 가격은 0보다 커야합니다.");
+            throw new InvalidProductException("상품 가격은 0보다 커야합니다.");
         }
     }
 
     private void validateAmount(final int amount) {
         if (amount < 0) {
-            throw new ProductCreateException("상품 수량은 0보다 커야합니다.");
+            throw new InvalidProductException("상품 수량은 0보다 커야합니다.");
         }
     }
 
     private void validateImagePath(final String imagePath) {
         if (!StringUtils.hasText(imagePath)) {
-            throw new ProductCreateException("상품 이미지는 필수값 입니다.");
+            throw new InvalidProductException("상품 이미지는 필수값 입니다.");
         }
     }
 

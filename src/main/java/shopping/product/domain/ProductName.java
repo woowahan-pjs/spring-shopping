@@ -1,7 +1,7 @@
 package shopping.product.domain;
 
 import org.springframework.util.StringUtils;
-import shopping.product.exception.ProductCreateException;
+import shopping.product.exception.InvalidProductException;
 
 import java.util.Objects;
 import java.util.regex.Pattern;
@@ -19,17 +19,17 @@ public class ProductName {
 
     private void validate(final String name) {
         if (!StringUtils.hasText(name)) {
-            throw new ProductCreateException("상품 이름은 필수값 입니다.");
+            throw new InvalidProductException("상품 이름은 필수값 입니다.");
         }
 
         // 이름 길이 검증
         if (name.length() > MIN_LENGTH) {
-            throw new ProductCreateException("상품 이름은 15자 이하여야 합니다.");
+            throw new InvalidProductException("상품 이름은 15자 이하여야 합니다.");
         }
 
         // 특수 문자 검증
         if (!ALLOWED_SPECIAL_CHARACTERS_PATTERN.matcher(name).matches()) {
-            throw new ProductCreateException("상품 이름에 허용되지 않는 특수 문자가 포함되어 있습니다.");
+            throw new InvalidProductException("상품 이름에 허용되지 않는 특수 문자가 포함되어 있습니다.");
         }
 
 //        // 비속어 필터링 (PurgoMalum API 사용)
