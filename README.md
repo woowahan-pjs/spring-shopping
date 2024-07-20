@@ -139,3 +139,32 @@ public class MemberRequest {
 ```java
 // POST /auth/login
 ```
+
+### 위시리스트
+
+- Feature: 위시리스트에 상품 추가
+
+> Scenario: 위시리스트에 상품을 추가함<br>
+> Given 로그인이 되어있고<br>
+> Given 상품이 등록되어 있고<br>
+> When 위시리스트에 상품을 추가하면<br>
+> Then 위시리스트 목록 조회 시 추가한 상품을 찾을 수 있다<br>
+
+```java
+// POST /wishlist
+public class WishlistRequest {
+    private Long productId;
+}
+```
+
+- Feature: 위시리스트에 상품 삭제
+
+> Scenario: 위시리스트에 상품을 삭제함<br>
+> Given 로그인이 되어있고<br>
+> Given 위시리스트에 상품이 추가되어 있고<br>
+> When 위시리스트에 상품을 삭제하면<br>
+> Then 위시리스트 목록 조회 시 상품이 제거 되어있다.<br>
+
+```java
+// DELETE /wishlist/{id}
+```
