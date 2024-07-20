@@ -72,4 +72,15 @@ public class SellerAcceptanceSteps {
     public static void validateSellerSignInInvalidPassword(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
+
+    public static void 회원가입되었다(final String email, final String name, final String password, final String birth, final String address, final String phone) {
+        final ExtractableResponse<Response> responseExtractableResponse = signUp(email, name, password, birth, address, phone);
+        validateSellerSignUp(responseExtractableResponse);
+    }
+
+    public static String 로그인되었다(final String email, final String password) {
+        final ExtractableResponse<Response> responseExtractableResponse = signIn(email, password);
+        validateSellerSignIn(responseExtractableResponse);
+        return responseExtractableResponse.body().jsonPath().getString("access_token");
+    }
 }
