@@ -18,8 +18,8 @@ public class ProductCreateRequest {
         this.price = price;
     }
 
-    public static Product toEntity(final ProductCreateRequest createRequest) {
-        return new Product(createRequest.name, createRequest.imagePath, createRequest.amount, createRequest.price);
+    public Product toEntity() {
+        return new Product(name, imagePath, amount, price);
     }
 
     public String getName() {

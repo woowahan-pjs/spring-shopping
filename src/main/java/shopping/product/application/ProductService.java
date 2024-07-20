@@ -39,9 +39,9 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse save(final ProductCreateRequest createRequest) {
-        validateProfanity(createRequest.getName());
-        final Product product = productRepository.save(ProductCreateRequest.toEntity(createRequest));
+    public ProductResponse save(final ProductCreateRequest request) {
+        validateProfanity(request.getName());
+        final Product product = productRepository.save(request.toEntity());
 
         return ProductResponse.from(product);
     }
