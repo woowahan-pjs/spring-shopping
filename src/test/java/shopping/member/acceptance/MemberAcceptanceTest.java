@@ -15,6 +15,7 @@ import static shopping.core.AcceptanceTestUtils.등록요청_성공;
 import static shopping.core.AcceptanceTestUtils.삭제요청_성공;
 
 
+@DisplayName("회원관련 기능")
 @AcceptanceTest
 class MemberAcceptanceTest {
     public static final String EMAIL = "test@test.com";

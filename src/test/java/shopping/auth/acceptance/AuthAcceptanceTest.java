@@ -14,6 +14,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("로그인 관련 기능")
 @AcceptanceTest
 public class AuthAcceptanceTest extends AcceptanceTestAuthBase {
 

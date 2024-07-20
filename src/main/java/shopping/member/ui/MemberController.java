@@ -29,7 +29,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<MemberResponse> removeMember(@PathVariable("id") final Long id) {
+    public ResponseEntity<Void> removeMember(@PathVariable("id") final Long id) {
         memberService.delete(id);
         return ResponseEntity.noContent().build();
     }
