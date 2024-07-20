@@ -19,6 +19,7 @@ import static shopping.core.AcceptanceTestUtils.등록_식별자_추출;
 import static shopping.core.AcceptanceTestUtils.등록요청_성공;
 import static shopping.core.AcceptanceTestUtils.삭제요청_성공;
 import static shopping.core.AcceptanceTestUtils.수정요청_성공;
+import static shopping.core.AcceptanceTestUtils.잘못된_요청;
 
 @DisplayName("상품 관련 기능")
 @AcceptanceTest
@@ -48,6 +49,20 @@ public class ProductAcceptanceTest {
 
         // then
         상품_목록_조회_시_상품을_찾을_수_있다(상품이름);
+    }
+
+    /**
+     * When 상품이름에 비속어가 포함되어 있으면
+     * Then 상품 등록에 실패한다
+     */
+    @DisplayName("상품등록 시 비속어가 포함되어 있으면 실패한다")
+    @Test
+    void 상품_비속어_등록_테스트() {
+        // when
+        final ExtractableResponse<Response> response = 상품_비속어_등록_요청();
+
+        // then
+        잘못된_요청(response);
     }
 
 
@@ -108,9 +123,18 @@ public class ProductAcceptanceTest {
         상품_목록_조회_시_상품을_찾을_수_없다(상품이름);
     }
 
-
     public ExtractableResponse<Response> 상품_등록_요청() {
         final Map<String, ?> body = Map.of("name", 상품이름, "imagePath", 상품_이미지_경로, "amount", 상품_수량, "price", 상품_가격);
+        return RestAssured
+                .given()
+                .body(body)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .when().post("/products")
+                .then().extract();
+    }
+
+    public ExtractableResponse<Response> 상품_비속어_등록_요청() {
+        final Map<String, ?> body = Map.of("name", "병신", "imagePath", 상품_이미지_경로, "amount", 상품_수량, "price", 상품_가격);
         return RestAssured
                 .given()
                 .body(body)
