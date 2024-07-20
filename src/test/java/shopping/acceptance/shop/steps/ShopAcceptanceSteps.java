@@ -6,6 +6,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import shopping.shop.api.dto.ShopRegistrationRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,17 +28,5 @@ public class ShopAcceptanceSteps {
 
     public static void validateRegistration(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
-    }
-}
-
-class ShopRegistrationRequest {
-    private String name;
-
-    public ShopRegistrationRequest(final String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
     }
 }
