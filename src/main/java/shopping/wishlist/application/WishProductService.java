@@ -1,5 +1,6 @@
 package shopping.wishlist.application;
 
+import java.util.List;
 import org.springframework.stereotype.Service;
 import shopping.member.application.MemberService;
 import shopping.member.domain.Member;
@@ -25,5 +26,10 @@ public class WishProductService {
 
         WishProduct wishProduct = WishProduct.of(member, product);
         wishProductRepository.save(wishProduct);
+    }
+
+    public List<WishProduct> getAll(String email) {
+        Member member = memberService.getByEmail(email);
+        return wishProductRepository.findAllByMember(member);
     }
 }

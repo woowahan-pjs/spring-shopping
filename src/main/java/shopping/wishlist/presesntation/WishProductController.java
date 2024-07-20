@@ -1,6 +1,8 @@
 package shopping.wishlist.presesntation;
 
+import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shopping.auth.AuthenticationPrincipal;
 import shopping.auth.UserDetails;
 import shopping.wishlist.application.WishProductService;
+import shopping.wishlist.domain.WishProduct;
 
 @RequestMapping("/wish-products")
 @RestController
@@ -22,5 +25,11 @@ public class WishProductController {
     public ResponseEntity<Void> add(@AuthenticationPrincipal UserDetails userDetails, @RequestBody WishProductRequest wishProductRequest) {
         wishProductService.add(userDetails.email(), wishProductRequest.productId());
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<WishProductsResponse> getAll(@AuthenticationPrincipal UserDetails userDetails) {
+        List<WishProduct> wishProducts = wishProductService.getAll(userDetails.email());
+        return ResponseEntity.ok(WishProductsResponse.from(wishProducts));
     }
 }
