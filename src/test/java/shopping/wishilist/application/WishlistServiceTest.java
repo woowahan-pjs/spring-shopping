@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shopping.product.application.ProductProvider;
 import shopping.product.domain.Product;
+import shopping.product.fixture.ProductFixture;
 import shopping.wishilist.WishlistRepository;
 import shopping.wishilist.application.dto.WishlistRequest;
 import shopping.wishilist.application.dto.WishlistResponse;
@@ -37,7 +38,7 @@ public class WishlistServiceTest {
     void addProductToWishlist() {
         final Long productId = 1L;
         final WishlistRequest request = new WishlistRequest(productId);
-        final Product product = new Product("첫번째상품", "/path/image1", 100, 10_000);
+        final Product product = ProductFixture.createProduct(productId, "첫번째상품", "/path/image1", 100, 10_000);
 
         final Wishlist wishlist = new Wishlist(MEMBER_ID);
         when(wishlistRepository.findByMemberId(anyLong())).thenReturn(Optional.of(wishlist));
@@ -53,7 +54,7 @@ public class WishlistServiceTest {
     void createWishlistAndAddProduct() {
         final Long productId = 1L;
         final WishlistRequest request = new WishlistRequest(productId);
-        final Product product = new Product("첫번째상품", "/path/image1", 100, 10_000);
+        final Product product = ProductFixture.createProduct(productId, "첫번째상품", "/path/image1", 100, 10_000);
 
         when(wishlistRepository.findByMemberId(anyLong())).thenReturn(Optional.empty());
         when(productProvider.findProductById(anyLong())).thenReturn(product);
@@ -67,7 +68,7 @@ public class WishlistServiceTest {
     @DisplayName("회원의 위시리스트에서 상품을 제거할 수 있다")
     void removeProductFromWishlist() {
         final Long productId = 1L;
-        final Product product = new Product("첫번째상품", "/path/image1", 100, 10_000);
+        final Product product = ProductFixture.createProduct(productId, "첫번째상품", "/path/image1", 100, 10_000);
 
         final Wishlist wishlist = new Wishlist(MEMBER_ID);
         wishlist.add(product);

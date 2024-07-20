@@ -12,6 +12,7 @@ import shopping.product.application.dto.ProductResponse;
 import shopping.product.domain.Product;
 import shopping.product.exception.InvalidProductException;
 import shopping.product.exception.ProductNotExistException;
+import shopping.product.fixture.ProductFixture;
 import shopping.product.infra.ProfanityChecker;
 import shopping.product.repository.ProductRepository;
 
@@ -133,6 +134,6 @@ class ProductServiceTest {
     }
 
     private Product createProduct() {
-        return new Product("productName", "/image/path", 10, 1000);
+        return ProductFixture.createProduct("productName", "/image/path", 10, 1000);
     }
 }

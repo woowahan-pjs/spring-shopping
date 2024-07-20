@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shopping.product.domain.Product;
+import shopping.product.fixture.ProductFixture;
 import shopping.wishilist.exception.InvalidWishlistException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,8 +19,8 @@ public class WishlistItemsTest {
     @BeforeEach
     void setUp() {
         wishlistItems = new WishlistItems();
-        첫번째_상품 = new Product(1L, "첫번째상품", "/path/image1", 100, 10_000);
-        두번째_상품 = new Product(2L, "두번째상품", "/path/image2", 200, 20_000);
+        첫번째_상품 = ProductFixture.createProduct(1L, "첫번째상품", "/path/image1", 100, 10_000);
+        두번째_상품 = ProductFixture.createProduct(2L, "두번째상품", "/path/image2", 200, 20_000);
     }
 
     @Test
