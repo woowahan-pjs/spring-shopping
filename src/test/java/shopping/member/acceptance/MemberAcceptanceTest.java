@@ -24,9 +24,9 @@ class MemberAcceptanceTest {
     @DisplayName("회원가입을 한다.")
     @Test
     void 회원_등록_테스트() {
-        final var response = 회원_등록_요청();
+        final var 회원_등록_응답 = 회원_등록_요청();
 
-        등록요청_성공(response);
+        등록요청_성공(회원_등록_응답);
     }
 
     @DisplayName("회원탈퇴를 한다.")
@@ -34,9 +34,9 @@ class MemberAcceptanceTest {
     void deleteMember() {
         final var 회원_등록_응답 = 회원_등록_요청();
 
-        final var response = 회원_삭제_요청(등록_식별자_추출(회원_등록_응답));
+        final var 회원_삭제_응답 = 회원_삭제_요청(등록_식별자_추출(회원_등록_응답));
 
-        삭제요청_성공(response);
+        삭제요청_성공(회원_삭제_응답);
     }
 
     public ExtractableResponse<Response> 회원_등록_요청() {

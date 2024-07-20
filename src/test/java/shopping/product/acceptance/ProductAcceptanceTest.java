@@ -41,11 +41,11 @@ public class ProductAcceptanceTest {
     @Test
     void 상품_등록_테스트() {
         // when
-        final var response = 상품_등록_요청();
+        final var 상품_등록_응답 = 상품_등록_요청();
 
         // then
-        등록요청_성공(response);
-        상품_등록_요청이_성공한다(response);
+        등록요청_성공(상품_등록_응답);
+        상품_등록_요청이_성공한다(상품_등록_응답);
 
         // then
         상품_목록_조회_시_상품을_찾을_수_있다(상품이름);
@@ -59,10 +59,10 @@ public class ProductAcceptanceTest {
     @Test
     void 상품_비속어_등록_테스트() {
         // when
-        final var response = 상품_비속어_등록_요청();
+        final var 상품_비속어_등록_응답 = 상품_비속어_등록_요청();
 
         // then
-        잘못된_요청(response);
+        잘못된_요청(상품_비속어_등록_응답);
     }
 
 
@@ -78,10 +78,10 @@ public class ProductAcceptanceTest {
         final var 상품_등록_응답 = 상품_등록_요청();
 
         // when
-        final var response = 상품_상세_조회_요청(상품_식별자(상품_등록_응답));
+        final var 상품_상세_조회_응답 = 상품_상세_조회_요청(상품_식별자(상품_등록_응답));
 
         // then
-        상품이_상세_조회_된다(response);
+        상품이_상세_조회_된다(상품_상세_조회_응답);
     }
 
     /**
@@ -96,10 +96,10 @@ public class ProductAcceptanceTest {
         final var 상품_등록_응답 = 상품_등록_요청();
 
         // when
-        final var response = 상품_수정_요청(상품_식별자(상품_등록_응답));
+        final var 상품_수정_응답 = 상품_수정_요청(상품_식별자(상품_등록_응답));
 
         // then
-        수정요청_성공(response);
+        수정요청_성공(상품_수정_응답);
         상품_목록_조회_시_상품을_찾을_수_있다(수정된_상품이름);
     }
 
@@ -116,10 +116,10 @@ public class ProductAcceptanceTest {
         final var 상품_등록_응답 = 상품_등록_요청();
 
         // when
-        final var response = 상품_삭제_요청(상품_식별자(상품_등록_응답));
+        final var 상품_삭제_응답 = 상품_삭제_요청(상품_식별자(상품_등록_응답));
 
         // then
-        삭제요청_성공(response);
+        삭제요청_성공(상품_삭제_응답);
         상품_목록_조회_시_상품을_찾을_수_없다(상품이름);
     }
 
