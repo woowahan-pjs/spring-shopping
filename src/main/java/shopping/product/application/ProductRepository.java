@@ -13,6 +13,4 @@ public interface ProductRepository {
     Page<Product> findAllBy(Pageable pageable);
 
     void delete(Product product);
-
-    boolean existsById(Long id);
 }

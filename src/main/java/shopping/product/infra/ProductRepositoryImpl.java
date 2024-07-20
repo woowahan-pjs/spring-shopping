@@ -34,9 +34,4 @@ public class ProductRepositoryImpl implements ProductRepository {
     public void delete(Product product) {
         productJpaRepository.delete(product);
     }
-
-    @Override
-    public boolean existsById(Long id) {
-        return productJpaRepository.existsById(id);
-    }
 }
