@@ -26,8 +26,8 @@ public class WishController {
     }
 
     @PostMapping()
-    public ResponseEntity<WishResponse.WishDetail> addWishList(@RequestBody @Valid WishRequest.RegWishList request) {
-        WishResponse.WishDetail wish = wishService.addWishList(request);
+    public ResponseEntity<WishResponse.WishDetail> addWishList(@AuthenticationPrincipal LoginMember loginMember, @RequestBody @Valid WishRequest.RegWishList request) {
+        WishResponse.WishDetail wish = wishService.addWishList(loginMember, request);
         return ResponseEntity.created(URI.create("/wishList/" + wish.getWishSn())).body(wish);
     }
 

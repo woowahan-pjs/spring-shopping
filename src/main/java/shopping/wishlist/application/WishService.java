@@ -2,6 +2,7 @@ package shopping.wishlist.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.auth.domain.LoginMember;
 import shopping.exception.BadRequestException;
 import shopping.exception.NotFoundException;
 import shopping.member.application.MemberService;
@@ -32,11 +33,10 @@ public class WishService {
 
 
     @Transactional
-    public WishResponse.WishDetail addWishList(WishRequest.RegWishList request) {
+    public WishResponse.WishDetail addWishList(LoginMember loginMember, WishRequest.RegWishList request) {
         Product product = productService.findProductByPrdctSn(request.getPrdctSn());
-        checkExistMember(request.getMbrSn());
-        checkExistWish(request.getMbrSn(), product);
-        Wish persistWishList = wishRepository.save(request.toWishList(product));
+        checkExistWish(loginMember.getId(), product);
+        Wish persistWishList = wishRepository.save(request.toWishList(loginMember.getId(), product));
 
         return WishResponse.WishDetail.from(persistWishList);
     }

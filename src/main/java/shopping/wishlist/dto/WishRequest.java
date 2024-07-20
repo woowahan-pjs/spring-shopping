@@ -17,13 +17,8 @@ public class WishRequest {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class RegWishList {
-
-        private Long mbrSn;
-
         private Long prdctSn;
-
-
-        public Wish toWishList(Product product) {
+        public Wish toWishList(Long mbrSn, Product product) {
             return Wish.builder()
                     .mbrSn(mbrSn)
                     .product(product)
