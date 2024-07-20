@@ -8,7 +8,7 @@ import shopping.auth.ui.AuthenticationPrincipalArgumentResolver;
 
 import java.util.List;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class AuthConfig implements WebMvcConfigurer {
     private final JwtTokenProvider jwtTokenProvider;
 
