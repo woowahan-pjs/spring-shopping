@@ -62,8 +62,8 @@ public class WishService {
     }
 
     @Transactional
-    public void deleteWishById(Long id) {
-        Wish persistWish = findWishById(id);
+    public void deleteWishById(LoginMember loginMember, Long id) {
+        Wish persistWish = findWishByIdAndMbrSn(id, loginMember.getId());
         wishRepository.delete(persistWish);
     }
 
@@ -73,10 +73,6 @@ public class WishService {
         return new WishList(wishList);
     }
 
-    private Wish findWishById(Long wishSn) {
-        return wishRepository.findById(wishSn)
-                .orElseThrow(() -> new NotFoundException("해당 위시 리스트가 존재하지 않습니다."));
-    }
 
     private Wish findWishByIdAndMbrSn(Long wishSn, Long mbrSn) {
         return Optional.ofNullable(wishRepository.findByWishSnAndMbrSn(wishSn, mbrSn))
