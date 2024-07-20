@@ -164,7 +164,7 @@ public class ProductAcceptanceTest {
     private ExtractableResponse<Response> 상품_삭제_요청(final String 상품_식별자) {
         return RestAssured
                 .given().pathParam("id", 상품_식별자)
-                .when().delete("/products")
+                .when().delete("/products/{id}")
                 .then().extract();
     }
 
