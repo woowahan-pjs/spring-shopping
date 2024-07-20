@@ -17,11 +17,20 @@ public class MemberService {
     }
 
     public void register(MemberCreate memberCreate) {
-        if (memberRepository.existsByEmail(Email.from(memberCreate.email()))) {
+        if (isAlreadyRegistered(Email.from(memberCreate.email()))) {
             throw new AlreadyRegisteredEmailException();
         }
 
         Member member = Member.of(memberCreate, passwordEncoder);
         memberRepository.save(member);
+    }
+
+    public boolean isAlreadyRegistered(Email email) {
+        return memberRepository.existsByEmail(email);
+    }
+
+    public Member getByEmail(String email) {
+        return memberRepository.findByEmail(Email.from(email))
+                .orElseThrow(() -> new MemberNotFoundException(email));
     }
 }

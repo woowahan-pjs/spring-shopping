@@ -1,5 +1,6 @@
 package shopping.member.infra;
 
+import java.util.Optional;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,5 +31,11 @@ public class MemberRepositoryImpl implements MemberRepository {
         } catch (DataIntegrityViolationException e) {
             throw new AlreadyRegisteredEmailException();
         }
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Optional<Member> findByEmail(Email email) {
+        return memberJpaRepository.findByEmail(email);
     }
 }
