@@ -56,6 +56,11 @@ dependencies {
 
     // feign
     implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+
+    // google guava
+    implementation("com.google.guava:guava:33.2.1-jre")
+
+    testImplementation("io.rest-assured:rest-assured:5.4.0")
 }
 
 dependencyManagement {
