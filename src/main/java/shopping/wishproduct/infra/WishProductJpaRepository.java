@@ -1,4 +1,4 @@
-package shopping.wishlist.infra;
+package shopping.wishproduct.infra;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import shopping.member.domain.Member;
 import shopping.product.domain.Product;
-import shopping.wishlist.domain.WishProduct;
+import shopping.wishproduct.domain.WishProduct;
 
 public interface WishProductJpaRepository extends JpaRepository<WishProduct, Long> {
     boolean existsByMemberAndProduct(Member member, Product product);

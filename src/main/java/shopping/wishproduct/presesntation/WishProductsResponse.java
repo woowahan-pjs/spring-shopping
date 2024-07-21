@@ -1,7 +1,7 @@
-package shopping.wishlist.presesntation;
+package shopping.wishproduct.presesntation;
 
 import java.util.List;
-import shopping.wishlist.domain.WishProduct;
+import shopping.wishproduct.domain.WishProduct;
 
 public record WishProductsResponse(List<WishProductResponse> wishProducts) {
     public static WishProductsResponse from(List<WishProduct> wishProducts) {

@@ -1,4 +1,4 @@
-package shopping.wishlist.domain;
+package shopping.wishproduct.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;

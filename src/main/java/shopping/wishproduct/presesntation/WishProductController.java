@@ -1,4 +1,4 @@
-package shopping.wishlist.presesntation;
+package shopping.wishproduct.presesntation;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shopping.auth.AuthenticationPrincipal;
 import shopping.auth.UserDetails;
-import shopping.wishlist.application.WishProductService;
-import shopping.wishlist.domain.WishProduct;
+import shopping.wishproduct.application.WishProductService;
+import shopping.wishproduct.domain.WishProduct;
 
 @RequestMapping("/wish-products")
 @RestController

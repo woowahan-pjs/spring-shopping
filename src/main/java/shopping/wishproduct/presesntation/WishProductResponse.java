@@ -1,6 +1,6 @@
-package shopping.wishlist.presesntation;
+package shopping.wishproduct.presesntation;
 
-import shopping.wishlist.domain.WishProduct;
+import shopping.wishproduct.domain.WishProduct;
 
 public record WishProductResponse(
         Long id,

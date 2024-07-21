@@ -1,4 +1,4 @@
-package shopping.wishlist.application;
+package shopping.wishproduct.application;
 
 import shopping.common.BusinessException;
 import shopping.common.ErrorCode;

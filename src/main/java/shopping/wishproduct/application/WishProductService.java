@@ -1,4 +1,4 @@
-package shopping.wishlist.application;
+package shopping.wishproduct.application;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
@@ -6,7 +6,7 @@ import shopping.member.application.MemberService;
 import shopping.member.domain.Member;
 import shopping.product.application.ProductService;
 import shopping.product.domain.Product;
-import shopping.wishlist.domain.WishProduct;
+import shopping.wishproduct.domain.WishProduct;
 
 @Service
 public class WishProductService {

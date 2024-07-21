@@ -1,4 +1,4 @@
-package shopping.wishlist.presesntation;
+package shopping.wishproduct.presesntation;
 
 public record ProductIdRequest(Long productId) {
 }

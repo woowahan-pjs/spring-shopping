@@ -1,11 +1,11 @@
-package shopping.wishlist.application;
+package shopping.wishproduct.application;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import shopping.member.domain.Member;
 import shopping.product.domain.Product;
-import shopping.wishlist.domain.WishProduct;
+import shopping.wishproduct.domain.WishProduct;
 
 public class TestWishProductRepository implements WishProductRepository {
     private final Map<Long, WishProduct> database = new HashMap<>();

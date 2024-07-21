@@ -1,4 +1,4 @@
-package shopping.wishlist.application;
+package shopping.wishproduct.application;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
