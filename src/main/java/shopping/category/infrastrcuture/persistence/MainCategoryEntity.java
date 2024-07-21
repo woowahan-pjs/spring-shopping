@@ -32,12 +32,13 @@ public class MainCategoryEntity {
     public MainCategoryEntity() {
     }
 
-    public MainCategoryEntity(final String name, final int order, final long createdBy, final long modifiedBy) {
+    public MainCategoryEntity(final Long id, final String name, final int order, final long createdBy, final long modifiedBy, final List<SubCategoryEntity> subCategoryEntities) {
+        this.id = id;
         this.name = name;
         this.order = order;
         this.createdBy = createdBy;
         this.modifiedBy = modifiedBy;
-        this.subCategoryEntities = new ArrayList<>();
+        this.subCategoryEntities = subCategoryEntities;
     }
 
     public Long getId() {

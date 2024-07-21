@@ -14,7 +14,6 @@ import shopping.utils.fixture.CustomerFixture;
 import shopping.utils.fixture.SellerFixture;
 
 import static shopping.utils.fixture.CategoryFixture.*;
-import static shopping.utils.fixture.SellerFixture.PHONE;
 
 
 @DisplayName("카테고리 인수 테스트")
@@ -61,9 +60,13 @@ public class CategoryAcceptanceTest extends AcceptanceTest {
             CategoryAcceptanceSteps.validateDuplicatedName(response);
         }
 
-        @DisplayName("서브 카테고리를 생성할 수 있다")
+        @DisplayName("어드민은 서브 카테고리를 추가할 수 있다")
         @Test
         void registerSubCategory() {
+            AdminAcceptanceSteps.회원가입됨(AdminFixture.EMAIL, AdminFixture.NAME, AdminFixture.PASSWORD);
+            final String accessToken = AdminAcceptanceSteps.로그인됨(AdminFixture.EMAIL, AdminFixture.PASSWORD);
+            final long 메인카테고리_아이디 = CategoryAcceptanceSteps.메인카테고리생성됨(NAME, ORDER, accessToken);
+            CategoryAcceptanceSteps.registerSub(SUB_NAME, SUB_ORDER, 메인카테고리_아이디, accessToken);
         }
 
         @DisplayName("카테고리를 숨김 처리할 수 있다")
