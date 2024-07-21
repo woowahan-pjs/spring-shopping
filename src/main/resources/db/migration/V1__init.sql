@@ -41,3 +41,11 @@ create table if not exists wish (
 )
     comment '위시 리스트';
 
+create table if not exists slang (
+                        slang_sn bigint auto_increment primary key comment '비속어 일련번호',
+                        slang varchar(45) not null comment '비속어',
+                        purgo_malum_yn enum('Y', 'N') not null comment 'purgoMalum 여부',
+                        reg_dt datetime not null comment '등록 일시',
+                        mod_dt datetime null comment '수정 일시'
+)
+    comment '비속어';
