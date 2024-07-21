@@ -10,6 +10,7 @@ import shopping.member.domain.Members;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Data
 public class MemberResponse {
@@ -33,6 +34,12 @@ public class MemberResponse {
             return members.stream()
                     .map(MemberDetail::from)
                     .toList();
+        }
+
+        public List<Long> getMbrSnToList() {
+            return members.stream()
+                    .map(MemberDetail::getMbrSn)
+                    .collect(Collectors.toList());
         }
     }
 

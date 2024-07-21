@@ -23,10 +23,20 @@ public class MemberAcceptanceStepTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> findMemberListRequest() {
+        return RestAssured
+                .given().log().all()
+                .when().get("/members")
+                .then().log().all()
+                .extract();
+    }
+
 
 
     public static void createdMember(ExtractableResponse response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
+
+
 }
