@@ -9,10 +9,11 @@ import shopping.product.domain.Product;
 
 public class TestProductRepository implements ProductRepository {
     private final Map<Long, Product> database = new HashMap<>();
+    private long autoIncrement;
 
     @Override
     public void save(Product product) {
-        database.put(product.getId(), product);
+        database.put(++autoIncrement, product);
     }
 
     @Override

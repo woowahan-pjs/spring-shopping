@@ -44,12 +44,7 @@ public class WishProduct {
     protected WishProduct() {
     }
 
-    WishProduct(Member member, Product product) {
-        this(null, member, product);
-    }
-
-    WishProduct(Long id, Member member, Product product) {
-        this.id = id;
+    private WishProduct(Member member, Product product) {
         this.member = member;
         this.product = product;
     }

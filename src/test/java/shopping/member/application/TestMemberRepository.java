@@ -8,6 +8,7 @@ import shopping.member.domain.Member;
 
 public class TestMemberRepository implements MemberRepository {
     private final Map<Long, Member> database = new HashMap<>();
+    private long autoIncrement;
 
     @Override
     public boolean existsByEmail(Email email) {
@@ -18,7 +19,7 @@ public class TestMemberRepository implements MemberRepository {
 
     @Override
     public void save(Member member) {
-        database.put(member.getId(), member);
+        database.put(++autoIncrement, member);
     }
 
     @Override
