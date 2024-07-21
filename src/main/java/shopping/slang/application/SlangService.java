@@ -1,5 +1,6 @@
 package shopping.slang.application;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.slang.domain.Slang;
@@ -14,10 +15,15 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class SlangService {
 
-    private SlangRepository slangRepository;
+    @Value("${purgo.malum.url}")
+    private String purgoMalumUrl;
 
-    public SlangService(SlangRepository slangRepository){
+    private SlangRepository slangRepository;
+    private PurgoMalumFeign purgoMalumFeign;
+
+    public SlangService(SlangRepository slangRepository, PurgoMalumFeign purgoMalumFeign){
         this.slangRepository = slangRepository;
+        this.purgoMalumFeign = purgoMalumFeign;
     }
 
     @Transactional
@@ -28,6 +34,31 @@ public class SlangService {
 
         return SlangResponse.toSlangResponse(slangs);
     }
+
+    public boolean hasSlang(String value) {
+        if(checkForPurgoMalum(value)) {
+            return true;
+        }
+
+        if(checkForCustomSlang(value)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean checkForCustomSlang(String value) {
+        Slangs psersistSlangs = findAllSlangs();
+        boolean hasCustomSlang = psersistSlangs.hasAnySlang(value);
+        return hasCustomSlang;
+    }
+
+    private boolean checkForPurgoMalum(String value) {
+        String result = purgoMalumFeign.containsSlang(value);
+        boolean containSlang = Boolean.parseBoolean(result);
+        return containSlang;
+    }
+
 
     private Slangs findAllSlangs() {
         List<Slang> slangs = slangRepository.findAll();

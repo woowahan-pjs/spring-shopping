@@ -25,4 +25,10 @@ public class Slangs {
                 .map(Slang::getSlang)
                 .collect(Collectors.toList());
     }
+
+    public boolean hasAnySlang(String value) {
+        String nonBlankValue = value.replaceAll(" ", "");
+        return slangs.stream()
+                .anyMatch(s -> s.hasSlang(nonBlankValue));
+    }
 }

@@ -27,4 +27,7 @@ public class Slang  extends BaseEntity {
     private YesNo purgoMalumYn = YesNo.N;
 
 
+    public boolean hasSlang(String value) {
+        return value.contains(slang);
+    }
 }
