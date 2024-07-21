@@ -4,6 +4,7 @@ package shopping.product.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.util.StringUtils;
 import shopping.BaseEntity;
 import shopping.constant.enums.YesNo;
 
@@ -64,11 +65,13 @@ public class Product extends BaseEntity {
     }
 
     private void updatePrice(BigDecimal price) {
-        this.price = price;
+        if(!this.price.equals(price)) {
+            this.price = price;
+        }
     }
 
     private void updateImage(String image) {
-        if(!image.isBlank()) {
+        if(isNotBlankValue(image)) {
             this.image = image;
         }
     }
@@ -77,6 +80,10 @@ public class Product extends BaseEntity {
         if(!prdctNm.isBlank()) {
             this.prdctNm = new Name(prdctNm);
         }
+    }
+
+    private boolean isNotBlankValue(String value) {
+        return value != null && !value.isBlank();
     }
 
     public void updateDelYn(YesNo yesNo) {
