@@ -12,7 +12,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ShopAcceptanceSteps {
     private static final String SHOP_BASE_URL = "/api/sellers/shops";
-    private static final String REGISTRATION = "/registration";
 
     public static ExtractableResponse<Response> registerShop(final String accessToken, final String name) {
         return RestAssured
@@ -21,7 +20,7 @@ public class ShopAcceptanceSteps {
                 .header(new Header("Authorization", "Bearer " + accessToken))
                 .body(new ShopRegistrationRequest(name))
                 .when()
-                .post(SHOP_BASE_URL + REGISTRATION)
+                .post(SHOP_BASE_URL)
                 .then()
                 .extract();
     }

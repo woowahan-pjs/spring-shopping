@@ -10,6 +10,7 @@ import shopping.common.auth.AuthorizationType;
 import shopping.common.auth.AuthorizationUser;
 import shopping.shop.api.dto.ShopRegistrationRequest;
 import shopping.shop.application.ShopRegistrationUseCase;
+import shopping.shop.domain.Shop;
 
 import java.net.URI;
 
@@ -23,12 +24,12 @@ public class ShopApi {
         this.shopRegistrationUseCase = shopRegistrationUseCase;
     }
 
-    @PostMapping("/registration")
+    @PostMapping
     public ResponseEntity<String> registration(
             @RequestBody final ShopRegistrationRequest request,
             @Authorization({AuthorizationType.SELLER}) final AuthorizationUser authorizationUser
     ) {
-        shopRegistrationUseCase.register(request.toCommand(authorizationUser.getUserId()));
-        return ResponseEntity.created(URI.create("")).build();
+        final Shop shop = shopRegistrationUseCase.register(request.toCommand(authorizationUser.getUserId()));
+        return ResponseEntity.created(URI.create("/api/sellers/shops/" + shop.id())).build();
     }
 }

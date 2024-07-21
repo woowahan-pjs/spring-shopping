@@ -1,4 +1,4 @@
 package shopping.shop.domain;
 
-public class Shop {
+public record Shop(long id, long sellerId, String name) {
 }
