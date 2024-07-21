@@ -1,17 +1,11 @@
 package shopping.member;
 
-import com.google.gson.JsonObject;
-import io.restassured.path.json.JsonPath;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import shopping.AcceptanceTest;
-import shopping.member.dto.MemberRequest;
 import shopping.member.dto.MemberResponse;
 
 import java.util.Arrays;
@@ -44,7 +38,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("회원 목록을 조회한다.")
     @Test
-    void getStations() {
+    void getMembers() {
         // given
         ExtractableResponse<Response> createResponse1 = alreadyCreatedMember(password1, email1);
         ExtractableResponse<Response> createResponse2 = alreadyCreatedMember(password2, password2);
@@ -56,7 +50,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
         findMemberListResponse(response);
         containMemberList(response, Arrays.asList(createResponse1, createResponse2));
     }
-
 
 
 
@@ -74,8 +67,8 @@ public class MemberAcceptanceTest extends AcceptanceTest {
                 .map(it -> Long.parseLong(it.header("Location").split("/")[2]))
                 .collect(Collectors.toList());
 
-        List<MemberResponse.MemberDetail> temp = response.jsonPath().getList("members", MemberResponse.MemberDetail.class);
-        List<Long> resultMbrSns = temp.stream().map(MemberResponse.MemberDetail::getMbrSn).toList();
+        List<MemberResponse.MemberDetail> resultMembers = response.jsonPath().getList("members", MemberResponse.MemberDetail.class);
+        List<Long> resultMbrSns = resultMembers.stream().map(MemberResponse.MemberDetail::getMbrSn).toList();
 
 //        List<Long> resultMbrSns = response.jsonPath().getList(".", MemberResponse.MembersRes.class).stream()
 //                .flatMap(m -> m.getMbrSnToList().stream())

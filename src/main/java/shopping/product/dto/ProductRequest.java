@@ -32,6 +32,21 @@ public class ProductRequest {
         @DecimalMin("0")
         private BigDecimal price;
 
+        public static RegProduct of(String name, BigDecimal price) {
+            return RegProduct.builder()
+                    .prdctNm(name)
+                    .price(price)
+                    .build();
+        }
+
+        public static RegProduct of(String name, BigDecimal price, String image) {
+            return RegProduct.builder()
+                    .prdctNm(name)
+                    .price(price)
+                    .image(image)
+                    .build();
+        }
+
         public Product toProduct() {
             return Product.builder()
                     .prdctNm(new Name(prdctNm))
