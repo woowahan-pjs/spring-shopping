@@ -63,4 +63,10 @@ public class CategoryAcceptanceSteps {
         CategoryAcceptanceSteps.validate(response);
         return response.body().jsonPath().getLong("id");
     }
+
+    public static long 서브카테고리생성됨(final String name, final int order, final long mainCategoryId, final String accessToken) {
+        final ExtractableResponse<Response> response = CategoryAcceptanceSteps.registerSub(name, order, mainCategoryId, accessToken);
+        CategoryAcceptanceSteps.validateSubCategory(response);
+        return response.body().jsonPath().getLong("id");
+    }
 }

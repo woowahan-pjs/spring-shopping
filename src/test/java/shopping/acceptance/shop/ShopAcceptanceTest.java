@@ -8,6 +8,7 @@ import shopping.acceptance.AcceptanceTest;
 import shopping.acceptance.customer.steps.CustomerAcceptanceSteps;
 import shopping.acceptance.seller.steps.SellerAcceptanceSteps;
 import shopping.acceptance.shop.steps.ShopAcceptanceSteps;
+import shopping.utils.fixture.ShopFixture;
 
 import static shopping.utils.fixture.SellerFixture.*;
 
@@ -23,7 +24,7 @@ public class ShopAcceptanceTest extends AcceptanceTest {
     void registerShop() {
         SellerAcceptanceSteps.회원가입됨(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
         final String accessToken = SellerAcceptanceSteps.로그인됨(EMAIL, PASSWORD);
-        final ExtractableResponse<Response> response = ShopAcceptanceSteps.registerShop(accessToken, "우재샵");
+        final ExtractableResponse<Response> response = ShopAcceptanceSteps.registerShop(accessToken, ShopFixture.NAME);
         ShopAcceptanceSteps.validateRegistration(response);
     }
 
@@ -32,7 +33,7 @@ public class ShopAcceptanceTest extends AcceptanceTest {
     void registerShopInvalidCustomer() {
         CustomerAcceptanceSteps.회원가입됨(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
         final String accessToken = CustomerAcceptanceSteps.로그인됨(EMAIL, PASSWORD);
-        final ExtractableResponse<Response> response = ShopAcceptanceSteps.registerShop(accessToken, "우재샵");
+        final ExtractableResponse<Response> response = ShopAcceptanceSteps.registerShop(accessToken, ShopFixture.NAME);
         ShopAcceptanceSteps.validateRegistrationInvalidCustomer(response);
     }
 }

@@ -32,4 +32,10 @@ public class ShopAcceptanceSteps {
     public static void validateRegistrationInvalidCustomer(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
+
+    public static long 상점생성됨(final String accessToken, final String name) {
+        final ExtractableResponse<Response> response = registerShop(accessToken, name);
+        validateRegistration(response);
+        return response.body().jsonPath().getLong("id");
+    }
 }
