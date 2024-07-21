@@ -26,7 +26,7 @@ public class MainCategoryEntity {
     @Column(name = "modified_by")
     private long modifiedBy;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "mainCategory", cascade = CascadeType.ALL)
     private List<SubCategoryEntity> subCategoryEntities;
 
     public MainCategoryEntity() {

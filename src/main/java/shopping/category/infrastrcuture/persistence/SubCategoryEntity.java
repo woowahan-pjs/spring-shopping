@@ -22,6 +22,10 @@ public class SubCategoryEntity {
     @Column(name = "modified_by")
     private long modifiedBy;
 
+    @JoinColumn(name = "main_category_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private MainCategoryEntity mainCategory;
+
     public SubCategoryEntity() {
     }
 

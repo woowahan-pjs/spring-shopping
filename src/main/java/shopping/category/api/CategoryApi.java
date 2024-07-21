@@ -38,8 +38,8 @@ public class CategoryApi {
 
     @PostMapping("/{categoryId}/sub")
     public ResponseEntity<?> registerSubCategory(
+            @PathVariable(name = "categoryId") final long categoryId,
             @RequestBody final SubCategoryRegistrationHttpRequest request,
-            @PathVariable final long categoryId,
             @Authorization({AuthorizationType.ADMIN}) final AuthorizationUser admin
     ) {
         final Category category = subCategoryRegistrationUseCase.registerSub(request.toCommand(categoryId, admin.getUserId()));

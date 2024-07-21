@@ -12,6 +12,7 @@ import shopping.category.infrastrcuture.persistence.MainCategoryEntity;
 import shopping.category.infrastrcuture.persistence.SubCategoryEntity;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 @Component
 public class CategoryRepositoryAdapter implements CategoryRepository {
@@ -51,7 +52,7 @@ public class CategoryRepositoryAdapter implements CategoryRepository {
                 mainCategoryEntity.getModifiedBy(),
                 mainCategoryEntity.getSubCategoryEntities().stream()
                         .map(this::entityToDomain)
-                        .toList()
+                        .collect(Collectors.toList())
         );
     }
 
@@ -79,7 +80,7 @@ public class CategoryRepositoryAdapter implements CategoryRepository {
                 category.modifiedBy(),
                 category.subCategories().stream()
                         .map(this::domainToEntity)
-                        .toList()
+                        .collect(Collectors.toList())
         );
     }
 

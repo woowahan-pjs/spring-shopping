@@ -10,11 +10,9 @@ import shopping.category.api.dto.CategoryRegistrationHttpRequest;
 import shopping.category.api.dto.SubCategoryRegistrationHttpRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static shopping.utils.fixture.CategoryFixture.NAME;
-import static shopping.utils.fixture.CategoryFixture.ORDER;
 
 public class CategoryAcceptanceSteps {
-    private static final String USER_BASE_URL = "/api/categories";
+    private static final String BASE_URL = "/api/categories";
 
     public static ExtractableResponse<Response> registerMain(final String name, final int order, final String accessToken) {
         return RestAssured
@@ -23,7 +21,7 @@ public class CategoryAcceptanceSteps {
                 .header(new Header("Authorization", "Bearer " + accessToken))
                 .body(new CategoryRegistrationHttpRequest(name, order))
                 .when()
-                .post(USER_BASE_URL)
+                .post(BASE_URL)
                 .then()
                 .extract();
     }
@@ -35,7 +33,7 @@ public class CategoryAcceptanceSteps {
                 .header(new Header("Authorization", "Bearer " + accessToken))
                 .body(new SubCategoryRegistrationHttpRequest(name, order))
                 .when()
-                .post(USER_BASE_URL + "/" + mainCategoryId + "/sub")
+                .post(BASE_URL + "/" + mainCategoryId + "/sub")
                 .then()
                 .extract();
     }
@@ -56,8 +54,12 @@ public class CategoryAcceptanceSteps {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
 
+    public static void validateSubCategory(final ExtractableResponse<Response> responseExtractableResponse) {
+        assertThat(responseExtractableResponse.statusCode()).isEqualTo(HttpStatus.CREATED.value());
+    }
+
     public static long 메인카테고리생성됨(final String name, final int order, final String accessToken) {
-        final ExtractableResponse<Response> response = CategoryAcceptanceSteps.registerMain(NAME, ORDER, accessToken);
+        final ExtractableResponse<Response> response = CategoryAcceptanceSteps.registerMain(name, order, accessToken);
         CategoryAcceptanceSteps.validate(response);
         return response.body().jsonPath().getLong("id");
     }
