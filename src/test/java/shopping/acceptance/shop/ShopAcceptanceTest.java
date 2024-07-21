@@ -11,6 +11,7 @@ import shopping.acceptance.shop.steps.ShopAcceptanceSteps;
 
 import static shopping.utils.fixture.SellerFixture.*;
 
+@DisplayName("상점 인수 테스트")
 public class ShopAcceptanceTest extends AcceptanceTest {
 
     @Test

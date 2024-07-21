@@ -27,7 +27,7 @@ public class SellerSignInUseCaseTest {
     void setUp() {
         sellerRepository = new FakeSellerRepository();
         accessTokenRepository = new FakeAccessTokenRepository();
-        sellerSignInUseCase = new SellerSignInService(accessTokenRepository, sellerRepository);
+        sellerSignInUseCase = new SellerService(accessTokenRepository, sellerRepository);
     }
 
     @DisplayName("회원가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")

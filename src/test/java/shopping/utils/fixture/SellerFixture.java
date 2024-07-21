@@ -13,5 +13,4 @@ public class SellerFixture {
     public static final String OTHER_BIRTH = "19970204";
     public static final String OTHER_ADDRESS = "1235 Elvis Street, GreenHil, IL 21704";
     public static final String OTHER_PHONE = "520-124-3567";
-
 }

@@ -1,4 +1,4 @@
-package shopping.seller.infrastructure;
+package shopping.seller.infrastructure.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

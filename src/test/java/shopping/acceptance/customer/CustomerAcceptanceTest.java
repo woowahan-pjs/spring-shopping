@@ -7,12 +7,43 @@ import shopping.acceptance.customer.steps.CustomerAcceptanceSteps;
 
 import static shopping.utils.fixture.CustomerFixture.*;
 
-@DisplayName("고객 로그인 인수 테스트")
-public class CustomerSignInAcceptanceTest extends AcceptanceTest {
+@DisplayName("고객 인수 테스트")
+public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
     void scenario() {
 
+    }
+
+    @DisplayName("이메일과 비밀번호를 입력하면 회원 가입을 할 수 있다.")
+    @Test
+    void signUp() {
+        final var response = CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        CustomerAcceptanceSteps.validateCustomerSignUp(response);
+    }
+
+    @DisplayName("비유효한 이메일을 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotSignUpInvalidEmail() {
+        final var response = CustomerAcceptanceSteps.signUp("test@", NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        CustomerAcceptanceSteps.validateCustomerSignUpInvalidEmail(response);
+    }
+
+    @DisplayName("비유효한 패스워드를 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotSignUpInvalidPassword() {
+        final var response = CustomerAcceptanceSteps.signUp(EMAIL, NAME, "1234", BIRTH, ADDRESS, PHONE);
+        CustomerAcceptanceSteps.validateCustomerSignUpInvalidPassword(response);
+    }
+
+    @DisplayName("이미 존재하는 이메일을 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotSignUpDuplicatedEmail() {
+        final var response = CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        CustomerAcceptanceSteps.validateCustomerSignUp(response);
+
+        final var secondResponse = CustomerAcceptanceSteps.signUp(EMAIL, OTHER_NAME, OTHER_PASSWORD, OTHER_BIRTH, OTHER_ADDRESS, OTHER_PHONE);
+        CustomerAcceptanceSteps.validateCustomerSignUpDuplicatedEmail(secondResponse);
     }
 
     @DisplayName("회원가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")

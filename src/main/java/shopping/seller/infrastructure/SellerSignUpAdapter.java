@@ -6,6 +6,8 @@ import org.springframework.transaction.annotation.Transactional;
 import shopping.seller.domain.Seller;
 import shopping.seller.domain.SellerRepository;
 import shopping.seller.domain.SellerSignUpRequest;
+import shopping.seller.infrastructure.persistence.SellerEntity;
+import shopping.seller.infrastructure.persistence.SellerEntityJpaRepository;
 
 @Component
 public class SellerSignUpAdapter implements SellerRepository {

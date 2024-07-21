@@ -4,10 +4,12 @@ import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import shopping.common.auth.AccessTokenRepository;
 import shopping.seller.application.command.SellerSignUpCommand;
 import shopping.seller.domain.Seller;
 import shopping.seller.domain.SellerRepository;
 import shopping.seller.domain.SellerSignUpRequest;
+import shopping.utils.fake.FakeAccessTokenRepository;
 import shopping.utils.fake.FakeSellerRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,12 +22,14 @@ import static shopping.utils.fixture.SellerFixture.*;
 public class SellerSignUpUseCaseTest {
 
     private SellerRepository sellerRepository;
+    private AccessTokenRepository accessTokenRepository;
     private SellerSignUpUseCase sellerSignUpUseCase;
 
     @BeforeEach
     void setUp() {
         sellerRepository = new FakeSellerRepository();
-        sellerSignUpUseCase = new SellerSignUpService(sellerRepository);
+        accessTokenRepository = new FakeAccessTokenRepository();
+        sellerSignUpUseCase = new SellerService(accessTokenRepository, sellerRepository);
     }
 
     @DisplayName("미가입 판매자는 이메일과 비밀번호를 입력하면 회원 가입 할 수 있다.")

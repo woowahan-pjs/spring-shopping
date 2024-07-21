@@ -1,4 +1,4 @@
-package shopping.customer.api;
+package shopping.common.exception;
 
 import jakarta.persistence.PersistenceException;
 import jakarta.validation.ConstraintViolationException;
@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import shopping.common.exception.BusinessRuntimeException;
 
 @RestControllerAdvice
 public class CustomerExceptionHandler {

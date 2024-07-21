@@ -7,12 +7,32 @@ import shopping.acceptance.seller.steps.SellerAcceptanceSteps;
 
 import static shopping.utils.fixture.SellerFixture.*;
 
-@DisplayName("판매자 로그인 인수 테스트")
+@DisplayName("판매자 인수 테스트")
 public class SellerSignInAcceptanceTest extends AcceptanceTest {
 
     @Test
     void scenario() {
 
+    }
+    @DisplayName("이메일과 비밀번호를 입력하면 회원 가입을 할 수 있다.")
+    @Test
+    void signUp() {
+        final var response = SellerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        SellerAcceptanceSteps.validateSellerSignUp(response);
+    }
+
+    @DisplayName("비유효한 이메일을 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotSignUpInvalidEmail() {
+        final var response = SellerAcceptanceSteps.signUp("test@", NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        SellerAcceptanceSteps.validateCustomerSignUpInvalidEmail(response);
+    }
+
+    @DisplayName("비유효한 패스워드를 입력하면 회원 가입 할 수 없다")
+    @Test
+    void doNotSignUpInvalidPassword() {
+        final var response = SellerAcceptanceSteps.signUp(EMAIL, NAME, "1234", BIRTH, ADDRESS, PHONE);
+        SellerAcceptanceSteps.validateCustomerSignUpInvalidPassword(response);
     }
 
     @DisplayName("회원가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")
