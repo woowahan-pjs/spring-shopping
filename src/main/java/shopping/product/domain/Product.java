@@ -89,4 +89,9 @@ public class Product extends BaseEntity {
     public void updateDelYn(YesNo yesNo) {
         this.delYn = yesNo;
     }
+
+    public boolean eqPrdctNm(String prdctNm) {
+        Name productName = new Name(prdctNm);
+        return this.prdctNm.equals(productName);
+    }
 }

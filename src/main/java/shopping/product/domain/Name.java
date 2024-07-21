@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import shopping.exception.BadRequestException;
 
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,5 +44,17 @@ public class Name {
 
     public String getName() {
         return prdctNm;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Name name)) return false;
+        return Objects.equals(prdctNm, name.prdctNm);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(prdctNm);
     }
 }

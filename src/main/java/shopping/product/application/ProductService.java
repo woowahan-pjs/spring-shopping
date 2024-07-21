@@ -21,7 +21,6 @@ public class ProductService {
     private SlangService slangService;
     private ProductRepository productRepository;
 
-
     public ProductService(ProductRepository productRepository, SlangService slangService) {
         this.productRepository = productRepository;
         this.slangService = slangService;
@@ -37,20 +36,11 @@ public class ProductService {
         return ProductResponse.ProductDetail.from(persistProduct);
     }
 
-    private void checkPrdctNmContainSlang(String prdctNm) {
-        if(slangService.hasSlang(prdctNm)) {
-            throw new BadRequestException("비속어가 포함되어 있습니다.");
-        }
-    }
 
-
-    public ProductResponse.ProductsRes findAllProducts() {
+    public ProductResponse.ProductsRes findAllProductResProducts() {
         Products products = findAllToProducts();
-
         return ProductResponse.ProductsRes.from(products);
     }
-
-
 
 
     public ProductResponse.ProductDetail findProductDetailResponseBySn(Long id) {
@@ -58,8 +48,17 @@ public class ProductService {
         return ProductResponse.ProductDetail.from(persistProduct);
     }
 
+    public ProductResponse.ProductNameCheckRes validProductName(ProductRequest.ProductNameCheck request) {
+        checkPrdctNmContainSlang(request.getPrdctNm());
+        checkExistProductNames(request.getPrdctNm());
+
+        return ProductResponse.ProductNameCheckRes.of(request.getPrdctNm(), true);
+    }
+
+
     @Transactional
     public ProductResponse.ProductDetail updateProductById(Long id, ProductRequest.ModProduct request) {
+        checkPrdctNmContainSlang(request.getPrdctNm());
         Product persistProduct = findProductByPrdctSn(id);
         persistProduct.updateNameOrImage(request.getPrdctNm(), request.getImage(), request.getPrice());
         return ProductResponse.ProductDetail.from(persistProduct);
@@ -80,6 +79,20 @@ public class ProductService {
     private Products findAllToProducts() {
         List<Product> products = productRepository.findAll();
         return new Products(products);
+    }
+
+
+    private void checkPrdctNmContainSlang(String prdctNm) {
+        if(slangService.hasSlang(prdctNm)) {
+            throw new BadRequestException("비속어가 포함되어 있습니다.");
+        }
+    }
+
+    private void checkExistProductNames(String prdctNm) {
+        Products products = findAllToProducts();
+        if(products.hasAnyExistPrdctNm(prdctNm)) {
+            throw new BadRequestException("이미 등록된 상품 명입니다.");
+        }
     }
 
 

@@ -1,7 +1,7 @@
 create table if not exists product (
                          prdct_sn bigint auto_increment primary key comment '상품 일련번호',
                          prdct_id varchar(20) null comment '상품 아이디',
-                         prdct_nm varchar(45) not null comment '상품 명',
+                         prdct_nm varchar(45) not null unique comment '상품 명',
                          price decimal(18,0) default 0  comment '가격',
                          image varchar(2000) null comment '상품 이미지',
                          del_yn enum('Y', 'N') not null default 'N' comment '삭제 여부',

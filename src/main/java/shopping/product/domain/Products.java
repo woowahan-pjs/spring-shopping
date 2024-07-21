@@ -22,4 +22,9 @@ public class Products {
     public int getTotCnt() {
         return products.size();
     }
+
+    public boolean hasAnyExistPrdctNm(String prdctNm) {
+        return products.stream()
+                .anyMatch(p -> p.eqPrdctNm(prdctNm));
+    }
 }

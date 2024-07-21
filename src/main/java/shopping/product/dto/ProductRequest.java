@@ -52,4 +52,12 @@ public class ProductRequest {
 
         private BigDecimal price;
     }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Builder
+    public static class ProductNameCheck {
+        private String prdctNm;
+    }
 }

@@ -29,9 +29,15 @@ public class ProductController {
         return ResponseEntity.created(URI.create("/products/" + product.getPrdctSn())).body(product);
     }
 
+    @PostMapping("/valid")
+    public ResponseEntity<ProductResponse.ProductNameCheckRes> validProductName(@RequestBody @Valid ProductRequest.ProductNameCheck request) {
+        ProductResponse.ProductNameCheckRes product = productService.validProductName(request);
+        return ResponseEntity.ok().body(product);
+    }
+
     @GetMapping()
     public ResponseEntity<ProductResponse.ProductsRes> findAllProducts() {
-        ProductResponse.ProductsRes products = productService.findAllProducts();
+        ProductResponse.ProductsRes products = productService.findAllProductResProducts();
         return ResponseEntity.ok().body(products);
     }
 

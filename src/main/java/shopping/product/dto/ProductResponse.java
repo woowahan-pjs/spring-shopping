@@ -63,4 +63,20 @@ public class ProductResponse {
                     .build();
         }
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProductNameCheckRes {
+        private String prdctNm;
+        private boolean ablePrdctNm;
+
+        public static ProductNameCheckRes of(String prdctNm, boolean ablePrdctNm) {
+            return ProductNameCheckRes.builder()
+                    .prdctNm(prdctNm)
+                    .ablePrdctNm(ablePrdctNm)
+                    .build();
+        }
+    }
 }
