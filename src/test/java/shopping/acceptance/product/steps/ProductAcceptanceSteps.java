@@ -29,4 +29,8 @@ public class ProductAcceptanceSteps {
     public static void validate(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
+
+    public static void validateInvalidNameLength(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 }
