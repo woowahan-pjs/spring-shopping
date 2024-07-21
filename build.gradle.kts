@@ -54,7 +54,16 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
+    // feign
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
 }
+
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.2")
+    }
+}
+
 
 //kotlin {
 //    compilerOptions {
