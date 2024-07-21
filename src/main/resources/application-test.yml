@@ -1,0 +1,32 @@
+spring:
+
+  application:
+    name: spring-shopping
+
+  datasource:
+    url: jdbc:h2:mem:shopping;mode=MySQL
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+
+jwt:
+  secret: 51d68a77edc9a7a87ad4c3bc8d2a7612335cf8d4f1bbbcbfcf214c127a5ef3fcd28cba2a646610d8ab96848b6d9dce8aa0017f0ece5f013ac4586cbe866e292d
+  access:
+    expiration: 300
+
+profanity-check:
+  url: "http://localhost:8080"
