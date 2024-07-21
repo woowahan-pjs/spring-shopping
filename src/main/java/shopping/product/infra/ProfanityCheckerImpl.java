@@ -1,21 +1,14 @@
 package shopping.product.infra;
 
-import java.util.Objects;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestClient;
 import shopping.product.application.ProfanityChecker;
 
 @Component
 public class ProfanityCheckerImpl implements ProfanityChecker {
-    private static final Logger log = LoggerFactory.getLogger(ProfanityCheckerImpl.class);
+    private final ProfanityCheckClient profanityCheckClient;
 
-    private final RestClient purgomalumRestClient;
-
-    public ProfanityCheckerImpl(RestClient purgomalumRestClient) {
-        this.purgomalumRestClient = purgomalumRestClient;
+    public ProfanityCheckerImpl(ProfanityCheckClient profanityCheckClient) {
+        this.profanityCheckClient = profanityCheckClient;
     }
 
     /**
@@ -24,19 +17,6 @@ public class ProfanityCheckerImpl implements ProfanityChecker {
      */
     @Override
     public boolean check(String value) {
-        String responseBody = purgomalumRestClient.get()
-                .uri(uriBuilder -> uriBuilder.path("/containsprofanity")
-                        .queryParam("text", value)
-                        .build())
-                .retrieve()
-                .onStatus(HttpStatusCode::is5xxServerError,
-                        ((request, response) -> log.error("[Purgomalum] Internal Server Error")))
-                .body(String.class);
-
-        if (Objects.isNull(responseBody)) {
-            log.warn("[Purgomalum] body 응답이 null입니다.");
-        }
-
-        return Boolean.parseBoolean(responseBody);
+        return profanityCheckClient.check(value);
     }
 }

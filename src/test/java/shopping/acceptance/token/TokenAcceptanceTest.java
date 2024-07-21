@@ -7,7 +7,7 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
-import shopping.acceptance.AcceptanceTest;
+import shopping.acceptance.utils.AcceptanceTest;
 import shopping.acceptance.member.MemberSteps;
 
 public class TokenAcceptanceTest extends AcceptanceTest {

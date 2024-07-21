@@ -29,4 +29,4 @@ jwt:
     expiration: 300
 
 profanity-check:
-  url: "https://www.purgomalum.com/service"
+  url: "http://localhost:8080"

@@ -41,8 +41,8 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<ProductsResponse> getAllBy(@
-            PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable
+    public ResponseEntity<ProductsResponse> getAllBy(
+            @PageableDefault(sort = "createdAt", direction = Direction.DESC) Pageable pageable
     ) {
         Page<Product> products = productService.getAllBy(pageable);
         return ResponseEntity.ok(ProductsResponse.from(products));
