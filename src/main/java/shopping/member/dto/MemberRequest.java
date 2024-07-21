@@ -28,6 +28,14 @@ public class MemberRequest {
 
         private String name;
 
+        public static RegMember of(String password, String email) {
+            return RegMember.builder()
+                    .password(password)
+                    .passwordConfirm(password)
+                    .email(email)
+                    .build();
+        }
+
         public void validate() {
             if (!password.equals(passwordConfirm)) {
                 throw new BadRequestException("비밀번호 확인이 일치하지 않습니다.");
