@@ -3,6 +3,7 @@ package shopping.product.infra;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.client.RestClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -12,7 +13,7 @@ class ProfanityCheckerTest {
 
     @BeforeEach
     void setUp() {
-        profanityChecker = new ProfanityChecker();
+        profanityChecker = new ProfanityChecker(RestClient.builder());
     }
 
     @Test

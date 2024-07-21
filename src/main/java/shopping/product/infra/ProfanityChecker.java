@@ -22,8 +22,8 @@ public class ProfanityChecker {
             "미친년"
     );
 
-    public ProfanityChecker() {
-        this.restClient = RestClient.builder()
+    public ProfanityChecker(final RestClient.Builder builder) {
+        this.restClient = builder
                 .baseUrl(PURGOMALUM_URL)
                 .build();
     }
