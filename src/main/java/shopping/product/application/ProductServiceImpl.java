@@ -14,7 +14,6 @@ import shopping.product.repository.ProductRepository;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 public class ProductServiceImpl implements ProductProvider, ProductService {
 
     private final ProductRepository productRepository;
@@ -41,7 +40,6 @@ public class ProductServiceImpl implements ProductProvider, ProductService {
     }
 
     @Override
-    @Transactional
     public ProductResponse save(final ProductCreateRequest request) {
         validateProfanity(request.getName());
         final Product product = productRepository.save(request.toEntity());
@@ -66,7 +64,6 @@ public class ProductServiceImpl implements ProductProvider, ProductService {
     }
 
     @Override
-    @Transactional
     public void delete(final Long id) {
         final Product product = findProductById(id);
 

@@ -2,7 +2,6 @@ package shopping.member.application;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import shopping.member.application.dto.MemberRequest;
 import shopping.member.application.dto.MemberResponse;
 import shopping.member.domain.Member;
@@ -11,7 +10,6 @@ import shopping.member.exception.MemberNotFoundException;
 import shopping.member.repository.MemberRepository;
 
 @Service
-@Transactional(readOnly = true)
 public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
@@ -22,7 +20,6 @@ public class MemberService {
 
     }
 
-    @Transactional
     public MemberResponse save(final MemberRequest request) {
         final String email = request.getEmail();
         memberRepository.findByEmail(email)
@@ -36,7 +33,6 @@ public class MemberService {
         return MemberResponse.from(member);
     }
 
-    @Transactional
     public void delete(final Long id) {
         final Member member = findMemberById(id);
 

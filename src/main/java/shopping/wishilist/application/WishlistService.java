@@ -10,7 +10,6 @@ import shopping.wishilist.application.dto.WishlistResponse;
 import shopping.wishilist.domain.Wishlist;
 
 @Service
-@Transactional(readOnly = true)
 public class WishlistService {
 
     private final WishlistRepository wishlistRepository;
