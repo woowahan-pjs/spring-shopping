@@ -19,7 +19,7 @@ public class ProductAcceptanceSteps {
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(new Header("Authorization", "Bearer " + accessToken))
-                .body(new ProductRegistrationHttpRequest(subCategoryId, name, amount, imageUrl))
+                .body(new ProductRegistrationHttpRequest(name, amount, imageUrl, subCategoryId))
                 .when()
                 .post(BASE_URL + "/" + shopId + PRODUCTS)
                 .then()

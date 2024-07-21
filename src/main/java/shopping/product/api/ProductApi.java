@@ -2,7 +2,12 @@ package shopping.product.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import shopping.common.auth.Authorization;
+import shopping.common.auth.AuthorizationType;
+import shopping.common.auth.AuthorizationUser;
 import shopping.product.api.dto.ProductRegistrationHttpRequest;
+import shopping.product.application.ProductRegistrationUseCase;
+import shopping.product.domain.Product;
 
 import java.net.URI;
 
@@ -10,11 +15,19 @@ import java.net.URI;
 @RestController
 public class ProductApi {
 
+    private final ProductRegistrationUseCase productRegistrationUseCase;
+
+    public ProductApi(final ProductRegistrationUseCase productRegistrationUseCase) {
+        this.productRegistrationUseCase = productRegistrationUseCase;
+    }
+
     @PostMapping("/{shopId}/products")
     public ResponseEntity<?> registerProduct(
             @PathVariable(name = "shopId") final long shopId,
+            @Authorization({AuthorizationType.SELLER}) AuthorizationUser authorizationUser,
             @RequestBody final ProductRegistrationHttpRequest request
     ) {
-        return ResponseEntity.created(URI.create("")).build();
+        final Product product = productRegistrationUseCase.register(request.toCommand(shopId, authorizationUser.getUserId()));
+        return ResponseEntity.created(URI.create("/internal-api/shops/" + shopId + "/products/" + product.id())).build();
     }
 }
