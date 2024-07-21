@@ -8,6 +8,7 @@ import shopping.member.domain.Member;
 import shopping.product.domain.Product;
 import shopping.product.domain.Products;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -46,6 +47,7 @@ public class ProductResponse {
         private String prdctId;
         private String prdctNm;
         private String image;
+        private BigDecimal price;
         private String delYn;
         private LocalDateTime regDt;
 
@@ -54,6 +56,7 @@ public class ProductResponse {
                     .prdctSn(persistProduct.getPrdctSn())
                     .prdctId(persistProduct.getPrdctId())
                     .prdctNm(persistProduct.getPrdctNmValue())
+                    .price(persistProduct.getPrice())
                     .image(persistProduct.getImage())
                     .delYn(persistProduct.getDelYnValue())
                     .regDt(persistProduct.getRegDt())

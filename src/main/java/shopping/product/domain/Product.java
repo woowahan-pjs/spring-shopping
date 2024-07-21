@@ -7,6 +7,8 @@ import lombok.experimental.SuperBuilder;
 import shopping.BaseEntity;
 import shopping.constant.enums.YesNo;
 
+import java.math.BigDecimal;
+
 
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -25,6 +27,9 @@ public class Product extends BaseEntity {
     @Embedded
     @Column
     private Name prdctNm;
+
+    @Column
+    private BigDecimal price;
 
     @Column(length = 2000)
     private String image;
@@ -52,9 +57,14 @@ public class Product extends BaseEntity {
         return prefix + formattedNumber;
     }
 
-    public void updateNameOrImage(String prdctNm, String image) {
+    public void updateNameOrImage(String prdctNm, String image, BigDecimal price) {
         updateName(prdctNm);
         updateImage(image);
+        updatePrice(price);
+    }
+
+    private void updatePrice(BigDecimal price) {
+        this.price = price;
     }
 
     private void updateImage(String image) {

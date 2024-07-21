@@ -49,7 +49,7 @@ public class ProductService {
     @Transactional
     public ProductResponse.ProductDetail updateProductById(Long id, ProductRequest.ModProduct request) {
         Product persistProduct = findProductByPrdctSn(id);
-        persistProduct.updateNameOrImage(request.getPrdctNm(), request.getImage());
+        persistProduct.updateNameOrImage(request.getPrdctNm(), request.getImage(), request.getPrice());
         return ProductResponse.ProductDetail.from(persistProduct);
     }
 

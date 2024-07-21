@@ -1,5 +1,6 @@
 package shopping.product.dto;
 
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,8 @@ import shopping.exception.BadRequestException;
 import shopping.member.domain.Member;
 import shopping.product.domain.Name;
 import shopping.product.domain.Product;
+
+import java.math.BigDecimal;
 
 @Data
 public class ProductRequest {
@@ -26,9 +29,13 @@ public class ProductRequest {
 
         private String image;
 
+        @DecimalMin("0")
+        private BigDecimal price;
+
         public Product toProduct() {
             return Product.builder()
                     .prdctNm(new Name(prdctNm))
+                    .price(price)
                     .image(image)
                     .build();
         }
@@ -42,5 +49,7 @@ public class ProductRequest {
         private String prdctNm;
 
         private String image;
+
+        private BigDecimal price;
     }
 }
