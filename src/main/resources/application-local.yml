@@ -1,0 +1,49 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    url: jdbc:h2:mem:~/spring-shopping?MODE=MySQL;
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: true
+        highlight_sql: true
+        storage_engine: innodb
+    defer-datasource-initialization: false
+
+  h2:
+    console:
+      enabled: true
+
+  flyway:
+    enabled: true
+    url: jdbc:h2:mem:~/spring-shopping?MODE=MySQL;
+
+  sql:
+    init:
+      mode: EMBEDDED
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: debug
+        orm.jdbc.bind: trace
+      springframework:
+        orm:
+          jpa: debug
+        transaction: debug
+
+jwt:
+  key: abcdefghijklmnopqrstuvwxyz1234567890
+  access-token-expiration: 3600000 # 1 day
+  refresh-token-expiration: 604800000 # 7 days
