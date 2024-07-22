@@ -43,7 +43,7 @@ public class AuthorizationArgumentResolver implements HandlerMethodArgumentResol
                 .map(it -> accessTokenRepository.find(it, accessToken))
                 .map(AuthorizationUser::new)
                 .findFirst()
-                .orElseThrow(() -> new BadRequestException());
+                .orElseThrow(BadRequestException::new);
         return authorizationUser;
     }
 
