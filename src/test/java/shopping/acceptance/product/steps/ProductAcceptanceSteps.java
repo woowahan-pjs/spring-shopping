@@ -37,4 +37,10 @@ public class ProductAcceptanceSteps {
     public static void validateInvalidNameContainsProfanity(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
+
+    public static long 상품등록됨(final long 상점, final long 서브카테고리, final String productName, final long amount, final String imageUrl, final String sellerAccessToken) {
+        final ExtractableResponse<Response> response = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, productName, amount, imageUrl, sellerAccessToken);
+        ProductAcceptanceSteps.validate(response);
+        return response.body().jsonPath().getLong("id");
+    }
 }

@@ -34,7 +34,7 @@ public class CategoryApi {
             @RequestBody final CategoryRegistrationHttpRequest request,
             @Authorization({AuthorizationType.ADMIN}) final AuthorizationUser admin
     ) {
-        final Category category = categoryRegistrationUseCase.register(request.toCommand(admin.getUserId()));
+        final Category category = categoryRegistrationUseCase.register(request.toCommand(admin.userId()));
         return ResponseEntity.created(URI.create("/api/categories/" + category.id()))
                 .body(new CategoryRegistrationHttpResponse(category.id()));
     }
@@ -45,7 +45,7 @@ public class CategoryApi {
             @RequestBody final SubCategoryRegistrationHttpRequest request,
             @Authorization({AuthorizationType.ADMIN}) final AuthorizationUser admin
     ) {
-        final Category category = subCategoryRegistrationUseCase.registerSub(request.toCommand(categoryId, admin.getUserId()));
+        final Category category = subCategoryRegistrationUseCase.registerSub(request.toCommand(categoryId, admin.userId()));
         final List<SubCategory> subCategories = category.subCategories();
         final SubCategory subCategory = subCategories.getLast();
         return ResponseEntity.created(URI.create("/api/categories/" + category.id() + "/sub" + subCategory.getId()))

@@ -30,7 +30,7 @@ public class ShopApi {
             @RequestBody final ShopRegistrationRequest request,
             @Authorization({AuthorizationType.SELLER}) final AuthorizationUser authorizationUser
     ) {
-        final Shop shop = shopRegistrationUseCase.register(request.toCommand(authorizationUser.getUserId()));
+        final Shop shop = shopRegistrationUseCase.register(request.toCommand(authorizationUser.userId()));
         return ResponseEntity.created(URI.create("/api/sellers/shops/" + shop.id()))
                 .body(new ShopRegistrationResponse(shop.id()));
     }
