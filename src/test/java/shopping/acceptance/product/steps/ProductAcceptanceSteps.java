@@ -33,4 +33,8 @@ public class ProductAcceptanceSteps {
     public static void validateInvalidNameLength(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
     }
+
+    public static void validateInvalidNameContainsProfanity(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
 }

@@ -3,12 +3,13 @@ package shopping.product.application.command;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.URL;
 import shopping.common.CommandValidating;
 
 public record ProductRegistrationCommand(
         @NotBlank @Length(min = 1, max = 15) String name,
         @Min(1) long amount,
-        String imageUrl,
+        @URL String imageUrl,
         @Min(1) long subCategoryId,
         @Min(1) long shopId,
         @Min(1) long sellerId

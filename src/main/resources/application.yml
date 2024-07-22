@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: local
+    active: '${SPRING_PROFILES_ACTIVE:local}'
   application:
     name: spring-shopping
   jpa:
@@ -8,11 +8,14 @@ spring:
     hibernate:
       ddl-auto: none
   datasource:
-    url: jdbc:mysql://localhost:3306/shopping
-    username: root
-    password: 1234
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: '${DATASOURCE_HOST:jdbc:mysql://localhost:3306/shopping}'
+    username: '${DATASOURCE_USERNAME:root}'
+    password: '${DATASOURCE_PASSWORD:1234}'
+    driver-class-name: '${DATASOURCE_DRIVER:com.mysql.cj.jdbc.Driver}'
   data:
     redis:
-      host: localhost
-      port: 6379
+      host: '${REDIS_HOST:localhost}'
+      port: '${REDIS_PORT:6379}'
+service:
+  abusing:
+    url: '${SERVICE_ABUSING_URL:https://www.purgomalum.com/service/json?text=}'
