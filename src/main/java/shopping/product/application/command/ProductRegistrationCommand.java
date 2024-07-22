@@ -2,12 +2,13 @@ package shopping.product.application.command;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 import shopping.common.CommandValidating;
 
 public record ProductRegistrationCommand(
-        @NotBlank @Length(min = 1, max = 15) String name,
+        @Pattern(regexp = "^[a-zA-Z0-9가-힣()+\\[\\]&/_-]*$") @NotBlank @Length(min = 1, max = 15) String name,
         @Min(1) long amount,
         @URL String imageUrl,
         @Min(1) long subCategoryId,

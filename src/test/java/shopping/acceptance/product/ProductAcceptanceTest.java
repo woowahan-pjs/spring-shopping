@@ -66,4 +66,20 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, PROFANITY_NAME, AMOUNT, IMAGE_URL, sellerAccessToken);
         ProductAcceptanceSteps.validateInvalidNameContainsProfanity(responseExtractableResponse);
     }
+
+    @DisplayName("상품 이름이 허용하지 않는 특수문자가 들어왔을 경우 상품을 등록할 수 없다")
+    @Test
+    void registerProductInvalidProductNameRegex() {
+        AdminAcceptanceSteps.회원가입됨(AdminFixture.EMAIL, AdminFixture.NAME, AdminFixture.PASSWORD);
+        final String adminAccessToken = AdminAcceptanceSteps.로그인됨(AdminFixture.EMAIL, AdminFixture.PASSWORD);
+        final long 메인카테고리 = CategoryAcceptanceSteps.메인카테고리생성됨(CategoryFixture.NAME, CategoryFixture.ORDER, adminAccessToken);
+        final long 서브카테고리 = CategoryAcceptanceSteps.서브카테고리생성됨(CategoryFixture.SUB_NAME, CategoryFixture.SUB_ORDER, 메인카테고리, adminAccessToken);
+
+        SellerAcceptanceSteps.회원가입됨(SellerFixture.EMAIL, SellerFixture.NAME, SellerFixture.PASSWORD, SellerFixture.BIRTH, SellerFixture.ADDRESS, SellerFixture.PHONE);
+        final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
+        final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
+
+        final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, INVALID_EXPRESS_NAME, AMOUNT, IMAGE_URL, sellerAccessToken);
+        ProductAcceptanceSteps.validateInvalidNameContainsProfanity(responseExtractableResponse);
+    }
 }
