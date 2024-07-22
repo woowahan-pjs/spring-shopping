@@ -35,4 +35,25 @@ public class WishlistAcceptanceTest extends AcceptanceTest {
         final ExtractableResponse<Response> response = WishListAcceptanceSteps.registerWishlist(상품, customerAccessToken);
         WishListAcceptanceSteps.validate(response);
     }
+
+    @DisplayName("위시 리스트에 등록된 상품이 추가 등록되어도 위시리스트의 상품은 하나이다")
+    @Test
+    void registerWishListDuplicated() {
+        AdminAcceptanceSteps.회원가입됨(AdminFixture.EMAIL, AdminFixture.NAME, AdminFixture.PASSWORD);
+        final String adminAccessToken = AdminAcceptanceSteps.로그인됨(AdminFixture.EMAIL, AdminFixture.PASSWORD);
+        final long 메인카테고리 = CategoryAcceptanceSteps.메인카테고리생성됨(CategoryFixture.NAME, CategoryFixture.ORDER, adminAccessToken);
+        final long 서브카테고리 = CategoryAcceptanceSteps.서브카테고리생성됨(CategoryFixture.SUB_NAME, CategoryFixture.SUB_ORDER, 메인카테고리, adminAccessToken);
+
+        SellerAcceptanceSteps.회원가입됨(SellerFixture.EMAIL, SellerFixture.NAME, SellerFixture.PASSWORD, SellerFixture.BIRTH, SellerFixture.ADDRESS, SellerFixture.PHONE);
+        final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
+        final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
+
+        final long 상품 = ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, ProductFixture.NAME, ProductFixture.AMOUNT, ProductFixture.IMAGE_URL, sellerAccessToken);
+        CustomerAcceptanceSteps.회원가입됨(CustomerFixture.EMAIL, CustomerFixture.NAME, CustomerFixture.PASSWORD, CustomerFixture.BIRTH, CustomerFixture.ADDRESS, CustomerFixture.PHONE);
+        final String customerAccessToken = CustomerAcceptanceSteps.로그인됨(CustomerFixture.EMAIL, CustomerFixture.PASSWORD);
+
+        WishListAcceptanceSteps.registerWishlist(상품, customerAccessToken);
+        final ExtractableResponse<Response> response = WishListAcceptanceSteps.registerWishlist(상품, customerAccessToken);
+        WishListAcceptanceSteps.validate(response);
+    }
 }
