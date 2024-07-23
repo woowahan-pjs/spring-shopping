@@ -14,6 +14,7 @@ import shopping.acceptance.shop.steps.ShopAcceptanceSteps;
 import shopping.acceptance.wishlist.steps.WishListAcceptanceSteps;
 import shopping.utils.fixture.*;
 
+@DisplayName("위시 리스트 인수 테스트")
 public class WishlistAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("상품이 상점에 등록되어 있으면 사용자는 위시 리스트를 등록할 수 있다")

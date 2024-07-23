@@ -15,6 +15,7 @@ import shopping.utils.fixture.*;
 
 import static shopping.utils.fixture.ProductFixture.*;
 
+@DisplayName("상품 인수 테스트")
 public class ProductAcceptanceTest extends AcceptanceTest {
 
     @DisplayName("판매자는 상점에 상품을 등록할 수 있다")
