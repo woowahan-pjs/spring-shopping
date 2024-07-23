@@ -7,13 +7,11 @@ import org.junit.jupiter.api.Test;
 import shopping.acceptance.AcceptanceTest;
 import shopping.acceptance.admin.steps.AdminAcceptanceSteps;
 import shopping.acceptance.category.steps.CategoryAcceptanceSteps;
+import shopping.acceptance.customer.steps.CustomerAcceptanceSteps;
 import shopping.acceptance.product.steps.ProductAcceptanceSteps;
 import shopping.acceptance.seller.steps.SellerAcceptanceSteps;
 import shopping.acceptance.shop.steps.ShopAcceptanceSteps;
-import shopping.utils.fixture.AdminFixture;
-import shopping.utils.fixture.CategoryFixture;
-import shopping.utils.fixture.SellerFixture;
-import shopping.utils.fixture.ShopFixture;
+import shopping.utils.fixture.*;
 
 import static shopping.utils.fixture.ProductFixture.*;
 
@@ -81,5 +79,25 @@ public class ProductAcceptanceTest extends AcceptanceTest {
 
         final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, INVALID_EXPRESS_NAME, AMOUNT, IMAGE_URL, sellerAccessToken);
         ProductAcceptanceSteps.validateInvalidNameContainsProfanity(responseExtractableResponse);
+    }
+
+    @DisplayName("모든 사용자는 상점에 등록된 상품을 볼 수 있다")
+    @Test
+    void readProduct() {
+        AdminAcceptanceSteps.회원가입됨(AdminFixture.EMAIL, AdminFixture.NAME, AdminFixture.PASSWORD);
+        final String adminAccessToken = AdminAcceptanceSteps.로그인됨(AdminFixture.EMAIL, AdminFixture.PASSWORD);
+        final long 메인카테고리 = CategoryAcceptanceSteps.메인카테고리생성됨(CategoryFixture.NAME, CategoryFixture.ORDER, adminAccessToken);
+        final long 서브카테고리 = CategoryAcceptanceSteps.서브카테고리생성됨(CategoryFixture.SUB_NAME, CategoryFixture.SUB_ORDER, 메인카테고리, adminAccessToken);
+
+        SellerAcceptanceSteps.회원가입됨(SellerFixture.EMAIL, SellerFixture.NAME, SellerFixture.PASSWORD, SellerFixture.BIRTH, SellerFixture.ADDRESS, SellerFixture.PHONE);
+        final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
+        final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
+
+        final long 상품 = ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, NAME, AMOUNT, IMAGE_URL, sellerAccessToken);
+        CustomerAcceptanceSteps.회원가입됨(CustomerFixture.EMAIL, CustomerFixture.NAME, CustomerFixture.PASSWORD, CustomerFixture.BIRTH, CustomerFixture.ADDRESS, CustomerFixture.PHONE);
+        final String customerAccessToken = CustomerAcceptanceSteps.로그인됨(CustomerFixture.EMAIL, CustomerFixture.PASSWORD);
+
+        final ExtractableResponse<Response> response = ProductAcceptanceSteps.readById(상점, 상품, customerAccessToken);
+        ProductAcceptanceSteps.validateRead(response);
     }
 }

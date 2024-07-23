@@ -1,12 +1,12 @@
-package shopping.product.api;
+package shopping.product.infrastructure.api;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shopping.common.auth.Authorization;
 import shopping.common.auth.AuthorizationType;
 import shopping.common.auth.AuthorizationUser;
-import shopping.product.api.dto.ProductRegistrationHttpRequest;
-import shopping.product.api.dto.ProductRegistrationHttpResponse;
+import shopping.product.infrastructure.api.dto.ProductRegistrationHttpRequest;
+import shopping.product.infrastructure.api.dto.ProductRegistrationHttpResponse;
 import shopping.product.application.ProductRegistrationUseCase;
 import shopping.product.domain.Product;
 

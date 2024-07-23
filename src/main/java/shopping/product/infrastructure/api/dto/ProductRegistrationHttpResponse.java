@@ -1,4 +1,4 @@
-package shopping.product.api.dto;
+package shopping.product.infrastructure.api.dto;
 
 public class ProductRegistrationHttpResponse {
     private long id;

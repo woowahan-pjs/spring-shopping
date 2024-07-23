@@ -1,4 +1,4 @@
-package shopping.product.api.dto;
+package shopping.product.infrastructure.api.dto;
 
 import shopping.product.application.command.ProductRegistrationCommand;
 
@@ -19,6 +19,17 @@ public class ProductRegistrationHttpRequest {
         this.subCategoryId = subCategoryId;
     }
 
+    public ProductRegistrationCommand toCommand(final long shopId, final long sellerId) {
+        return new ProductRegistrationCommand(
+                name,
+                amount,
+                imageUrl,
+                subCategoryId,
+                shopId,
+                sellerId
+        );
+    }
+
     public long getSubCategoryId() {
         return subCategoryId;
     }
@@ -31,14 +42,7 @@ public class ProductRegistrationHttpRequest {
         return amount;
     }
 
-    public ProductRegistrationCommand toCommand(final long shopId, final long sellerId) {
-        return new ProductRegistrationCommand(
-                name,
-                amount,
-                imageUrl,
-                subCategoryId,
-                shopId,
-                sellerId
-        );
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
