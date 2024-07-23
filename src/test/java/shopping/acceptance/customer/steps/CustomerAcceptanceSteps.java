@@ -5,8 +5,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import shopping.customer.api.dto.CustomerSignInHttpRequest;
-import shopping.customer.api.dto.CustomerSignUpHttpRequest;
+import shopping.customer.infrastructure.api.dto.CustomerSignInHttpRequest;
+import shopping.customer.infrastructure.api.dto.CustomerSignUpHttpRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;

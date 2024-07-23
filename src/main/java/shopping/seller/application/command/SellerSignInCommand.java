@@ -7,7 +7,8 @@ import shopping.common.CommandValidating;
 public record SellerSignInCommand(
         @Email String email,
         @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*]).{12,}$") String password
-) implements CommandValidating {
+) implements CommandValidating<SellerSignInCommand> {
+
     public SellerSignInCommand(final String email, final String password) {
         this.email = email;
         this.password = password;

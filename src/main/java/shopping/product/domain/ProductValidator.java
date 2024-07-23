@@ -3,6 +3,7 @@ package shopping.product.domain;
 import org.springframework.stereotype.Component;
 import shopping.common.exception.ProductNameInvalidException;
 import shopping.product.application.command.ProductRegistrationCommand;
+import shopping.product.domain.clients.ProfanityClient;
 
 @Component
 public class ProductValidator {

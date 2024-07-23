@@ -1,16 +1,16 @@
 package shopping.product.infrastructure.persistence;
 
 import org.springframework.jdbc.core.RowMapper;
-import shopping.product.infrastructure.api.dto.ProductDetailInfo;
+import shopping.product.infrastructure.api.dto.ProductDetailResponse;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProductMapper implements RowMapper<ProductDetailInfo> {
+public class ProductMapper implements RowMapper<ProductDetailResponse> {
 
     @Override
-    public ProductDetailInfo mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-        return new ProductDetailInfo(
+    public ProductDetailResponse mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+        return new ProductDetailResponse(
                 rs.getString("product_name"),
                 rs.getLong("amount"),
                 rs.getString("image_url"),

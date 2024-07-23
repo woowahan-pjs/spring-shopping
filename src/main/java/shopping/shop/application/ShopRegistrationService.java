@@ -2,6 +2,7 @@ package shopping.shop.application;
 
 import org.springframework.stereotype.Service;
 import shopping.shop.application.command.ShopRegistrationCommand;
+import shopping.shop.application.query.ShopRegistrationQuery;
 import shopping.shop.domain.Shop;
 import shopping.shop.domain.ShopRegistrationRequest;
 import shopping.shop.domain.ShopRepository;
@@ -16,8 +17,9 @@ public class ShopRegistrationService implements ShopRegistrationUseCase {
     }
 
     @Override
-    public Shop register(final ShopRegistrationCommand shopRegistrationCommand) {
-        return shopRepository.save(mapToDomain(shopRegistrationCommand));
+    public ShopRegistrationQuery register(final ShopRegistrationCommand shopRegistrationCommand) {
+        final Shop shop = shopRepository.save(mapToDomain(shopRegistrationCommand));
+        return new ShopRegistrationQuery(shop);
     }
 
     private ShopRegistrationRequest mapToDomain(final ShopRegistrationCommand shopRegistrationCommand) {

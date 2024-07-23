@@ -4,7 +4,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductRegistrationRequest;
-import shopping.product.domain.ProductRepository;
+import shopping.product.domain.repository.ProductRepository;
 import shopping.product.infrastructure.persistence.ProductEntity;
 import shopping.product.infrastructure.persistence.ProductEntityJpaRepository;
 

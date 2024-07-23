@@ -1,8 +1,8 @@
 package shopping.category.application;
 
 import shopping.category.application.command.CategoryRegistrationCommand;
-import shopping.category.domain.Category;
+import shopping.category.application.query.CategoryQuery;
 
 public interface CategoryRegistrationUseCase {
-    Category register(final CategoryRegistrationCommand command);
+    CategoryQuery register(final CategoryRegistrationCommand command);
 }

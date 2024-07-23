@@ -5,7 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 import org.springframework.web.client.RestClient;
-import shopping.product.domain.ProfanityClient;
+import shopping.product.domain.clients.ProfanityClient;
 
 @Component
 public class PurgoMalumClient implements ProfanityClient {

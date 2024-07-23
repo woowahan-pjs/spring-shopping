@@ -5,10 +5,10 @@ import org.springframework.web.bind.annotation.*;
 import shopping.common.auth.Authorization;
 import shopping.common.auth.AuthorizationType;
 import shopping.common.auth.AuthorizationUser;
+import shopping.product.application.ProductRegistrationUseCase;
+import shopping.product.application.query.ProductRegistrationQuery;
 import shopping.product.infrastructure.api.dto.ProductRegistrationHttpRequest;
 import shopping.product.infrastructure.api.dto.ProductRegistrationHttpResponse;
-import shopping.product.application.ProductRegistrationUseCase;
-import shopping.product.domain.Product;
 
 import java.net.URI;
 
@@ -28,8 +28,8 @@ public class ProductApi {
             @Authorization({AuthorizationType.SELLER}) AuthorizationUser authorizationUser,
             @RequestBody final ProductRegistrationHttpRequest request
     ) {
-        final Product product = productRegistrationUseCase.register(request.toCommand(shopId, authorizationUser.userId()));
-        return ResponseEntity.created(URI.create("/internal-api/shops/" + shopId + "/products/" + product.id()))
-                .body(new ProductRegistrationHttpResponse(product.id()));
+        final ProductRegistrationQuery productRegistrationQuery = productRegistrationUseCase.register(request.toCommand(shopId, authorizationUser.userId()));
+        return ResponseEntity.created(URI.create("/internal-api/shops/" + shopId + "/products/" + productRegistrationQuery.id()))
+                .body(new ProductRegistrationHttpResponse(productRegistrationQuery.id()));
     }
 }

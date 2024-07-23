@@ -4,7 +4,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
-import shopping.product.infrastructure.api.dto.ProductDetailInfo;
+import shopping.product.infrastructure.api.dto.ProductDetailResponse;
 
 import javax.sql.DataSource;
 
@@ -17,7 +17,7 @@ public class ProductDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public ProductDetailInfo find(final long shopId, final long productId) {
+    public ProductDetailResponse find(final long shopId, final long productId) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("shopId", shopId)
                 .addValue("id", productId);

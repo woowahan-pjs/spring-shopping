@@ -6,7 +6,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import shopping.wishlist.api.dto.WishListRegistrationRequest;
+import shopping.wishlist.infrastructure.api.dto.WishListRegistrationRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

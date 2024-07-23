@@ -1,8 +1,8 @@
 package shopping.shop.application;
 
 import shopping.shop.application.command.ShopRegistrationCommand;
-import shopping.shop.domain.Shop;
+import shopping.shop.application.query.ShopRegistrationQuery;
 
 public interface ShopRegistrationUseCase {
-    Shop register(final ShopRegistrationCommand shopRegistrationCommand);
+    ShopRegistrationQuery register(final ShopRegistrationCommand shopRegistrationCommand);
 }

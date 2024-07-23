@@ -3,9 +3,10 @@ package shopping.category.application;
 import org.springframework.stereotype.Service;
 import shopping.category.application.command.CategoryRegistrationCommand;
 import shopping.category.application.command.SubCategoryRegistrationCommand;
+import shopping.category.application.query.CategoryQuery;
 import shopping.category.domain.Category;
 import shopping.category.domain.CategoryRegistrationRequest;
-import shopping.category.domain.CategoryRepository;
+import shopping.category.domain.repository.CategoryRepository;
 
 @Service
 public class CategoryService implements CategoryRegistrationUseCase, SubCategoryRegistrationUseCase {
@@ -17,8 +18,9 @@ public class CategoryService implements CategoryRegistrationUseCase, SubCategory
     }
 
     @Override
-    public Category register(final CategoryRegistrationCommand command) {
-        return categoryRepository.save(mapToDomain(command));
+    public CategoryQuery register(final CategoryRegistrationCommand command) {
+        final Category category = categoryRepository.save(mapToDomain(command));
+        return new CategoryQuery(category);
     }
 
     private CategoryRegistrationRequest mapToDomain(final CategoryRegistrationCommand command) {
@@ -30,9 +32,9 @@ public class CategoryService implements CategoryRegistrationUseCase, SubCategory
     }
 
     @Override
-    public Category registerSub(final SubCategoryRegistrationCommand command) {
+    public CategoryQuery registerSub(final SubCategoryRegistrationCommand command) {
         final Category category = categoryRepository.findById(command.mainCategoryId());
         category.addSubCategory(command.name(), command.order(), command.adminId());
-        return categoryRepository.save(category);
+        return new CategoryQuery(categoryRepository.save(category));
     }
 }

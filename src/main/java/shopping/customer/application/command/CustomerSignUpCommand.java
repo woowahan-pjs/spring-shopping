@@ -12,7 +12,7 @@ public record CustomerSignUpCommand(
         String birth,
         String address,
         String phone
-) implements CommandValidating {
+) implements CommandValidating<CustomerSignUpCommand> {
     public CustomerSignUpCommand(final String email, final String name, final String password, final String birth, final String address, final String phone) {
         this.email = email;
         this.name = name;

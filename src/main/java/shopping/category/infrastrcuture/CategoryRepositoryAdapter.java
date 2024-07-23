@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.category.domain.Category;
 import shopping.category.domain.CategoryRegistrationRequest;
-import shopping.category.domain.CategoryRepository;
+import shopping.category.domain.repository.CategoryRepository;
 import shopping.category.domain.SubCategory;
 import shopping.category.infrastrcuture.persistence.CategoryEntityJpaRepository;
 import shopping.category.infrastrcuture.persistence.MainCategoryEntity;
@@ -86,11 +86,11 @@ public class CategoryRepositoryAdapter implements CategoryRepository {
 
     private SubCategoryEntity domainToEntity(final SubCategory subCategory) {
         return new SubCategoryEntity(
-                subCategory.getId(),
-                subCategory.getName(),
-                subCategory.getOrder(),
-                subCategory.getCreatedBy(),
-                subCategory.getModifiedBy()
+                subCategory.id(),
+                subCategory.name(),
+                subCategory.order(),
+                subCategory.createdBy(),
+                subCategory.modifiedBy()
         );
     }
 }

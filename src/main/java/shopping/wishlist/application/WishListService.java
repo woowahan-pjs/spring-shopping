@@ -2,6 +2,7 @@ package shopping.wishlist.application;
 
 import org.springframework.stereotype.Service;
 import shopping.wishlist.application.command.WishListRegistrationCommand;
+import shopping.wishlist.application.query.WishListRegistrationQuery;
 import shopping.wishlist.domain.WishList;
 import shopping.wishlist.domain.WishListRepository;
 
@@ -15,7 +16,8 @@ public class WishListService implements WishListRegistrationUseCase {
     }
 
     @Override
-    public WishList register(final WishListRegistrationCommand command) {
-        return wishListRepository.save(command.productId(), command.customerId());
+    public WishListRegistrationQuery register(final WishListRegistrationCommand command) {
+        final WishList wishList = wishListRepository.save(command.productId(), command.customerId());
+        return new WishListRegistrationQuery(wishList);
     }
 }

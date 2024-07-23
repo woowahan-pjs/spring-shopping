@@ -6,7 +6,7 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import shopping.shop.api.dto.ShopRegistrationRequest;
+import shopping.shop.infrastructure.api.dto.ShopRegistrationRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

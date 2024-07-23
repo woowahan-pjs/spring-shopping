@@ -6,8 +6,8 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import shopping.category.api.dto.CategoryRegistrationHttpRequest;
-import shopping.category.api.dto.SubCategoryRegistrationHttpRequest;
+import shopping.category.infrastrcuture.api.dto.CategoryRegistrationHttpRequest;
+import shopping.category.infrastrcuture.api.dto.SubCategoryRegistrationHttpRequest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
