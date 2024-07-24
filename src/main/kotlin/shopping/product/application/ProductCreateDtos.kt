@@ -8,9 +8,12 @@ import shopping.product.domain.MAX_PRODUCT_NAME_LENGTH
 import shopping.product.domain.PRODUCT_NAME_PATTERN
 import shopping.product.domain.Product
 
+const val INVALID_NAME_LENGTH_MESSAGE = "상품명은 1자 이상 ${MAX_PRODUCT_NAME_LENGTH}자 이하여야 합니다."
+const val INVALID_NAME_PATTERN_MESSAGE = "허용되지 않은 특수문자가 포함되어있습니다."
+
 data class CreateProductRequest(
-    @field:Size(min = 1, max = MAX_PRODUCT_NAME_LENGTH, message = "상품명은 1자 이상 ${MAX_PRODUCT_NAME_LENGTH}자 이하여야 합니다.")
-    @field:Pattern(regexp = PRODUCT_NAME_PATTERN, message = "허용되지 않은 특수문자가 포함되어있습니다.")
+    @field:Size(min = 1, max = MAX_PRODUCT_NAME_LENGTH, message = INVALID_NAME_LENGTH_MESSAGE)
+    @field:Pattern(regexp = PRODUCT_NAME_PATTERN, message = INVALID_NAME_PATTERN_MESSAGE)
     val name: String,
     @field:Min(0)
     val price: Int,
