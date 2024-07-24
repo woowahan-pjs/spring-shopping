@@ -22,7 +22,7 @@ class GlobalErrorHandler {
 
     @ExceptionHandler(LoginFailedException::class)
     fun loginFailedExceptionHandler(e: LoginFailedException): ResponseEntity<ApiResponse<Unit>> {
-        logger.error("LoginFailedException: {}", e.message, e)
+        logger.warn("LoginFailedException: {}", e.message, e)
         val errorMessage =
             ErrorMessage(
                 errorCode = ErrorCode.LOGIN_FAILED,
@@ -36,7 +36,7 @@ class GlobalErrorHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
     fun httpMessageNotReadableExceptionHandler(e: HttpMessageNotReadableException): ResponseEntity<ApiResponse<Unit>> {
-        logger.error("HttpMessageNotReadableException: {}", e.message, e)
+        logger.warn("HttpMessageNotReadableException: {}", e.message, e)
         val data =
             when (val causeException = e.cause) {
                 is MismatchedInputException -> causeException.path[0].toData()
@@ -57,7 +57,7 @@ class GlobalErrorHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException::class)
     fun requestValidationExceptionHandler(e: MethodArgumentNotValidException): ResponseEntity<ApiResponse<Unit>> {
-        logger.error("MethodArgumentNotValidException: {}", e.message, e)
+        logger.warn("MethodArgumentNotValidException: {}", e.message, e)
         val errorMessage =
             ErrorMessage(
                 errorCode = ErrorCode.VALIDATION_ERROR,
