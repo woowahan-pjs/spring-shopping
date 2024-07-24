@@ -49,7 +49,7 @@ public class ProductRequest {
 
         public Product toProduct() {
             return Product.builder()
-                    .prdctNm(new Name(prdctNm))
+                    .prdctNm(Name.from(prdctNm))
                     .price(price)
                     .image(image)
                     .build();

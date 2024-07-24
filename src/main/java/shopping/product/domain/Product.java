@@ -78,7 +78,7 @@ public class Product extends BaseEntity {
 
     private void updateName(String prdctNm) {
         if(!prdctNm.isBlank()) {
-            this.prdctNm = new Name(prdctNm);
+            this.prdctNm = Name.from(prdctNm);
         }
     }
 
@@ -91,7 +91,7 @@ public class Product extends BaseEntity {
     }
 
     public boolean eqPrdctNm(String prdctNm) {
-        Name productName = new Name(prdctNm);
+        Name productName = Name.from(prdctNm);
         return this.prdctNm.equals(productName);
     }
 }

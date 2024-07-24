@@ -5,8 +5,6 @@ import jakarta.persistence.Embeddable;
 import shopping.exception.BadRequestException;
 
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Embeddable
 public class Name {
@@ -18,9 +16,13 @@ public class Name {
     public Name() {
     }
 
-    public Name(String name) {
+    private Name(String name) {
         validateName(name);
         this.prdctNm = name;
+    }
+
+    public static Name from(String name) {
+        return new Name(name);
     }
 
     private void validateName(String name) {
