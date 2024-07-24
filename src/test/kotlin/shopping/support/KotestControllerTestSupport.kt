@@ -18,6 +18,7 @@ import org.springframework.security.web.access.AccessDeniedHandler
 import org.springframework.security.web.authentication.logout.LogoutHandler
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.ResultActions
+import org.springframework.test.web.servlet.ResultActionsDsl
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers
 import shopping.auth.application.AuthenticationCommandService
 import shopping.auth.application.JwtAuthenticationFilter
@@ -102,4 +103,10 @@ abstract class KotestControllerTestSupport : BehaviorSpec() {
     protected fun ResultActions.isInvalidInputValueResponse(message: String): ResultActions =
         this.andExpect(MockMvcResultMatchers.jsonPath("$.meta.code").value(ErrorCode.INVALID_INPUT_VALUE.status.value()))
             .andExpect(MockMvcResultMatchers.jsonPath("$.meta.message").value(message))
+
+    protected fun ResultActionsDsl.isInvalidInputValueResponse(message: String): ResultActionsDsl =
+        this.andExpectAll {
+            jsonPath("$.meta.code") { value(ErrorCode.INVALID_INPUT_VALUE.status.value()) }
+            jsonPath("$.meta.message") { value(message) }
+        }
 }
