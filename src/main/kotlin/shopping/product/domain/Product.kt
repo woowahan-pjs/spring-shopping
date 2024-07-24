@@ -8,7 +8,7 @@ import shopping.common.domain.BaseEntity
 import java.time.LocalDateTime
 
 const val MAX_PRODUCT_NAME_LENGTH: Int = 15
-const val PRODUCT_NAME_PATTERN: String = "^[a-zA-Z0-9 ()\\[\\]+\\-&/_]*$"
+const val PRODUCT_NAME_PATTERN: String = "^[ㄱ-ㅎㅏ-ㅣ가-힣a-zA-Z0-9 ()\\[\\]\\+\\-&/_]*$"
 
 @SQLDelete(sql = "update product set deleted_at = CURRENT_TIMESTAMP where id = ?")
 @SQLRestriction(value = "deleted_at is null")
