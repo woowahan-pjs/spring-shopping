@@ -81,7 +81,7 @@ class GlobalErrorHandler {
             )
 
         return ResponseEntity
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .status(HttpStatus.BAD_REQUEST)
             .body(ApiResponse.error(errorMessage))
     }
 
