@@ -30,11 +30,13 @@ public class MemberRequest {
 
         private String nickName;
 
-        public static RegMember of(String password, String email) {
+        public static RegMember of(String password, String email, String name, String nickName) {
             return RegMember.builder()
                     .password(password)
                     .passwordConfirm(password)
                     .email(email)
+                    .name(name)
+                    .nickName(nickName)
                     .build();
         }
 

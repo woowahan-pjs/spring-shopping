@@ -21,16 +21,18 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
     private static final String password1 = "1234";
     private static final String email1 = "test@test.com";
+    private static final String name1 = "테스트";
 
     private static final String password2 = "1111";
     private static final String email2 = "yalmung@test.com";
+    private static final String nickName = "하하";
 
 
     @DisplayName("회원을 생성한다.")
     @Test
     void createMember() {
         // when
-        ExtractableResponse<Response> response = createMemberRequest(password1, email1);
+        ExtractableResponse<Response> response = createMemberRequest(password1, email1, name1, null);
 
         // then
         createdMember(response);
@@ -40,8 +42,8 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void getMembers() {
         // given
-        ExtractableResponse<Response> createResponse1 = alreadyCreatedMember(password1, email1);
-        ExtractableResponse<Response> createResponse2 = alreadyCreatedMember(password2, password2);
+        ExtractableResponse<Response> createResponse1 = alreadyCreatedMember(password1, email1, name1, null);
+        ExtractableResponse<Response> createResponse2 = alreadyCreatedMember(password2, email2, null, nickName);
 
         // when
         ExtractableResponse<Response> response = findMemberListRequest();
@@ -53,8 +55,8 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
 
 
-    public static ExtractableResponse<Response> alreadyCreatedMember(String password, String email) {
-        return createMemberRequest(password, email);
+    public static ExtractableResponse<Response> alreadyCreatedMember(String password, String email, String name, String nickName) {
+        return createMemberRequest(password, email, name, nickName);
     }
 
     public static void findMemberListResponse(ExtractableResponse<Response> response) {
@@ -69,10 +71,6 @@ public class MemberAcceptanceTest extends AcceptanceTest {
 
         List<MemberResponse.MemberDetail> resultMembers = response.jsonPath().getList("members", MemberResponse.MemberDetail.class);
         List<Long> resultMbrSns = resultMembers.stream().map(MemberResponse.MemberDetail::getMbrSn).toList();
-
-//        List<Long> resultMbrSns = response.jsonPath().getList(".", MemberResponse.MembersRes.class).stream()
-//                .flatMap(m -> m.getMbrSnToList().stream())
-//                .collect(Collectors.toList());
 
         assertThat(resultMbrSns).containsAll(expectedMbrSns);
     }

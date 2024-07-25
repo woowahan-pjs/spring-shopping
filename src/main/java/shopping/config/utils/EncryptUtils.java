@@ -4,17 +4,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-import java.security.MessageDigest;
 import java.util.Base64;
 
 @Slf4j
 @Component
 public class EncryptUtils {
     // 고정된 AES 키 (16 바이트, 128 비트)
-    private static final String FIXED_KEY = "1234567890123456"; // 16자 문자열, 128비트 키
+    private static final String FIXED_KEY = "1c4d3f012e41b9de";
 
     public static String encrypt(String text) {
 
@@ -28,7 +25,7 @@ public class EncryptUtils {
 
         } catch (Exception e) {
             log.error(e.toString());
-            throw new RuntimeException("암호화 처리중에 에러가 발생했습니다. e = {}");
+            throw new RuntimeException("암호화 처리중에 에러가 발생했습니다.");
         }
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }

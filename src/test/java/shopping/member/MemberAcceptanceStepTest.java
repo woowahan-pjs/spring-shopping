@@ -11,8 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class MemberAcceptanceStepTest {
-    public static ExtractableResponse<Response> createMemberRequest(String password, String email) {
-        MemberRequest.RegMember regMemberRequest = MemberRequest.RegMember.of(password, email);
+    public static ExtractableResponse<Response> createMemberRequest(String password, String email, String name, String nickName) {
+        MemberRequest.RegMember regMemberRequest = MemberRequest.RegMember.of(password, email, name, nickName);
 
         return RestAssured
                 .given().log().all()
@@ -31,12 +31,11 @@ public class MemberAcceptanceStepTest {
                 .extract();
     }
 
-
-
     public static void createdMember(ExtractableResponse response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
         assertThat(response.header("Location")).isNotBlank();
     }
+
 
 
 }

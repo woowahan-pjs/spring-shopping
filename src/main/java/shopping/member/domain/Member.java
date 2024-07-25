@@ -78,11 +78,11 @@ public class Member extends BaseEntity {
 
 
     private String encryptValue(String value) {
-        return EncryptUtils.encrypt(value);
+        return value == null || value.isBlank() ? null : EncryptUtils.encrypt(value);
     }
 
     private String decryptValue(String encryptedValue) {
-        return EncryptUtils.decrypt(encryptedValue);
+        return encryptedValue == null || encryptedValue.isBlank() ? null : EncryptUtils.decrypt(encryptedValue);
     }
 
 
