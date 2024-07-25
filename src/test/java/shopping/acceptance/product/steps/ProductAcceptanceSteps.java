@@ -88,18 +88,14 @@ public class ProductAcceptanceSteps {
     public static void validateReadCategory(final ExtractableResponse<Response> response) {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.body().jsonPath().getString("product_name")).isNotNull(),
-                () -> assertThat(response.body().jsonPath().getLong("amount")).isNotNull(),
-                () -> assertThat(response.body().jsonPath().getString("image_url")).isNotNull()
+                () -> assertThat(response.body().jsonPath().getList("products")).isNotEmpty()
         );
     }
 
     public static void validateReadShop(final ExtractableResponse<Response> response) {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
-                () -> assertThat(response.body().jsonPath().getString("product_name")).isNotNull(),
-                () -> assertThat(response.body().jsonPath().getLong("amount")).isNotNull(),
-                () -> assertThat(response.body().jsonPath().getString("image_url")).isNotNull()
+                () -> assertThat(response.body().jsonPath().getList("products")).isNotEmpty()
         );
     }
 

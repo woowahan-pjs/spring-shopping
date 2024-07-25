@@ -2,17 +2,17 @@ package shopping.product.infrastructure.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ProductListResponse {
+public class ProductList {
     @JsonProperty("product_name")
     private String productName;
     private long amount;
     @JsonProperty("image_url")
     private String imageUrl;
 
-    public ProductListResponse() {
+    public ProductList() {
     }
 
-    public ProductListResponse(final String productName, final long amount, final String imageUrl) {
+    public ProductList(final String productName, final long amount, final String imageUrl) {
         this.productName = productName;
         this.amount = amount;
         this.imageUrl = imageUrl;
@@ -30,4 +30,3 @@ public class ProductListResponse {
         return imageUrl;
     }
 }
-

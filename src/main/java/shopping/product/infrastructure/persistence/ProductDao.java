@@ -5,9 +5,10 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 import shopping.product.infrastructure.api.dto.ProductDetailResponse;
-import shopping.product.infrastructure.api.dto.ProductListResponse;
+import shopping.product.infrastructure.api.dto.ProductList;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 @Component
 public class ProductDao {
@@ -36,13 +37,13 @@ public class ProductDao {
         );
     }
 
-    public ProductListResponse findProductListByCategoryId(final long categoryId, final long startId, final long limit) {
+    public List<ProductList> findProductListByCategoryId(final long categoryId, final long startId, final long limit) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("categoryId", categoryId)
                 .addValue("startId", startId)
                 .addValue("limit", limit);
 
-        return namedParameterJdbcTemplate.queryForObject(
+        return namedParameterJdbcTemplate.query(
                 """
                         SELECT 
                             p.name as product_name, p.amount, p.image_url, sc.name as category_name, s.name as shop_name, se.name as seller_name   
@@ -59,13 +60,13 @@ public class ProductDao {
         );
     }
 
-    public ProductListResponse findProductListByShopId(final long shopId, final long startId, final long limit) {
+    public List<ProductList> findProductListByShopId(final long shopId, final long startId, final long limit) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("shopId", shopId)
                 .addValue("startId", startId)
                 .addValue("limit", limit);
 
-        return namedParameterJdbcTemplate.queryForObject(
+        return namedParameterJdbcTemplate.query(
                 """
                         SELECT 
                             p.name as product_name, p.amount, p.image_url, sc.name as category_name, s.name as shop_name, se.name as seller_name   
