@@ -3,8 +3,9 @@ package shopping.member.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import shopping.BaseEntity;
-import shopping.config.utils.EncryptionUtil;
+import shopping.config.utils.EncryptUtils;
 import shopping.constant.enums.YesNo;
 import shopping.exception.AuthorizationException;
 
@@ -25,10 +26,13 @@ public class Member extends BaseEntity {
     private String email;
 
     @Column(name = "password")
-    private byte[] encryptedPassword;
+    private String encryptedPassword;
+
+    @Column(name = "mbr_nm")
+    private String encryptedMbrNm;
 
     @Column
-    private String mbrNm;
+    private String nickNm;
 
     @Enumerated(EnumType.STRING)
     @Column
@@ -39,49 +43,64 @@ public class Member extends BaseEntity {
     @Transient
     private String password;
 
+    @Transient
+    private String mbrNm;
 
 
     public String getDelYnStr() {
         return delYn.name();
     }
 
-    public void updatePwdOrName(String password, String name) {
+    public void updatePwdOrName(String password, String name, String nickNm) {
         updatePassword(password);
         updateName(name);
+        updateNickNm(nickNm);
     }
 
 
     @PrePersist
     @PreUpdate
-    public void encryptPassword() {
-        this.encryptedPassword = encrypt(this.password);
+    public void encryptInfo() {
+        this.encryptedMbrNm = encryptValue(this.mbrNm);
+        this.encryptedPassword = encryptPassword(this.password);
+
     }
 
     @PostLoad
-    public void decryptPassword() {
-        this.password = decrypt(this.encryptedPassword);
+    public void decryptInfo() {
+        this.mbrNm = decryptValue(this.encryptedMbrNm);
     }
 
-    private byte[] encrypt(String password) {
-        byte[] encodedValue = EncryptionUtil.encrypt(password);
-        return encodedValue;
+
+    private String encryptPassword(String password) {
+        return new BCryptPasswordEncoder().encode(password);
     }
 
-    private String decrypt(byte[] encryptedPassword) {
-        String decryptedPassword = EncryptionUtil.decrypt(encryptedPassword);
-        return decryptedPassword;
+
+    private String encryptValue(String value) {
+        return EncryptUtils.encrypt(value);
+    }
+
+    private String decryptValue(String encryptedValue) {
+        return EncryptUtils.decrypt(encryptedValue);
     }
 
 
     private void updateName(String name) {
-        if(!name.isBlank()) {
+        if (!name.isBlank()) {
             this.mbrNm = name;
         }
     }
 
     private void updatePassword(String password) {
-        if(!password.isBlank()) {
+        if (!password.isBlank()) {
             this.password = password;
+        }
+    }
+
+    private void updateNickNm(String nickNm) {
+        if (!nickNm.isBlank()) {
+            this.nickNm = nickNm;
         }
     }
 
@@ -90,12 +109,13 @@ public class Member extends BaseEntity {
     }
 
     public void checkPassword(String password) {
-        if(isNotEqualPassword(password)) {
+        if (isNotEqualPassword(password)) {
             throw new AuthorizationException("비밀번호가 일치하지 않습니다.");
         }
     }
 
     private boolean isNotEqualPassword(String password) {
-        return !this.password.equals(password);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        return !passwordEncoder.matches(password, this.encryptedPassword);
     }
 }

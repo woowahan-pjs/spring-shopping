@@ -56,7 +56,7 @@ public class MemberService {
     public MemberResponse.MemberDetail updateMemberById(Long id, MemberRequest.ModMember request) {
         Member persistMember = findMemberByMbrSn(id);
 
-        persistMember.updatePwdOrName(request.getPassword(), request.getName());
+        persistMember.updatePwdOrName(request.getPassword(), request.getName(), request.getNickName());
         return MemberResponse.MemberDetail.from(persistMember);
     }
 

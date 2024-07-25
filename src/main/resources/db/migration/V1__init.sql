@@ -13,8 +13,9 @@ create table if not exists product (
 create table if not exists member (
                         mbr_sn bigint auto_increment primary key comment '회원 일련번호',
                         email varchar(200) unique not null comment '회원 이메일',
-                        password blob not null comment '회원 비밀번호',
+                        password varchar(1000) not null comment '회원 비밀번호',
                         mbr_nm varchar(100) null comment '회원 명',
+                        nick_nm varchar(200) null comment '닉네임',
                         del_yn enum('Y', 'N') default 'N' not null comment '탈퇴 여부',
                         reg_dt datetime not null comment '등록 일시',
                         mod_dt datetime null comment '수정 일시'

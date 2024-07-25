@@ -52,6 +52,7 @@ public class MemberResponse {
         private Long mbrSn;
         private String email;
         private String name;
+        private String nickName;
         private String delYn;
         private LocalDateTime regDt;
 
@@ -60,6 +61,7 @@ public class MemberResponse {
                     .mbrSn(persistMember.getMbrSn())
                     .email(persistMember.getEmail())
                     .name(persistMember.getMbrNm())
+                    .nickName(persistMember.getNickNm())
                     .delYn(persistMember.getDelYnStr())
                     .regDt(persistMember.getRegDt())
                     .build();

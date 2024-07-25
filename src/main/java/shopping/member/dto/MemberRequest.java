@@ -28,6 +28,8 @@ public class MemberRequest {
 
         private String name;
 
+        private String nickName;
+
         public static RegMember of(String password, String email) {
             return RegMember.builder()
                     .password(password)
@@ -45,8 +47,9 @@ public class MemberRequest {
         public Member toMember() {
             return Member.builder()
                     .email(email)
-                    .password(password) //todo 암호화
+                    .password(password)
                     .mbrNm(name)
+                    .nickNm(nickName)
                     .build();
         }
     }
@@ -61,10 +64,13 @@ public class MemberRequest {
 
         private String name;
 
+        private String nickName;
+
         public Member toMember() {
             return Member.builder()
-                    .password(password) //todo 암호화
+                    .password(password)
                     .mbrNm(name)
+                    .nickNm(nickName)
                     .build();
         }
     }
