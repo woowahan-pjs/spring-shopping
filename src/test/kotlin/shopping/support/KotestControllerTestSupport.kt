@@ -31,11 +31,15 @@ import shopping.member.application.MemberCommandService
 import shopping.member.application.MemberQueryRepository
 import shopping.member.application.MemberQueryService
 import shopping.member.presentation.MemberApi
+import shopping.product.application.ProductCommandService
+import shopping.product.application.ProductQueryService
+import shopping.product.presentation.ProductApi
 
 @WebMvcTest(
     controllers = [
         MemberApi::class,
         AuthenticationApi::class,
+        ProductApi::class,
     ],
     includeFilters = [
         ComponentScan.Filter(
@@ -84,6 +88,12 @@ abstract class KotestControllerTestSupport : BehaviorSpec() {
 
     @MockkBean
     protected lateinit var authenticationCommandService: AuthenticationCommandService
+
+    @MockkBean
+    protected lateinit var productCommandService: ProductCommandService
+
+    @MockkBean
+    protected lateinit var productQueryService: ProductQueryService
 
     init {
         afterContainer {
