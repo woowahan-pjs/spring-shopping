@@ -98,7 +98,27 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         CustomerAcceptanceSteps.회원가입됨(CustomerFixture.EMAIL, CustomerFixture.NAME, CustomerFixture.PASSWORD, CustomerFixture.BIRTH, CustomerFixture.ADDRESS, CustomerFixture.PHONE);
         final String customerAccessToken = CustomerAcceptanceSteps.로그인됨(CustomerFixture.EMAIL, CustomerFixture.PASSWORD);
 
-        final ExtractableResponse<Response> response = ProductAcceptanceSteps.readById(상점, 상품, customerAccessToken);
+        final ExtractableResponse<Response> response = ProductAcceptanceSteps.readById(상품, customerAccessToken);
         ProductAcceptanceSteps.validateRead(response);
+    }
+
+    @DisplayName("모든 사용자는 카테고리별 상품 목록을 볼 수 있다")
+    @Test
+    void readProductInCategory() {
+        AdminAcceptanceSteps.회원가입됨(AdminFixture.EMAIL, AdminFixture.NAME, AdminFixture.PASSWORD);
+        final String adminAccessToken = AdminAcceptanceSteps.로그인됨(AdminFixture.EMAIL, AdminFixture.PASSWORD);
+        final long 메인카테고리 = CategoryAcceptanceSteps.메인카테고리생성됨(CategoryFixture.NAME, CategoryFixture.ORDER, adminAccessToken);
+        final long 서브카테고리 = CategoryAcceptanceSteps.서브카테고리생성됨(CategoryFixture.SUB_NAME, CategoryFixture.SUB_ORDER, 메인카테고리, adminAccessToken);
+
+        SellerAcceptanceSteps.회원가입됨(SellerFixture.EMAIL, SellerFixture.NAME, SellerFixture.PASSWORD, SellerFixture.BIRTH, SellerFixture.ADDRESS, SellerFixture.PHONE);
+        final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
+        final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
+        ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, NAME, AMOUNT, IMAGE_URL, sellerAccessToken);
+
+        CustomerAcceptanceSteps.회원가입됨(CustomerFixture.EMAIL, CustomerFixture.NAME, CustomerFixture.PASSWORD, CustomerFixture.BIRTH, CustomerFixture.ADDRESS, CustomerFixture.PHONE);
+        final String customerAccessToken = CustomerAcceptanceSteps.로그인됨(CustomerFixture.EMAIL, CustomerFixture.PASSWORD);
+
+        final ExtractableResponse<Response> response = ProductAcceptanceSteps.readByCategory(서브카테고리, customerAccessToken);
+        ProductAcceptanceSteps.validateReadCategory(response);
     }
 }

@@ -6,7 +6,7 @@ import shopping.product.infrastructure.api.dto.ProductDetailResponse;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProductMapper implements RowMapper<ProductDetailResponse> {
+public class ProductDetailMapper implements RowMapper<ProductDetailResponse> {
 
     @Override
     public ProductDetailResponse mapRow(final ResultSet rs, final int rowNum) throws SQLException {

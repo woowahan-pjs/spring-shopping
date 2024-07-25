@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 public class ProductAcceptanceSteps {
     private static final String BASE_URL = "/internal-api/shops";
     private static final String PRODUCTS = "/products";
+    private static final String PRODUCT_BASE_URL = "/api/products";
 
     public static ExtractableResponse<Response> registerProduct(final long shopId, final long subCategoryId, final String name, final long amount, final String imageUrl, final String accessToken) {
         return RestAssured
@@ -27,13 +28,24 @@ public class ProductAcceptanceSteps {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> readById(final long shopId, final long productId, final String accessToken) {
+    public static ExtractableResponse<Response> readById(final long productId, final String accessToken) {
         return RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(new Header("Authorization", "Bearer " + accessToken))
                 .when()
-                .get(BASE_URL + "/" + shopId + PRODUCTS + "/" + productId)
+                .get(PRODUCT_BASE_URL + "/" + productId)
+                .then()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> readByCategory(final long categoryId, final String accessToken) {
+        return RestAssured
+                .given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(new Header("Authorization", "Bearer " + accessToken))
+                .when()
+                .get(PRODUCT_BASE_URL + "/categories/" + categoryId)
                 .then()
                 .extract();
     }
@@ -59,6 +71,15 @@ public class ProductAcceptanceSteps {
                 () -> assertThat(response.body().jsonPath().getString("shop_name")).isNotNull(),
                 () -> assertThat(response.body().jsonPath().getString("seller_name")).isNotNull(),
                 () -> assertThat(response.body().jsonPath().getString("category_name")).isNotNull()
+        );
+    }
+
+    public static void validateReadCategory(final ExtractableResponse<Response> response) {
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.body().jsonPath().getString("product_name")).isNotNull(),
+                () -> assertThat(response.body().jsonPath().getLong("amount")).isNotNull(),
+                () -> assertThat(response.body().jsonPath().getString("image_url")).isNotNull()
         );
     }
 
