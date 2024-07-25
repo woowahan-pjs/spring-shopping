@@ -50,6 +50,17 @@ public class ProductAcceptanceSteps {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> readByShop(final long shopsId, final String accessToken) {
+        return RestAssured
+                .given()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .header(new Header("Authorization", "Bearer " + accessToken))
+                .when()
+                .get(PRODUCT_BASE_URL + "/shops/" + shopsId)
+                .then()
+                .extract();
+    }
+
     public static void validate(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -75,6 +86,15 @@ public class ProductAcceptanceSteps {
     }
 
     public static void validateReadCategory(final ExtractableResponse<Response> response) {
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.body().jsonPath().getString("product_name")).isNotNull(),
+                () -> assertThat(response.body().jsonPath().getLong("amount")).isNotNull(),
+                () -> assertThat(response.body().jsonPath().getString("image_url")).isNotNull()
+        );
+    }
+
+    public static void validateReadShop(final ExtractableResponse<Response> response) {
         assertAll(
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.body().jsonPath().getString("product_name")).isNotNull(),
