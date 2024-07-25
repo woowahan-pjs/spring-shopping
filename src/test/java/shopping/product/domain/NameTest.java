@@ -8,6 +8,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import shopping.exception.BadRequestException;
 
+import javax.crypto.SecretKey;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class NameTest {

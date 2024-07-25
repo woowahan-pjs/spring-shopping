@@ -4,6 +4,7 @@ package shopping.member.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import shopping.BaseEntity;
+import shopping.config.utils.EncryptionUtil;
 import shopping.constant.enums.YesNo;
 import shopping.exception.AuthorizationException;
 
@@ -23,8 +24,8 @@ public class Member extends BaseEntity {
     @Column
     private String email;
 
-    @Column
-    private String password;
+    @Column(name = "password")
+    private byte[] encryptedPassword;
 
     @Column
     private String mbrNm;
@@ -34,6 +35,12 @@ public class Member extends BaseEntity {
     @Builder.Default
     private YesNo delYn = YesNo.N;
 
+
+    @Transient
+    private String password;
+
+
+
     public String getDelYnStr() {
         return delYn.name();
     }
@@ -42,6 +49,29 @@ public class Member extends BaseEntity {
         updatePassword(password);
         updateName(name);
     }
+
+
+    @PrePersist
+    @PreUpdate
+    public void encryptPassword() {
+        this.encryptedPassword = encrypt(this.password);
+    }
+
+    @PostLoad
+    public void decryptPassword() {
+        this.password = decrypt(this.encryptedPassword);
+    }
+
+    private byte[] encrypt(String password) {
+        byte[] encodedValue = EncryptionUtil.encrypt(password);
+        return encodedValue;
+    }
+
+    private String decrypt(byte[] encryptedPassword) {
+        String decryptedPassword = EncryptionUtil.decrypt(encryptedPassword);
+        return decryptedPassword;
+    }
+
 
     private void updateName(String name) {
         if(!name.isBlank()) {

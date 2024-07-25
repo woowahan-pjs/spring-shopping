@@ -61,6 +61,9 @@ dependencies {
     implementation("com.google.guava:guava:33.2.1-jre")
 
     testImplementation("io.rest-assured:rest-assured:5.4.0")
+
+    // spring security core
+    implementation("org.springframework.security:spring-security-core:6.3.1")
 }
 
 dependencyManagement {
