@@ -11,10 +11,10 @@ import org.springframework.validation.FieldError
 import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
+import shopping.common.auth.LoginFailedException
 import shopping.common.error.ApiException
 import shopping.common.error.ErrorCode
 import shopping.common.error.ErrorMessage
-import shopping.common.error.LoginFailedException
 
 @RestControllerAdvice
 class GlobalErrorHandler {

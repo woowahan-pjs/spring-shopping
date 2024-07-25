@@ -1,6 +1,6 @@
 package shopping.user.domain
 
-import shopping.common.util.AuthUtil
+import shopping.common.auth.AuthUtil
 
 const val MIN_PASSWORD_LENGTH = 10
 const val MAX_PASSWORD_LENGTH = 20

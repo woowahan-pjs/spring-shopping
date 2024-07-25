@@ -1,4 +1,4 @@
-package shopping.common.util
+package shopping.common.auth
 
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys

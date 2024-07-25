@@ -2,7 +2,7 @@ package shopping.user.application
 
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
-import shopping.common.util.JwtProvider
+import shopping.common.auth.JwtProvider
 import shopping.user.domain.EncryptedPassword
 import shopping.user.domain.PasswordMismatchException
 import shopping.user.domain.User

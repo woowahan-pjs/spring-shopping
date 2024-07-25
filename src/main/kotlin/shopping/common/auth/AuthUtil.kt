@@ -1,4 +1,4 @@
-package shopping.common.util
+package shopping.common.auth
 
 import java.security.MessageDigest
 
