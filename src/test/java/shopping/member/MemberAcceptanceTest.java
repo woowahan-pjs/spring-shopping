@@ -20,8 +20,8 @@ import static shopping.member.MemberAcceptanceStepTest.*;
 public class MemberAcceptanceTest extends AcceptanceTest {
 
     private static final String password1 = "1234";
-    private static final String email1 = "test@test.com";
-    private static final String name1 = "테스트";
+    private static final String email1 = "yalmung@email.com";
+    private static final String name1 = "얄뭉";
 
     private static final String password2 = "1111";
     private static final String email2 = "yalmung@test.com";

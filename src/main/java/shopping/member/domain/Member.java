@@ -46,6 +46,12 @@ public class Member extends BaseEntity {
     @Transient
     private String mbrNm;
 
+    public Member(String email, String encryptedPassword) {
+        this.email = email;
+        this.encryptedPassword = encryptedPassword;
+    }
+
+
 
     public String getDelYnStr() {
         return delYn.name();
