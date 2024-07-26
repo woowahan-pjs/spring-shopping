@@ -2,6 +2,7 @@ package shopping.product;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static shopping.product.ProductAcceptanceStepTest.*;
 
 
@@ -28,7 +30,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     private static final BigDecimal price2 = new BigDecimal(375000);
 
     private static final String prdctnm3 = "배달의 민족 맛집";
-    private static final String imgaes3 = "https://";
+    private static final String images3 = "https://";
     private static final BigDecimal price3 = new BigDecimal(14500);
 
 
@@ -48,7 +50,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         // given
         ExtractableResponse<Response> createResponse1 = alreadyCreatedProduct(prdctnm1, price1);
         ExtractableResponse<Response> createResponse2 = alreadyCreatedProduct(prdctnm2, price2);
-        ExtractableResponse<Response> createResponse3 = alreadyCreatedProduct(prdctnm3, price3, imgaes3);
+        ExtractableResponse<Response> createResponse3 = alreadyCreatedProduct(prdctnm3, price3, images3);
 
         // when
         ExtractableResponse<Response> response = findProductListRequest();
@@ -56,6 +58,24 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         // then
         findMemberListResponse(response);
         containProductList(response, Arrays.asList(createResponse1, createResponse2, createResponse3));
+    }
+
+    @DisplayName("상품 상세를 조회한다.")
+    @Test
+    void getProductDetail() {
+        // given
+        ProductResponse.ProductDetail createResponse = alreadyCreatedProduct(prdctnm3, price3, images3).as(ProductResponse.ProductDetail.class);
+
+        // when
+        ProductResponse.ProductDetail response = findProductRequest(createResponse).as(ProductResponse.ProductDetail.class);
+
+        // then
+        assertAll(
+                () -> assertThat(createResponse.getPrdctId()).isEqualTo(response.getPrdctId()),
+                () -> assertThat(createResponse.getPrdctNm()).isEqualTo(response.getPrdctNm()),
+                () -> assertThat(createResponse.getPrice()).isEqualTo(response.getPrice()),
+                () -> assertThat(createResponse.getImage()).isEqualTo(response.getImage())
+        );
     }
 
 

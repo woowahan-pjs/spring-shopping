@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import shopping.member.dto.MemberRequest;
 import shopping.product.dto.ProductRequest;
+import shopping.product.dto.ProductResponse;
 
 import java.math.BigDecimal;
 
@@ -42,6 +43,14 @@ public class ProductAcceptanceStepTest {
         return RestAssured
                 .given().log().all()
                 .when().get("/products")
+                .then().log().all()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> findProductRequest(ProductResponse.ProductDetail response) {
+        return RestAssured
+                .given().log().all()
+                .when().get("/products/{id}", response.getPrdctSn())
                 .then().log().all()
                 .extract();
     }
