@@ -2,12 +2,10 @@ package shopping.product;
 
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import shopping.AcceptanceTest;
-import shopping.member.dto.MemberResponse;
 import shopping.product.dto.ProductRequest;
 import shopping.product.dto.ProductResponse;
 

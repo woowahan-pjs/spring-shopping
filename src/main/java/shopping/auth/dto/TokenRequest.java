@@ -17,6 +17,10 @@ public class TokenRequest {
         this.password = password;
     }
 
+    public static TokenRequest of(String email, String password) {
+        return new TokenRequest(email, password);
+    }
+
     public String getEmail() {
         return email;
     }

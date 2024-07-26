@@ -18,6 +18,13 @@ public class WishRequest {
     @AllArgsConstructor
     public static class RegWishList {
         private Long prdctSn;
+
+        public static RegWishList from(Long prdctSn) {
+            return RegWishList.builder()
+                    .prdctSn(prdctSn)
+                    .build();
+        }
+
         public Wish toWishList(Long mbrSn, Product product) {
             return Wish.builder()
                     .mbrSn(mbrSn)
@@ -38,5 +45,12 @@ public class WishRequest {
         @JsonProperty("isAdd")
         @Builder.Default
         private boolean isAdd = true;
+
+        public static ModWishProductCnt from(Long cnt, boolean isAdd) {
+            return ModWishProductCnt.builder()
+                    .cnt(cnt)
+                    .isAdd(isAdd)
+                    .build();
+        }
     }
 }
