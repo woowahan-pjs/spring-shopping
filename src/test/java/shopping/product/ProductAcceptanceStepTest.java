@@ -55,6 +55,18 @@ public class ProductAcceptanceStepTest {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> modifyProductRequest(ExtractableResponse<Response> response, ProductRequest.ModProduct params) {
+        String uri = response.header("Location");
+
+        return RestAssured
+                .given().log().all()
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .body(params)
+                .when().put(uri)
+                .then().log().all()
+                .extract();
+    }
+
 
 
     public static void createdProduct(ExtractableResponse response) {

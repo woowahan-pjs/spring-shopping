@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import shopping.AcceptanceTest;
 import shopping.member.dto.MemberResponse;
+import shopping.product.dto.ProductRequest;
 import shopping.product.dto.ProductResponse;
 
 import java.math.BigDecimal;
@@ -70,14 +71,23 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         ProductResponse.ProductDetail response = findProductRequest(createResponse).as(ProductResponse.ProductDetail.class);
 
         // then
-        assertAll(
-                () -> assertThat(createResponse.getPrdctId()).isEqualTo(response.getPrdctId()),
-                () -> assertThat(createResponse.getPrdctNm()).isEqualTo(response.getPrdctNm()),
-                () -> assertThat(createResponse.getPrice()).isEqualTo(response.getPrice()),
-                () -> assertThat(createResponse.getImage()).isEqualTo(response.getImage())
-        );
+        validateEqualProduct(createResponse, response);
     }
 
+
+
+    @DisplayName("상품을 수정한다.")
+    @Test
+    void updateProduct() {
+        // given
+        ExtractableResponse<Response> createResponse = alreadyCreatedProduct(prdctnm1, price1, images3);
+
+        // when
+        ExtractableResponse<Response> response = modifyProductRequest(createResponse, ProductRequest.ModProduct.from(prdctnm2));
+
+        // then
+        validateModProductName(response);
+    }
 
 
     public static ExtractableResponse<Response> alreadyCreatedProduct(String name, BigDecimal price) {
@@ -85,7 +95,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
     }
 
     public static ExtractableResponse<Response> alreadyCreatedProduct(String name, BigDecimal price, String image) {
-        return createProductRequest(name, price);
+        return createProductRequest(name, price, image);
     }
 
     public static void findMemberListResponse(ExtractableResponse<Response> response) {
@@ -104,5 +114,17 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         assertThat(resultProductSns).containsAll(expectedPrdctsSns);
     }
 
+    private static void validateEqualProduct(ProductResponse.ProductDetail createResponse, ProductResponse.ProductDetail response) {
+        assertAll(
+                () -> assertThat(createResponse.getPrdctId()).isEqualTo(response.getPrdctId()),
+                () -> assertThat(createResponse.getPrdctNm()).isEqualTo(response.getPrdctNm()),
+                () -> assertThat(createResponse.getPrice()).isEqualTo(response.getPrice()),
+                () -> assertThat(createResponse.getImage()).isEqualTo(response.getImage())
+        );
+    }
+
+    private void validateModProductName(ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
+    }
 
 }

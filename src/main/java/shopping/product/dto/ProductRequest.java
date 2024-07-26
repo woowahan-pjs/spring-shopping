@@ -66,6 +66,12 @@ public class ProductRequest {
         private String image;
 
         private BigDecimal price;
+
+        public static ModProduct from(String prdctnm) {
+            return ModProduct.builder()
+                    .prdctNm(prdctnm)
+                    .build();
+        }
     }
 
     @Data

@@ -65,7 +65,7 @@ public class Product extends BaseEntity {
     }
 
     private void updatePrice(BigDecimal price) {
-        if(!this.price.equals(price)) {
+        if(price != null && !this.price.equals(price)) {
             this.price = price;
         }
     }
