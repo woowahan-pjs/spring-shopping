@@ -16,6 +16,9 @@ spring:
     redis:
       host: '${REDIS_HOST:localhost}'
       port: '${REDIS_PORT:6379}'
+  flyway:
+    enabled: true
 service:
   abusing:
     url: '${SERVICE_ABUSING_URL:https://www.purgomalum.com/service/json?text=}'
+
