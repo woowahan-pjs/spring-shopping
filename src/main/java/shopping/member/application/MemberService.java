@@ -96,6 +96,6 @@ public class MemberService {
     public Member findMemberByEmailAndDelYn(String email, YesNo delYn) {
         Member member = Optional.ofNullable(memberRepository.findByEmailAndDelYn(email, delYn))
                 .orElseThrow(() -> new AuthorizationException("해당 회원이 존재하지 않습니다."));
-        return  member;
+        return member;
     }
 }
