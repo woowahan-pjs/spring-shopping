@@ -6,22 +6,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import shopping.auth.dto.TokenRequest;
 import shopping.auth.dto.TokenResponse;
 import shopping.auth.infrastructure.JwtTokenProvider;
 import shopping.constant.enums.YesNo;
-import shopping.member.MemberAcceptanceTest;
 import shopping.member.application.MemberService;
 import shopping.member.domain.Member;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static shopping.member.MemberAcceptanceStepTest.createMemberRequest;
 
 @ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
@@ -41,7 +36,6 @@ public class AuthServiceTest {
     @BeforeEach
     void setUp() {
         authService = new AuthService(jwtTokenProvider, memberService);
-//        createMemberRequest(PASSWORD, EMAIL, NAME, null);
     }
 
     @DisplayName("등록된 회원정보와 유효한 토큰으로 로그인을 한다.")
