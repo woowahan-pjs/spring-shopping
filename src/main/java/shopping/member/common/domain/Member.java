@@ -4,12 +4,11 @@ import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import shopping.common.domain.BaseEntity;
 
 @Entity
@@ -20,6 +19,7 @@ public abstract class Member extends BaseEntity {
 
     @Id
     @Column(name = "email", nullable = false)
+    @Getter
     private String email;
 
     @Embedded
@@ -28,18 +28,17 @@ public abstract class Member extends BaseEntity {
     @Column(name = "member_name", nullable = false)
     private String memberName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "member_priority", nullable = false)
-    private MemberPriority memberPriority;
-
     protected Member() {
     }
 
-    protected Member(final String email, final Password password, final String memberName,
-        final MemberPriority memberPriority) {
+    protected Member(final String email, final Password password, final String memberName) {
         this.email = email;
         this.password = password;
         this.memberName = memberName;
-        this.memberPriority = memberPriority;
+    }
+
+    public boolean isValidPassword(final String rawPassword,
+            final PasswordEncoder passwordEncoder) {
+        return password.isMatch(rawPassword, passwordEncoder);
     }
 }
