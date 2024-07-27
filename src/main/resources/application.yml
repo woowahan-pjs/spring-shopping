@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: spring-shopping
+
+  profiles:
+    default: local
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+
+  sql:
+    init:
+      mode: NEVER
