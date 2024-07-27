@@ -10,7 +10,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.whenever
 import org.springframework.boot.test.mock.mockito.MockBean
 import shopping.E2ETest
-import shopping.product.application.CreateProductRequest
 import shopping.product.application.INVALID_NAME_LENGTH_MESSAGE
 import shopping.product.application.INVALID_NAME_PATTERN_MESSAGE
 import shopping.product.domain.BadWordValidator
@@ -23,7 +22,7 @@ class ProductControllerTest(
         RestAssured
             .given()
             .contentType(ContentType.JSON)
-            .body(buildRequest())
+            .body(CreateProductRequestFixture().build())
             .`when`()
             .post("/products")
             .then()
@@ -37,9 +36,9 @@ class ProductControllerTest(
             .given()
             .contentType(ContentType.JSON)
             .body(
-                buildRequest(
+                CreateProductRequestFixture(
                     name = productName,
-                ),
+                ).build(),
             ).`when`()
             .post("/products")
             .then()
@@ -53,9 +52,9 @@ class ProductControllerTest(
             .given()
             .contentType(ContentType.JSON)
             .body(
-                buildRequest(
+                CreateProductRequestFixture(
                     name = "product !",
-                ),
+                ).build(),
             ).`when`()
             .post("/products")
             .then()
@@ -69,24 +68,12 @@ class ProductControllerTest(
         RestAssured
             .given()
             .contentType(ContentType.JSON)
-            .body(buildRequest())
+            .body(CreateProductRequestFixture().build())
             .`when`()
             .post("/products")
             .then()
-            .statusCode(500)
+            .statusCode(400)
             .log()
             .all()
     }
 }
-
-private fun buildRequest(
-    name: String = "[p_1] 상품",
-    price: Int = 1000,
-    imageUrl: String = "http://localhost:8080/image1",
-    stockQuantity: Int = 10,
-) = CreateProductRequest(
-    name = name,
-    price = price,
-    imageUrl = imageUrl,
-    stockQuantity = stockQuantity,
-)
