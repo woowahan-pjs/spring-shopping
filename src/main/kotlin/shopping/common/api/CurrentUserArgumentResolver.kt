@@ -1,5 +1,6 @@
 package shopping.common.api
 
+import io.jsonwebtoken.ExpiredJwtException
 import io.jsonwebtoken.JwtException
 import org.springframework.core.MethodParameter
 import org.springframework.http.HttpHeaders.AUTHORIZATION
@@ -8,9 +9,11 @@ import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
+import shopping.common.auth.InvalidTokenException
+import shopping.common.auth.JwtProvider
+import shopping.common.auth.TokenExpiredException
+import shopping.common.auth.TokenMissingException
 import shopping.common.domain.CurrentUser
-import shopping.common.error.LoginFailedException
-import shopping.common.util.JwtProvider
 import shopping.user.application.UserNotFoundException
 import shopping.user.domain.UserRepository
 
@@ -40,13 +43,14 @@ class CurrentUserArgumentResolver(
             jwtProvider.getSubject(token)
         } catch (e: Exception) {
             when (e) {
-                is JwtException, is IllegalArgumentException -> throw LoginFailedException("인증정보가 유효하지 않습니다.", e)
+                is ExpiredJwtException -> throw TokenExpiredException()
+                is JwtException, is IllegalArgumentException -> throw InvalidTokenException(e)
                 else -> throw e
             }
         }
 
     private fun getToken(webRequest: NativeWebRequest): String {
-        val token = webRequest.getHeader(AUTHORIZATION) ?: throw LoginFailedException("인증정보가 없습니다.")
-        return token.split(" ").getOrNull(1) ?: throw LoginFailedException("인증정보가 유효하지 않습니다.")
+        val token = webRequest.getHeader(AUTHORIZATION) ?: throw TokenMissingException()
+        return token.split(" ").getOrNull(1) ?: throw InvalidTokenException()
     }
 }
