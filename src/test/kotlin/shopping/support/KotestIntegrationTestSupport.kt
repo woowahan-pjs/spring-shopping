@@ -25,7 +25,7 @@ abstract class KotestIntegrationTestSupport : BehaviorSpec() {
             clearAllMocks()
         }
 
-        afterEach {
+        afterAny {
             cleanUp.all()
         }
 

@@ -34,12 +34,16 @@ import shopping.member.presentation.MemberApi
 import shopping.product.application.ProductCommandService
 import shopping.product.application.ProductQueryService
 import shopping.product.presentation.ProductApi
+import shopping.wish.application.WishListCommandService
+import shopping.wish.application.WishListQueryService
+import shopping.wish.presentation.WishListApi
 
 @WebMvcTest(
     controllers = [
         MemberApi::class,
         AuthenticationApi::class,
         ProductApi::class,
+        WishListApi::class,
     ],
     includeFilters = [
         ComponentScan.Filter(
@@ -94,6 +98,12 @@ abstract class KotestControllerTestSupport : BehaviorSpec() {
 
     @MockkBean
     protected lateinit var productQueryService: ProductQueryService
+
+    @MockkBean
+    protected lateinit var wishListCommandService: WishListCommandService
+
+    @MockkBean
+    protected lateinit var wishListQueryService: WishListQueryService
 
     init {
         afterContainer {

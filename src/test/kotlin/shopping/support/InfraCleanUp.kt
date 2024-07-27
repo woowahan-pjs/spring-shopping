@@ -24,6 +24,8 @@ class InfraCleanUp(
                 return@map tableName
             }
 
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE;")
         tables.forEach { table -> jdbcTemplate.execute("TRUNCATE table $table") }
+        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE;")
     }
 }

@@ -27,6 +27,10 @@ enum class ErrorCode(
     PROFANITY_CONTAIN_PRODUCT_NAME(HttpStatus.BAD_REQUEST, "상품 이름에 비속어가 포함되어 있습니다"),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "상품을 찾을 수 없습니다."),
 
+    // WISH
+    WISH_PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "찜 상품을 찾을 수 없습니다."),
+    WISH_LIST_NOT_FOUND(HttpStatus.NOT_FOUND, "위시 리스트를 찾을 수 없습니다."),
+
     // COMMON
     INTERNAL_SEVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "관리자에게 문의 바랍니다."),
 

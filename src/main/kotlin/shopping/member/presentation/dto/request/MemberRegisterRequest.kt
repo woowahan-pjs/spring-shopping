@@ -2,12 +2,9 @@ package shopping.member.presentation.dto.request
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
-import org.springframework.security.crypto.password.PasswordEncoder
 import shopping.global.common.ValidEnum
 import shopping.member.application.command.MemberCreateCommand
-import shopping.member.domain.Member
 import shopping.member.domain.MemberType
-import kotlin.math.log
 
 data class MemberRegisterRequest(
     @field:NotBlank(message = "이메일은 필수로 입력하셔야 합니다.")
