@@ -14,24 +14,23 @@ import java.time.LocalDateTime
 @Embeddable
 data class WishlistProductId(
     @Column
-    val userId: Long,
+    val memberId: Long,
     @Column
     val productId: Long,
 ) : Serializable
 
 @Entity
 @Table(
-    name = "wishlist",
     indexes = [
-        Index(name = "ix_user_id_product_id", columnList = "userId, productId"),
+        Index(name = "ix_user_id_product_id", columnList = "memberId, productId"),
     ],
 )
 class WishlistProduct(
     productId: Long,
-    userId: Long,
+    memberId: Long,
 ) {
     @EmbeddedId
-    val id: WishlistProductId = WishlistProductId(userId, productId)
+    val id: WishlistProductId = WishlistProductId(memberId, productId)
 
     @CreationTimestamp
     @Column

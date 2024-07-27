@@ -1,4 +1,4 @@
-package shopping.user.domain
+package shopping.member.domain
 
 import shopping.common.error.ApiException
 import shopping.common.error.ErrorCode

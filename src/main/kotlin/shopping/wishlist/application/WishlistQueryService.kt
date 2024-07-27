@@ -6,7 +6,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import shopping.common.domain.CurrentUser
+import shopping.common.domain.CurrentMember
 
 @Service
 class WishlistQueryService(
@@ -14,7 +14,7 @@ class WishlistQueryService(
     private val entityManager: EntityManager,
 ) {
     fun findAllByUserId(
-        currentUser: CurrentUser,
+        currentMember: CurrentMember,
         pageable: Pageable,
     ): Page<WishlistProductDto> {
         val jpql =
@@ -27,7 +27,7 @@ class WishlistQueryService(
                 wp.createdAt
             )
             $fromClause
-            ${whereClause(currentUser.id)}
+            ${whereClause(currentMember.id)}
             order by wp.createdAt desc
             """.trimIndent()
 
@@ -38,17 +38,17 @@ class WishlistQueryService(
                 .setMaxResults(pageable.pageSize)
 
         val content = query.resultList
-        val totalSize = getTotalCount(currentUser.id)
+        val totalSize = getTotalCount(currentMember.id)
 
         return PageImpl(content, pageable, totalSize)
     }
 
-    fun getTotalCount(userId: Long): Long {
+    fun getTotalCount(memberId: Long): Long {
         val jpql =
             """
             select count(wp)
             $fromClause
-            ${whereClause(userId)}
+            ${whereClause(memberId)}
             """.trimIndent()
 
         val query = entityManager.createQuery(jpql, Long::class.java)
@@ -61,8 +61,8 @@ class WishlistQueryService(
         join Product p on wp.id.productId = p.id
         """.trimIndent()
 
-    private fun whereClause(userId: Long) =
+    private fun whereClause(memberId: Long) =
         """
-        where wp.id.userId = $userId
+        where wp.id.memberId = $memberId
         """.trimIndent()
 }

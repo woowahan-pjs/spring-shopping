@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import shopping.common.api.ApiResponse
-import shopping.common.domain.CurrentUser
+import shopping.common.domain.CurrentMember
 import shopping.wishlist.application.AddWishlistRequest
 import shopping.wishlist.application.AddWishlistResponse
 import shopping.wishlist.application.WishlistProductDto
@@ -29,29 +29,29 @@ class WishlistController(
     @PostMapping
     fun addWishlist(
         @Valid @RequestBody request: AddWishlistRequest,
-        currentUser: CurrentUser,
+        currentMember: CurrentMember,
     ): ApiResponse<AddWishlistResponse> {
-        val response = wishlistService.addWishlist(request = request, currentUser = currentUser)
+        val response = wishlistService.addWishlist(request = request, currentMember = currentMember)
 
         return ApiResponse.success(response)
     }
 
     @GetMapping
     fun getWishlists(
-        currentUser: CurrentUser,
+        currentMember: CurrentMember,
         @PageableDefault pageable: Pageable,
     ): ApiResponse<Page<WishlistProductDto>> {
-        val response = wishlistQueryService.findAllByUserId(currentUser = currentUser, pageable = pageable)
+        val response = wishlistQueryService.findAllByUserId(currentMember = currentMember, pageable = pageable)
 
         return ApiResponse.success(response)
     }
 
     @DeleteMapping("/{productId}")
     fun deleteWishlist(
-        currentUser: CurrentUser,
+        currentMember: CurrentMember,
         @PathVariable("productId") productId: Long,
     ): ResponseEntity<ApiResponse<String>> {
-        wishlistService.deleteWishlist(productId = productId, currentUser = currentUser)
+        wishlistService.deleteWishlist(productId = productId, currentMember = currentMember)
 
         return ResponseEntity.noContent().build()
     }

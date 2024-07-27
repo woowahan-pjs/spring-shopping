@@ -13,16 +13,16 @@ import shopping.common.auth.InvalidTokenException
 import shopping.common.auth.JwtProvider
 import shopping.common.auth.TokenExpiredException
 import shopping.common.auth.TokenMissingException
-import shopping.common.domain.CurrentUser
-import shopping.user.application.UserNotFoundException
-import shopping.user.domain.UserRepository
+import shopping.common.domain.CurrentMember
+import shopping.member.application.MemberNotFoundException
+import shopping.member.domain.MemberRepository
 
 @Component
-class CurrentUserArgumentResolver(
+class CurrentMemberArgumentResolver(
     private val jwtProvider: JwtProvider,
-    private val userRepository: UserRepository,
+    private val memberRepository: MemberRepository,
 ) : HandlerMethodArgumentResolver {
-    override fun supportsParameter(parameter: MethodParameter): Boolean = parameter.parameterType == CurrentUser::class.java
+    override fun supportsParameter(parameter: MethodParameter): Boolean = parameter.parameterType == CurrentMember::class.java
 
     override fun resolveArgument(
         parameter: MethodParameter,
@@ -33,9 +33,9 @@ class CurrentUserArgumentResolver(
         val token = getToken(webRequest)
         val email = getEmail(token)
 
-        userRepository.findByEmail(email)?.let {
-            return CurrentUser(it.id, it.email)
-        } ?: throw UserNotFoundException.fromEmail(email)
+        memberRepository.findByEmail(email)?.let {
+            return CurrentMember(it.id, it.email)
+        } ?: throw MemberNotFoundException.fromEmail(email)
     }
 
     private fun getEmail(token: String) =

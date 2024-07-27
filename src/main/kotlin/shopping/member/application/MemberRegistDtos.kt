@@ -1,12 +1,12 @@
-package shopping.user.application
+package shopping.member.application
 
 import jakarta.validation.constraints.Email
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Size
-import shopping.user.domain.MAX_PASSWORD_LENGTH
-import shopping.user.domain.MIN_PASSWORD_LENGTH
+import shopping.member.domain.MAX_PASSWORD_LENGTH
+import shopping.member.domain.MIN_PASSWORD_LENGTH
 
-data class UserRegistRequest(
+data class MemberRegistRequest(
     @field:Email
     val email: String,
     @field:Size(min = MIN_PASSWORD_LENGTH, max = MAX_PASSWORD_LENGTH)
@@ -15,6 +15,6 @@ data class UserRegistRequest(
     val name: String,
 )
 
-data class UserRegistResponse(
+data class MemberRegistResponse(
     val accessToken: String,
 )

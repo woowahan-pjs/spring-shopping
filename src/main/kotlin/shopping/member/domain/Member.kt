@@ -1,13 +1,11 @@
-package shopping.user.domain
+package shopping.member.domain
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.Table
 import shopping.common.domain.BaseEntity
 
 @Entity
-@Table(name = "users")
-class User(
+class Member(
     email: String,
     password: EncryptedPassword,
 ) : BaseEntity() {
