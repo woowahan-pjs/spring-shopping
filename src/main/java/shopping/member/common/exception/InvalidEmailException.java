@@ -1,6 +1,8 @@
 package shopping.member.common.exception;
 
-public class InvalidEmailException extends RuntimeException {
+import shopping.common.exception.SpringShoppingException;
+
+public class InvalidEmailException extends SpringShoppingException {
 
     public InvalidEmailException(final String message) {
         super(message);

@@ -1,6 +1,8 @@
 package shopping.member.common.exception;
 
-public class InvalidPasswordException extends RuntimeException {
+import shopping.common.exception.SpringShoppingException;
+
+public class InvalidPasswordException extends SpringShoppingException {
 
     public InvalidPasswordException(final String message) {
         super(message);

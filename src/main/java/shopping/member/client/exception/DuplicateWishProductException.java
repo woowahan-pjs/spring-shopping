@@ -1,6 +1,8 @@
 package shopping.member.client.exception;
 
-public class DuplicateWishProductException extends RuntimeException {
+import shopping.common.exception.SpringShoppingException;
+
+public class DuplicateWishProductException extends SpringShoppingException {
 
     public DuplicateWishProductException(final String message) {
         super(message);

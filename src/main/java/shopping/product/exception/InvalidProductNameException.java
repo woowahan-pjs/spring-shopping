@@ -1,6 +1,8 @@
 package shopping.product.exception;
 
-public class InvalidProductNameException extends IllegalStateException {
+import shopping.common.exception.SpringShoppingException;
+
+public class InvalidProductNameException extends SpringShoppingException {
 
     public InvalidProductNameException(String s) {
         super(s);

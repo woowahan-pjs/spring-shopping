@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductRepository;
+import shopping.product.exception.NotFoundProductException;
 
 @Service
 @RequiredArgsConstructor

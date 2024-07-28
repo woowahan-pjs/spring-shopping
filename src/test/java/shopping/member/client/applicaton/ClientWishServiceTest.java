@@ -16,7 +16,7 @@ import shopping.member.client.applicaton.dto.WishProductResponse;
 import shopping.member.client.domain.Client;
 import shopping.member.client.exception.DuplicateWishProductException;
 import shopping.member.client.exception.NotFoundWishProductException;
-import shopping.product.application.NotFoundProductException;
+import shopping.product.exception.NotFoundProductException;
 import shopping.product.application.ProductService;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductRepository;
