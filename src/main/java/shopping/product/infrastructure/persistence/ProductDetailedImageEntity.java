@@ -7,7 +7,8 @@ import java.util.Objects;
 @Table(name = "product_detailed_images")
 @Entity
 public class ProductDetailedImageEntity {
-    @Id @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "detailed_image_url")

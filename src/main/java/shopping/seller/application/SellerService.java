@@ -21,7 +21,7 @@ public class SellerService implements SellerSignInUseCase, SellerSignUpUseCase, 
 
     @Override
     public Seller signUp(final SellerSignUpCommand sellerSignUpCommand) {
-        return sellerRepository.save(mapToDomain(sellerSignUpCommand));
+        return sellerRepository.save(init(sellerSignUpCommand));
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SellerService implements SellerSignInUseCase, SellerSignUpUseCase, 
         accessTokenRepository.delete(AuthorizationType.SELLER, userId);
     }
 
-    private Seller mapToDomain(final SellerSignUpCommand sellerSignUpCommand) {
+    private Seller init(final SellerSignUpCommand sellerSignUpCommand) {
         return new Seller(
                 null,
                 sellerSignUpCommand.email(),

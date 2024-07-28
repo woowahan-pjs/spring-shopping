@@ -17,7 +17,8 @@ public class ShopEntity {
     public ShopEntity() {
     }
 
-    public ShopEntity(final Long sellerId, final String name) {
+    public ShopEntity(final Long id, final long sellerId, final String name) {
+        this.id = id;
         this.sellerId = sellerId;
         this.name = name;
     }

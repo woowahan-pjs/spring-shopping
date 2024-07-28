@@ -8,8 +8,8 @@ import shopping.seller.domain.SellerRepository;
 import shopping.seller.infrastructure.persistence.SellerEntity;
 import shopping.seller.infrastructure.persistence.SellerEntityJpaRepository;
 
+import static shopping.seller.infrastructure.SellerEntityMapper.domainToEntity;
 import static shopping.seller.infrastructure.SellerEntityMapper.entityToDomain;
-import static shopping.seller.infrastructure.SellerEntityMapper.init;
 
 @Component
 public class SellerSignUpAdapter implements SellerRepository {
@@ -23,7 +23,7 @@ public class SellerSignUpAdapter implements SellerRepository {
     @Transactional
     @Override
     public Seller save(final Seller seller) {
-        final SellerEntity sellerEntity = repository.save(init(seller));
+        final SellerEntity sellerEntity = repository.save(domainToEntity(seller));
         return entityToDomain(sellerEntity);
     }
 

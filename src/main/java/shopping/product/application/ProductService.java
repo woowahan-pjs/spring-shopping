@@ -4,9 +4,9 @@ import org.springframework.stereotype.Service;
 import shopping.product.application.command.ProductRegistrationCommand;
 import shopping.product.application.query.ProductRegistrationQuery;
 import shopping.product.domain.Product;
-import shopping.product.domain.ProductRegistrationRequest;
-import shopping.product.domain.repository.ProductRepository;
+import shopping.product.domain.ProductDetailedImage;
 import shopping.product.domain.ProductValidator;
+import shopping.product.domain.repository.ProductRepository;
 
 @Service
 public class ProductService implements ProductRegistrationUseCase {
@@ -21,19 +21,22 @@ public class ProductService implements ProductRegistrationUseCase {
     @Override
     public ProductRegistrationQuery register(final ProductRegistrationCommand command) {
         productValidator.verify(command);
-        final Product product = productRepository.save(mapToDomain(command));
+        final Product product = productRepository.save(init(command));
         return new ProductRegistrationQuery(product);
     }
 
-    private ProductRegistrationRequest mapToDomain(final ProductRegistrationCommand command) {
-        return new ProductRegistrationRequest(
+    private Product init(final ProductRegistrationCommand command) {
+        return new Product(
+                null,
                 command.name(),
                 command.amount(),
                 command.thumbnailImageUrl(),
                 command.subCategoryId(),
                 command.shopId(),
                 command.sellerId(),
-                command.detailedImageUrls()
+                command.detailedImageUrls().stream()
+                        .map(it -> new ProductDetailedImage(null, it))
+                        .toList()
         );
     }
 }

@@ -27,7 +27,7 @@ public class CustomerExceptionHandler {
 
     @ExceptionHandler(PersistenceException.class)
     public ResponseEntity<ErrorMessage> persistence(final PersistenceException exception) {
-        logger.info("PersistenceException = {}", exception.getMessage());
+        logger.info("PersistenceException = {}", exception.getStackTrace());
         return ResponseEntity.badRequest().body(new ErrorMessage(exception.getMessage()));
     }
 

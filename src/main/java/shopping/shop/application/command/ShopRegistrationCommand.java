@@ -5,12 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import shopping.common.CommandValidating;
 
 public record ShopRegistrationCommand(
-        @NotBlank String name,
-        @Min(1) long userId
+        @Min(1) long sellerId,
+        @NotBlank String name
 ) implements CommandValidating<ShopRegistrationCommand> {
-    public ShopRegistrationCommand(final String name, final long userId) {
+    public ShopRegistrationCommand(final long sellerId, final String name) {
+        this.sellerId = sellerId;
         this.name = name;
-        this.userId = userId;
-        validateSelf(this);
     }
 }

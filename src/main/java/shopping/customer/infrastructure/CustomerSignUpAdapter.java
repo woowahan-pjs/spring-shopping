@@ -3,14 +3,13 @@ package shopping.customer.infrastructure;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.admin.infrastructure.AdminEntityMapper;
 import shopping.customer.domain.Customer;
 import shopping.customer.domain.repository.CustomerRepository;
 import shopping.customer.infrastructure.persistence.CustomerEntity;
 import shopping.customer.infrastructure.persistence.CustomerEntityJpaRepository;
 
+import static shopping.customer.infrastructure.CustomerEntityMapper.domainToEntity;
 import static shopping.customer.infrastructure.CustomerEntityMapper.entityToDomain;
-import static shopping.customer.infrastructure.CustomerEntityMapper.init;
 
 @Component
 public class CustomerSignUpAdapter implements CustomerRepository {
@@ -24,7 +23,7 @@ public class CustomerSignUpAdapter implements CustomerRepository {
     @Transactional
     @Override
     public Customer save(final Customer customer) {
-        final CustomerEntity customerEntity = repository.save(init(customer));
+        final CustomerEntity customerEntity = repository.save(domainToEntity(customer));
         return entityToDomain(customerEntity);
     }
 

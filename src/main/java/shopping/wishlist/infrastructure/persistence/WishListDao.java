@@ -4,7 +4,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
-import shopping.product.infrastructure.persistence.ProductListMapper;
 import shopping.wishlist.infrastructure.api.dto.WishListInfo;
 
 import javax.sql.DataSource;

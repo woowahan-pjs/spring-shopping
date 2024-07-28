@@ -1,11 +1,14 @@
 package shopping.shop.infrastructure;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import shopping.shop.domain.Shop;
-import shopping.shop.domain.ShopRegistrationRequest;
 import shopping.shop.domain.ShopRepository;
 import shopping.shop.infrastructure.pesistence.ShopEntity;
 import shopping.shop.infrastructure.pesistence.ShopEntityRepository;
+
+import static shopping.shop.infrastructure.ShopEntityMapper.domainToEntity;
+import static shopping.shop.infrastructure.ShopEntityMapper.entityToDomain;
 
 @Component
 public class ShopRepositoryAdapter implements ShopRepository {
@@ -16,13 +19,10 @@ public class ShopRepositoryAdapter implements ShopRepository {
         this.shopEntityRepository = shopEntityRepository;
     }
 
+    @Transactional
     @Override
-    public Shop save(final ShopRegistrationRequest shopRegistrationRequest) {
-        final ShopEntity shopEntity = shopEntityRepository.save(new ShopEntity(shopRegistrationRequest.userId(), shopRegistrationRequest.name()));
-        return mapToDomain(shopEntity);
-    }
-
-    public Shop mapToDomain(final ShopEntity shopEntity) {
-        return new Shop(shopEntity.getId(), shopEntity.getSellerId(), shopEntity.getName());
+    public Shop save(final Shop shop) {
+        final ShopEntity shopEntity = shopEntityRepository.save(domainToEntity(shop));
+        return entityToDomain(shopEntity);
     }
 }

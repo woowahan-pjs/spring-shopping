@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RestController;
 import shopping.common.auth.Authorization;
 import shopping.common.auth.AuthorizationType;
 import shopping.common.auth.AuthorizationUser;
+import shopping.seller.application.SellerSignInUseCase;
 import shopping.seller.application.SellerSignOutUseCase;
+import shopping.seller.application.SellerSignUpUseCase;
 import shopping.seller.infrastructure.api.dto.SellerSignInHttpRequest;
 import shopping.seller.infrastructure.api.dto.SellerSignInHttpResponse;
 import shopping.seller.infrastructure.api.dto.SellerSignUpHttpRequest;
-import shopping.seller.application.SellerSignInUseCase;
-import shopping.seller.application.SellerSignUpUseCase;
 
 import java.net.URI;
 

@@ -7,9 +7,9 @@ public class CustomerEntityMapper {
     private CustomerEntityMapper() {
     }
 
-    public static CustomerEntity init(final Customer customer) {
+    public static CustomerEntity domainToEntity(final Customer customer) {
         return new CustomerEntity(
-                null,
+                customer.id(),
                 customer.email(),
                 customer.name(),
                 customer.address(),

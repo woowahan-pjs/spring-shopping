@@ -27,7 +27,7 @@ public class AccessTokenRepositoryImpl implements AccessTokenRepository {
         final String prefix = prefix(authorizationType);
         final String key = prefix + accessToken;
         final String value = redisTemplate.opsForValue().get(key);
-        if(Objects.isNull(value)) {
+        if (Objects.isNull(value)) {
             throw new RuntimeException();
         }
         return Long.valueOf(value);

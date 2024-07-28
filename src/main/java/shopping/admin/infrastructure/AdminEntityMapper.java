@@ -7,8 +7,8 @@ public class AdminEntityMapper {
     private AdminEntityMapper() {
     }
 
-    public static AdminEntity init(final Admin admin) {
-        return new AdminEntity(null, admin.name(), admin.email(), admin.password());
+    public static AdminEntity domainToEntity(final Admin admin) {
+        return new AdminEntity(admin.id(), admin.name(), admin.email(), admin.password());
     }
 
     public static Admin entityToDomain(final AdminEntity adminEntity) {

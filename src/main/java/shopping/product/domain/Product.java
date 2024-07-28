@@ -3,7 +3,7 @@ package shopping.product.domain;
 import java.util.List;
 
 public record Product(
-        long id,
+        Long id,
         String name,
         long amount,
         String thumbnailImageUrl,

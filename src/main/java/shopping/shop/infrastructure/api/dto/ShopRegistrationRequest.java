@@ -12,8 +12,8 @@ public class ShopRegistrationRequest {
         this.name = name;
     }
 
-    public ShopRegistrationCommand toCommand(final long userId) {
-        return new ShopRegistrationCommand(name, userId);
+    public ShopRegistrationCommand toCommand(final long sellerId) {
+        return new ShopRegistrationCommand(sellerId, name);
     }
 
     public String getName() {

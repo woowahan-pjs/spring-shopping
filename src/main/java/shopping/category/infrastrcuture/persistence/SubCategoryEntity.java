@@ -7,7 +7,8 @@ import java.util.Objects;
 @Table(name = "sub_categories")
 @Entity
 public class SubCategoryEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true)

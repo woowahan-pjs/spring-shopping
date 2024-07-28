@@ -7,9 +7,9 @@ public class SellerEntityMapper {
     private SellerEntityMapper() {
     }
 
-    public static SellerEntity init(final Seller seller) {
+    public static SellerEntity domainToEntity(final Seller seller) {
         return new SellerEntity(
-                null,
+                seller.id(),
                 seller.email(),
                 seller.name(),
                 seller.address(),

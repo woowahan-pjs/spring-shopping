@@ -22,8 +22,7 @@ public class CustomerService implements CustomerSignUpUseCase, CustomerSignInUse
 
     @Override
     public Customer signUp(final CustomerSignUpCommand customerSignUpCommand) {
-        final Customer customer = mapToDomain(customerSignUpCommand);
-        return customerRepository.save(customer);
+        return customerRepository.save(init(customerSignUpCommand));
     }
 
     @Override
@@ -40,7 +39,7 @@ public class CustomerService implements CustomerSignUpUseCase, CustomerSignInUse
         accessTokenRepository.delete(AuthorizationType.CUSTOMER, userId);
     }
 
-    private Customer mapToDomain(final CustomerSignUpCommand customerSignUpCommand) {
+    private Customer init(final CustomerSignUpCommand customerSignUpCommand) {
         return new Customer(
                 null,
                 customerSignUpCommand.email(),

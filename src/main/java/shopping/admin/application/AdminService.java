@@ -21,7 +21,7 @@ public class AdminService implements AdminSignUpUseCase, AdminSignInUseCase {
 
     @Override
     public Admin signUp(final AdminSignUpCommand adminSignUpCommand) {
-        return adminRepository.save(mapToDomain(adminSignUpCommand));
+        return adminRepository.save(init(adminSignUpCommand));
     }
 
     @Override
@@ -33,11 +33,11 @@ public class AdminService implements AdminSignUpUseCase, AdminSignInUseCase {
         throw new PasswordMissMatchException();
     }
 
-    private Admin mapToDomain(final AdminSignUpCommand adminSignUpCommand) {
+    private Admin init(final AdminSignUpCommand adminSignUpCommand) {
         return new Admin(
                 null,
-                adminSignUpCommand.email(),
                 adminSignUpCommand.name(),
+                adminSignUpCommand.email(),
                 adminSignUpCommand.password()
         );
     }

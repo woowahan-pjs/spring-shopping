@@ -3,12 +3,12 @@ package shopping.category.domain;
 import java.util.List;
 
 public record Category(
-        long id,
+        Long id,
         String name,
         int order,
+        List<SubCategory> subCategories,
         long createdBy,
-        long modifiedBy,
-        List<SubCategory> subCategories
+        long modifiedBy
 ) {
 
     public void addSubCategory(final String name, final int order, final long adminId) {
