@@ -32,7 +32,8 @@ public class ProductService implements ProductRegistrationUseCase {
                 command.thumbnailImageUrl(),
                 command.subCategoryId(),
                 command.shopId(),
-                command.sellerId()
+                command.sellerId(),
+                command.detailedImageUrls()
         );
     }
 }

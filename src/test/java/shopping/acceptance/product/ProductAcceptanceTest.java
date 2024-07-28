@@ -30,7 +30,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
         final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
 
-        final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, NAME, AMOUNT, THUMBNAIL_IMAGE_URL, sellerAccessToken);
+        final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, NAME, AMOUNT, THUMBNAIL_IMAGE_URL, DETAILED_IMAGE_URLS, sellerAccessToken);
         ProductAcceptanceSteps.validate(responseExtractableResponse);
     }
 
@@ -46,7 +46,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
         final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
 
-        final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, INVALID_NAME, AMOUNT, THUMBNAIL_IMAGE_URL, sellerAccessToken);
+        final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, INVALID_NAME, AMOUNT, THUMBNAIL_IMAGE_URL, DETAILED_IMAGE_URLS, sellerAccessToken);
         ProductAcceptanceSteps.validateInvalidNameLength(responseExtractableResponse);
     }
 
@@ -62,7 +62,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
         final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
 
-        final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, PROFANITY_NAME, AMOUNT, THUMBNAIL_IMAGE_URL, sellerAccessToken);
+        final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, PROFANITY_NAME, AMOUNT, THUMBNAIL_IMAGE_URL, DETAILED_IMAGE_URLS, sellerAccessToken);
         ProductAcceptanceSteps.validateInvalidNameContainsProfanity(responseExtractableResponse);
     }
 
@@ -78,7 +78,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
         final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
 
-        final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, INVALID_EXPRESS_NAME, AMOUNT, THUMBNAIL_IMAGE_URL, sellerAccessToken);
+        final ExtractableResponse<Response> responseExtractableResponse = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, INVALID_EXPRESS_NAME, AMOUNT, THUMBNAIL_IMAGE_URL, DETAILED_IMAGE_URLS, sellerAccessToken);
         ProductAcceptanceSteps.validateInvalidNameContainsProfanity(responseExtractableResponse);
     }
 
@@ -94,7 +94,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
         final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
 
-        final long 상품 = ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, NAME, AMOUNT, THUMBNAIL_IMAGE_URL, sellerAccessToken);
+        final long 상품 = ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, NAME, AMOUNT, THUMBNAIL_IMAGE_URL, DETAILED_IMAGE_URLS, sellerAccessToken);
         CustomerAcceptanceSteps.회원가입됨(CustomerFixture.EMAIL, CustomerFixture.NAME, CustomerFixture.PASSWORD, CustomerFixture.BIRTH, CustomerFixture.ADDRESS, CustomerFixture.PHONE);
         final String customerAccessToken = CustomerAcceptanceSteps.로그인됨(CustomerFixture.EMAIL, CustomerFixture.PASSWORD);
 
@@ -113,7 +113,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         SellerAcceptanceSteps.회원가입됨(SellerFixture.EMAIL, SellerFixture.NAME, SellerFixture.PASSWORD, SellerFixture.BIRTH, SellerFixture.ADDRESS, SellerFixture.PHONE);
         final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
         final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
-        ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, NAME, AMOUNT, THUMBNAIL_IMAGE_URL, sellerAccessToken);
+        ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, NAME, AMOUNT, THUMBNAIL_IMAGE_URL, DETAILED_IMAGE_URLS, sellerAccessToken);
 
         CustomerAcceptanceSteps.회원가입됨(CustomerFixture.EMAIL, CustomerFixture.NAME, CustomerFixture.PASSWORD, CustomerFixture.BIRTH, CustomerFixture.ADDRESS, CustomerFixture.PHONE);
         final String customerAccessToken = CustomerAcceptanceSteps.로그인됨(CustomerFixture.EMAIL, CustomerFixture.PASSWORD);
@@ -133,7 +133,7 @@ public class ProductAcceptanceTest extends AcceptanceTest {
         SellerAcceptanceSteps.회원가입됨(SellerFixture.EMAIL, SellerFixture.NAME, SellerFixture.PASSWORD, SellerFixture.BIRTH, SellerFixture.ADDRESS, SellerFixture.PHONE);
         final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
         final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
-        ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, NAME, AMOUNT, THUMBNAIL_IMAGE_URL, sellerAccessToken);
+        ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, NAME, AMOUNT, THUMBNAIL_IMAGE_URL, DETAILED_IMAGE_URLS, sellerAccessToken);
 
         CustomerAcceptanceSteps.회원가입됨(CustomerFixture.EMAIL, CustomerFixture.NAME, CustomerFixture.PASSWORD, CustomerFixture.BIRTH, CustomerFixture.ADDRESS, CustomerFixture.PHONE);
         final String customerAccessToken = CustomerAcceptanceSteps.로그인됨(CustomerFixture.EMAIL, CustomerFixture.PASSWORD);

@@ -6,7 +6,10 @@ import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import shopping.product.infrastructure.api.dto.ProductRegistrationDetailedImageHttpRequest;
 import shopping.product.infrastructure.api.dto.ProductRegistrationHttpRequest;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -16,12 +19,22 @@ public class ProductAcceptanceSteps {
     private static final String PRODUCTS = "/products";
     private static final String PRODUCT_BASE_URL = "/api/products";
 
-    public static ExtractableResponse<Response> registerProduct(final long shopId, final long subCategoryId, final String name, final long amount, final String thumbnailImageUrl, final String accessToken) {
+    public static ExtractableResponse<Response> registerProduct(final long shopId,
+                                                                final long subCategoryId,
+                                                                final String name,
+                                                                final long amount,
+                                                                final String thumbnailImageUrl,
+                                                                final List<String> detailedImageUrls,
+                                                                final String accessToken
+                                                                ) {
         return RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(new Header("Authorization", "Bearer " + accessToken))
-                .body(new ProductRegistrationHttpRequest(name, amount, thumbnailImageUrl, subCategoryId))
+                .body(
+                        new ProductRegistrationHttpRequest(name, amount, thumbnailImageUrl, subCategoryId,
+                        new ProductRegistrationDetailedImageHttpRequest(detailedImageUrls))
+                )
                 .when()
                 .post(BASE_URL + "/" + shopId + PRODUCTS)
                 .then()
@@ -99,8 +112,8 @@ public class ProductAcceptanceSteps {
         );
     }
 
-    public static long 상품등록됨(final long 상점, final long 서브카테고리, final String productName, final long amount, final String thumbnailImageUrl, final String sellerAccessToken) {
-        final ExtractableResponse<Response> response = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, productName, amount, thumbnailImageUrl, sellerAccessToken);
+    public static long 상품등록됨(final long 상점, final long 서브카테고리, final String productName, final long amount, final String thumbnailImageUrl, final List<String> detailedImageUrls,  final String sellerAccessToken) {
+        final ExtractableResponse<Response> response = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, productName, amount, thumbnailImageUrl, detailedImageUrls, sellerAccessToken);
         ProductAcceptanceSteps.validate(response);
         return response.body().jsonPath().getLong("id");
     }

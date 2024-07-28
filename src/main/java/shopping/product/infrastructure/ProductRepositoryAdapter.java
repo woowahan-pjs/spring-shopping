@@ -3,10 +3,14 @@ package shopping.product.infrastructure;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.product.domain.Product;
+import shopping.product.domain.ProductDetailedImage;
 import shopping.product.domain.ProductRegistrationRequest;
 import shopping.product.domain.repository.ProductRepository;
+import shopping.product.infrastructure.persistence.ProductDetailedImageEntity;
 import shopping.product.infrastructure.persistence.ProductEntity;
 import shopping.product.infrastructure.persistence.ProductEntityJpaRepository;
+
+import java.util.List;
 
 @Component
 public class ProductRepositoryAdapter implements ProductRepository {
@@ -32,8 +36,15 @@ public class ProductRepositoryAdapter implements ProductRepository {
                 productEntity.getThumbnailImageUrl(),
                 productEntity.getSubCategoryId(),
                 productEntity.getShopId(),
-                productEntity.getSellerId()
-        );
+                productEntity.getSellerId(),
+                entityToDomain(productEntity.getDetailedImages())
+            );
+    }
+
+    private List<ProductDetailedImage> entityToDomain(final List<ProductDetailedImageEntity> detailedImages) {
+        return detailedImages.stream()
+                .map(it -> new ProductDetailedImage(it.getId(), it.getDetailedImageUrl()))
+                .toList();
     }
 
     private ProductEntity domainToEntity(final ProductRegistrationRequest productRegistrationRequest) {
@@ -44,7 +55,14 @@ public class ProductRepositoryAdapter implements ProductRepository {
                 productRegistrationRequest.thumbnailImageUrl(),
                 productRegistrationRequest.subCategoryId(),
                 productRegistrationRequest.shopId(),
-                productRegistrationRequest.sellerId()
+                productRegistrationRequest.sellerId(),
+                domainToEntity(productRegistrationRequest.detailedImageUrls())
         );
+    }
+
+    private List<ProductDetailedImageEntity> domainToEntity(final List<String> detailedImageUrls) {
+        return detailedImageUrls.stream()
+                .map(it -> new ProductDetailedImageEntity(null, it, null))
+                .toList();
     }
 }

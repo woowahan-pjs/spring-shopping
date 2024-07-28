@@ -12,7 +12,6 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
 
     @Test
     void scenario() {
-
     }
 
     @DisplayName("이메일과 비밀번호를 입력하면 회원 가입을 할 수 있다.")

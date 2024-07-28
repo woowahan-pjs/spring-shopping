@@ -2,6 +2,7 @@ package shopping.product.infrastructure.persistence;
 
 import jakarta.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 @Table(name = "products")
@@ -22,10 +23,13 @@ public class ProductEntity {
     @Column(name = "seller_id")
     private long sellerId;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<ProductDetailedImageEntity> detailedImages;
+
     public ProductEntity() {
     }
 
-    public ProductEntity(final Long id, final String name, final long amount, final String thumbnailImageUrl, final long subCategoryId, final long shopId, final long sellerId) {
+    public ProductEntity(final Long id, final String name, final long amount, final String thumbnailImageUrl, final long subCategoryId, final long shopId, final long sellerId, final List<ProductDetailedImageEntity> detailedImages) {
         this.id = id;
         this.name = name;
         this.amount = amount;
@@ -33,6 +37,8 @@ public class ProductEntity {
         this.subCategoryId = subCategoryId;
         this.shopId = shopId;
         this.sellerId = sellerId;
+        this.detailedImages = detailedImages;
+        detailedImages.forEach(detailedImage -> detailedImage.setProduct(this));
     }
 
     public Long getId() {
@@ -61,6 +67,10 @@ public class ProductEntity {
 
     public long getSellerId() {
         return sellerId;
+    }
+
+    public List<ProductDetailedImageEntity> getDetailedImages() {
+        return detailedImages;
     }
 
     @Override
