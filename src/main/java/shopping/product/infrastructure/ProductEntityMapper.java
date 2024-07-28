@@ -39,7 +39,7 @@ public class ProductEntityMapper {
                 product.subCategoryId(),
                 product.shopId(),
                 product.sellerId(),
-                domainToEntity(product.detailedImages())
+                domainToEntity(product.detailedImageUrls())
         );
     }
 

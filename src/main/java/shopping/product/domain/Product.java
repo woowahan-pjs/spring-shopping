@@ -10,6 +10,6 @@ public record Product(
         long subCategoryId,
         long shopId,
         long sellerId,
-        List<ProductDetailedImage> detailedImages
+        List<ProductDetailedImage> detailedImageUrls
 ) {
 }
