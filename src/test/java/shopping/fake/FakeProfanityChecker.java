@@ -8,8 +8,8 @@ public class FakeProfanityChecker implements ProfanityChecker {
     private static final List<String> profanities = List.of("비속어", "욕", "메롱");
 
     @Override
-    public boolean isProfanity(final String word) {
+    public boolean isProfanity(final String text) {
         return profanities.stream()
-                .anyMatch(word::contains);
+                .anyMatch(text::contains);
     }
 }
