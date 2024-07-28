@@ -7,7 +7,6 @@ import shopping.common.exception.PasswordMissMatchException;
 import shopping.customer.application.command.CustomerSignInCommand;
 import shopping.customer.application.command.CustomerSignUpCommand;
 import shopping.customer.domain.Customer;
-import shopping.customer.domain.CustomerSignUpRequest;
 import shopping.customer.domain.repository.CustomerRepository;
 
 @Service
@@ -23,8 +22,8 @@ public class CustomerService implements CustomerSignUpUseCase, CustomerSignInUse
 
     @Override
     public Customer signUp(final CustomerSignUpCommand customerSignUpCommand) {
-        final CustomerSignUpRequest customerSignUpRequest = mapToDomain(customerSignUpCommand);
-        return customerRepository.save(customerSignUpRequest);
+        final Customer customer = mapToDomain(customerSignUpCommand);
+        return customerRepository.save(customer);
     }
 
     @Override
@@ -41,8 +40,9 @@ public class CustomerService implements CustomerSignUpUseCase, CustomerSignInUse
         accessTokenRepository.delete(AuthorizationType.CUSTOMER, userId);
     }
 
-    private CustomerSignUpRequest mapToDomain(final CustomerSignUpCommand customerSignUpCommand) {
-        return new CustomerSignUpRequest(
+    private Customer mapToDomain(final CustomerSignUpCommand customerSignUpCommand) {
+        return new Customer(
+                null,
                 customerSignUpCommand.email(),
                 customerSignUpCommand.name(),
                 customerSignUpCommand.password(),

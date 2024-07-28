@@ -1,7 +1,6 @@
 package shopping.utils.fake;
 
 import shopping.customer.domain.Customer;
-import shopping.customer.domain.CustomerSignUpRequest;
 import shopping.customer.domain.repository.CustomerRepository;
 
 import java.util.HashMap;
@@ -13,7 +12,7 @@ public class FakeCustomerRepository implements CustomerRepository {
     private final AtomicLong idGenerator = new AtomicLong();
 
     @Override
-    public Customer save(final CustomerSignUpRequest customerSignUpRequest) {
+    public Customer save(final Customer customerSignUpRequest) {
         final boolean exist = storage.values().stream()
                 .map(Customer::email)
                 .anyMatch(it -> it.equals(customerSignUpRequest.email()));

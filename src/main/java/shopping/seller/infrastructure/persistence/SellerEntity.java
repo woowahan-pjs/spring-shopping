@@ -21,12 +21,8 @@ public class SellerEntity {
     public SellerEntity() {
     }
 
-    public SellerEntity(final String email,
-                        final String name,
-                        final String address,
-                        final String birth,
-                        final String phone,
-                        final String password) {
+    public SellerEntity(final Long id, final String email, final String name, final String address, final String birth, final String phone, final String password) {
+        this.id = id;
         this.email = email;
         this.name = name;
         this.address = address;

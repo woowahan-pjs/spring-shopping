@@ -5,7 +5,6 @@ import shopping.admin.application.command.AdminSignInCommand;
 import shopping.admin.application.command.AdminSignUpCommand;
 import shopping.admin.domain.Admin;
 import shopping.admin.domain.AdminRepository;
-import shopping.admin.domain.AdminSignUpRequest;
 import shopping.common.auth.AccessTokenRepository;
 import shopping.common.auth.AuthorizationType;
 import shopping.common.exception.PasswordMissMatchException;
@@ -22,8 +21,7 @@ public class AdminService implements AdminSignUpUseCase, AdminSignInUseCase {
 
     @Override
     public Admin signUp(final AdminSignUpCommand adminSignUpCommand) {
-        final AdminSignUpRequest adminSignUpRequest = mapToDomain(adminSignUpCommand);
-        return adminRepository.save(adminSignUpRequest);
+        return adminRepository.save(mapToDomain(adminSignUpCommand));
     }
 
     @Override
@@ -35,8 +33,9 @@ public class AdminService implements AdminSignUpUseCase, AdminSignInUseCase {
         throw new PasswordMissMatchException();
     }
 
-    private AdminSignUpRequest mapToDomain(final AdminSignUpCommand adminSignUpCommand) {
-        return new AdminSignUpRequest(
+    private Admin mapToDomain(final AdminSignUpCommand adminSignUpCommand) {
+        return new Admin(
+                null,
                 adminSignUpCommand.email(),
                 adminSignUpCommand.name(),
                 adminSignUpCommand.password()

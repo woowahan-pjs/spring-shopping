@@ -8,7 +8,6 @@ import shopping.seller.application.command.SellerSignInCommand;
 import shopping.seller.application.command.SellerSignUpCommand;
 import shopping.seller.domain.Seller;
 import shopping.seller.domain.SellerRepository;
-import shopping.seller.domain.SellerSignUpRequest;
 
 @Service
 public class SellerService implements SellerSignInUseCase, SellerSignUpUseCase, SellerSignOutUseCase {
@@ -39,8 +38,9 @@ public class SellerService implements SellerSignInUseCase, SellerSignUpUseCase, 
         accessTokenRepository.delete(AuthorizationType.SELLER, userId);
     }
 
-    private SellerSignUpRequest mapToDomain(final SellerSignUpCommand sellerSignUpCommand) {
-        return new SellerSignUpRequest(
+    private Seller mapToDomain(final SellerSignUpCommand sellerSignUpCommand) {
+        return new Seller(
+                null,
                 sellerSignUpCommand.email(),
                 sellerSignUpCommand.name(),
                 sellerSignUpCommand.password(),

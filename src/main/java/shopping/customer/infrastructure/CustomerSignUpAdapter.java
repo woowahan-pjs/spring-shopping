@@ -3,11 +3,14 @@ package shopping.customer.infrastructure;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.admin.infrastructure.AdminEntityMapper;
 import shopping.customer.domain.Customer;
-import shopping.customer.domain.CustomerSignUpRequest;
 import shopping.customer.domain.repository.CustomerRepository;
 import shopping.customer.infrastructure.persistence.CustomerEntity;
 import shopping.customer.infrastructure.persistence.CustomerEntityJpaRepository;
+
+import static shopping.customer.infrastructure.CustomerEntityMapper.entityToDomain;
+import static shopping.customer.infrastructure.CustomerEntityMapper.init;
 
 @Component
 public class CustomerSignUpAdapter implements CustomerRepository {
@@ -20,38 +23,16 @@ public class CustomerSignUpAdapter implements CustomerRepository {
 
     @Transactional
     @Override
-    public Customer save(final CustomerSignUpRequest customerSignUpRequest) {
-        final CustomerEntity customerEntity = repository.save(domainToEntity(customerSignUpRequest));
+    public Customer save(final Customer customer) {
+        final CustomerEntity customerEntity = repository.save(init(customer));
         return entityToDomain(customerEntity);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Customer findByEmail(final String email) {
-        final CustomerEntity customerEntity = repository.findByEmail(email)
+        return repository.findByEmail(email)
+                .map(CustomerEntityMapper::entityToDomain)
                 .orElseThrow(() -> new EntityNotFoundException());
-        return entityToDomain(customerEntity);
-    }
-
-    private CustomerEntity domainToEntity(final CustomerSignUpRequest customerSignUpRequest) {
-        return new CustomerEntity(
-                customerSignUpRequest.email(),
-                customerSignUpRequest.name(),
-                customerSignUpRequest.address(),
-                customerSignUpRequest.birth(),
-                customerSignUpRequest.phone(),
-                customerSignUpRequest.password());
-    }
-
-    private Customer entityToDomain(final CustomerEntity customerEntity) {
-        return new Customer(
-                customerEntity.getId(),
-                customerEntity.getEmail(),
-                customerEntity.getName(),
-                customerEntity.getPassword(),
-                customerEntity.getBirth(),
-                customerEntity.getAddress(),
-                customerEntity.getPhone()
-        );
     }
 }

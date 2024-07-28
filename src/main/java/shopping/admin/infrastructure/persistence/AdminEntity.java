@@ -18,7 +18,8 @@ public class AdminEntity {
     public AdminEntity() {
     }
 
-    public AdminEntity(final String name, final String email, final String password) {
+    public AdminEntity(final Long id, final String name, final String email, final String password) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.password = password;

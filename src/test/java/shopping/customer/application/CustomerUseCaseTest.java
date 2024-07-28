@@ -9,7 +9,6 @@ import shopping.common.exception.PasswordMissMatchException;
 import shopping.customer.application.command.CustomerSignInCommand;
 import shopping.customer.application.command.CustomerSignUpCommand;
 import shopping.customer.domain.Customer;
-import shopping.customer.domain.CustomerSignUpRequest;
 import shopping.customer.domain.repository.CustomerRepository;
 import shopping.utils.fake.FakeAccessTokenRepository;
 import shopping.utils.fake.FakeCustomerRepository;
@@ -70,7 +69,7 @@ public class CustomerUseCaseTest {
     @DisplayName("이미 존재하는 이메일을 입력하면 회원 가입 할 수 없다")
     @Test
     void doNotSignUpDuplicatedEmail() {
-        customerRepository.save(new CustomerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
+        customerRepository.save(new Customer(1L, EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
         assertThatThrownBy(() -> customerSignUpUseCase.signUp(new CustomerSignUpCommand(EMAIL, OTHER_NAME, OTHER_PASSWORD, OTHER_BIRTH, OTHER_ADDRESS, OTHER_PHONE)))
                 .isExactlyInstanceOf(IllegalArgumentException.class);
     }
@@ -78,7 +77,7 @@ public class CustomerUseCaseTest {
     @DisplayName("회원가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")
     @Test
     void signIn() {
-        customerRepository.save(new CustomerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
+        customerRepository.save(new Customer(null, EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
 
         final CustomerSignInCommand customerSignInCommand = new CustomerSignInCommand(EMAIL, PASSWORD);
         final String accessToken = customerSignInUseCase.signIn(customerSignInCommand);
@@ -89,7 +88,7 @@ public class CustomerUseCaseTest {
     @DisplayName("회원가입이 되어있지만 이메일을 잘못 입력하면 로그인을 할 수 없다.")
     @Test
     void doNotSignInNotRegisteredEmail() {
-        customerRepository.save(new CustomerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
+        customerRepository.save(new Customer(1L, EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
         final CustomerSignInCommand customerSignInCommand = new CustomerSignInCommand(OTHER_EMAIL, PASSWORD);
         assertThatThrownBy(() -> customerSignInUseCase.signIn(customerSignInCommand))
                 .isExactlyInstanceOf(RuntimeException.class);
@@ -98,7 +97,7 @@ public class CustomerUseCaseTest {
     @DisplayName("회원가입이 되어있지만 비밀번호를 잘못 입력하면 로그인을 할 수 없다.")
     @Test
     void doNotSignInWrongPassword() {
-        customerRepository.save(new CustomerSignUpRequest(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
+        customerRepository.save(new Customer(1L, EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE));
         final CustomerSignInCommand customerSignInCommand = new CustomerSignInCommand(EMAIL, OTHER_PASSWORD);
         assertThatThrownBy(() -> customerSignInUseCase.signIn(customerSignInCommand))
                 .isExactlyInstanceOf(PasswordMissMatchException.class);

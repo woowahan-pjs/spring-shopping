@@ -2,7 +2,6 @@ package shopping.utils.fake;
 
 import shopping.seller.domain.Seller;
 import shopping.seller.domain.SellerRepository;
-import shopping.seller.domain.SellerSignUpRequest;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,24 +12,25 @@ public class FakeSellerRepository implements SellerRepository {
     private final AtomicLong idGenerator = new AtomicLong();
 
     @Override
-    public Seller save(final SellerSignUpRequest sellerSignUpRequest) {
+    public Seller save(final Seller sellerRegistration) {
         final boolean exist = storage.values().stream()
                 .map(Seller::email)
-                .anyMatch(it -> it.equals(sellerSignUpRequest.email()));
+                .anyMatch(it -> it.equals(sellerRegistration.email()));
         if (exist) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
         final var id = idGenerator.incrementAndGet();
+
         final Seller seller = new Seller(
                 id,
-                sellerSignUpRequest.email(),
-                sellerSignUpRequest.name(),
-                sellerSignUpRequest.password(),
-                sellerSignUpRequest.birth(),
-                sellerSignUpRequest.address(),
-                sellerSignUpRequest.phone()
+                sellerRegistration.email(),
+                sellerRegistration.name(),
+                sellerRegistration.password(),
+                sellerRegistration.birth(),
+                sellerRegistration.address(),
+                sellerRegistration.phone()
         );
-        storage.put(id, seller);
+        storage.put(id, sellerRegistration);
         return seller;
     }
 
