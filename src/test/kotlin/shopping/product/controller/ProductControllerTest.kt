@@ -7,15 +7,15 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.kotlin.any
+import org.mockito.kotlin.reset
 import org.mockito.kotlin.whenever
-import org.springframework.boot.test.mock.mockito.MockBean
 import shopping.E2ETest
 import shopping.product.application.INVALID_NAME_LENGTH_MESSAGE
 import shopping.product.application.INVALID_NAME_PATTERN_MESSAGE
 import shopping.product.domain.BadWordValidator
 
 class ProductControllerTest(
-    @MockBean private val badWordValidator: BadWordValidator,
+    private val badWordValidator: BadWordValidator,
 ) : E2ETest() {
     @Test
     fun `상품 등록 성공`() {
@@ -73,7 +73,7 @@ class ProductControllerTest(
             .post("/products")
             .then()
             .statusCode(400)
-            .log()
-            .all()
+
+        reset(badWordValidator)
     }
 }
