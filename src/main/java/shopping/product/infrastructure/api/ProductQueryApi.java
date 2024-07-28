@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shopping.product.infrastructure.api.dto.ProductDetailResponse;
-import shopping.product.infrastructure.api.dto.ProductList;
-import shopping.product.infrastructure.api.dto.ProductListHttpResponse;
+import shopping.product.infrastructure.api.dto.ProductInfo;
+import shopping.product.infrastructure.api.dto.ProductInfosHttpResponse;
 import shopping.product.infrastructure.persistence.ProductDao;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class ProductQueryApi {
     }
 
     @GetMapping("/api/products/categories/{categoryId}")
-    public ResponseEntity<ProductListHttpResponse> readByCategory(
+    public ResponseEntity<ProductInfosHttpResponse> readByCategory(
             @PathVariable("categoryId") final long categoryId,
             @RequestParam(value = "startId", required = false, defaultValue = "1") final long startId,
             @RequestParam(value = "limit", required = false, defaultValue = "10") final long limit
@@ -38,12 +38,12 @@ public class ProductQueryApi {
         if (limit > 100) {
             throw new RuntimeException();
         }
-        final List<ProductList> productLists = productDao.findProductListByCategoryId(categoryId, startId, limit);
-        return ResponseEntity.ok().body(new ProductListHttpResponse(productLists));
+        final List<ProductInfo> productInfos = productDao.findProductListByCategoryId(categoryId, startId, limit);
+        return ResponseEntity.ok().body(new ProductInfosHttpResponse(productInfos));
     }
 
     @GetMapping("/api/products/shops/{shopId}")
-    public ResponseEntity<ProductListHttpResponse> readByShop(
+    public ResponseEntity<ProductInfosHttpResponse> readByShop(
             @PathVariable("shopId") final long shopId,
             @RequestParam(value = "startId", required = false, defaultValue = "1") final long startId,
             @RequestParam(value = "limit", required = false, defaultValue = "10") final long limit
@@ -51,7 +51,7 @@ public class ProductQueryApi {
         if (limit > 100) {
             throw new RuntimeException();
         }
-        final List<ProductList> productLists = productDao.findProductListByShopId(shopId, startId, limit);
-        return ResponseEntity.ok().body(new ProductListHttpResponse(productLists));
+        final List<ProductInfo> productInfos = productDao.findProductListByShopId(shopId, startId, limit);
+        return ResponseEntity.ok().body(new ProductInfosHttpResponse(productInfos));
     }
 }

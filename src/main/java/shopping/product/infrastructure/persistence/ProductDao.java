@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
 import shopping.product.infrastructure.api.dto.ProductDetailResponse;
-import shopping.product.infrastructure.api.dto.ProductList;
+import shopping.product.infrastructure.api.dto.ProductInfo;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -37,7 +37,7 @@ public class ProductDao {
         );
     }
 
-    public List<ProductList> findProductListByCategoryId(final long categoryId, final long startId, final long limit) {
+    public List<ProductInfo> findProductListByCategoryId(final long categoryId, final long startId, final long limit) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("categoryId", categoryId)
                 .addValue("startId", startId)
@@ -51,7 +51,6 @@ public class ProductDao {
                         LEFT JOIN shops s ON p.shop_id = s.id 
                         LEFT JOIN sub_categories sc ON p.sub_category_id = sc.id 
                         LEFT JOIN sellers se ON s.seller_id = se.id
-                        LEFT JOIN wish_lists w ON p.id = w.product_id
                         WHERE p.id >= :startId 
                         AND p.sub_category_id = :categoryId
                         LIMIT :limit
@@ -60,7 +59,7 @@ public class ProductDao {
         );
     }
 
-    public List<ProductList> findProductListByShopId(final long shopId, final long startId, final long limit) {
+    public List<ProductInfo> findProductListByShopId(final long shopId, final long startId, final long limit) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("shopId", shopId)
                 .addValue("startId", startId)
@@ -74,7 +73,6 @@ public class ProductDao {
                         LEFT JOIN shops s ON p.shop_id = s.id 
                         LEFT JOIN sub_categories sc ON p.sub_category_id = sc.id 
                         LEFT JOIN sellers se ON s.seller_id = se.id
-                        LEFT JOIN wish_lists w ON p.id = w.product_id
                         WHERE p.id >= :startId 
                         AND p.shop_id = :shopId
                         LIMIT :limit

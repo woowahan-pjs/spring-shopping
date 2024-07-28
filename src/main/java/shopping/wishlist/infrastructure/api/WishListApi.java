@@ -11,6 +11,7 @@ import shopping.common.auth.AuthorizationUser;
 import shopping.wishlist.application.WishListRegistrationUseCase;
 import shopping.wishlist.application.query.WishListRegistrationQuery;
 import shopping.wishlist.infrastructure.api.dto.WishListRegistrationRequest;
+import shopping.wishlist.infrastructure.api.dto.WishListRegistrationResponse;
 
 import java.net.URI;
 
@@ -25,11 +26,12 @@ public class WishListApi {
     }
 
     @PostMapping
-    public ResponseEntity<?> register(
+    public ResponseEntity<WishListRegistrationResponse> register(
             @RequestBody final WishListRegistrationRequest request,
             @Authorization({AuthorizationType.CUSTOMER}) final AuthorizationUser authorizationUser
     ) {
         final WishListRegistrationQuery wishListRegistrationQuery = wishListRegistrationUseCase.register(request.toCommand(authorizationUser.userId()));
-        return ResponseEntity.created(URI.create("")).build();
+        return ResponseEntity.created(URI.create("/api/wish-lists/" + wishListRegistrationQuery.id()))
+                .body(new WishListRegistrationResponse(wishListRegistrationQuery.id()));
     }
 }
