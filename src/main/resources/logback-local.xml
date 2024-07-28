@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 30초마다 설정 파일의 변경을 확인한다. 파일이 변경되면 다시 로딩한다 -->
+<configuration scan="true" scanPeriod="30 seconds">
+
+    <!-- Variable -->
+    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight(%-5level) [%X{traceId:-},%X{spanId:-}] [%thread] [%logger{40}] - %msg%n"/>
+
+    <!-- Console appender -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <Pattern>${LOG_PATTERN}</Pattern>
+        </encoder>
+    </appender>
+
+
+    <!-- ROOT Logger -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+    <!-- Application-Specific Logger -->
+    <logger name="camp.nextstep" level="DEBUG"/>
+
+    <!-- JDBC Logger -->
+    <!-- OFF, 실행된 쿼리 -->
+    <logger name="jdbc.sqlonly" level="OFF"/>
+
+    <!-- OFF, 테이블 조회 결과와 모델 맵핑 결과 -->
+    <logger name="jdbc.resultset" level="OFF"/>
+
+    <!-- INFO, 실행된 쿼리와 실행 시간 -->
+    <logger name="jdbc.sqltiming" level="INFO"/>
+
+    <!-- INFO(개발환경) / OFF(운영환경), ResultSet을 제외한 모든 JDBC 호출 정보를 로그로 남긴다. 많은 양의 로그가 생성됨 -->
+    <logger name="jdbc.audit" level="INFO"/>
+
+    <!-- INFO, 테이블 조회 결과 -->
+    <logger name="jdbc.resultsettable" level="INFO"/>
+
+    <!-- INFO, 커넥션 정보 -->
+    <logger name="jdbc.connection" level="INFO"/>
+
+</configuration>
