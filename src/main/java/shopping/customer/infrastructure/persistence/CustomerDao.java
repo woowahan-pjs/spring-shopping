@@ -21,11 +21,11 @@ public class CustomerDao {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", customerId);
 
-        final String sql = """
+        final String query = """
                 SELECT c.name
                 FROM customers c
                 WHERE c.id = :id
                 """;
-        return namedParameterJdbcTemplate.queryForObject(sql, namedParameters, new CustomerInfoMapper());
+        return namedParameterJdbcTemplate.queryForObject(query, namedParameters, new CustomerInfoMapper());
     }
 }

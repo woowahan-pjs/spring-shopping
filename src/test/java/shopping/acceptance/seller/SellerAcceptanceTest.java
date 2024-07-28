@@ -5,10 +5,16 @@ import org.junit.jupiter.api.Test;
 import shopping.acceptance.AcceptanceTest;
 import shopping.acceptance.seller.steps.SellerAcceptanceSteps;
 
+import static shopping.utils.fixture.CustomerFixture.ADDRESS;
+import static shopping.utils.fixture.CustomerFixture.BIRTH;
+import static shopping.utils.fixture.CustomerFixture.EMAIL;
+import static shopping.utils.fixture.CustomerFixture.NAME;
+import static shopping.utils.fixture.CustomerFixture.PASSWORD;
+import static shopping.utils.fixture.CustomerFixture.PHONE;
 import static shopping.utils.fixture.SellerFixture.*;
 
 @DisplayName("판매자 인수 테스트")
-public class SellerSignInAcceptanceTest extends AcceptanceTest {
+public class SellerAcceptanceTest extends AcceptanceTest {
 
     @Test
     void scenario() {
@@ -78,5 +84,15 @@ public class SellerSignInAcceptanceTest extends AcceptanceTest {
 
         final var response = SellerAcceptanceSteps.signIn(EMAIL, "1234");
         SellerAcceptanceSteps.validateSellerSignInInvalidPassword(response);
+    }
+
+    @DisplayName("로그인 되어있다면 내 정보를 확인할 수 있다")
+    @Test
+    void getSellerInfo() {
+        SellerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        final String accessToken = SellerAcceptanceSteps.로그인됨(EMAIL, PASSWORD);
+
+        final var response = SellerAcceptanceSteps.getSellerInfo(accessToken);
+        SellerAcceptanceSteps.validateSellerInfo(response, NAME);
     }
 }

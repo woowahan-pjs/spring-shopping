@@ -1,6 +1,7 @@
 package shopping.acceptance.seller.steps;
 
 import io.restassured.RestAssured;
+import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
@@ -38,6 +39,16 @@ public class SellerAcceptanceSteps {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> getSellerInfo(final String accessToken) {
+        return RestAssured
+                .given()
+                .header(new Header("Authorization", "Bearer " + accessToken))
+                .when()
+                .get(SELLER_BASE_URL)
+                .then()
+                .extract();
+    }
+
     public static void validateSellerSignUp(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -71,6 +82,13 @@ public class SellerAcceptanceSteps {
 
     public static void validateSellerSignInInvalidPassword(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    public static void validateSellerInfo(final ExtractableResponse<Response> response, final String name) {
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.jsonPath().getString("name")).isEqualTo(name)
+        );
     }
 
     public static void 회원가입됨(final String email, final String name, final String password, final String birth, final String address, final String phone) {
