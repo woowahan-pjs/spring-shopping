@@ -11,7 +11,7 @@ import shopping.seller.domain.SellerRepository;
 import shopping.seller.domain.SellerSignUpRequest;
 
 @Service
-public class SellerService implements SellerSignInUseCase, SellerSignUpUseCase {
+public class SellerService implements SellerSignInUseCase, SellerSignUpUseCase, SellerSignOutUseCase {
     private final AccessTokenRepository accessTokenRepository;
     private final SellerRepository sellerRepository;
 
@@ -32,6 +32,11 @@ public class SellerService implements SellerSignInUseCase, SellerSignUpUseCase {
             return accessTokenRepository.create(AuthorizationType.SELLER, seller.id());
         }
         throw new PasswordMissMatchException();
+    }
+
+    @Override
+    public void signOut(final long userId) {
+        accessTokenRepository.delete(AuthorizationType.SELLER, userId);
     }
 
     private SellerSignUpRequest mapToDomain(final SellerSignUpCommand sellerSignUpCommand) {

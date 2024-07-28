@@ -3,6 +3,7 @@ package shopping.acceptance.seller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shopping.acceptance.AcceptanceTest;
+import shopping.acceptance.customer.steps.CustomerAcceptanceSteps;
 import shopping.acceptance.seller.steps.SellerAcceptanceSteps;
 
 import static shopping.utils.fixture.CustomerFixture.ADDRESS;
@@ -94,5 +95,15 @@ public class SellerAcceptanceTest extends AcceptanceTest {
 
         final var response = SellerAcceptanceSteps.getSellerInfo(accessToken);
         SellerAcceptanceSteps.validateSellerInfo(response, NAME);
+    }
+
+    @DisplayName("로그인 되어있다면 로그아웃을 할 수 있다")
+    @Test
+    void signOut() {
+        SellerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        final String accessToken = SellerAcceptanceSteps.로그인됨(EMAIL, PASSWORD);
+
+        final var response = SellerAcceptanceSteps.signOut(accessToken);
+        SellerAcceptanceSteps.validateSignOut(response);
     }
 }

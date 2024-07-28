@@ -50,7 +50,7 @@ public class CustomerAcceptanceSteps {
                 .extract();
     }
 
-    public static ExtractableResponse<Response> logOut(final String accessToken) {
+    public static ExtractableResponse<Response> signOut(final String accessToken) {
         return RestAssured
                 .given()
                 .header(new Header("Authorization", "Bearer " + accessToken))
@@ -106,7 +106,7 @@ public class CustomerAcceptanceSteps {
         );
     }
 
-    public static void validateLogOut(final ExtractableResponse<Response> response) {
+    public static void validateSignOut(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
