@@ -26,4 +26,9 @@ public class FakeAccessTokenRepository implements AccessTokenRepository {
         storage.put(authorizationType.name() + accessToken, String.valueOf(id));
         return accessToken;
     }
+
+    @Override
+    public void delete(final AuthorizationType authorizationType, final long userId) {
+        storage.remove(authorizationType.name() + userId);
+    }
 }

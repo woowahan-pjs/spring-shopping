@@ -41,6 +41,12 @@ public class AccessTokenRepositoryImpl implements AccessTokenRepository {
         return Objects.nonNull(value);
     }
 
+    @Override
+    public void delete(final AuthorizationType authorizationType, final long userId) {
+        final String prefix = prefix(authorizationType);
+        redisTemplate.delete(prefix + userId);
+    }
+
     private String prefix(final AuthorizationType authorizationType) {
         return switch (authorizationType) {
             case CUSTOMER -> "customer:";

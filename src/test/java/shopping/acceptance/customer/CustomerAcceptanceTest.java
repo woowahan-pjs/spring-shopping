@@ -100,4 +100,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final var response = CustomerAcceptanceSteps.getCustomerInfo(accessToken);
         CustomerAcceptanceSteps.validateCustomerInfo(response, NAME);
     }
+
+    @DisplayName("로그인 되어있다면 로그아웃을 할 수 있다")
+    @Test
+    void logOut() {
+        CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        final String accessToken = CustomerAcceptanceSteps.로그인됨(EMAIL, PASSWORD);
+
+        final var response = CustomerAcceptanceSteps.logOut(accessToken);
+        CustomerAcceptanceSteps.validateLogOut(response);
+    }
 }

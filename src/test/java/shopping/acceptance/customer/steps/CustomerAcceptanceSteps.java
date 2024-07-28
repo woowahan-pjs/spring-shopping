@@ -50,6 +50,16 @@ public class CustomerAcceptanceSteps {
                 .extract();
     }
 
+    public static ExtractableResponse<Response> logOut(final String accessToken) {
+        return RestAssured
+                .given()
+                .header(new Header("Authorization", "Bearer " + accessToken))
+                .when()
+                .post(USER_BASE_URL + "/sign-out")
+                .then()
+                .extract();
+    }
+
     public static void validateCustomerSignUp(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.CREATED.value());
     }
@@ -94,6 +104,10 @@ public class CustomerAcceptanceSteps {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.body().jsonPath().getString("name")).isEqualTo(name)
         );
+    }
+
+    public static void validateLogOut(final ExtractableResponse<Response> response) {
+        assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value());
     }
 
     public static void 회원가입됨(final String email, final String name, final String password, final String birth, final String address, final String phone) {

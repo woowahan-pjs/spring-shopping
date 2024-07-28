@@ -5,4 +5,6 @@ public interface AccessTokenRepository {
     long find(AuthorizationType authorizationType, String accessToken);
 
     String create(final AuthorizationType authorizationType, final long id);
+
+    void delete(AuthorizationType authorizationType, long userId);
 }

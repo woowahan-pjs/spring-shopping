@@ -11,7 +11,7 @@ import shopping.customer.domain.CustomerSignUpRequest;
 import shopping.customer.domain.repository.CustomerRepository;
 
 @Service
-public class CustomerService implements CustomerSignUpUseCase, CustomerSignInUseCase {
+public class CustomerService implements CustomerSignUpUseCase, CustomerSignInUseCase, CustomerSignOutUseCase {
 
     private final AccessTokenRepository accessTokenRepository;
     private final CustomerRepository customerRepository;
@@ -34,6 +34,11 @@ public class CustomerService implements CustomerSignUpUseCase, CustomerSignInUse
             return accessTokenRepository.create(AuthorizationType.CUSTOMER, customer.id());
         }
         throw new PasswordMissMatchException();
+    }
+
+    @Override
+    public void signOut(final long userId) {
+        accessTokenRepository.delete(AuthorizationType.CUSTOMER, userId);
     }
 
     private CustomerSignUpRequest mapToDomain(final CustomerSignUpCommand customerSignUpCommand) {
