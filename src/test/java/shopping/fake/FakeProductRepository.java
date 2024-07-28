@@ -19,6 +19,11 @@ public class FakeProductRepository implements ProductRepository {
     }
 
     @Override
+    public void delete(final Product product) {
+        products.remove(product.getId());
+    }
+
+    @Override
     public Optional<Product> findById(final Long id) {
         return Optional.ofNullable(products.get(id));
     }

@@ -48,6 +48,13 @@ public class Product extends AuditableBaseEntity {
         this.heartCount = 0L;
     }
 
+    public void update(final String name, final ProfanityChecker profanityChecker, final Long price,
+            final String image) {
+        this.name = new ProductName(name, profanityChecker);
+        this.price = new ProductPrice(price);
+        this.image = image;
+    }
+
     public void wish() {
         this.heartCount++;
     }

@@ -10,16 +10,17 @@ import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import shopping.fake.FakeProductRepository;
+import shopping.fake.FakeProfanityChecker;
 import shopping.fixture.ClientFixture;
 import shopping.fixture.ProductFixture;
 import shopping.member.client.applicaton.dto.WishProductResponse;
 import shopping.member.client.domain.Client;
 import shopping.member.client.exception.DuplicateWishProductException;
 import shopping.member.client.exception.NotFoundWishProductException;
-import shopping.product.exception.NotFoundProductException;
 import shopping.product.application.ProductService;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductRepository;
+import shopping.product.exception.NotFoundProductException;
 
 @DisplayName("ClientWishService")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
@@ -30,7 +31,9 @@ class ClientWishServiceTest {
 
     @BeforeEach
     void setUp() {
-        final ProductService productService = new ProductService(productRepository);
+        final ProductService productService = new ProductService(
+                new FakeProfanityChecker(),
+                productRepository);
         final WishProductMapper wishProductMapper = new WishProductMapper(productService);
         clientWishService = new ClientWishService(wishProductMapper,
                 (event) -> System.out.println("이벤트 발행"));
