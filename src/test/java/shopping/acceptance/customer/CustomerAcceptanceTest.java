@@ -90,4 +90,14 @@ public class CustomerAcceptanceTest extends AcceptanceTest {
         final var response = CustomerAcceptanceSteps.signIn(EMAIL, "1234");
         CustomerAcceptanceSteps.validateCustomerSignInInvalidPassword(response);
     }
+
+    @DisplayName("로그인 되어있다면 내 정보를 확인할 수 있다")
+    @Test
+    void getCustomerInfo() {
+        CustomerAcceptanceSteps.signUp(EMAIL, NAME, PASSWORD, BIRTH, ADDRESS, PHONE);
+        final String accessToken = CustomerAcceptanceSteps.로그인됨(EMAIL, PASSWORD);
+
+        final var response = CustomerAcceptanceSteps.getCustomerInfo(accessToken);
+        CustomerAcceptanceSteps.validateCustomerInfo(response, NAME);
+    }
 }

@@ -1,6 +1,7 @@
 package shopping.acceptance.customer.steps;
 
 import io.restassured.RestAssured;
+import io.restassured.http.Header;
 import io.restassured.response.ExtractableResponse;
 import io.restassured.response.Response;
 import org.springframework.http.HttpStatus;
@@ -35,6 +36,16 @@ public class CustomerAcceptanceSteps {
                 .body(new CustomerSignInHttpRequest(email, password))
                 .when()
                 .post(USER_BASE_URL + SIGN_IN)
+                .then()
+                .extract();
+    }
+
+    public static ExtractableResponse<Response> getCustomerInfo(final String accessToken) {
+        return RestAssured
+                .given()
+                .header(new Header("Authorization", "Bearer " + accessToken))
+                .when()
+                .get(USER_BASE_URL)
                 .then()
                 .extract();
     }
@@ -76,6 +87,13 @@ public class CustomerAcceptanceSteps {
 
     public static void validateCustomerSignInInvalidPassword(final ExtractableResponse<Response> response) {
         assertThat(response.statusCode()).isEqualTo(HttpStatus.BAD_REQUEST.value());
+    }
+
+    public static void validateCustomerInfo(final ExtractableResponse<Response> response, final String name) {
+        assertAll(
+                () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
+                () -> assertThat(response.body().jsonPath().getString("name")).isEqualTo(name)
+        );
     }
 
     public static void 회원가입됨(final String email, final String name, final String password, final String birth, final String address, final String phone) {
