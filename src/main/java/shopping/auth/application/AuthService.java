@@ -9,7 +9,6 @@ import shopping.constant.enums.YesNo;
 import shopping.exception.AuthorizationException;
 import shopping.member.application.MemberService;
 import shopping.member.domain.Member;
-import shopping.member.domain.MemberRepository;
 
 
 @Service
