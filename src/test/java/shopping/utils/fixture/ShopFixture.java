@@ -1,5 +1,5 @@
 package shopping.utils.fixture;
 
 public class ShopFixture {
-    public static final String NAME = "우재샵";
+    public static final String NAME = "커피샵";
 }
