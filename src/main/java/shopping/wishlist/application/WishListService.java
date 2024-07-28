@@ -17,7 +17,11 @@ public class WishListService implements WishListRegistrationUseCase {
 
     @Override
     public WishListRegistrationQuery register(final WishListRegistrationCommand command) {
-        final WishList wishList = wishListRepository.save(command.productId(), command.customerId());
+        final WishList wishList = wishListRepository.save(init(command));
         return new WishListRegistrationQuery(wishList);
+    }
+
+    private WishList init(final WishListRegistrationCommand command) {
+        return new WishList(null, command.productId(), command.customerId());
     }
 }

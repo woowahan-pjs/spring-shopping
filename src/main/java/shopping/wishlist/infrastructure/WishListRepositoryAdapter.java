@@ -7,6 +7,9 @@ import shopping.wishlist.domain.WishListRepository;
 import shopping.wishlist.infrastructure.persistence.WishListEntity;
 import shopping.wishlist.infrastructure.persistence.WishListEntityJpaRepository;
 
+import static shopping.wishlist.infrastructure.WishListEntityMapper.domainToEntity;
+import static shopping.wishlist.infrastructure.WishListEntityMapper.entityToDomain;
+
 @Component
 public class WishListRepositoryAdapter implements WishListRepository {
 
@@ -18,13 +21,9 @@ public class WishListRepositoryAdapter implements WishListRepository {
 
     @Transactional
     @Override
-    public WishList save(final long productId, final long customerId) {
-        final WishListEntity wishListEntity = wishListEntityJpaRepository.findByCustomerIdAndProductId(customerId, productId)
-                .orElseGet(() -> wishListEntityJpaRepository.save(new WishListEntity(productId, customerId)));
+    public WishList save(final WishList wishList) {
+        final WishListEntity wishListEntity = wishListEntityJpaRepository.findByCustomerIdAndProductId(wishList.customerId(), wishList.productId())
+                .orElseGet(() -> wishListEntityJpaRepository.save(domainToEntity(wishList)));
         return entityToDomain(wishListEntity);
-    }
-
-    private WishList entityToDomain(final WishListEntity wishListEntity) {
-        return new WishList(wishListEntity.getId(), wishListEntity.getProductId(), wishListEntity.getCustomerId());
     }
 }

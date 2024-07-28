@@ -21,7 +21,8 @@ public class WishListEntity {
     public WishListEntity() {
     }
 
-    public WishListEntity(final long productId, final long customerId) {
+    public WishListEntity(final Long id, final long productId, final long customerId) {
+        this.id = id;
         this.productId = productId;
         this.customerId = customerId;
     }
