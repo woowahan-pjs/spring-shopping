@@ -6,4 +6,5 @@ import shopping.member.client.domain.ClientRepository;
 
 public interface JPAClientRepository extends ClientRepository, JpaRepository<Client, String> {
 
+
 }

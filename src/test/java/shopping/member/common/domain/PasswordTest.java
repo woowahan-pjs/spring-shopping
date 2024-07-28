@@ -15,7 +15,7 @@ import shopping.fake.FakePasswordEncoder;
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class PasswordTest {
 
-    private PasswordEncoder passwordEncoder = new FakePasswordEncoder();
+    private final PasswordEncoder passwordEncoder = new FakePasswordEncoder();
 
     @Test
     void Password를_생성할_수_있다() {
