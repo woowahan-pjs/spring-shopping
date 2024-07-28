@@ -1,4 +1,4 @@
-package shopping.member.client.domain;
+package shopping.member.client.exception;
 
 public class DuplicateWishProductException extends RuntimeException {
 
