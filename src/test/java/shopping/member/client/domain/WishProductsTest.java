@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import shopping.member.client.exception.DuplicateWishProductException;
 import shopping.member.client.exception.NotFoundWishProductException;
 
 @DisplayName("WishProducts")
@@ -16,30 +17,27 @@ class WishProductsTest {
     @Test
     void WishProducts에_위시상품을_추가했다가_삭제할_수_있다() {
         final WishProducts wishProducts = new WishProducts();
-        final WishProduct wishProduct = new WishProduct(1L);
 
         assertThatNoException().isThrownBy(() -> {
-            wishProducts.wish(wishProduct);
-            wishProducts.unWish(wishProduct);
+            wishProducts.wish(1L);
+            wishProducts.unWish(1L);
         });
     }
 
     @Test
     void WishProducts에_위시상품을_중복해서_추가할_수_없다() {
         final WishProducts wishProducts = new WishProducts();
-        final WishProduct wishProduct = new WishProduct(1L);
-        wishProducts.wish(wishProduct);
+        wishProducts.wish(1L);
 
-        assertThatThrownBy(() -> wishProducts.wish(wishProduct))
+        assertThatThrownBy(() -> wishProducts.wish(1L))
                 .isInstanceOf(DuplicateWishProductException.class);
     }
 
     @Test
     void WishProducts에_없는_위시상품을_삭제할_수_없다() {
         final WishProducts wishProducts = new WishProducts();
-        final WishProduct wishProduct = new WishProduct(1L);
 
-        assertThatThrownBy(() -> wishProducts.unWish(wishProduct))
+        assertThatThrownBy(() -> wishProducts.unWish(1L))
                 .isInstanceOf(NotFoundWishProductException.class);
     }
 }

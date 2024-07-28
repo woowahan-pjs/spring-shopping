@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
 import shopping.common.domain.BaseEntity;
 
 @Entity
@@ -16,6 +17,7 @@ public class WishProduct extends BaseEntity {
     @Column(name = "wish_product_id", nullable = false)
     private Long id;
 
+    @Getter
     private Long productId;
 
     protected WishProduct() {
@@ -25,11 +27,7 @@ public class WishProduct extends BaseEntity {
         this.productId = productId;
     }
 
-    public boolean isSameProduct(WishProduct wishProduct){
-        return this.productId.equals(wishProduct.productId);
-    }
-
-    public Long getProductId() {
-        return productId;
+    public boolean isSameProduct(Long productId){
+        return this.productId.equals(productId);
     }
 }
