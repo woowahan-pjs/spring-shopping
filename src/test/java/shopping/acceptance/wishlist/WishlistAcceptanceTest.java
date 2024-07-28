@@ -29,7 +29,7 @@ public class WishlistAcceptanceTest extends AcceptanceTest {
         final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
         final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
 
-        final long 상품 = ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, ProductFixture.NAME, ProductFixture.AMOUNT, ProductFixture.IMAGE_URL, sellerAccessToken);
+        final long 상품 = ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, ProductFixture.NAME, ProductFixture.AMOUNT, ProductFixture.THUMBNAIL_IMAGE_URL, sellerAccessToken);
         CustomerAcceptanceSteps.회원가입됨(CustomerFixture.EMAIL, CustomerFixture.NAME, CustomerFixture.PASSWORD, CustomerFixture.BIRTH, CustomerFixture.ADDRESS, CustomerFixture.PHONE);
         final String customerAccessToken = CustomerAcceptanceSteps.로그인됨(CustomerFixture.EMAIL, CustomerFixture.PASSWORD);
 
@@ -49,7 +49,7 @@ public class WishlistAcceptanceTest extends AcceptanceTest {
         final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
         final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
 
-        final long 상품 = ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, ProductFixture.NAME, ProductFixture.AMOUNT, ProductFixture.IMAGE_URL, sellerAccessToken);
+        final long 상품 = ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, ProductFixture.NAME, ProductFixture.AMOUNT, ProductFixture.THUMBNAIL_IMAGE_URL, sellerAccessToken);
         CustomerAcceptanceSteps.회원가입됨(CustomerFixture.EMAIL, CustomerFixture.NAME, CustomerFixture.PASSWORD, CustomerFixture.BIRTH, CustomerFixture.ADDRESS, CustomerFixture.PHONE);
         final String customerAccessToken = CustomerAcceptanceSteps.로그인됨(CustomerFixture.EMAIL, CustomerFixture.PASSWORD);
 
@@ -70,7 +70,7 @@ public class WishlistAcceptanceTest extends AcceptanceTest {
         final String sellerAccessToken = SellerAcceptanceSteps.로그인됨(SellerFixture.EMAIL, SellerFixture.PASSWORD);
         final long 상점 = ShopAcceptanceSteps.상점생성됨(sellerAccessToken, ShopFixture.NAME);
 
-        final long 상품 = ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, ProductFixture.NAME, ProductFixture.AMOUNT, ProductFixture.IMAGE_URL, sellerAccessToken);
+        final long 상품 = ProductAcceptanceSteps.상품등록됨(상점, 서브카테고리, ProductFixture.NAME, ProductFixture.AMOUNT, ProductFixture.THUMBNAIL_IMAGE_URL, sellerAccessToken);
         CustomerAcceptanceSteps.회원가입됨(CustomerFixture.EMAIL, CustomerFixture.NAME, CustomerFixture.PASSWORD, CustomerFixture.BIRTH, CustomerFixture.ADDRESS, CustomerFixture.PHONE);
         final String customerAccessToken = CustomerAcceptanceSteps.로그인됨(CustomerFixture.EMAIL, CustomerFixture.PASSWORD);
 

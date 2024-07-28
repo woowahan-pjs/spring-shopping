@@ -13,8 +13,8 @@ public class ProductEntity {
 
     private String name;
     private long amount;
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "thumbnail_image_url")
+    private String thumbnailImageUrl;
     @Column(name = "sub_category_id")
     private long subCategoryId;
     @Column(name = "shop_id")
@@ -25,11 +25,11 @@ public class ProductEntity {
     public ProductEntity() {
     }
 
-    public ProductEntity(final Long id, final String name, final long amount, final String imageUrl, final long subCategoryId, final long shopId, final long sellerId) {
+    public ProductEntity(final Long id, final String name, final long amount, final String thumbnailImageUrl, final long subCategoryId, final long shopId, final long sellerId) {
         this.id = id;
         this.name = name;
         this.amount = amount;
-        this.imageUrl = imageUrl;
+        this.thumbnailImageUrl = thumbnailImageUrl;
         this.subCategoryId = subCategoryId;
         this.shopId = shopId;
         this.sellerId = sellerId;
@@ -47,8 +47,8 @@ public class ProductEntity {
         return amount;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getThumbnailImageUrl() {
+        return thumbnailImageUrl;
     }
 
     public long getSubCategoryId() {

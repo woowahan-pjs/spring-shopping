@@ -23,7 +23,7 @@ public class ProductApi {
     }
 
     @PostMapping("/{shopId}/products")
-    public ResponseEntity<?> registerProduct(
+    public ResponseEntity<ProductRegistrationHttpResponse> registerProduct(
             @PathVariable(name = "shopId") final long shopId,
             @Authorization({AuthorizationType.SELLER}) AuthorizationUser authorizationUser,
             @RequestBody final ProductRegistrationHttpRequest request

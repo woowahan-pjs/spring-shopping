@@ -1,21 +1,23 @@
 package shopping.product.infrastructure.api.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import shopping.product.application.command.ProductRegistrationCommand;
 
 public class ProductRegistrationHttpRequest {
 
     private String name;
     private long amount;
-    private String imageUrl;
+    @JsonProperty("thumbnail_image_url")
+    private String thumbnailImageUrl;
     private long subCategoryId;
 
     public ProductRegistrationHttpRequest() {
     }
 
-    public ProductRegistrationHttpRequest(final String name, final long amount, final String imageUrl, final long subCategoryId) {
+    public ProductRegistrationHttpRequest(final String name, final long amount, final String thumbnailImageUrl, final long subCategoryId) {
         this.name = name;
         this.amount = amount;
-        this.imageUrl = imageUrl;
+        this.thumbnailImageUrl = thumbnailImageUrl;
         this.subCategoryId = subCategoryId;
     }
 
@@ -23,7 +25,7 @@ public class ProductRegistrationHttpRequest {
         return new ProductRegistrationCommand(
                 name,
                 amount,
-                imageUrl,
+                thumbnailImageUrl,
                 subCategoryId,
                 shopId,
                 sellerId
@@ -42,7 +44,7 @@ public class ProductRegistrationHttpRequest {
         return amount;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getThumbnailImageUrl() {
+        return thumbnailImageUrl;
     }
 }

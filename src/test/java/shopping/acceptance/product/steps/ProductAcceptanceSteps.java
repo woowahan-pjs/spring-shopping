@@ -16,12 +16,12 @@ public class ProductAcceptanceSteps {
     private static final String PRODUCTS = "/products";
     private static final String PRODUCT_BASE_URL = "/api/products";
 
-    public static ExtractableResponse<Response> registerProduct(final long shopId, final long subCategoryId, final String name, final long amount, final String imageUrl, final String accessToken) {
+    public static ExtractableResponse<Response> registerProduct(final long shopId, final long subCategoryId, final String name, final long amount, final String thumbnailImageUrl, final String accessToken) {
         return RestAssured
                 .given()
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .header(new Header("Authorization", "Bearer " + accessToken))
-                .body(new ProductRegistrationHttpRequest(name, amount, imageUrl, subCategoryId))
+                .body(new ProductRegistrationHttpRequest(name, amount, thumbnailImageUrl, subCategoryId))
                 .when()
                 .post(BASE_URL + "/" + shopId + PRODUCTS)
                 .then()
@@ -78,7 +78,7 @@ public class ProductAcceptanceSteps {
                 () -> assertThat(response.statusCode()).isEqualTo(HttpStatus.OK.value()),
                 () -> assertThat(response.body().jsonPath().getString("product_name")).isNotNull(),
                 () -> assertThat(response.body().jsonPath().getLong("amount")).isNotNull(),
-                () -> assertThat(response.body().jsonPath().getString("image_url")).isNotNull(),
+                () -> assertThat(response.body().jsonPath().getString("thumbnail_image_url")).isNotNull(),
                 () -> assertThat(response.body().jsonPath().getString("shop_name")).isNotNull(),
                 () -> assertThat(response.body().jsonPath().getString("seller_name")).isNotNull(),
                 () -> assertThat(response.body().jsonPath().getString("category_name")).isNotNull()
@@ -99,8 +99,8 @@ public class ProductAcceptanceSteps {
         );
     }
 
-    public static long 상품등록됨(final long 상점, final long 서브카테고리, final String productName, final long amount, final String imageUrl, final String sellerAccessToken) {
-        final ExtractableResponse<Response> response = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, productName, amount, imageUrl, sellerAccessToken);
+    public static long 상품등록됨(final long 상점, final long 서브카테고리, final String productName, final long amount, final String thumbnailImageUrl, final String sellerAccessToken) {
+        final ExtractableResponse<Response> response = ProductAcceptanceSteps.registerProduct(상점, 서브카테고리, productName, amount, thumbnailImageUrl, sellerAccessToken);
         ProductAcceptanceSteps.validate(response);
         return response.body().jsonPath().getLong("id");
     }

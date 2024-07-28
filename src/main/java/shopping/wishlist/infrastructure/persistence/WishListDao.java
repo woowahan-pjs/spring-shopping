@@ -28,7 +28,7 @@ public class WishListDao {
         return namedParameterJdbcTemplate.query(
                 """
                         SELECT 
-                            p.name as product_name, p.amount, p.image_url, sc.name as category_name, s.name as shop_name, se.name as seller_name   
+                            p.name as product_name, p.amount, p.thumbnail_image_url, sc.name as category_name, s.name as shop_name, se.name as seller_name   
                         FROM wish_lists w
                         LEFT JOIN products p ON p.id = w.product_id
                         LEFT JOIN shops s ON p.shop_id = s.id 

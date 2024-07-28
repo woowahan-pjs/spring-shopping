@@ -13,7 +13,7 @@ public class ProductDetailMapper implements RowMapper<ProductDetailResponse> {
         return new ProductDetailResponse(
                 rs.getString("product_name"),
                 rs.getLong("amount"),
-                rs.getString("image_url"),
+                rs.getString("thumbnail_image_url"),
                 rs.getString("category_name"),
                 rs.getString("shop_name"),
                 rs.getString("seller_name")

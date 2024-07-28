@@ -26,7 +26,7 @@ public class ProductDao {
         return namedParameterJdbcTemplate.queryForObject(
                 """
                         SELECT 
-                            p.name as product_name, p.amount, p.image_url, sc.name as category_name, s.name as shop_name, se.name as seller_name   
+                            p.name as product_name, p.amount, p.thumbnail_image_url, sc.name as category_name, s.name as shop_name, se.name as seller_name   
                         FROM products p
                         LEFT JOIN shops s ON p.shop_id = s.id 
                         LEFT JOIN sub_categories sc ON p.sub_category_id = sc.id 
@@ -46,7 +46,7 @@ public class ProductDao {
         return namedParameterJdbcTemplate.query(
                 """
                         SELECT 
-                            p.name as product_name, p.amount, p.image_url, sc.name as category_name, s.name as shop_name, se.name as seller_name   
+                            p.name as product_name, p.amount, p.thumbnail_image_url, sc.name as category_name, s.name as shop_name, se.name as seller_name   
                         FROM products p
                         LEFT JOIN shops s ON p.shop_id = s.id 
                         LEFT JOIN sub_categories sc ON p.sub_category_id = sc.id 
@@ -68,7 +68,7 @@ public class ProductDao {
         return namedParameterJdbcTemplate.query(
                 """
                         SELECT 
-                            p.name as product_name, p.amount, p.image_url, sc.name as category_name, s.name as shop_name, se.name as seller_name   
+                            p.name as product_name, p.amount, p.thumbnail_image_url, sc.name as category_name, s.name as shop_name, se.name as seller_name   
                         FROM products p
                         LEFT JOIN shops s ON p.shop_id = s.id 
                         LEFT JOIN sub_categories sc ON p.sub_category_id = sc.id 

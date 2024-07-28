@@ -6,16 +6,16 @@ public class ProductInfo {
     @JsonProperty("product_name")
     private String productName;
     private long amount;
-    @JsonProperty("image_url")
-    private String imageUrl;
+    @JsonProperty("thumbnail_image_url")
+    private String thumbnailImageUrl;
 
     public ProductInfo() {
     }
 
-    public ProductInfo(final String productName, final long amount, final String imageUrl) {
+    public ProductInfo(final String productName, final long amount, final String thumbnailImageUrl) {
         this.productName = productName;
         this.amount = amount;
-        this.imageUrl = imageUrl;
+        this.thumbnailImageUrl = thumbnailImageUrl;
     }
 
     public String getProductName() {
@@ -26,7 +26,7 @@ public class ProductInfo {
         return amount;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getThumbnailImageUrl() {
+        return thumbnailImageUrl;
     }
 }

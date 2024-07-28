@@ -29,7 +29,7 @@ public class ProductService implements ProductRegistrationUseCase {
         return new ProductRegistrationRequest(
                 command.name(),
                 command.amount(),
-                command.imageUrl(),
+                command.thumbnailImageUrl(),
                 command.subCategoryId(),
                 command.shopId(),
                 command.sellerId()

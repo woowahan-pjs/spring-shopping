@@ -7,8 +7,8 @@ public class ProductDetailResponse {
     private String productName;
     private long amount;
 
-    @JsonProperty("image_url")
-    private String imageUrl;
+    @JsonProperty("thumbnail_image_url")
+    private String thumbnailImageUrl;
 
     @JsonProperty("category_name")
     private String categoryName;
@@ -22,10 +22,10 @@ public class ProductDetailResponse {
     public ProductDetailResponse() {
     }
 
-    public ProductDetailResponse(final String productName, final long amount, final String imageUrl, final String categoryName, final String shopName, final String sellerName) {
+    public ProductDetailResponse(final String productName, final long amount, final String thumbnailImageUrl, final String categoryName, final String shopName, final String sellerName) {
         this.productName = productName;
         this.amount = amount;
-        this.imageUrl = imageUrl;
+        this.thumbnailImageUrl = thumbnailImageUrl;
         this.categoryName = categoryName;
         this.shopName = shopName;
         this.sellerName = sellerName;
@@ -39,8 +39,8 @@ public class ProductDetailResponse {
         return amount;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public String getThumbnailImageUrl() {
+        return thumbnailImageUrl;
     }
 
     public String getCategoryName() {

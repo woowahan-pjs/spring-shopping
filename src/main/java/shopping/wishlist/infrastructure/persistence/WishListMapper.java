@@ -13,7 +13,7 @@ public class WishListMapper implements RowMapper<WishListInfo> {
         return new WishListInfo(
                 rs.getString("product_name"),
                 rs.getLong("amount"),
-                rs.getString("image_url")
+                rs.getString("thumbnail_image_url")
         );
     }
 }

@@ -29,7 +29,7 @@ public class ProductRepositoryAdapter implements ProductRepository {
                 productEntity.getId(),
                 productEntity.getName(),
                 productEntity.getAmount(),
-                productEntity.getImageUrl(),
+                productEntity.getThumbnailImageUrl(),
                 productEntity.getSubCategoryId(),
                 productEntity.getShopId(),
                 productEntity.getSellerId()
@@ -41,7 +41,7 @@ public class ProductRepositoryAdapter implements ProductRepository {
                 null,
                 productRegistrationRequest.name(),
                 productRegistrationRequest.amount(),
-                productRegistrationRequest.imageUrl(),
+                productRegistrationRequest.thumbnailImageUrl(),
                 productRegistrationRequest.subCategoryId(),
                 productRegistrationRequest.shopId(),
                 productRegistrationRequest.sellerId()

@@ -4,7 +4,7 @@ public record Product(
         long id,
         String name,
         long amount,
-        String imageUrl,
+        String thumbnailImageUrl,
         long subCategoryId,
         long shopId,
         long sellerId
