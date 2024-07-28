@@ -6,7 +6,7 @@ public class CustomerSignInHttpRequest {
     private String email;
     private String password;
 
-    public CustomerSignInHttpRequest() {
+    private CustomerSignInHttpRequest() {
     }
 
     public CustomerSignInHttpRequest(final String email, final String password) {

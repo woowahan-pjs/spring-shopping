@@ -8,7 +8,7 @@ public class ProductRegistrationDetailedImageHttpRequest {
     @JsonProperty("detailed_image_url")
     private List<String> images;
 
-    public ProductRegistrationDetailedImageHttpRequest() {
+    private ProductRegistrationDetailedImageHttpRequest() {
     }
 
     public ProductRegistrationDetailedImageHttpRequest(final List<String> images) {

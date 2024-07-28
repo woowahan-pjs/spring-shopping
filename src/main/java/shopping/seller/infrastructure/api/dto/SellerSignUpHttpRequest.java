@@ -11,7 +11,7 @@ public class SellerSignUpHttpRequest {
     private String address;
     private String phone;
 
-    public SellerSignUpHttpRequest() {
+    private SellerSignUpHttpRequest() {
     }
 
     public SellerSignUpHttpRequest(final String email, final String name, final String password, final String brith, final String address, final String phone) {

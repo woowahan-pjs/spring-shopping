@@ -8,7 +8,7 @@ public class AdminSignUpHttpRequest {
     private String name;
     private String password;
 
-    public AdminSignUpHttpRequest() {
+    private AdminSignUpHttpRequest() {
     }
 
     public AdminSignUpHttpRequest(final String email, String name, final String password) {

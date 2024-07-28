@@ -6,7 +6,7 @@ public class SubCategoryRegistrationHttpRequest {
     private String name;
     private int order;
 
-    public SubCategoryRegistrationHttpRequest() {
+    private SubCategoryRegistrationHttpRequest() {
     }
 
     public SubCategoryRegistrationHttpRequest(final String name, final int order) {

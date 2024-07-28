@@ -17,7 +17,7 @@ public class ProductRegistrationHttpRequest {
     @JsonProperty("detailed_image_urls")
     private ProductRegistrationDetailedImageHttpRequest detailedImageUrls;
 
-    public ProductRegistrationHttpRequest() {
+    private ProductRegistrationHttpRequest() {
     }
 
     public ProductRegistrationHttpRequest(final String name, final long amount, final String thumbnailImageUrl, final long subCategoryId, final ProductRegistrationDetailedImageHttpRequest detailedImageUrls) {

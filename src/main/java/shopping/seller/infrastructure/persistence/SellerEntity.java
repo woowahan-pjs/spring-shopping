@@ -2,6 +2,8 @@ package shopping.seller.infrastructure.persistence;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Table(name = "sellers")
 @Entity
 public class SellerEntity {
@@ -57,5 +59,18 @@ public class SellerEntity {
 
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final SellerEntity that = (SellerEntity) o;
+        return Objects.equals(getId(), that.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(getId());
     }
 }

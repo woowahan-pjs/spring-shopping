@@ -7,7 +7,7 @@ public class SellerSignInHttpRequest {
     private String email;
     private String password;
 
-    public SellerSignInHttpRequest() {
+    private SellerSignInHttpRequest() {
     }
 
     public SellerSignInHttpRequest(final String email, final String password) {

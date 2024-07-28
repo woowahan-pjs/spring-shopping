@@ -10,7 +10,7 @@ public class CustomerSignUpHttpRequest {
     private String address;
     private String phone;
 
-    public CustomerSignUpHttpRequest() {
+    private CustomerSignUpHttpRequest() {
     }
 
     public CustomerSignUpHttpRequest(final String email, final String name, final String password, final String brith, final String address, final String phone) {

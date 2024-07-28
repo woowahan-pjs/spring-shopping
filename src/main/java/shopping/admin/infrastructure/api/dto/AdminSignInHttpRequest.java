@@ -7,7 +7,7 @@ public class AdminSignInHttpRequest {
     private String email;
     private String password;
 
-    public AdminSignInHttpRequest() {
+    private AdminSignInHttpRequest() {
     }
 
     public AdminSignInHttpRequest(final String email, final String password) {
