@@ -62,7 +62,7 @@ public class AdminSignUpUseCaseTest {
     @DisplayName("이미 존재하는 이메일을 입력하면 회원 가입 할 수 없다")
     @Test
     void doNotSignUpDuplicatedEmail() {
-        adminRepository.save(new Admin(null, EMAIL, NAME, PASSWORD));
+        adminRepository.save(new Admin(1L, NAME, EMAIL, PASSWORD));
         assertThatThrownBy(() -> AdminSignUpUseCase.signUp(new AdminSignUpCommand(EMAIL, OTHER_NAME, OTHER_PASSWORD)))
                 .isExactlyInstanceOf(IllegalArgumentException.class);
     }

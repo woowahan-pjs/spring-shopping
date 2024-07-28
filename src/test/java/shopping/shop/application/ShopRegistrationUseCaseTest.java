@@ -27,7 +27,7 @@ public class ShopRegistrationUseCaseTest {
     @Test
     void register() {
         // given
-        final var shopRegistrationCommand = new ShopRegistrationCommand(1L, ShopFixture.NAME);
+        final var shopRegistrationCommand = new ShopRegistrationCommand(ShopFixture.SELLER_ID, ShopFixture.NAME);
 
         // when
         final var shopRegistrationQuery = shopRegistrationUseCase.register(shopRegistrationCommand);
@@ -36,8 +36,8 @@ public class ShopRegistrationUseCaseTest {
         assertAll(
                 () -> assertThat(shopRegistrationQuery).isNotNull(),
                 () -> assertThat(shopRegistrationQuery.id()).isNotNull(),
-                () -> assertThat(shopRegistrationQuery.sellerId()).isEqualTo(1L),
-                () -> assertThat(shopRegistrationQuery.name()).isEqualTo("커피숍")
+                () -> assertThat(shopRegistrationQuery.sellerId()).isEqualTo(ShopFixture.SELLER_ID),
+                () -> assertThat(shopRegistrationQuery.name()).isEqualTo(ShopFixture.NAME)
         );
     }
 }

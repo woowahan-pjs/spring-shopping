@@ -21,14 +21,14 @@ public class FakeAdminRepository implements AdminRepository {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
         final var id = idGenerator.incrementAndGet();
-        final Admin Admin = new Admin(
+        final Admin admin = new Admin(
                 id,
                 AdminSignUpRequest.name(),
                 AdminSignUpRequest.email(),
                 AdminSignUpRequest.password()
         );
-        storage.put(id, Admin);
-        return Admin;
+        storage.put(id, admin);
+        return admin;
     }
 
     @Override

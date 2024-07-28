@@ -33,7 +33,7 @@ public class AdminSignInUseCaseTest {
     @DisplayName("회원가입이 되어있다면 이메일과 비밀번호로 로그인을 할 수 있다.")
     @Test
     void signIn() {
-        adminRepository.save(new Admin(1L, EMAIL, PASSWORD, NAME));
+        adminRepository.save(new Admin(1L, NAME, EMAIL, PASSWORD));
 
         final AdminSignInCommand AdminSignInCommand = new AdminSignInCommand(EMAIL, PASSWORD);
         final String accessToken = AdminSignInUseCase.signIn(AdminSignInCommand);
@@ -44,7 +44,7 @@ public class AdminSignInUseCaseTest {
     @DisplayName("회원가입이 되어있지만 이메일을 잘못 입력하면 로그인을 할 수 없다.")
     @Test
     void doNotSignInNotRegisteredEmail() {
-        adminRepository.save(new Admin(1L, EMAIL, PASSWORD, NAME));
+        adminRepository.save(new Admin(1L, NAME, EMAIL, PASSWORD));
         final AdminSignInCommand AdminSignInCommand = new AdminSignInCommand(OTHER_EMAIL, PASSWORD);
         assertThatThrownBy(() -> AdminSignInUseCase.signIn(AdminSignInCommand))
                 .isExactlyInstanceOf(RuntimeException.class);
@@ -53,7 +53,7 @@ public class AdminSignInUseCaseTest {
     @DisplayName("회원가입이 되어있지만 비밀번호를 잘못 입력하면 로그인을 할 수 없다.")
     @Test
     void doNotSignInWrongPassword() {
-        adminRepository.save(new Admin(1L, EMAIL, PASSWORD, NAME));
+        adminRepository.save(new Admin(1L, NAME, EMAIL, PASSWORD));
         final AdminSignInCommand AdminSignInCommand = new AdminSignInCommand(EMAIL, OTHER_PASSWORD);
         assertThatThrownBy(() -> AdminSignInUseCase.signIn(AdminSignInCommand))
                 .isExactlyInstanceOf(PasswordMissMatchException.class);
