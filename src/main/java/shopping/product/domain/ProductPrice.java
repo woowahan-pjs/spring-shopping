@@ -3,12 +3,14 @@ package shopping.product.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import java.math.BigDecimal;
+import lombok.Getter;
 import shopping.product.exception.InvalidProductPriceException;
 
 @Embeddable
 public class ProductPrice {
 
     @Column(name = "product_price", nullable = false)
+    @Getter
     private BigDecimal price;
 
     protected ProductPrice() {

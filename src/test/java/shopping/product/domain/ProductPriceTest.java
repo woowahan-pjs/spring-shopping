@@ -11,7 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import shopping.product.exception.InvalidProductPriceException;
 
-@DisplayName("ProductName")
+@DisplayName("ProductPrice")
 @DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class ProductPriceTest {
 
