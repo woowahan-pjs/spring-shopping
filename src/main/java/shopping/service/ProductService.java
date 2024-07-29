@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shopping.entity.Product;
+import shopping.infra.ProfanityChecker;
 import shopping.repository.ProductRepository;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.Optional;
 public class ProductService {
 
     private final ProductRepository productRepository;
+    private final ProfanityChecker profanityChecker;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -47,6 +49,6 @@ public class ProductService {
     }
 
     private boolean isProfanity(String text) {
-        return false;
+        return profanityChecker.hasProfanity(text);
     }
 }
