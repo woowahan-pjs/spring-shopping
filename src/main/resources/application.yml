@@ -19,3 +19,9 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+
+security:
+  jwt:
+    token:
+      secret-key: ZGJzY29kbXN5b29uY2hhZWV1buycpOyxhOydgGNoZWVzZWdpdGh1Yi5jb20veWNoZWVzZQ==
+      expiration-time: 864000000
