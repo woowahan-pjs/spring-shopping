@@ -1,0 +1,52 @@
+spring:
+  application:
+    name: spring-shopping
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+
+jwt:
+  secret-key: "spring-shopping-user-k!@#@!#@!#!@#!@#!@#!@#!@y"
+  # 1week = 1000 * 60 * 60 * 24 * 7
+  expiration-millis-second: 604800000
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+  h2:
+    console:
+      enabled: true
+
+  datasource:
+    jdbc-url: jdbc:h2:mem:testdb
+    username: sa
+    driver-class-name: org.h2.Driver
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: test
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
