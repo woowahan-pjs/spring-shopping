@@ -12,11 +12,11 @@ import static shopping.seller.infrastructure.SellerEntityMapper.domainToEntity;
 import static shopping.seller.infrastructure.SellerEntityMapper.entityToDomain;
 
 @Component
-public class SellerSignUpAdapter implements SellerRepository {
+public class SellerRepositoryAdapter implements SellerRepository {
 
     private final SellerEntityJpaRepository repository;
 
-    public SellerSignUpAdapter(final SellerEntityJpaRepository repository) {
+    public SellerRepositoryAdapter(final SellerEntityJpaRepository repository) {
         this.repository = repository;
     }
 

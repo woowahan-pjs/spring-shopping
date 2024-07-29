@@ -12,11 +12,11 @@ import static shopping.customer.infrastructure.CustomerEntityMapper.domainToEnti
 import static shopping.customer.infrastructure.CustomerEntityMapper.entityToDomain;
 
 @Component
-public class CustomerSignUpAdapter implements CustomerRepository {
+public class CustomerRepositoryAdapter implements CustomerRepository {
 
     private final CustomerEntityJpaRepository repository;
 
-    public CustomerSignUpAdapter(final CustomerEntityJpaRepository repository) {
+    public CustomerRepositoryAdapter(final CustomerEntityJpaRepository repository) {
         this.repository = repository;
     }
 
