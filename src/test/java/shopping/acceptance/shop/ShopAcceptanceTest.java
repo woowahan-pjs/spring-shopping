@@ -15,10 +15,6 @@ import static shopping.utils.fixture.SellerFixture.*;
 @DisplayName("상점 인수 테스트")
 public class ShopAcceptanceTest extends AcceptanceTest {
 
-    @Test
-    void scenario() {
-    }
-
     @DisplayName("판매자는 로그인 되어있다면 샵을 개설할 수 있다")
     @Test
     void registerShop() {

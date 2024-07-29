@@ -10,10 +10,6 @@ import static shopping.utils.fixture.AdminFixture.*;
 @DisplayName("관리자 인수 테스트")
 public class AdminAcceptanceTest extends AcceptanceTest {
 
-    @Test
-    void scenario() {
-    }
-
     @DisplayName("이메일과 비밀번호를 입력하면 회원 가입을 할 수 있다.")
     @Test
     void signUp() {

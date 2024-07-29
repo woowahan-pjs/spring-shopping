@@ -19,10 +19,6 @@ import static shopping.utils.fixture.CategoryFixture.*;
 @DisplayName("카테고리 인수 테스트")
 public class CategoryAcceptanceTest extends AcceptanceTest {
 
-    @Test
-    void scenario() {
-    }
-
     @DisplayName("어드민은 메인 카테고리를 생성할 수 있다")
     @Test
     void registerMainCategory() {
