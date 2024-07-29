@@ -34,6 +34,8 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok")
     // crypto
     implementation("org.springframework.security:spring-security-crypto")
+    // jwt
+    implementation("io.jsonwebtoken:jjwt:0.12.6")
 }
 
 tasks.named("test") {
