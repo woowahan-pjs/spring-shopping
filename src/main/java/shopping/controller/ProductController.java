@@ -1,10 +1,13 @@
-package shopping;
+package shopping.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+import shopping.service.ProductService;
+import shopping.entity.Product;
+
 import java.util.List;
 
 @RestController

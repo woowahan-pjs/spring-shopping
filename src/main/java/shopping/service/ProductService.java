@@ -1,8 +1,10 @@
-package shopping;
+package shopping.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import shopping.entity.Product;
+import shopping.repository.ProductRepository;
 
 import java.util.List;
 import java.util.Optional;

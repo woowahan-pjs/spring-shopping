@@ -1,4 +1,4 @@
-package shopping;
+package shopping.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
