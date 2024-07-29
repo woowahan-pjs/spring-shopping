@@ -25,7 +25,7 @@ public class ProductQueryApi {
     public ResponseEntity<ProductDetailResponse> readById(
             @PathVariable("productId") final long productId
     ) {
-        final ProductDetailResponse productDetailResponse = productDao.findProductDetail(productId);
+        final ProductDetailResponse productDetailResponse = productDao.findProductDetailByProductId(productId);
         return ResponseEntity.ok().body(productDetailResponse);
     }
 

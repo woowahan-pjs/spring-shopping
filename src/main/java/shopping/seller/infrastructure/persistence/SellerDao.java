@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import shopping.seller.infrastructure.api.dto.SellerInfo;
 
 @Component
@@ -14,7 +15,8 @@ public class SellerDao {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public SellerInfo getSellerInfo(final long sellerId) {
+    @Transactional(readOnly = true)
+    public SellerInfo findBySellerId(final long sellerId) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", sellerId);
         final String query = """

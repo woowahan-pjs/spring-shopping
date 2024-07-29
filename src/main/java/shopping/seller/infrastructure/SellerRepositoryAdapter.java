@@ -27,6 +27,7 @@ public class SellerRepositoryAdapter implements SellerRepository {
         return entityToDomain(sellerEntity);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Seller findByEmail(final String email) {
         return repository.findByEmail(email)

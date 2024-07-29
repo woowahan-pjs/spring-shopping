@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import shopping.wishlist.infrastructure.api.dto.WishListInfo;
 
 import javax.sql.DataSource;
@@ -18,6 +19,7 @@ public class WishListDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
+    @Transactional(readOnly = true)
     public List<WishListInfo> findByCustomerId(final long customerId, final long startId, final long limit) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("customerId", customerId)

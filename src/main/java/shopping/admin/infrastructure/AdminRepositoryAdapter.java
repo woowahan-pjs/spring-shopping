@@ -28,6 +28,7 @@ public class AdminRepositoryAdapter implements AdminRepository {
         return entityToDomain(adminEntity);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Admin findByEmail(final String email) {
         final List<AdminEntity> all = adminEntityJpaRepository.findAll();

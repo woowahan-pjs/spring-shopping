@@ -25,7 +25,7 @@ public class CustomerQueryApi {
     public ResponseEntity<CustomerInfoHttpResponse> myInfo(
             @Authorization({AuthorizationType.CUSTOMER}) final AuthorizationUser authorizationUser
     ) {
-        CustomerInfo customerInfo = customerDao.findById(authorizationUser.userId());
+        CustomerInfo customerInfo = customerDao.findByCustomerId(authorizationUser.userId());
         return ResponseEntity.ok(new CustomerInfoHttpResponse(customerInfo.name()));
     }
 }

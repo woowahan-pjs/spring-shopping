@@ -24,7 +24,7 @@ public class SellerQueryApi {
     public ResponseEntity<SellerInfoHttpResponse> getSellerInfo(
             @Authorization({AuthorizationType.SELLER}) AuthorizationUser authorizationUser
     ) {
-        final SellerInfo sellerInfo = sellerDao.getSellerInfo(authorizationUser.userId());
+        final SellerInfo sellerInfo = sellerDao.findBySellerId(authorizationUser.userId());
         return ResponseEntity.ok(new SellerInfoHttpResponse(sellerInfo.name()));
     }
 }

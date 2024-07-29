@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import shopping.product.infrastructure.api.dto.ProductDetailResponse;
 import shopping.product.infrastructure.api.dto.ProductInfo;
 
@@ -19,7 +20,8 @@ public class ProductDao {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
-    public ProductDetailResponse findProductDetail(final long productId) {
+    @Transactional(readOnly = true)
+    public ProductDetailResponse findProductDetailByProductId(final long productId) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("id", productId);
 
@@ -37,6 +39,7 @@ public class ProductDao {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<ProductInfo> findProductListByCategoryId(final long categoryId, final long startId, final long limit) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("categoryId", categoryId)
@@ -59,6 +62,7 @@ public class ProductDao {
         );
     }
 
+    @Transactional(readOnly = true)
     public List<ProductInfo> findProductListByShopId(final long shopId, final long startId, final long limit) {
         final SqlParameterSource namedParameters = new MapSqlParameterSource()
                 .addValue("shopId", shopId)
