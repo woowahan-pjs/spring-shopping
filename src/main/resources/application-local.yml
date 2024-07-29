@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: spring-shopping
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: validate
+  datasource:
+    url: jdbc:mysql://localhost:3306/shopping
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  data:
+    redis:
+      host: localhost
+      port: 6379
+service:
+  abusing:
+    url: https://www.purgomalum.com
