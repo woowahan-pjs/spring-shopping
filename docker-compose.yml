@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  shopping-db:
+  shopping-mysql:
     container_name: shopping-db
     image: mysql:8.0.34
     restart: always
@@ -10,4 +10,8 @@ services:
       - MYSQL_ROOT_PASSWORD=1234
     volumes:
       - ./infra/mysql/initdb.d:/docker-entrypoint-initdb.d
-
+  shopping-redis:
+    image: redis:7.2.5
+    restart: always
+    ports:
+      - '6379:6379'
