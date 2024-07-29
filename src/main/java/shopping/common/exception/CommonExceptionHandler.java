@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class CustomerExceptionHandler {
+public class CommonExceptionHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomerExceptionHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommonExceptionHandler.class);
 
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorMessage> constraintViolation(final ConstraintViolationException exception) {
