@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 @Embeddable
 public class WishlistItems implements Iterable<Product> {
     @OneToMany
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "wishlist_id")
     private List<Product> products = new LinkedList<>();
 
     protected WishlistItems() {
