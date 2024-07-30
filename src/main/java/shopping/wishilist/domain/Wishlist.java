@@ -9,6 +9,9 @@ import jakarta.persistence.Id;
 import shopping.product.domain.Product;
 import shopping.wishilist.exception.InvalidWishlistException;
 
+import java.util.Collections;
+import java.util.List;
+
 @Entity
 public class Wishlist {
 
@@ -44,7 +47,7 @@ public class Wishlist {
         return id;
     }
 
-    public WishlistItems getWishlistItems() {
-        return wishlistItems;
+    public List<Product> getProducts() {
+        return Collections.unmodifiableList(wishlistItems.getProducts());
     }
 }

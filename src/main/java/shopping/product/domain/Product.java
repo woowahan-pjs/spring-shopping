@@ -97,13 +97,12 @@ public class Product {
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final Product product = (Product) o;
-        return Objects.equals(id, product.id);
+        if (!(o instanceof final Product product)) return false;
+        return Objects.equals(getId(), product.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 }

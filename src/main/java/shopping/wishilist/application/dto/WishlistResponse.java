@@ -21,7 +21,10 @@ public class WishlistResponse {
     public static WishlistResponse from(final Wishlist wishlist) {
         return new WishlistResponse(
                 wishlist.getId(),
-                wishlist.getWishlistItems().stream().map(ProductResponse::from).toList()
+                wishlist.getProducts()
+                        .stream()
+                        .map(ProductResponse::from)
+                        .toList()
         );
     }
 

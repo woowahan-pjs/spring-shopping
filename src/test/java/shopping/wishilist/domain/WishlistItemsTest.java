@@ -28,7 +28,7 @@ public class WishlistItemsTest {
     void addProduct() {
         wishlistItems.add(첫번째_상품);
 
-        assertThat(wishlistItems).containsExactly(첫번째_상품);
+        assertThat(wishlistItems.getProducts()).containsExactly(첫번째_상품);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class WishlistItemsTest {
 
         wishlistItems.remove(첫번째_상품);
 
-        assertThat(wishlistItems).containsExactly(두번째_상품);
+        assertThat(wishlistItems.getProducts()).containsExactly(두번째_상품);
     }
 
 }

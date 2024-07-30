@@ -115,15 +115,14 @@ public class WishlistAcceptanceTest extends AcceptanceTestAuthBase {
         // given
         final var 상품_등록_응답 = 상품_등록_요청();
         final var 상품_식별자 = 등록_식별자_추출(상품_등록_응답);
-        final var 위시리스트_추가_응답 = 로그인_후_위시리스트_추가_요청(상품_식별자);
-        final var 위시리스트_식별자 = 등록_식별자_추출(위시리스트_추가_응답);
+        로그인_후_위시리스트_추가_요청(상품_식별자);
 
         // when
         final var 위시리스트_삭제_응답 = 로그인_후_상품_삭제_요청(상품_식별자);
 
         // then
         삭제요청_성공(위시리스트_삭제_응답);
-        로그인_후_위시리스트_목록_조회_시_추가한_상품을_찾을_수_없다(위시리스트_식별자);
+        로그인_후_위시리스트_목록_조회_시_추가한_상품을_찾을_수_없다(상품_식별자);
     }
 
     /**
@@ -219,7 +218,7 @@ public class WishlistAcceptanceTest extends AcceptanceTestAuthBase {
     private void 로그인_후_위시리스트_목록_조회_시_추가한_상품을_찾을_수_없다(final String id) {
         final List<String> productIds = 로그인_후_상품_목록_조회_요청()
                 .jsonPath()
-                .getList("productId", String.class);
+                .getList("products.id", String.class);
 
         assertThat(productIds).doesNotContain(id);
     }

@@ -77,7 +77,7 @@ public class WishlistServiceTest {
 
         wishlistService.deleteProduct(MEMBER_ID, productId);
 
-        assertThat(wishlist.getWishlistItems()).doesNotContain(product);
+        assertThat(wishlist.getProducts()).doesNotContain(product);
     }
 
     @Test

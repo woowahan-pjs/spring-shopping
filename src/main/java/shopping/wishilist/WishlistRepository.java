@@ -8,6 +8,6 @@ import shopping.wishilist.domain.Wishlist;
 import java.util.Optional;
 
 public interface WishlistRepository extends JpaRepository<Wishlist, Long> {
-    @Query("select wishlist from Wishlist wishlist left join fetch wishlist.wishlistItems.products where wishlist.memberId = :memberId")
+    @Query("select wishlist from Wishlist wishlist left join fetch wishlist.wishlistItems.wishlistItems where wishlist.memberId = :memberId")
     Optional<Wishlist> findByMemberId(@Param("memberId") Long memberId);
 }
