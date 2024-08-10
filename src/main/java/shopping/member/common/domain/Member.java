@@ -10,6 +10,9 @@ import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import shopping.common.domain.BaseEntity;
+import shopping.member.client.domain.Client;
+import shopping.member.common.exception.InvalidMemberException;
+import shopping.member.owner.domain.Owner;
 
 @Entity
 @Table(name = "members")
@@ -40,5 +43,15 @@ public abstract class Member extends BaseEntity {
     public boolean isValidPassword(final String rawPassword,
             final PasswordEncoder passwordEncoder) {
         return password.isMatch(rawPassword, passwordEncoder);
+    }
+
+    public String getRole() {
+        if (this instanceof Client) {
+            return "Client";
+        }
+        if (this instanceof Owner) {
+            return "Owner";
+        }
+        throw new InvalidMemberException("유효하지 않은 회원입니다.");
     }
 }
