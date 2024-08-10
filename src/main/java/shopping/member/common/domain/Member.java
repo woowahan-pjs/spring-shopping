@@ -52,6 +52,10 @@ public abstract class Member extends BaseEntity {
         if (this instanceof Owner) {
             return "Owner";
         }
-        throw new InvalidMemberException("유효하지 않은 회원입니다.");
+        return null;
+    }
+
+    public boolean isValidRole(String role){
+        return role.equals(getRole());
     }
 }

@@ -30,7 +30,7 @@ public class ClientLoginService {
     }
 
     public ClientLoginResponse login(final ClientLoginRequest request) {
-        final String accessToken = authService.login(request.email(), request.password());
+        final String accessToken = authService.login(request.email(), request.password(), "Client");
         return new ClientLoginResponse(accessToken);
     }
 }

@@ -9,6 +9,7 @@ import shopping.member.common.domain.MemberRepository;
 import shopping.member.common.domain.Password;
 import shopping.member.common.domain.PasswordEncoder;
 import shopping.member.common.exception.InvalidEmailException;
+import shopping.member.common.exception.InvalidMemberException;
 import shopping.member.common.exception.InvalidPasswordException;
 import shopping.member.common.exception.NotFoundMemberException;
 
@@ -31,10 +32,13 @@ public class AuthService {
         return new Password(rawPassword, passwordEncoder);
     }
 
-    public String login(final String email, final String rawPassword) {
+    public String login(final String email, final String rawPassword, final String role) {
         final Member member = findMember(email);
         if (!member.isValidPassword(rawPassword, passwordEncoder)) {
             throw new InvalidPasswordException("비밀번호가 틀렸습니다.");
+        }
+        if(!member.isValidRole(role)){
+            throw new InvalidMemberException("권한이 없는 회원입니다.");
         }
 
         return tokenGenerator.generate(member.getEmail(), member.getRole());

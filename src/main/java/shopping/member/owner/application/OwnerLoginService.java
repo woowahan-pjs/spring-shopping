@@ -29,6 +29,6 @@ public class OwnerLoginService {
     }
 
     public String login(final OwnerLoginRequest request) {
-        return authService.login(request.email(), request.password());
+        return authService.login(request.email(), request.password(), "Owner");
     }
 }
