@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shopping.member.client.applicaton.dto.ClientCreateRequest;
 import shopping.member.client.applicaton.dto.ClientLoginRequest;
+import shopping.member.client.applicaton.dto.ClientLoginResponse;
 import shopping.member.client.domain.Client;
 import shopping.member.client.domain.ClientRepository;
 import shopping.member.common.application.AuthService;
@@ -28,7 +29,8 @@ public class ClientLoginService {
         clientRepository.save(client);
     }
 
-    public String login(final ClientLoginRequest request) {
-        return authService.login(request.email(), request.password());
+    public ClientLoginResponse login(final ClientLoginRequest request) {
+        final String accessToken = authService.login(request.email(), request.password());
+        return new ClientLoginResponse(accessToken);
     }
 }
