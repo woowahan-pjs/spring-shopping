@@ -8,9 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import shopping.fake.FakePasswordEncoder;
 import shopping.fake.FakeClientRepository;
 import shopping.fake.FakeMemberRepository;
+import shopping.fake.FakePasswordEncoder;
 import shopping.fake.InMemoryMembers;
 import shopping.member.client.applicaton.dto.ClientCreateRequest;
 import shopping.member.client.domain.ClientRepository;
@@ -28,8 +28,10 @@ class ClientLoginServiceTest {
     void setUp() {
         final InMemoryMembers inMemoryMembers = new InMemoryMembers();
         final MemberRepository memberRepository = new FakeMemberRepository(inMemoryMembers);
-        final AuthService authService = new AuthService(memberRepository,
-                new FakePasswordEncoder());
+        final AuthService authService = new AuthService(
+                memberRepository,
+                new FakePasswordEncoder(),
+                (email, token) -> email + " " + token);
         final ClientRepository clientRepository = new FakeClientRepository(inMemoryMembers);
         clientService = new ClientLoginService(authService, clientRepository);
     }

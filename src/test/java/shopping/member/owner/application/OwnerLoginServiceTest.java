@@ -28,8 +28,10 @@ class OwnerLoginServiceTest {
     void setUp() {
         final InMemoryMembers inMemoryMembers = new InMemoryMembers();
         final MemberRepository memberRepository = new FakeMemberRepository(inMemoryMembers);
-        final AuthService authService = new AuthService(memberRepository,
-                new FakePasswordEncoder());
+        final AuthService authService = new AuthService(
+                memberRepository,
+                new FakePasswordEncoder(),
+                (email, token) -> email+" "+token);
         final OwnerRepository ownerRepository = new FakeOwnerRepository(inMemoryMembers);
         ownerService = new OwnerLoginService(authService, ownerRepository);
     }

@@ -10,14 +10,15 @@ import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import shopping.fake.FakePasswordEncoder;
 import shopping.fake.FakeMemberRepository;
+import shopping.fake.FakePasswordEncoder;
 import shopping.fake.InMemoryMembers;
 import shopping.member.client.domain.Client;
 import shopping.member.common.domain.MemberRepository;
 import shopping.member.common.domain.Password;
 import shopping.member.common.domain.PasswordEncoder;
 import shopping.member.common.exception.InvalidEmailException;
+import shopping.member.common.exception.InvalidMemberException;
 import shopping.member.common.exception.InvalidPasswordException;
 import shopping.member.common.exception.NotFoundMemberException;
 
@@ -32,7 +33,11 @@ class AuthServiceTest {
     @BeforeEach
     void setUp() {
         final MemberRepository memberRepository = new FakeMemberRepository(inMemoryMembers);
-        authService = new AuthService(memberRepository, passwordEncoder);
+        authService = new AuthService(
+                memberRepository,
+                passwordEncoder,
+                (email, role) -> email + " " + email
+        );
     }
 
     @Test
@@ -55,12 +60,12 @@ class AuthServiceTest {
     void 로그인을_수행한다() {
         saveMember();
 
-        assertThat(authService.login("test@test.com", "1234")).isNotNull();
+        assertThat(authService.login("test@test.com", "1234", "Client")).isNotNull();
     }
 
     @Test
     void 가입되지않은_멤버의_로그인을_수행하면_예외를_던진다() {
-        assertThatThrownBy(() -> authService.login("test@test.com", "1234"))
+        assertThatThrownBy(() -> authService.login("test@test.com", "1234", "Client"))
                 .isInstanceOf(NotFoundMemberException.class);
     }
 
@@ -68,8 +73,16 @@ class AuthServiceTest {
     void 로그인수행_시_비밀번호를_틀리면_예외를_던진다() {
         saveMember();
 
-        assertThatThrownBy(() -> authService.login("test@test.com", "1111"))
+        assertThatThrownBy(() -> authService.login("test@test.com", "1111", "Client"))
                 .isInstanceOf(InvalidPasswordException.class);
+    }
+
+    @Test
+    void 로그인수행_시_권한이_없다면_예외를_던진다() {
+        saveMember();
+
+        assertThatThrownBy(() -> authService.login("test@test.com", "1234", "Owner"))
+                .isInstanceOf(InvalidMemberException.class);
     }
 
     private void saveMember() {
