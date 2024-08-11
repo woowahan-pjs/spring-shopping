@@ -40,13 +40,15 @@ public class ClientController {
 
 
     @PutMapping("/wish/{productId}")
-    public ResponseEntity<Void> wish(@PathVariable final Long productId, @LoginClient Client client) {
+    public ResponseEntity<Void> wish(@PathVariable final Long productId,
+            @LoginClient Client client) {
         clientWishService.wish(productId, client);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/un-wish/{productId}")
-    public ResponseEntity<Void> unWish(@PathVariable final Long productId, @LoginClient Client client) {
+    public ResponseEntity<Void> unWish(@PathVariable final Long productId,
+            @LoginClient Client client) {
         clientWishService.unWish(productId, client);
         return ResponseEntity.ok().build();
     }

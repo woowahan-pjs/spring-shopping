@@ -1,6 +1,5 @@
 package shopping.common.auth.resolver;
 
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;

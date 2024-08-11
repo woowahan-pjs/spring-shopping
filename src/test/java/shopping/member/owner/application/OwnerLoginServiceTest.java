@@ -8,10 +8,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
 import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
-import shopping.fake.FakePasswordEncoder;
 import shopping.fake.FakeMemberRepository;
-import shopping.fake.InMemoryMembers;
 import shopping.fake.FakeOwnerRepository;
+import shopping.fake.FakePasswordEncoder;
+import shopping.fake.InMemoryMembers;
 import shopping.member.common.application.AuthService;
 import shopping.member.common.domain.MemberRepository;
 import shopping.member.common.exception.InvalidEmailException;
@@ -31,7 +31,7 @@ class OwnerLoginServiceTest {
         final AuthService authService = new AuthService(
                 memberRepository,
                 new FakePasswordEncoder(),
-                (email, token) -> email+" "+token);
+                (email, token) -> email + " " + token);
         final OwnerRepository ownerRepository = new FakeOwnerRepository(inMemoryMembers);
         ownerService = new OwnerLoginService(authService, ownerRepository);
     }

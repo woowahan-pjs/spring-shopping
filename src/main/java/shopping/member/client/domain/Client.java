@@ -5,8 +5,8 @@ import jakarta.persistence.Entity;
 import java.util.List;
 import lombok.Getter;
 import shopping.member.common.domain.Member;
-import shopping.member.common.domain.Password;
 import shopping.member.common.domain.MemberRole;
+import shopping.member.common.domain.Password;
 
 @Entity
 public class Client extends Member {
