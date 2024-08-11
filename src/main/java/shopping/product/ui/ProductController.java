@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import java.net.URI;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ public class ProductController {
     private final ProductService productService;
 
     @PostMapping()
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> create(@RequestBody @Valid final ProductCreateRequest request) {
         final Long saved = productService.create(request);
         return ResponseEntity.created(URI.create("/api/products/" + saved))
@@ -32,6 +34,7 @@ public class ProductController {
     }
 
     @PutMapping("/{productId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> update(@PathVariable Long productId,
             @RequestBody @Valid final ProductUpdateRequest request) {
         productService.update(productId, request);
@@ -39,6 +42,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{productId}")
+    @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<Void> delete(@PathVariable Long productId) {
         productService.delete(productId);
         return ResponseEntity.ok().build();
