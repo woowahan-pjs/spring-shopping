@@ -1,8 +1,10 @@
 package shopping.member.client.ui;
 
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +17,7 @@ import shopping.member.client.applicaton.ClientWishService;
 import shopping.member.client.applicaton.dto.ClientCreateRequest;
 import shopping.member.client.applicaton.dto.ClientLoginRequest;
 import shopping.member.client.applicaton.dto.ClientLoginResponse;
+import shopping.member.client.applicaton.dto.WishProductResponse;
 import shopping.member.client.domain.Client;
 
 @RequestMapping("/api/client")
@@ -51,5 +54,11 @@ public class ClientController {
             @LoginClient Client client) {
         clientWishService.unWish(productId, client);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/wish")
+    public ResponseEntity<List<WishProductResponse>> findAll(@LoginClient Client client) {
+        final List<WishProductResponse> responses = clientWishService.findAll(client);
+        return ResponseEntity.ok().body(responses);
     }
 }
