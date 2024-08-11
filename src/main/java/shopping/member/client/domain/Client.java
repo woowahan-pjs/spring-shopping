@@ -6,6 +6,7 @@ import java.util.List;
 import lombok.Getter;
 import shopping.member.common.domain.Member;
 import shopping.member.common.domain.Password;
+import shopping.member.common.domain.MemberRole;
 
 @Entity
 public class Client extends Member {
@@ -18,7 +19,7 @@ public class Client extends Member {
     }
 
     public Client(final String email, final Password password, final String memberName) {
-        super(email, password, memberName);
+        super(email, password, memberName, MemberRole.CLIENT);
     }
 
     public void wish(final Long productId) {

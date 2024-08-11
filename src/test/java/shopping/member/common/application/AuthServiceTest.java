@@ -17,6 +17,7 @@ import shopping.member.client.domain.Client;
 import shopping.member.common.domain.MemberRepository;
 import shopping.member.common.domain.Password;
 import shopping.member.common.domain.PasswordEncoder;
+import shopping.member.common.domain.MemberRole;
 import shopping.member.common.exception.InvalidEmailException;
 import shopping.member.common.exception.InvalidMemberException;
 import shopping.member.common.exception.InvalidPasswordException;
@@ -60,12 +61,12 @@ class AuthServiceTest {
     void 로그인을_수행한다() {
         saveMember();
 
-        assertThat(authService.login("test@test.com", "1234", "Client")).isNotNull();
+        assertThat(authService.login("test@test.com", "1234", MemberRole.CLIENT)).isNotNull();
     }
 
     @Test
     void 가입되지않은_멤버의_로그인을_수행하면_예외를_던진다() {
-        assertThatThrownBy(() -> authService.login("test@test.com", "1234", "Client"))
+        assertThatThrownBy(() -> authService.login("test@test.com", "1234", MemberRole.CLIENT))
                 .isInstanceOf(NotFoundMemberException.class);
     }
 
@@ -73,7 +74,7 @@ class AuthServiceTest {
     void 로그인수행_시_비밀번호를_틀리면_예외를_던진다() {
         saveMember();
 
-        assertThatThrownBy(() -> authService.login("test@test.com", "1111", "Client"))
+        assertThatThrownBy(() -> authService.login("test@test.com", "1111", MemberRole.CLIENT))
                 .isInstanceOf(InvalidPasswordException.class);
     }
 
@@ -81,7 +82,7 @@ class AuthServiceTest {
     void 로그인수행_시_권한이_없다면_예외를_던진다() {
         saveMember();
 
-        assertThatThrownBy(() -> authService.login("test@test.com", "1234", "Owner"))
+        assertThatThrownBy(() -> authService.login("test@test.com", "1234", MemberRole.OWNER))
                 .isInstanceOf(InvalidMemberException.class);
     }
 

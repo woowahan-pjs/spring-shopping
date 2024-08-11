@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shopping.member.common.application.AuthService;
 import shopping.member.common.domain.Password;
+import shopping.member.common.domain.MemberRole;
 import shopping.member.owner.application.dto.OwnerCreateRequest;
 import shopping.member.owner.application.dto.OwnerLoginRequest;
+import shopping.member.owner.application.dto.OwnerLoginResponse;
 import shopping.member.owner.domain.Owner;
 import shopping.member.owner.domain.OwnerRepository;
 
@@ -28,7 +30,9 @@ public class OwnerLoginService {
         ownerRepository.save(owner);
     }
 
-    public String login(final OwnerLoginRequest request) {
-        return authService.login(request.email(), request.password(), "Owner");
+    public OwnerLoginResponse login(final OwnerLoginRequest request) {
+        final String accessToken = authService.login(request.email(), request.password(),
+                MemberRole.OWNER);
+        return new OwnerLoginResponse(accessToken);
     }
 }

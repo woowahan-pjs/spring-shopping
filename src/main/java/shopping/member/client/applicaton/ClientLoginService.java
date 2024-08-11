@@ -8,6 +8,7 @@ import shopping.member.client.applicaton.dto.ClientLoginResponse;
 import shopping.member.client.domain.Client;
 import shopping.member.client.domain.ClientRepository;
 import shopping.member.common.application.AuthService;
+import shopping.member.common.domain.MemberRole;
 import shopping.member.common.domain.Password;
 
 @Service
@@ -30,7 +31,8 @@ public class ClientLoginService {
     }
 
     public ClientLoginResponse login(final ClientLoginRequest request) {
-        final String accessToken = authService.login(request.email(), request.password(), "Client");
+        final String accessToken = authService.login(request.email(), request.password(),
+                MemberRole.CLIENT);
         return new ClientLoginResponse(accessToken);
     }
 }

@@ -26,14 +26,14 @@ class MemberTest {
     void Member가_어떤_권한을_가졌는지_얻을_수_있다() {
         final Member member = createMember();
 
-        assertThat(member.getRole()).isEqualTo("Client");
+        assertThat(member.getMemberRole()).isEqualTo("Client");
     }
 
     @Test
     void Member가_유효한_권한을_가졌는지_확인할_수_있다() {
         final Member member = createMember();
 
-        assertThat(member.isValidRole("Client")).isTrue();
+        assertThat(member.isValidRole(MemberRole.CLIENT)).isTrue();
     }
 
     private Member createMember() {

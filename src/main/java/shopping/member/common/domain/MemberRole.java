@@ -1,5 +1,5 @@
 package shopping.member.common.domain;
 
-public enum MemberPriority {
+public enum MemberRole {
     CLIENT, OWNER
 }
