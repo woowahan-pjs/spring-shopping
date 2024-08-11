@@ -26,8 +26,8 @@ public class ProductService {
         return saved.getId();
     }
 
-    public void update(ProductUpdateRequest request) {
-        final Product product = findProduct(request.id());
+    public void update(Long productId, ProductUpdateRequest request) {
+        final Product product = findProduct(productId);
         product.update(request.name(),
                 profanityChecker,
                 request.price(),
