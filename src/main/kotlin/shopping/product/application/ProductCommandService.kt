@@ -4,17 +4,19 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import shopping.global.exception.ApplicationException
 import shopping.global.exception.ErrorCode
+import shopping.global.infra.TransactionTemplate
 import shopping.product.application.command.ProductCreateCommand
 import shopping.product.application.command.ProductUpdateCommand
 import shopping.product.domain.Product
 
 @Service
-@Transactional
 class ProductCommandService(
     private val profanityValidator: ProfanityValidator,
     private val productCommandRepository: ProductCommandRepository,
     private val productQueryRepository: ProductQueryRepository,
+    private val transactionTemplate: TransactionTemplate,
 ) {
+    @Transactional
     fun createProduct(productCreateCommand: ProductCreateCommand): Product {
         validateProfanityProductName(productCreateCommand.productName)
         val product = productCreateCommand.toEntity()
@@ -23,10 +25,13 @@ class ProductCommandService(
     }
 
     fun modifyProduct(productId: Long, productUpdateCommand: ProductUpdateCommand) {
-        productUpdateCommand.productName?.let { validateProfanityProductName(it) }
-        val product = findProductNotDeleted(productId)
+        validateProfanityProductName(productUpdateCommand.productName)
 
-        product.modify(productUpdateCommand.toEntity())
+        transactionTemplate.execute {
+            val product = findProductNotDeleted(productId)
+
+            product.modify(productUpdateCommand.toEntity())
+        }
     }
 
     private fun validateProfanityProductName(productName: String) {
@@ -35,6 +40,7 @@ class ProductCommandService(
         }
     }
 
+    @Transactional
     fun deletedProduct(productId: Long) {
         val product = findProductNotDeleted(productId)
         product.delete()
