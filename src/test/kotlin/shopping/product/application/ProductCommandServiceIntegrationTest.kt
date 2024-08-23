@@ -48,8 +48,6 @@ class ProductCommandServiceIntegrationTest : KotestIntegrationTestSupport() {
 
                 Then("상품을 수정 후 다시 조회 하면 변경 된 정보가 조회 된다") {
                     val actual = productQueryRepository.findByIdAndNotDeleted(product.id)
-                    println("actual?.sellingPrice = ${actual?.sellingPrice}")
-                    println("ProductFixture.`상품 2`.`상품 엔티티 생성`().sellingPrice = ${ProductFixture.`상품 2`.`상품 엔티티 생성`().sellingPrice}")
 
                     actual.shouldNotBeNull().shouldBeEqualToUsingFields(
                         ProductFixture.`상품 2`.`상품 엔티티 생성`(),
