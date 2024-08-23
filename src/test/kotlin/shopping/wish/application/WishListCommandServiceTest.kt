@@ -2,7 +2,7 @@ package shopping.wish.application
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.throwable.shouldHaveMessage
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -78,7 +78,7 @@ class WishListCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     service.deleteWishProduct(memberId, command)
-                }.message shouldBe "위시 리스트를 찾을 수 없습니다."
+                } shouldHaveMessage "위시 리스트를 찾을 수 없습니다."
             }
         }
 

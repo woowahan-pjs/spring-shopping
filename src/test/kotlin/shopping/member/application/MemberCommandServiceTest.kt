@@ -4,7 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.annotation.DisplayName
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.nulls.shouldNotBeNull
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.throwable.shouldHaveMessage
 import io.mockk.every
 import io.mockk.mockk
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -43,7 +43,7 @@ class MemberCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     memberCommandService.createMember(memberCommand)
-                }.message shouldBe "이미 존재 하는 이메일 입니다."
+                } shouldHaveMessage "이미 존재 하는 이메일 입니다."
             }
         }
     }

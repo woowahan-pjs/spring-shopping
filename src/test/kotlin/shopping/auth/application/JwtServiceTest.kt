@@ -10,6 +10,7 @@ import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldNotBeBlank
+import io.kotest.matchers.throwable.shouldHaveMessage
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -18,8 +19,7 @@ import shopping.global.exception.ApplicationException
 import shopping.member.domain.Member
 import java.time.Instant
 import java.time.ZonedDateTime
-import java.util.Base64
-import java.util.Date
+import java.util.*
 
 @DisplayName("JwtService 테스트")
 class JwtServiceTest : BehaviorSpec({
@@ -48,7 +48,7 @@ class JwtServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     jwtService.getUsername(token)
-                }.message shouldBe "CLAIM 정보가 비어있습니다."
+                } shouldHaveMessage "CLAIM 정보가 비어있습니다."
             }
         }
 
@@ -58,7 +58,7 @@ class JwtServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     jwtService.getUsername(token)
-                }.message shouldBe "CLAIM 정보가 비어있습니다."
+                } shouldHaveMessage "CLAIM 정보가 비어있습니다."
             }
         }
     }
@@ -82,7 +82,7 @@ class JwtServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     jwtService.getJti(token)
-                }.message shouldBe "CLAIM 정보가 비어있습니다."
+                } shouldHaveMessage "CLAIM 정보가 비어있습니다."
             }
         }
 
@@ -92,7 +92,7 @@ class JwtServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     jwtService.getJti(token)
-                }.message shouldBe "CLAIM 정보가 비어있습니다."
+                } shouldHaveMessage "CLAIM 정보가 비어있습니다."
             }
         }
     }
@@ -236,7 +236,7 @@ class JwtServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     jwtService.checkTokenExpiredByTokenString(token)
-                }.message shouldBe "액세스 토큰이 유효하지 않습니다."
+                } shouldHaveMessage "액세스 토큰이 유효하지 않습니다."
             }
         }
     }

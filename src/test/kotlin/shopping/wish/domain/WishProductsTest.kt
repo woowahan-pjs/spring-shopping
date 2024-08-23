@@ -4,7 +4,7 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.collections.shouldHaveSize
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.throwable.shouldHaveMessage
 import io.mockk.every
 import io.mockk.mockk
 import shopping.global.exception.ApplicationException
@@ -40,7 +40,7 @@ class WishProductsTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     wishProducts.delete(wishProduct)
-                }.message shouldBe  "찜 상품을 찾을 수 없습니다."
+                } shouldHaveMessage  "찜 상품을 찾을 수 없습니다."
             }
         }
     }

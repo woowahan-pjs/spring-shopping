@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.annotation.DisplayName
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.throwable.shouldHaveMessage
 import io.mockk.every
 import io.mockk.mockk
 import shopping.global.exception.ApplicationException
@@ -35,7 +36,7 @@ class MemberQueryServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     memberQueryService.findById(memberId)
-                }.message shouldBe "일치하는 회원 정보를 찾을 수 없습니다."
+                } shouldHaveMessage "일치하는 회원 정보를 찾을 수 없습니다."
             }
         }
     }

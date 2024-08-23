@@ -4,7 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.annotation.DisplayName
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.equality.shouldBeEqualToUsingFields
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.throwable.shouldHaveMessage
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -56,7 +56,7 @@ class ProductCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     productCommandService.createProduct(productCreateCommand)
-                }.message shouldBe "상품 이름에 비속어가 포함되어 있습니다"
+                } shouldHaveMessage "상품 이름에 비속어가 포함되어 있습니다"
             }
         }
     }
@@ -86,7 +86,7 @@ class ProductCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     productCommandService.modifyProduct(1L, productModifyCommand)
-                }.message shouldBe "상품 이름에 비속어가 포함되어 있습니다"
+                } shouldHaveMessage "상품 이름에 비속어가 포함되어 있습니다"
             }
         }
 
@@ -99,7 +99,7 @@ class ProductCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     productCommandService.modifyProduct(1L, productModifyCommand)
-                }.message shouldBe "상품을 찾을 수 없습니다."
+                } shouldHaveMessage "상품을 찾을 수 없습니다."
             }
         }
     }
@@ -125,7 +125,7 @@ class ProductCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     productCommandService.deletedProduct(1L)
-                }.message shouldBe "상품을 찾을 수 없습니다."
+                } shouldHaveMessage "상품을 찾을 수 없습니다."
             }
         }
     }

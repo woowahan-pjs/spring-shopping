@@ -5,7 +5,7 @@ import io.kotest.core.annotation.DisplayName
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.equality.shouldBeEqualUsingFields
 import io.kotest.matchers.equality.shouldNotBeEqualUsingFields
-import io.kotest.matchers.shouldBe
+import io.kotest.matchers.throwable.shouldHaveMessage
 import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
@@ -63,7 +63,7 @@ class AuthenticationCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<BadCredentialsException> {
                     authenticationCommandService.logIn(loginCommand)
-                }.message shouldBe "Bad credentials"
+                } shouldHaveMessage "Bad credentials"
             }
         }
     }
@@ -105,7 +105,7 @@ class AuthenticationCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     authenticationCommandService.refreshToken(tokenRefreshCommand)
-                }.message shouldBe "일치하는 회원 정보를 찾을 수 없습니다."
+                } shouldHaveMessage "일치하는 회원 정보를 찾을 수 없습니다."
             }
         }
 
@@ -118,7 +118,7 @@ class AuthenticationCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     authenticationCommandService.refreshToken(tokenRefreshCommand)
-                }.message shouldBe "토큰을 찾을 수 없습니다."
+                } shouldHaveMessage "토큰을 찾을 수 없습니다."
             }
         }
 
@@ -131,7 +131,7 @@ class AuthenticationCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     authenticationCommandService.refreshToken(tokenRefreshCommand)
-                }.message shouldBe "토큰이 일치하지 않습니다."
+                } shouldHaveMessage "토큰이 일치하지 않습니다."
             }
         }
 
@@ -145,7 +145,7 @@ class AuthenticationCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     authenticationCommandService.refreshToken(tokenRefreshCommand)
-                }.message shouldBe "리프레시 토큰이 유효하지 않습니다."
+                } shouldHaveMessage "리프레시 토큰이 유효하지 않습니다."
             }
         }
 
@@ -161,7 +161,7 @@ class AuthenticationCommandServiceTest : BehaviorSpec({
             Then("예외를 던진다") {
                 shouldThrow<ApplicationException> {
                     authenticationCommandService.refreshToken(tokenRefreshCommand)
-                }.message shouldBe "토큰을 재발급 할 수 없습니다."
+                } shouldHaveMessage "토큰을 재발급 할 수 없습니다."
             }
         }
     }
