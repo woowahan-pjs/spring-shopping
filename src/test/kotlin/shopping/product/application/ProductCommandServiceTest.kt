@@ -9,7 +9,9 @@ import io.mockk.every
 import io.mockk.justRun
 import io.mockk.mockk
 import io.mockk.verify
+import shopping.fake.FakeTransactionTemplate
 import shopping.global.exception.ApplicationException
+import shopping.global.infra.TransactionTemplate
 import shopping.product.domain.Product
 import shopping.product.fixture.ProductFixture
 
@@ -18,9 +20,10 @@ class ProductCommandServiceTest : BehaviorSpec({
     val profanityValidator: ProfanityValidator = mockk()
     val productCommandRepository: ProductCommandRepository = mockk()
     val productQueryRepository: ProductQueryRepository = mockk()
+    val transactionTemplate: TransactionTemplate = FakeTransactionTemplate()
 
     val productCommandService =
-        ProductCommandService(profanityValidator, productCommandRepository, productQueryRepository)
+        ProductCommandService(profanityValidator, productCommandRepository, productQueryRepository, transactionTemplate)
 
     Given("상품을 등록할 때") {
 
