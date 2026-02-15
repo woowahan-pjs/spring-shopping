@@ -1,1 +1,1 @@
-# spring-shopping-product
+# spring-shopping
