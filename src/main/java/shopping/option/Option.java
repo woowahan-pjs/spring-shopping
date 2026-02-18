@@ -1,5 +1,6 @@
 package shopping.option;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -17,9 +18,13 @@ public class Option {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "product_id")
+    @JoinColumn(name = "product_id", nullable = false)
     private Product product;
+
+    @Column(nullable = false, length = 50)
     private String name;
+
+    @Column(nullable = false)
     private int quantity;
 
     protected Option() {
@@ -31,10 +36,6 @@ public class Option {
         this.quantity = quantity;
     }
 
-    /*
-     * Subtracts the given amount from the current stock quantity.
-     * Throws if the requested amount exceeds available stock.
-     */
     public void subtractQuantity(int amount) {
         if (amount > this.quantity) {
             throw new IllegalArgumentException("차감할 수량이 현재 재고보다 많습니다.");

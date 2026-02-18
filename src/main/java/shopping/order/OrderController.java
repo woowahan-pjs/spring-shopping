@@ -77,6 +77,7 @@ public class OrderController {
             return ResponseEntity.status(401).build();
         }
 
+        // validate option
         var option = optionRepository.findById(request.optionId()).orElse(null);
         if (option == null) {
             return ResponseEntity.notFound().build();

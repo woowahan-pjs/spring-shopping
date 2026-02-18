@@ -6,10 +6,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
 
-/*
- * Client for Kakao OAuth2 API interactions.
- * Handles access token requests and user info retrieval.
- */
 @Component
 public class KakaoLoginClient {
     private final KakaoLoginProperties properties;

@@ -46,9 +46,6 @@ public class Member {
         this.kakaoAccessToken = kakaoAccessToken;
     }
 
-    /**
-     * Charges the given amount to this member's point balance.
-     */
     public void chargePoint(int amount) {
         if (amount <= 0) {
             throw new IllegalArgumentException("Amount must be greater than zero.");

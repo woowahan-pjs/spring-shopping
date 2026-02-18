@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
  * Validates option names against the following rules:
  * - Must not be null or blank
  * - Maximum length of 50 characters (including spaces)
- * - Only Korean, English, digits, and selected special characters are allowed: ( ) [ ] + - & / _
+ * - Only Korean, English, digits, spaces, and selected special characters are allowed: ( ) [ ] + - & / _
  */
 public class OptionNameValidator {
     private static final int MAX_LENGTH = 50;

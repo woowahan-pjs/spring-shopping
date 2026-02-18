@@ -1,16 +1,16 @@
 create table category
 (
     id          bigint auto_increment primary key,
-    name        varchar(255) not null,
+    name        varchar(255) not null unique,
     color       varchar(7)   not null,
     image_url   varchar(255) not null,
-    description varchar(255) not null
+    description varchar(255)
 );
 
 create table product
 (
     id          bigint auto_increment primary key,
-    name        varchar(255) not null,
+    name        varchar(15)  not null,
     price       int          not null,
     image_url   varchar(255) not null,
     category_id bigint       not null,

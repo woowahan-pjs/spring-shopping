@@ -8,7 +8,7 @@ import shopping.category.Category;
 public record ProductRequest(
     @NotBlank String name,
     @Positive int price,
-    String imageUrl,
+    @NotBlank String imageUrl,
     @NotNull Long categoryId
 ) {
     public Product toEntity(Category category) {

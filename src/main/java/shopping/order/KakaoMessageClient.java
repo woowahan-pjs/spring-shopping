@@ -13,7 +13,6 @@ public class KakaoMessageClient {
         this.restClient = builder.build();
     }
 
-    // fire-and-forget
     public void sendToMe(String accessToken, Order order, Product product) {
         var templateObject = buildTemplate(order, product);
 

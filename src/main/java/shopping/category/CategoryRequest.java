@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 
 public record CategoryRequest(
     @NotBlank String name,
-    String color,
-    String imageUrl,
+    @NotBlank String color,
+    @NotBlank String imageUrl,
     String description
 ) {
     public Category toEntity() {

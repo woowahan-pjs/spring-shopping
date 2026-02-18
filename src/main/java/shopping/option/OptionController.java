@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /*
- * Controller for managing product options.
  * Each product must have at least one option at all times.
  * Option names are validated against allowed characters and length constraints.
  */
@@ -67,7 +66,7 @@ public class OptionController {
             .body(OptionResponse.from(saved));
     }
 
-    @DeleteMapping("/{optionId}")
+    @DeleteMapping(path = "/{optionId}")
     public ResponseEntity<Void> deleteOption(
         @PathVariable Long productId,
         @PathVariable Long optionId

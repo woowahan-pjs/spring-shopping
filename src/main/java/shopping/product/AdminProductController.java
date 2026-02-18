@@ -11,6 +11,7 @@ import shopping.category.Category;
 import shopping.category.CategoryRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Controller
 @RequestMapping("/admin/products")
@@ -39,7 +40,7 @@ public class AdminProductController {
     public String create(
         @RequestParam String name,
         @RequestParam int price,
-        @RequestParam(required = false) String imageUrl,
+        @RequestParam String imageUrl,
         @RequestParam Long categoryId,
         Model model
     ) {
@@ -50,7 +51,7 @@ public class AdminProductController {
         }
 
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다. id=" + categoryId));
+            .orElseThrow(() -> new NoSuchElementException("카테고리가 존재하지 않습니다. id=" + categoryId));
         productRepository.save(new Product(name, price, imageUrl, category));
         return "redirect:/admin/products";
     }
@@ -58,7 +59,7 @@ public class AdminProductController {
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Product product = productRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다. id=" + id));
+            .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다. id=" + id));
         model.addAttribute("product", product);
         model.addAttribute("categories", categoryRepository.findAll());
         return "product/edit";
@@ -69,12 +70,12 @@ public class AdminProductController {
         @PathVariable Long id,
         @RequestParam String name,
         @RequestParam int price,
-        @RequestParam(required = false) String imageUrl,
+        @RequestParam String imageUrl,
         @RequestParam Long categoryId,
         Model model
     ) {
         Product product = productRepository.findById(id)
-            .orElseThrow(() -> new IllegalArgumentException("상품이 존재하지 않습니다. id=" + id));
+            .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다. id=" + id));
 
         List<String> errors = ProductNameValidator.validate(name, true);
         if (!errors.isEmpty()) {
@@ -83,7 +84,7 @@ public class AdminProductController {
         }
 
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new IllegalArgumentException("카테고리가 존재하지 않습니다. id=" + categoryId));
+            .orElseThrow(() -> new NoSuchElementException("카테고리가 존재하지 않습니다. id=" + categoryId));
 
         product.update(name, price, imageUrl, category);
         productRepository.save(product);
