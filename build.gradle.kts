@@ -3,6 +3,7 @@ plugins {
     id("org.springframework.boot") version "3.5.9"
     id("io.spring.dependency-management") version "1.1.7"
     id("org.flywaydb.flyway") version "12.0.1"
+    id("com.diffplug.spotless") version "8.2.1"
 }
 
 group = "camp.nextstep.edu"
@@ -40,4 +41,14 @@ dependencies {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+spotless {
+    java {
+        googleJavaFormat().aosp()
+        importOrder("java", "javax", "jakarta", "org", "com")
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
 }

@@ -1,0 +1,49 @@
+#!/bin/sh
+set -e
+
+repo_root=$(git rev-parse --show-toplevel)
+cd "$repo_root"
+
+if [ ! -f "./gradlew" ]; then
+  echo "❌ 레포 루트에 gradlew가 없습니다. (현재 위치: $repo_root)"
+  exit 1
+fi
+
+echo "▶ 스테이지된 Java 파일만 spotlessApply 실행 중..."
+
+files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.java$' || true)
+
+if [ -z "$files" ]; then
+  echo "✅ 포맷할 Java 파일이 없습니다. 커밋을 진행합니다."
+  exit 0
+fi
+
+spotless_patterns=""
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  abs="$repo_root/$f"
+  pat='\Q'"$abs"'\E'
+  if [ -z "$spotless_patterns" ]; then
+    spotless_patterns="$pat"
+  else
+    spotless_patterns="$spotless_patterns,$pat"
+  fi
+done <<EOF
+$files
+EOF
+
+echo "▶ spotlessApply (스테이지된 파일만) 실행 중..."
+./gradlew spotlessApply -PspotlessFiles="$spotless_patterns" --quiet
+
+echo "▶ 다시 git add 중..."
+while IFS= read -r f; do
+  [ -z "$f" ] && continue
+  git add -- "$f"
+done <<EOF
+$files
+EOF
+
+echo "▶ spotlessCheck (스테이지된 파일만) 실행 중..."
+./gradlew spotlessCheck -PspotlessFiles="$spotless_patterns" --quiet
+
+echo "✅ 포맷 완료. 커밋 진행 가능!"
