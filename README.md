@@ -1,5 +1,9 @@
 # 온라인 쇼핑몰 구현 과제 
 
+## ERD
+![erd.png](image/erd.png)
+- erd cloud : https://www.erdcloud.com/d/7vnuP9tbqo85etrxx
+
 ## 📈 1. 과제 진행 요구 사항
 - ✅ 쇼핑 저장소를 포크하고 클론하는 방식으로 시작
 - ✅ 기능 구현 전 `README.md`에 구현 목록을 작성하고, 구현 전략을 정리
