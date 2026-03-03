@@ -2,6 +2,8 @@ package shopping.infra.exception;
 
 import java.util.List;
 
+import jakarta.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -45,6 +47,29 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         problemDetail.setProperty("parameters", responses);
 
         return handleExceptionInternal(ex, problemDetail, headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<Object> handleConstraintViolation(
+            ConstraintViolationException ex, WebRequest request) {
+        log.error("[ VALIDATE ERROR ] : ", ex);
+
+        List<InvalidResponse> responses =
+                ex.getConstraintViolations().stream()
+                        .map(
+                                constraintViolation ->
+                                        new InvalidResponse(
+                                                constraintViolation.getPropertyPath().toString(),
+                                                constraintViolation.getMessage(),
+                                                constraintViolation.getInvalidValue()))
+                        .toList();
+
+        ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problemDetail.setProperty("parameters", responses);
+
+        return handleExceptionInternal(
+                ex, problemDetail, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
