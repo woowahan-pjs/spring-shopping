@@ -133,7 +133,8 @@ class JwtAuthenticationFilterTest {
                     "/h2-console",
                     "/v3/api-docs",
                     "/favicon.ico",
-                    "/api/members/register"
+                    "/api/members/register",
+                    "/api/members/login"
                 })
         @DisplayName("생략 여부가 true로 반환됩니다.")
         void isTrue(final String requestUri) {

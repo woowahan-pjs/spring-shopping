@@ -4,8 +4,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import shopping.auth.domain.Role;
+import shopping.auth.dto.LoginRequest;
+import shopping.auth.dto.LoginResponse;
 import shopping.auth.dto.RegisterRequest;
 import shopping.auth.dto.RegisterResponse;
+import shopping.auth.dto.UserResponse;
 import shopping.infra.security.JwtTokenProvider;
 import shopping.infra.security.UserPrincipal;
 
@@ -27,10 +31,24 @@ public class AuthFacade {
     public RegisterResponse register(final RegisterRequest request) {
         final Long userId = userService.register(request);
 
-        final String token =
-                jwtTokenProvider.generateToken(
-                        UserPrincipal.generate(userId, request.email(), request.role()));
+        return RegisterResponse.of(generateToken(userId, request.email(), request.role()));
+    }
 
-        return RegisterResponse.of(token);
+    /**
+     * 회원 로그인 요청을 처리하고, 인증 토큰을 포함한 응답을 반환합니다.
+     *
+     * @param request 로그인 요청 정보를 담고 있는 LoginRequest 객체입니다. 이 객체에는 이메일과 비밀번호가 포함됩니다.
+     * @return 인증 토큰을 포함한 LoginResponse 객체를 반환합니다.
+     */
+    @Transactional(readOnly = true)
+    public LoginResponse login(final LoginRequest request) {
+        final UserResponse response = userService.getUser(request.email(), request.password());
+
+        return LoginResponse.of(
+                generateToken(response.userId(), response.email(), response.role()));
+    }
+
+    private String generateToken(final Long userId, final String email, final Role role) {
+        return jwtTokenProvider.generateToken(UserPrincipal.generate(userId, email, role));
     }
 }

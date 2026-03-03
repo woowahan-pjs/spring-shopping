@@ -14,9 +14,13 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import shopping.auth.domain.DuplicateEmailException;
+import shopping.auth.domain.InvalidUserException;
 import shopping.auth.domain.Role;
+import shopping.auth.dto.LoginRequest;
+import shopping.auth.dto.LoginResponse;
 import shopping.auth.dto.RegisterRequest;
 import shopping.auth.dto.RegisterResponse;
+import shopping.auth.dto.UserResponse;
 import shopping.infra.security.JwtTokenProvider;
 import shopping.infra.security.UserPrincipal;
 
@@ -66,6 +70,49 @@ class AuthFacadeTest {
 
             // then
             assertThat(result.accessToken()).isEqualTo(expectedAccessToken);
+        }
+    }
+
+    @Nested
+    @DisplayName("로그인을 할 때,")
+    class login {
+
+        @Test
+        @DisplayName("존재하지 않는 회원이거나, 비밀번호가 동일하지 않은 경우 예외가 발생합니다.")
+        void invalidUser() {
+            // given
+            final LoginRequest request = new LoginRequest("test@test.com", "12345678");
+
+            given(userService.getUser(request.email(), request.password()))
+                    .willThrow(new InvalidUserException());
+
+            // when & then
+            assertThatThrownBy(() -> authFacade.login(request))
+                    .isInstanceOf(InvalidUserException.class)
+                    .hasMessage("이메일 또는 비밀번호를 확인해주세요.");
+        }
+
+        @Test
+        @DisplayName("성공적으로 로그인을하여 accessToken을 반환합니다.")
+        void success() {
+            // given
+            final String email = "test@test.com";
+            final LoginRequest request = new LoginRequest(email, "12345678");
+
+            final UserResponse userResponse = new UserResponse(1L, email, Role.CUSTOMER);
+
+            final String expectedToken = "ACCESS-TOKEN";
+
+            given(userService.getUser(request.email(), request.password()))
+                    .willReturn(userResponse);
+            given(jwtTokenProvider.generateToken(any(UserPrincipal.class)))
+                    .willReturn(expectedToken);
+
+            // when
+            final LoginResponse response = authFacade.login(request);
+
+            // then
+            assertThat(response.accessToken()).isEqualTo(expectedToken);
         }
     }
 }

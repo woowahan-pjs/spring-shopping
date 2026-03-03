@@ -12,6 +12,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import shopping.auth.dto.LoginRequest;
+import shopping.auth.dto.LoginResponse;
 import shopping.auth.dto.RegisterRequest;
 import shopping.auth.dto.RegisterResponse;
 import shopping.auth.service.AuthFacade;
@@ -35,5 +37,19 @@ class AuthController {
     @Operation(summary = "회원 가입", description = "회원 가입을 합니다.")
     public RegisterResponse register(@Valid @RequestBody final RegisterRequest request) {
         return authFacade.register(request);
+    }
+
+    @PostMapping("/login")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "로그인 성공"),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "입력 값이 잘못 되거나, 유효하지 않은 정보, 비밀번호가 불일치한 경우"),
+                @ApiResponse(responseCode = "500", description = "서버 오류")
+            })
+    @Operation(summary = "로그인", description = "로그인을 합니다.")
+    public LoginResponse login(@Valid @RequestBody final LoginRequest request) {
+        return authFacade.login(request);
     }
 }

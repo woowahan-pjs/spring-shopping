@@ -6,8 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import shopping.auth.domain.DuplicateEmailException;
+import shopping.auth.domain.InvalidUserException;
 import shopping.auth.domain.User;
 import shopping.auth.dto.RegisterRequest;
+import shopping.auth.dto.UserResponse;
 import shopping.auth.repository.UserRepository;
 
 @Service
@@ -37,5 +39,26 @@ public class UserService {
                         User.generate(request, passwordEncoder.encode(request.password())));
 
         return user.getId();
+    }
+
+    /**
+     * 이메일과 비밀번호를 사용하여 활성화된 회원 정보를 조회합니다. 비밀번호가 일치하지 않거나 사용자가 존재하지 않을 경우 예외를 발생시킵니다.
+     *
+     * @param email 조회할 회원의 이메일 주소입니다.
+     * @param password 조회할 회원의 비밀번호입니다.
+     * @return 조회된 회원의 정보(UserResponse)를 반환합니다.
+     */
+    @Transactional(readOnly = true)
+    public UserResponse getUser(final String email, final String password) {
+        final User user =
+                userRepository
+                        .findByEmailAndIsUse(email, true)
+                        .orElseThrow(InvalidUserException::new);
+
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new InvalidUserException();
+        }
+
+        return UserResponse.from(user.getId(), user.getEmail(), user.getRole());
     }
 }

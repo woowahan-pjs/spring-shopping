@@ -16,7 +16,7 @@ import shopping.infra.security.UserPrincipal;
 
 class SecurityAuditorAwareTest {
 
-    private SecurityAuditorAware auditorAware = new SecurityAuditorAware();
+    private final SecurityAuditorAware auditorAware = new SecurityAuditorAware();
 
     @AfterEach
     void clear() {
