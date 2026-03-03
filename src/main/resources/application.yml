@@ -23,3 +23,7 @@ spring:
   mvc:
     problemdetails:
       enabled: true
+
+jwt:
+  secret: 63f4945d921d599f27ae4fdf5bada3f1
+  expiration: 900000
