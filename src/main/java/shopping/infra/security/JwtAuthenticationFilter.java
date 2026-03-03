@@ -54,7 +54,8 @@ class JwtAuthenticationFilter extends OncePerRequestFilter {
         return uri.startsWith("/swagger-ui")
                 || uri.startsWith("/h2-console")
                 || uri.startsWith("/v3/api-docs")
-                || uri.equals("/favicon.ico");
+                || uri.equals("/favicon.ico")
+                || uri.equals("/api/members/register");
     }
 
     private String extractTokenWithValid(final HttpServletRequest request) {

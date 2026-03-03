@@ -51,6 +51,10 @@ public class UserPrincipal implements UserDetails {
         return this.id.toString();
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Role getRole() {
         return role;
     }

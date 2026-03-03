@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.util.ObjectUtils;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 import shopping.infra.exception.ShoppingBusinessException;
 
 public enum Role {
@@ -15,6 +17,15 @@ public enum Role {
     private static final Map<String, Role> ROLE_MAP =
             Arrays.stream(Role.values())
                     .collect(Collectors.toUnmodifiableMap(Role::name, role -> role));
+
+    @JsonCreator
+    public static Role from(final String name) {
+        try {
+            return convert(name);
+        } catch (ShoppingBusinessException e) {
+            return null;
+        }
+    }
 
     public static Role convert(final String name) {
         if (ObjectUtils.isEmpty(name)) {

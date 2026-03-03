@@ -14,10 +14,13 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.Comment;
 
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shopping.auth.dto.RegisterRequest;
 import shopping.infra.orm.AuditInformation;
 import shopping.infra.orm.BooleanYnConverter;
 
+@Getter
 @Entity
 @Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -49,4 +52,15 @@ public class User extends AuditInformation {
     @Convert(converter = BooleanYnConverter.class)
     @Column(name = "use_yn", nullable = false, columnDefinition = "char(1)")
     private Boolean isUse;
+
+    public static User generate(final RegisterRequest request, final String encoderPassword) {
+        User user = new User();
+
+        user.email = request.email();
+        user.password = encoderPassword;
+        user.role = request.role();
+        user.isUse = true;
+
+        return user;
+    }
 }
