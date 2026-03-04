@@ -10,12 +10,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shopping.global.BaseEntity;
 
 @Entity
 @Getter
 @Table(name = "members")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Member {
+public class Member extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,6 +26,12 @@ public class Member {
 
     @Column(nullable = false)
     private String password;
+
+    @Column(name = "created_by", updatable = false)
+    private String createdBy;
+
+    @Column(name = "modified_by")
+    private String modifiedBy;
 
     @Builder
     public Member(Long id, String email, String password) {
