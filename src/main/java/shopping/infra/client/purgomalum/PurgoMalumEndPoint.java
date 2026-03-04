@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum PurgoMalumEndPoint {
+enum PurgoMalumEndPoint {
     CONTAINS_PROFANITY("/service/containsprofanity");
 
     private final String endpoint;

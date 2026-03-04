@@ -4,9 +4,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import shopping.infra.client.purgomalum.PurgoMalumAdapter;
 import shopping.infra.exception.ShoppingBusinessException;
 import shopping.product.domain.Product;
 import shopping.product.dto.ProductResponse;
+import shopping.product.dto.ProductSaveRequest;
 import shopping.product.repository.ProductRepository;
 
 @Service
@@ -14,6 +16,8 @@ import shopping.product.repository.ProductRepository;
 public class ProductService {
 
     private final ProductRepository productRepository;
+
+    private final PurgoMalumAdapter purgoMalumAdapter;
 
     /**
      * 주어진 상품 ID를 이용하여 활성화된 상품 정보를 조회하고, ProductResponse로 반환합니다.
@@ -30,5 +34,22 @@ public class ProductService {
 
         return ProductResponse.from(
                 product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
+    /**
+     * 상품 정보를 저장하고 생성된 상품의 고유 ID를 반환합니다. 요청된 상품 이름에 비속어가 포함된 경우 예외를 발생시킵니다.
+     *
+     * @param request 저장할 상품 정보를 포함한 ProductSaveRequest 객체입니다.
+     * @return 저장된 상품의 고유 ID를 반환합니다.
+     */
+    @Transactional
+    public Long registerProduct(final ProductSaveRequest request) {
+        if (!purgoMalumAdapter.isProfanity(request.name())) {
+            throw new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다.");
+        }
+
+        final Product product = productRepository.save(Product.of(request));
+
+        return product.getId();
     }
 }

@@ -1,11 +1,12 @@
 package shopping.infra.client.purgomalum;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-class PurgoMalumAdapter {
+public class PurgoMalumAdapter {
 
     private final PurgoMalumClient client;
 
@@ -16,7 +17,10 @@ class PurgoMalumAdapter {
      * @return 텍스트에 부적절한 언어가 포함되어 있으면 true를 반환하며, 그렇지 않으면 false를 반환합니다.
      */
     public boolean isProfanity(final String text) {
-        final String response = client.get(PurgoMalumEndPoint.CONTAINS_PROFANITY.getEndpoint(), new ContainsProfanityRequest(text));
+        final String response =
+                client.get(
+                        PurgoMalumEndPoint.CONTAINS_PROFANITY.getEndpoint(),
+                        new ContainsProfanityRequest(text));
 
         return response.equals("true");
     }

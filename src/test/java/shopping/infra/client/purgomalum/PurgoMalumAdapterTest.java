@@ -2,7 +2,6 @@ package shopping.infra.client.purgomalum;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
@@ -11,13 +10,8 @@ import org.junit.jupiter.api.Test;
 @Tag("integration")
 class PurgoMalumAdapterTest {
 
-    private final PurgoMalumAdapter purgoMalumAdapter = new PurgoMalumAdapter(PurgoMalumClientHelper.client());
-
-    //TODO: 제거 필요
-    @BeforeAll
-    static void init() {
-        InsecureSsl.disableForJvm();
-    }
+    private final PurgoMalumAdapter purgoMalumAdapter =
+            new PurgoMalumAdapter(PurgoMalumClientHelper.client());
 
     @Nested
     @DisplayName("특정 단어가 비속어인지 판단할 때,")

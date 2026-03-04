@@ -1,13 +1,11 @@
 package shopping.product.domain;
 
-import java.math.BigDecimal;
-
 import org.springframework.test.util.ReflectionTestUtils;
 
 public class ProductFixture {
 
     public static Product fixture(
-            final Long id, final String name, final BigDecimal price, final String imageUrl) {
+            final Long id, final String name, final Price price, final String imageUrl) {
         Product product = new Product();
 
         ReflectionTestUtils.setField(product, "id", id);
