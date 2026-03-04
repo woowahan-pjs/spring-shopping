@@ -24,9 +24,27 @@ public class MemberService {
         return new TokenResponse(token);
     }
 
+    public TokenResponse login(MemberRequest request) {
+        Member member = findMemberByEmail(request.email());
+        verifyPassword(member, request.password());
+        String token = authService.createToken(member.getId());
+        return new TokenResponse(token);
+    }
+
     private void verifyEmail(String email) {
         if (memberRepository.existsByEmail(email)) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
+        }
+    }
+
+    private Member findMemberByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                               .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+    }
+
+    private void verifyPassword(Member member, String password) {
+        if (!member.getPassword().equals(password)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
     }
 }

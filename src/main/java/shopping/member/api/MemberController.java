@@ -23,4 +23,9 @@ public class MemberController {
     public TokenResponse register(@RequestBody MemberRequest request) {
         return memberService.register(request);
     }
+
+    @PostMapping("/login")
+    public TokenResponse login(@RequestBody MemberRequest request) {
+        return memberService.login(request);
+    }
 }
