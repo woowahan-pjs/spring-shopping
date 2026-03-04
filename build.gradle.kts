@@ -68,3 +68,12 @@ spotless {
         endWithNewline()
     }
 }
+
+tasks.register<Test>("integrationTest") {
+    group = "verification"
+    description = "통합테스트만 실행합니다."
+
+    useJUnitPlatform {
+        includeTags("integration")
+    }
+}
