@@ -11,9 +11,9 @@ public final class PurgoMalumClientHelper {
     private static class Holder {
         private static final RestClientTestConfig restClientTestConfig = new RestClientTestConfig();
         private static final PurgoMalumClientConfig clientConfig =
-            new PurgoMalumClientConfig(restClientTestConfig.create());
+                new PurgoMalumClientConfig(RestClientTestConfig.create());
         private static final PurgoMalumClient client =
-            clientConfig.purgomalumClientFactory(BASE_URI);
+                clientConfig.purgomalumClientFactory(BASE_URI);
     }
 
     public static PurgoMalumClient client() {
