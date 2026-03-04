@@ -38,5 +38,6 @@ public class Member extends BaseEntity {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.createdBy = "system";
     }
 }
