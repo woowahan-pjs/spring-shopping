@@ -41,17 +41,17 @@
 - [ ] 상품명 길이 검사 (공백 포함 최대 15자)
 - [ ] 상품명 허용 특수문자 검사 (정규식 기반)
 - [ ] 상품명 비속어 검사 (PurgoMalum API 연동)
-- [ ] 전역 예외 핸들러 구현 (`@RestControllerAdvice`)
-- [ ] 유효성 검사 실패 시 400 Bad Request 응답
+- [x] 전역 예외 핸들러 구현 (`@RestControllerAdvice`)
+- [x] 유효성 검사 실패 시 400 Bad Request 응답
 
 ---
 
 ### 3. 회원 (Member)
 
-- [ ] 회원 가입 `POST /api/members/register`
+- [x] 회원 가입 `POST /api/members/register`
   - 이메일 + 비밀번호로 가입
   - 가입 성공 시 인증 토큰 발급
-- [ ] 로그인 `POST /api/members/login`
+- [x] 로그인 `POST /api/members/login`
   - 이메일 + 비밀번호 검증
   - 일치 시 인증 토큰 발급
 
@@ -366,11 +366,11 @@ test: 위시 리스트 서비스 단위 테스트 작성
 
 ## 프로그래밍 제약 사항 체크리스트
 
-- [ ] Google Java Style Guide 준수 (들여쓰기 4 spaces)
-- [ ] 들여쓰기 최대 2단계
-- [ ] 함수 최대 15줄
-- [ ] 함수는 한 가지 일만 수행
-- [ ] `else` 키워드 사용 금지
-- [ ] `switch` 문 사용 금지
-- [ ] 3항 연산자 사용 금지
-- [ ] JUnit 5 + AssertJ로 기능 테스트 작성
+- [x] Google Java Style Guide 준수 (들여쓰기 4 spaces)
+- [x] 들여쓰기 최대 2단계
+- [x] 함수 최대 15줄
+- [x] 함수는 한 가지 일만 수행
+- [x] `else` 키워드 사용 금지
+- [x] `switch` 문 사용 금지
+- [x] 3항 연산자 사용 금지
+- [x] JUnit 5 + AssertJ로 기능 테스트 작성

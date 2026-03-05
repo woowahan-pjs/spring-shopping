@@ -61,7 +61,9 @@
 
 ---
 
-### 7. 테스트 (`MemberServiceTest.java`)
+### 7. 테스트
+
+**MemberServiceTest.java**
 
 | 케이스 | 기대 결과 |
 |--------|-----------|
@@ -70,6 +72,25 @@
 | 정상 로그인 | token 반환 |
 | 존재하지 않는 이메일 로그인 | 예외 발생 |
 | 비밀번호 불일치 로그인 | 예외 발생 |
+| 회원가입 시 비밀번호 암호화 저장 | 평문 != 저장값 |
+
+**MemberControllerTest.java**
+
+| 케이스 | 기대 결과 |
+|--------|-----------|
+| 회원가입 성공 | 201 + token |
+| 중복 이메일 가입 | 400 + message |
+| 로그인 성공 | 200 + token |
+| 존재하지 않는 이메일 로그인 | 400 + message |
+| 비밀번호 불일치 로그인 | 400 + message |
+
+**AuthServiceTest.java**
+
+| 케이스 | 기대 결과 |
+|--------|-----------|
+| 비밀번호 암호화 | 평문 != 암호화값 |
+| 비밀번호 일치 검증 | 예외 없음 |
+| 비밀번호 불일치 검증 | 예외 발생 |
 
 ---
 
@@ -80,7 +101,7 @@
 | 구현 언어 | Java 21 |
 | JWT 라이브러리 | `jjwt 0.12.6` (build.gradle.kts에 포함됨) |
 | JWT subject | `memberId` (Long → String 변환) |
-| 비밀번호 저장 | BCrypt 암호화 |
+| 비밀번호 저장 | Argon2id 암호화 (`Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8()`) |
 | 인증 실패 응답 | 401 Unauthorized |
 | 유효성 실패 응답 | 400 Bad Request |
 | 예외 응답 형식 | `{"message": "에러 메시지"}` |
@@ -95,7 +116,8 @@ src/main/java/shopping/
 ├── auth/
 │   └── AuthService.java
 ├── config/
-│   └── JpaConfig.java
+│   ├── JpaConfig.java
+│   └── PasswordEncoderConfig.java
 ├── common/
 │   ├── converter/
 │   │   ├── EnumType.java
@@ -128,14 +150,14 @@ src/main/java/shopping/
 ### 회원 가입
 - [x] 이메일 + 비밀번호로 회원 가입
 - [x] 중복 이메일 가입 시 400 반환
-- [ ] 비밀번호 암호화 후 저장 (BCrypt)
+- [x] 비밀번호 암호화 후 저장 (Argon2id)
 - [x] 가입 성공 시 JWT 토큰 발급 후 201 반환
 
 ### 로그인
-- [ ] 이메일 + 비밀번호로 로그인
-- [ ] 존재하지 않는 이메일 로그인 시 400 반환
-- [ ] 암호화된 비밀번호와 비교 후 불일치 시 400 반환
-- [ ] 로그인 성공 시 JWT 토큰 발급 후 200 반환
+- [x] 이메일 + 비밀번호로 로그인
+- [x] 존재하지 않는 이메일 로그인 시 400 반환
+- [x] 암호화된 비밀번호와 비교 후 불일치 시 400 반환
+- [x] 로그인 성공 시 JWT 토큰 발급 후 200 반환
 
 ### JWT 인증
 - [x] 회원 ID를 subject로 담아 JWT 생성
@@ -143,16 +165,23 @@ src/main/java/shopping/
 - [ ] 토큰 검증 후 회원 식별
 - [ ] 토큰 없거나 유효하지 않으면 401 반환
 
+### Spring Security (후속 작업)
+- [ ] `spring-boot-starter-security` 도입
+- [ ] `SecurityFilterChain` 설정 (register/login은 permitAll, 나머지 authenticated)
+- [ ] JWT 검증 필터 (`OncePerRequestFilter`) 구현
+- [ ] Role 기반 인가 처리
+
 ### 예외 처리
-- [ ] 예외 발생 시 `{"message": "..."}` 형태로 응답
-- [ ] 400 / 401 / 500 상황별 HTTP 상태코드 반환
+- [x] 예외 발생 시 `{"message": "..."}` 형태로 응답
+- [x] 400 / 401 / 500 상황별 HTTP 상태코드 반환
 
 ### 테스트
 - [x] 정상 회원 가입 테스트
 - [x] 중복 이메일 가입 테스트
-- [ ] 정상 로그인 테스트
-- [ ] 존재하지 않는 이메일 로그인 테스트
-- [ ] 비밀번호 불일치 로그인 테스트
+- [x] 회원가입 시 비밀번호 암호화 저장 테스트
+- [x] 정상 로그인 테스트
+- [x] 존재하지 않는 이메일 로그인 테스트
+- [x] 비밀번호 불일치 로그인 테스트
 
 ---
 
