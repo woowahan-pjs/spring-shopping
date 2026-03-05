@@ -15,3 +15,6 @@ spring:
 
 jwt:
   secret: spring-shopping-jwt-secret-key-must-be-long-enough
+
+purgomalum:
+  url: https://www.purgomalum.com/service/containsprofanity?text={text}
