@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import shopping.auth.application.AuthService;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
+import shopping.member.api.LoginRequest;
 import shopping.member.api.RegisterRequest;
 import shopping.member.api.TokenResponse;
 import shopping.member.domain.Member;
@@ -39,6 +40,15 @@ public class MemberService {
         validateActiveSeller(member);
     }
 
+    @Transactional(readOnly = true)
+    public TokenResponse login(LoginRequest request) {
+        Member member = findByEmail(request.email());
+        validateMemberState(member);
+        validatePassword(member, request.password());
+        String token = authService.issueToken(member.getId());
+        return new TokenResponse(token);
+    }
+
     private void validateDuplicatedEmail(String email) {
         if (memberRepository.findByEmail(email).isEmpty()) {
             return;
@@ -52,6 +62,26 @@ public class MemberService {
         } catch (DataIntegrityViolationException exception) {
             throw new ApiException(ErrorCode.MEMBER_EMAIL_DUPLICATE);
         }
+    }
+
+    private Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new ApiException(ErrorCode.MEMBER_CREDENTIALS_INVALID));
+    }
+
+    private void validateMemberState(Member member) {
+        if (member.isActive()) {
+            return;
+        }
+        throw new ApiException(ErrorCode.MEMBER_CREDENTIALS_INVALID);
+    }
+
+    private void validatePassword(Member member, String rawPassword) {
+        String encoded = encodePassword(rawPassword);
+        if (member.getPassword().equals(encoded)) {
+            return;
+        }
+        throw new ApiException(ErrorCode.MEMBER_CREDENTIALS_INVALID);
     }
 
     private Member findById(Long memberId) {
