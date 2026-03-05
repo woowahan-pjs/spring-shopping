@@ -1,35 +1,31 @@
 package shopping.auth;
 
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-
 @Service
+@RequiredArgsConstructor
 public class AuthService {
-    private final SecretKey secretKey;
-
-    public AuthService(@Value("${jwt.secret}") String secret) {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-    }
+    private final TokenProvider tokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     public String createToken(Long memberId) {
-        return Jwts.builder()
-                   .subject(String.valueOf(memberId))
-                   .signWith(secretKey)
-                   .compact();
+        return tokenProvider.createToken(memberId);
     }
 
     public Long getMemberId(String token) {
-        String subject = Jwts.parser()
-                             .verifyWith(secretKey)
-                             .build()
-                             .parseSignedClaims(token)
-                             .getPayload()
-                             .getSubject();
-        return Long.parseLong(subject);
+        return tokenProvider.getMemberId(token);
+    }
+
+    public String encodePassword(String rawPassword) {
+        return passwordEncoder.encode(rawPassword);
+    }
+
+    public void verifyPassword(String rawPassword, String encodedPassword) {
+        if (!passwordEncoder.matches(rawPassword, encodedPassword)) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
     }
 }

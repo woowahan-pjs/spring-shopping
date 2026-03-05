@@ -6,6 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.member.api.dto.MemberRequest;
 import shopping.member.api.dto.TokenResponse;
+import shopping.member.repository.MemberRepository;
 
 import org.junit.jupiter.api.DisplayName;
 
@@ -17,6 +18,9 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class MemberServiceTest {
     @Autowired
     private MemberService memberService;
+
+    @Autowired
+    private MemberRepository memberRepository;
 
     @Test
     @DisplayName("이메일과 비밀번호로 회원가입 성공")
@@ -68,6 +72,22 @@ class MemberServiceTest {
         assertThatThrownBy(() -> memberService.login(request))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("존재하지 않는 이메일입니다.");
+    }
+
+    @Test
+    @DisplayName("회원가입 시 비밀번호는 암호화되어 저장된다")
+    void test06() {
+        // given
+        String rawPassword = "password123";
+        MemberRequest request = new MemberRequest("user@example.com", rawPassword);
+
+        // when
+        memberService.register(request);
+
+        // then
+        String storedPassword = memberRepository.findByEmail("user@example.com")
+            .get().getPassword();
+        assertThat(storedPassword).isNotEqualTo(rawPassword);
     }
 
     @Test

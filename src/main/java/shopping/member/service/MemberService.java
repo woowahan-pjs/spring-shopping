@@ -18,15 +18,15 @@ public class MemberService {
         verifyEmail(request.email());
         Member saved = memberRepository.save(Member.builder()
                                                    .email(request.email())
-                                                   .password(request.password())
+                                                   .password(authService.encodePassword(request.password()))
                                                    .build());
         String token = authService.createToken(saved.getId());
         return new TokenResponse(token);
     }
 
     public TokenResponse login(MemberRequest request) {
-        Member member = findMemberByEmail(request.email());
-        verifyPassword(member, request.password());
+        Member member = getMemberByEmail(request.email());
+        authService.verifyPassword(request.password(), member.getPassword());
         String token = authService.createToken(member.getId());
         return new TokenResponse(token);
     }
@@ -37,14 +37,8 @@ public class MemberService {
         }
     }
 
-    private Member findMemberByEmail(String email) {
+    private Member getMemberByEmail(String email) {
         return memberRepository.findByEmail(email)
                                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
-    }
-
-    private void verifyPassword(Member member, String password) {
-        if (!member.getPassword().equals(password)) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
     }
 }

@@ -40,6 +40,10 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
 
+    // Argon2id
+    implementation("org.springframework.security:spring-security-crypto")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.80")
+
     // Utils
     implementation("org.apache.commons:commons-lang3")
 
