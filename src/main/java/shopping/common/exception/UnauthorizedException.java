@@ -1,4 +1,4 @@
-package shopping.global.exception;
+package shopping.common.exception;
 
 public class UnauthorizedException extends RuntimeException {
 

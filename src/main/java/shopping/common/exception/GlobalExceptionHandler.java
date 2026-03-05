@@ -1,4 +1,4 @@
-package shopping.global.exception;
+package shopping.common.exception;
 
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
