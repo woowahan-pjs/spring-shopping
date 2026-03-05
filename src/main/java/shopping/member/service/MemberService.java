@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shopping.auth.AuthService;
 import shopping.member.domain.Member;
-import shopping.member.api.dto.MemberRequest;
+import shopping.member.api.dto.MemberLoginRequest;
+import shopping.member.api.dto.MemberRegisterRequest;
 import shopping.member.api.dto.TokenResponse;
 import shopping.member.repository.MemberRepository;
 
@@ -14,7 +15,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final AuthService authService;
 
-    public TokenResponse register(MemberRequest request) {
+    public TokenResponse register(MemberRegisterRequest request) {
         verifyEmail(request.email());
         Member saved = memberRepository.save(Member.builder()
                                                    .email(request.email())
@@ -24,7 +25,7 @@ public class MemberService {
         return new TokenResponse(token);
     }
 
-    public TokenResponse login(MemberRequest request) {
+    public TokenResponse login(MemberLoginRequest request) {
         Member member = getMemberByEmail(request.email());
         authService.verifyPassword(request.password(), member.getPassword());
         String token = authService.createToken(member.getId());

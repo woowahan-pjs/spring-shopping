@@ -4,7 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.member.api.dto.MemberRequest;
+import shopping.member.api.dto.MemberLoginRequest;
+import shopping.member.api.dto.MemberRegisterRequest;
 import shopping.member.api.dto.TokenResponse;
 import shopping.member.repository.MemberRepository;
 
@@ -26,7 +27,7 @@ class MemberServiceTest {
     @DisplayName("이메일과 비밀번호로 회원가입 성공")
     void test01() {
         // given
-        MemberRequest request = new MemberRequest("user@example.com", "password123");
+        MemberRegisterRequest request = new MemberRegisterRequest("user@example.com", "password123");
 
         // when
         TokenResponse sut = memberService.register(request);
@@ -39,7 +40,7 @@ class MemberServiceTest {
     @DisplayName("중복 이메일로 회원가입 시 예외 발생")
     void test02() {
         // given
-        MemberRequest request = new MemberRequest("user@example.com", "password123");
+        MemberRegisterRequest request = new MemberRegisterRequest("user@example.com", "password123");
         memberService.register(request);
 
         // when & then
@@ -52,8 +53,8 @@ class MemberServiceTest {
     @DisplayName("이메일과 비밀번호로 로그인 성공")
     void test03() {
         // given
-        MemberRequest request = new MemberRequest("user@example.com", "password123");
-        memberService.register(request);
+        memberService.register(new MemberRegisterRequest("user@example.com", "password123"));
+        MemberLoginRequest request = new MemberLoginRequest("user@example.com", "password123");
 
         // when
         TokenResponse sut = memberService.login(request);
@@ -66,7 +67,7 @@ class MemberServiceTest {
     @DisplayName("존재하지 않는 이메일로 로그인 시 예외 발생")
     void test04() {
         // given
-        MemberRequest request = new MemberRequest("notfound@example.com", "password123");
+        MemberLoginRequest request = new MemberLoginRequest("notfound@example.com", "password123");
 
         // when & then
         assertThatThrownBy(() -> memberService.login(request))
@@ -79,7 +80,7 @@ class MemberServiceTest {
     void test06() {
         // given
         String rawPassword = "password123";
-        MemberRequest request = new MemberRequest("user@example.com", rawPassword);
+        MemberRegisterRequest request = new MemberRegisterRequest("user@example.com", rawPassword);
 
         // when
         memberService.register(request);
@@ -94,8 +95,8 @@ class MemberServiceTest {
     @DisplayName("비밀번호 불일치로 로그인 시 예외 발생")
     void test05() {
         // given
-        memberService.register(new MemberRequest("user@example.com", "password123"));
-        MemberRequest request = new MemberRequest("user@example.com", "wrongpassword");
+        memberService.register(new MemberRegisterRequest("user@example.com", "password123"));
+        MemberLoginRequest request = new MemberLoginRequest("user@example.com", "wrongpassword");
 
         // when & then
         assertThatThrownBy(() -> memberService.login(request))

@@ -9,7 +9,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.member.api.dto.MemberRequest;
+import shopping.member.api.dto.MemberLoginRequest;
+import shopping.member.api.dto.MemberRegisterRequest;
 import shopping.member.repository.MemberRepository;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,7 +36,7 @@ class MemberControllerTest {
     @DisplayName("회원가입 성공 시 201과 토큰을 반환한다")
     void test01() throws Exception {
         // given
-        MemberRequest request = new MemberRequest("user@example.com", "password123");
+        MemberRegisterRequest request = new MemberRegisterRequest("user@example.com", "password123");
 
         // when
         mockMvc.perform(post("/api/members/register")
@@ -52,7 +53,7 @@ class MemberControllerTest {
     @DisplayName("중복 이메일로 회원가입 시 400을 반환한다")
     void test02() throws Exception {
         // given
-        MemberRequest request = new MemberRequest("user@example.com", "password123");
+        MemberRegisterRequest request = new MemberRegisterRequest("user@example.com", "password123");
         register(request);
 
         // when & then
@@ -67,8 +68,8 @@ class MemberControllerTest {
     @DisplayName("로그인 성공 시 200과 토큰을 반환한다")
     void test03() throws Exception {
         // given
-        MemberRequest request = new MemberRequest("user@example.com", "password123");
-        register(request);
+        register(new MemberRegisterRequest("user@example.com", "password123"));
+        MemberLoginRequest request = new MemberLoginRequest("user@example.com", "password123");
 
         // when & then
         mockMvc.perform(post("/api/members/login")
@@ -82,7 +83,7 @@ class MemberControllerTest {
     @DisplayName("존재하지 않는 이메일로 로그인 시 400을 반환한다")
     void test04() throws Exception {
         // given
-        MemberRequest request = new MemberRequest("notfound@example.com", "password123");
+        MemberLoginRequest request = new MemberLoginRequest("notfound@example.com", "password123");
 
         // when & then
         mockMvc.perform(post("/api/members/login")
@@ -96,8 +97,8 @@ class MemberControllerTest {
     @DisplayName("비밀번호 불일치로 로그인 시 400을 반환한다")
     void test05() throws Exception {
         // given
-        register(new MemberRequest("user@example.com", "password123"));
-        MemberRequest request = new MemberRequest("user@example.com", "wrongpassword");
+        register(new MemberRegisterRequest("user@example.com", "password123"));
+        MemberLoginRequest request = new MemberLoginRequest("user@example.com", "wrongpassword");
 
         // when & then
         mockMvc.perform(post("/api/members/login")
@@ -107,7 +108,7 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.message").value("비밀번호가 일치하지 않습니다."));
     }
 
-    private void register(MemberRequest request) throws Exception {
+    private void register(MemberRegisterRequest request) throws Exception {
         mockMvc.perform(post("/api/members/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)));

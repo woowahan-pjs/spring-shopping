@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import shopping.member.api.dto.MemberRequest;
+import shopping.member.api.dto.MemberLoginRequest;
+import shopping.member.api.dto.MemberRegisterRequest;
 import shopping.member.api.dto.TokenResponse;
 import shopping.member.service.MemberService;
 
@@ -20,12 +21,12 @@ public class MemberController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    public TokenResponse register(@RequestBody MemberRequest request) {
+    public TokenResponse register(@RequestBody MemberRegisterRequest request) {
         return memberService.register(request);
     }
 
     @PostMapping("/login")
-    public TokenResponse login(@RequestBody MemberRequest request) {
+    public TokenResponse login(@RequestBody MemberLoginRequest request) {
         return memberService.login(request);
     }
 }
