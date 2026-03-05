@@ -37,12 +37,7 @@
   - `getMemberId(String token): Long` - JWT 검증 후 subject 파싱
   - 토큰 만료/서명 오류 시 401 Unauthorized
 
-- `auth/LoginMember.java` - 컨트롤러 파라미터 바인딩용 어노테이션
-- `auth/AuthArgumentResolver.java`
-  - `@LoginMember` 파라미터 감지
-  - `Authorization: Bearer {token}` 헤더에서 토큰 추출
-  - `AuthService`로 memberId 파싱 → Member 조회 후 주입
-  - 토큰 없거나 유효하지 않으면 401 Unauthorized
+> `LoginMember` 어노테이션 및 `AuthArgumentResolver`는 미구현 (위시리스트 기능 구현 시 추가 예정)
 
 ---
 
@@ -96,29 +91,34 @@
 
 ```
 src/main/java/shopping/
-├── member/
-│   ├── api/
-│   │   ├── MemberController.java
-│   │   └── dto/
-│   │       ├── MemberRequest.java
-│   │       └── TokenResponse.java
-│   ├── service/
-│   │   └── MemberService.java
-│   ├── domain/
-│   │   └── Member.java
-│   └── repository/
-│       └── MemberRepository.java
+├── Application.java
 ├── auth/
-│   ├── AuthService.java
-│   ├── LoginMember.java
-│   └── AuthArgumentResolver.java
-└── global/
-    ├── BaseEntity.java
-    ├── JpaConfig.java
-    └── exception/
-        ├── GlobalExceptionHandler.java
-        ├── ErrorResponse.java
-        └── UnauthorizedException.java
+│   └── AuthService.java
+├── config/
+│   └── JpaConfig.java
+├── common/
+│   ├── converter/
+│   │   ├── EnumType.java
+│   │   ├── EnumTypeConvertUtils.java
+│   │   └── EnumTypeConverter.java
+│   ├── entity/
+│   │   └── BaseEntity.java
+│   └── exception/
+│       ├── GlobalExceptionHandler.java
+│       ├── ErrorResponse.java
+│       └── UnauthorizedException.java
+└── member/
+    ├── api/
+    │   ├── MemberController.java
+    │   └── dto/
+    │       ├── MemberRequest.java
+    │       └── TokenResponse.java
+    ├── service/
+    │   └── MemberService.java
+    ├── domain/
+    │   └── Member.java
+    └── repository/
+        └── MemberRepository.java
 ```
 
 ---

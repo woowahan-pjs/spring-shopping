@@ -247,18 +247,22 @@ Response 200:
 
 ```
 shopping/
-├── product/
-│   ├── api/
-│   │   ├── ProductController.java
-│   │   └── dto/
-│   │       ├── ProductRequest.java
-│   │       └── ProductResponse.java
-│   ├── service/
-│   │   └── ProductService.java
-│   ├── domain/
-│   │   └── Product.java
-│   └── repository/
-│       └── ProductRepository.java
+├── Application.java
+├── auth/
+│   └── AuthService.java           # 토큰 생성 및 회원 ID 파싱
+├── config/
+│   └── JpaConfig.java
+├── common/
+│   ├── converter/
+│   │   ├── EnumType.java
+│   │   ├── EnumTypeConvertUtils.java
+│   │   └── EnumTypeConverter.java
+│   ├── entity/
+│   │   └── BaseEntity.java
+│   └── exception/
+│       ├── GlobalExceptionHandler.java
+│       ├── ErrorResponse.java
+│       └── UnauthorizedException.java
 ├── member/
 │   ├── api/
 │   │   ├── MemberController.java
@@ -271,31 +275,30 @@ shopping/
 │   │   └── Member.java
 │   └── repository/
 │       └── MemberRepository.java
-├── wish/
+├── product/                       # 미구현
 │   ├── api/
-│   │   ├── WishController.java
+│   │   ├── ProductController.java
 │   │   └── dto/
-│   │       ├── WishRequest.java
-│   │       └── WishResponse.java
+│   │       ├── ProductRequest.java
+│   │       └── ProductResponse.java
 │   ├── service/
-│   │   └── WishService.java
+│   │   └── ProductService.java
 │   ├── domain/
-│   │   └── Wish.java
+│   │   └── Product.java
 │   └── repository/
-│       └── WishRepository.java
-├── auth/
-│   ├── AuthService.java           # 토큰 검증 및 회원 식별
-│   ├── LoginMember.java           # 컨트롤러 파라미터 바인딩용 어노테이션
-│   └── AuthArgumentResolver.java  # @LoginMember 파라미터 처리
-└── global/
-    ├── BaseEntity.java
-    ├── JpaConfig.java
-    ├── exception/
-    │   ├── GlobalExceptionHandler.java
-    │   ├── ErrorResponse.java
-    │   └── UnauthorizedException.java
-    └── client/
-        └── PurgoMalumClient.java   # 비속어 검사 외부 API 클라이언트
+│       └── ProductRepository.java
+└── wish/                          # 미구현
+    ├── api/
+    │   ├── WishController.java
+    │   └── dto/
+    │       ├── WishRequest.java
+    │       └── WishResponse.java
+    ├── service/
+    │   └── WishService.java
+    ├── domain/
+    │   └── Wish.java
+    └── repository/
+        └── WishRepository.java
 ```
 
 ---
