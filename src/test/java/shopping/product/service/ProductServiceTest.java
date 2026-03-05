@@ -209,4 +209,43 @@ class ProductServiceTest {
             });
         }
     }
+
+    @Nested
+    @DisplayName("상품을 삭제할 때,")
+    class removeProduct {
+
+        @Test
+        @DisplayName("상품이 존재하지 않는 경우 예외가 발생합니다.")
+        void notFound() {
+            // given
+            final Long userId = 703L;
+            final Long productId = 73L;
+
+            given(productRepository.findProductByIdAndUserIdAndIsUse(productId, userId, true))
+                .willReturn(Optional.empty());
+
+            // when & then
+            assertThatThrownBy(() -> productService.removeProduct(userId, productId))
+                .isInstanceOf(NotFoundProductException.class)
+                .hasMessage("상품이 존재하지 않습니다.");
+        }
+
+        @Test
+        @DisplayName("성공적으로 상품을 삭제합니다.")
+        void success() {
+            // given
+            final Long userId = 703L;
+            final Long productId = 73L;
+
+            final Product product = ProductFixture.fixture(productId, "안녕하세요", Price.create(3000L), "http://");
+            given(productRepository.findProductByIdAndUserIdAndIsUse(productId, userId, true))
+                .willReturn(Optional.of(product));
+
+            // when
+            productService.removeProduct(userId, productId);
+
+            // then
+            assertThat(product.getIsUse()).isFalse();
+        }
+    }
 }

@@ -84,6 +84,10 @@ public class Product extends AuditInformation {
         }
     }
 
+    public void remove() {
+        this.isUse = false;
+    }
+
     private boolean isEqualsPriceTo(final Price price) {
         return this.price.equals(price);
     }

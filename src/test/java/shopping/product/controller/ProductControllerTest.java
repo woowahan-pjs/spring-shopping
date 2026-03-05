@@ -3,7 +3,9 @@ package shopping.product.controller;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -1032,6 +1034,81 @@ class ProductControllerTest {
                     put("/api/products/{productId}", productId)
                         .content(requestBody)
                         .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        }
+    }
+
+    @Nested
+    @DisplayName("상품을 삭제할 때,")
+    class removeProduct {
+
+        @Nested
+        @DisplayName("입력 값에 대한 유효성 검증을 할 때,")
+        class validate {
+
+            @Nested
+            @DisplayName("상품 고유 ID가")
+            class productId {
+
+                @Test
+                @WithAuthUser(role = Role.ADMIN)
+                @DisplayName("숫자 외의 값이 들어오면 예외가 발생합니다.")
+                void invalidInput() throws Exception {
+                    // given
+                    final String productId = "가나디";
+
+                    // when & then
+                    mockMvc.perform(delete("/api/products/{productId}", productId))
+                        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                }
+
+                @Test
+                @WithAuthUser(role = Role.ADMIN)
+                @DisplayName("1보다 작으면 예외가 발생합니다.")
+                void isMin() throws Exception {
+                    // given
+                    final Long productId = 0L;
+
+                    // when & then
+                    mockMvc.perform(delete("/api/products/{productId}", productId))
+                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                        .andExpect(
+                            jsonPath(
+                                "$.parameters[*].message",
+                                hasItem("상품 고유 ID는 0보다 큰 값이여야 합니다.")));
+                }
+            }
+        }
+
+        @Test
+        @WithAuthUser(role = Role.ADMIN)
+        @DisplayName("상품이 유효하지 않으면 예외가 발생합니다.")
+        void notFound() throws Exception {
+            // given
+            final Long userId = 1L;
+            final Long productId = 703L;
+
+            willThrow(new ShoppingBusinessException("상품이 존재하지 않습니다."))
+                .given(productService).removeProduct(userId, productId);
+
+            // when & then
+            mockMvc.perform(delete("/api/products/{productId}", productId))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(jsonPath("$.detail").value("상품이 존재하지 않습니다."));
+        }
+
+        @Test
+        @WithAuthUser(role = Role.ADMIN)
+        @DisplayName("성공적으로 상품을 삭제합니다.")
+        void success() throws Exception {
+            // given
+            final Long userId = 1L;
+            final Long productId = 703L;
+
+            willDoNothing().given(productService).removeProduct(userId, productId);
+
+            // when & then
+            mockMvc.perform(delete("/api/products/{productId}", productId))
                 .andExpect(MockMvcResultMatchers.status().isOk());
         }
     }

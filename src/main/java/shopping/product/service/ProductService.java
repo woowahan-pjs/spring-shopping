@@ -76,6 +76,21 @@ public class ProductService {
     }
 
     /**
+     * 주어진 사용자 ID와 상품 ID를 기반으로 활성화된 상품을 조회하고 상품을 비활성화 처리합니다.
+     * 상품이 존재하지 않을 경우 NotFoundProductException 예외를 발생시킵니다.
+     *
+     * @param userId 상품을 소유한 사용자의 고유 ID입니다.
+     * @param productId 비활성화할 상품의 고유 ID입니다.
+     */
+    @Transactional
+    public void removeProduct(final Long userId, final Long productId) {
+        final Product product = productRepository.findProductByIdAndUserIdAndIsUse(productId, userId, true)
+            .orElseThrow(NotFoundProductException::new);
+
+        product.remove();
+    }
+
+    /**
      * 주어진 상품 이름에 비속어가 포함되어 있는지 검증합니다.
      * 비속어가 포함되어 있을 경우 ShoppingBusinessException 예외를 발생시킵니다.
      *
