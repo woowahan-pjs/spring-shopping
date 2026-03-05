@@ -12,6 +12,8 @@ import jakarta.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.URL;
 
+// TODO : Validate 어노테이션으로 분리하는게 나을지에 대해 고민해보기
+// TODO : 해당 어노테이션에서 @NotBlank를 제외하고 DTO에 추가해도 괜찮을 것 같음
 @Constraint(validatedBy = {})
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.RECORD_COMPONENT})
 @Retention(RetentionPolicy.RUNTIME)

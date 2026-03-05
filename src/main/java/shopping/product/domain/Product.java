@@ -18,6 +18,7 @@ import lombok.NoArgsConstructor;
 import shopping.infra.orm.AuditInformation;
 import shopping.infra.orm.BooleanYnConverter;
 import shopping.product.dto.ProductSaveRequest;
+import shopping.product.dto.ProductUpdateRequest;
 
 @Getter
 @Entity
@@ -52,6 +53,8 @@ public class Product extends AuditInformation {
     @Column(name = "use_yn", nullable = false, columnDefinition = "char(1)")
     private Boolean isUse;
 
+    private Long userId;
+
     public static Product of(final ProductSaveRequest request) {
         Product product = new Product();
 
@@ -61,5 +64,31 @@ public class Product extends AuditInformation {
         product.isUse = true;
 
         return product;
+    }
+
+    public boolean isEqualsNameTo(final String name) {
+        return this.name.equals(name);
+    }
+
+    public void modify(final ProductUpdateRequest request) {
+        if (this.isEqualsNameTo(request.name())) {
+            this.name = request.name();
+        }
+
+        if (this.isEqualsPriceTo(request.price())) {
+            this.price = request.price();
+        }
+
+        if (this.isEqualsImageUrl(request.imageUrl())) {
+            this.imageUrl = request.imageUrl();
+        }
+    }
+
+    private boolean isEqualsPriceTo(final Price price) {
+        return this.price.equals(price);
+    }
+
+    private boolean isEqualsImageUrl(final String imageUrl) {
+        return this.imageUrl.equals(imageUrl);
     }
 }

@@ -16,4 +16,10 @@ public interface ProductRepository extends CrudRepository<Product, Long> {
                     name = "org.hibernate.comment",
                     value = "ProductRepository.findProductByIdAndIsUse : 활성화 되어 있는 상품을 조회합니다."))
     Optional<Product> findProductByIdAndIsUse(final Long id, final Boolean isUse);
+
+    @QueryHints(
+        @QueryHint(
+            name = "org.hibernate.comment",
+            value = "ProductRepository.findProductByIdAndUserIdAndIsUse : 특정 회원의 활성화 되어 있는 상품을 조회합니다."))
+    Optional<Product> findProductByIdAndUserIdAndIsUse(final Long id, final Long userId, final Boolean isUse);
 }

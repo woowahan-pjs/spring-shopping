@@ -6,9 +6,11 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import shopping.infra.client.purgomalum.PurgoMalumAdapter;
 import shopping.infra.exception.ShoppingBusinessException;
+import shopping.product.domain.NotFoundProductException;
 import shopping.product.domain.Product;
 import shopping.product.dto.ProductResponse;
 import shopping.product.dto.ProductSaveRequest;
+import shopping.product.dto.ProductUpdateRequest;
 import shopping.product.repository.ProductRepository;
 
 @Service
@@ -30,7 +32,7 @@ public class ProductService {
         final Product product =
                 productRepository
                         .findProductByIdAndIsUse(productId, true)
-                        .orElseThrow(() -> new ShoppingBusinessException("상품이 존재하지 않습니다."));
+                        .orElseThrow(NotFoundProductException::new);
 
         return ProductResponse.from(
                 product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
@@ -44,12 +46,44 @@ public class ProductService {
      */
     @Transactional
     public Long registerProduct(final ProductSaveRequest request) {
-        if (!purgoMalumAdapter.isProfanity(request.name())) {
-            throw new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다.");
-        }
+        validProductNameProfanity(request.name());
 
         final Product product = productRepository.save(Product.of(request));
 
         return product.getId();
+    }
+
+    /**
+     * 상품 정보를 수정합니다. 주어진 사용자 ID와 상품 ID에 해당하는 활성화된 상품을 조회하고, 요청 정보를 기반으로 수정합니다.
+     * 상품 이름이 변경될 경우 비속어 검사를 진행합니다.
+     *
+     * @param userId 수정하려는 상품을 소유한 사용자의 고유 ID입니다.
+     * @param productId 수정하려는 상품의 고유 ID입니다.
+     * @param request 수정할 상품 정보를 포함한 ProductUpdateRequest 객체입니다.
+     */
+    @Transactional
+    public void modifyProduct(final Long userId, final Long productId, final ProductUpdateRequest request) {
+        // 1. 상품이 존재하는지 확인
+        final Product product = productRepository.findProductByIdAndUserIdAndIsUse(productId, userId, true)
+            .orElseThrow(NotFoundProductException::new);
+
+        // 2. 상품 명이 변경되었다면, 비속어가 존재하는지 확인
+        if (!product.isEqualsNameTo(request.name())) {
+            validProductNameProfanity(request.name());
+        }
+
+        product.modify(request);
+    }
+
+    /**
+     * 주어진 상품 이름에 비속어가 포함되어 있는지 검증합니다.
+     * 비속어가 포함되어 있을 경우 ShoppingBusinessException 예외를 발생시킵니다.
+     *
+     * @param name 검증할 상품 이름으로, 비속어 포함 여부를 확인합니다.
+     */
+    private void validProductNameProfanity(final String name) {
+        if (purgoMalumAdapter.isProfanity(name)) {
+            throw new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다.");
+        }
     }
 }
