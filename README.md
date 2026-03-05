@@ -248,48 +248,52 @@ Response 200:
 ```
 shopping/
 ├── product/
-│   ├── controller/
-│   │   └── ProductController.java
+│   ├── api/
+│   │   ├── ProductController.java
+│   │   └── dto/
+│   │       ├── ProductRequest.java
+│   │       └── ProductResponse.java
 │   ├── service/
 │   │   └── ProductService.java
 │   ├── domain/
 │   │   └── Product.java
-│   ├── repository/
-│   │   └── ProductRepository.java
-│   └── dto/
-│       ├── ProductRequest.java
-│       └── ProductResponse.java
+│   └── repository/
+│       └── ProductRepository.java
 ├── member/
-│   ├── controller/
-│   │   └── MemberController.java
+│   ├── api/
+│   │   ├── MemberController.java
+│   │   └── dto/
+│   │       ├── MemberRequest.java
+│   │       └── TokenResponse.java
 │   ├── service/
 │   │   └── MemberService.java
 │   ├── domain/
 │   │   └── Member.java
-│   ├── repository/
-│   │   └── MemberRepository.java
-│   └── dto/
-│       ├── MemberRequest.java
-│       └── TokenResponse.java
+│   └── repository/
+│       └── MemberRepository.java
 ├── wish/
-│   ├── controller/
-│   │   └── WishController.java
+│   ├── api/
+│   │   ├── WishController.java
+│   │   └── dto/
+│   │       ├── WishRequest.java
+│   │       └── WishResponse.java
 │   ├── service/
 │   │   └── WishService.java
 │   ├── domain/
 │   │   └── Wish.java
-│   ├── repository/
-│   │   └── WishRepository.java
-│   └── dto/
-│       ├── WishRequest.java
-│       └── WishResponse.java
+│   └── repository/
+│       └── WishRepository.java
 ├── auth/
 │   ├── AuthService.java           # 토큰 검증 및 회원 식별
+│   ├── LoginMember.java           # 컨트롤러 파라미터 바인딩용 어노테이션
 │   └── AuthArgumentResolver.java  # @LoginMember 파라미터 처리
 └── global/
+    ├── BaseEntity.java
+    ├── JpaConfig.java
     ├── exception/
     │   ├── GlobalExceptionHandler.java
-    │   └── ErrorResponse.java
+    │   ├── ErrorResponse.java
+    │   └── UnauthorizedException.java
     └── client/
         └── PurgoMalumClient.java   # 비속어 검사 외부 API 클라이언트
 ```

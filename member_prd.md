@@ -97,25 +97,28 @@
 ```
 src/main/java/shopping/
 ├── member/
-│   ├── controller/
-│   │   └── MemberController.java
+│   ├── api/
+│   │   ├── MemberController.java
+│   │   └── dto/
+│   │       ├── MemberRequest.java
+│   │       └── TokenResponse.java
 │   ├── service/
 │   │   └── MemberService.java
 │   ├── domain/
 │   │   └── Member.java
-│   ├── repository/
-│   │   └── MemberRepository.java
-│   └── dto/
-│       ├── MemberRequest.java
-│       └── TokenResponse.java
+│   └── repository/
+│       └── MemberRepository.java
 ├── auth/
 │   ├── AuthService.java
 │   ├── LoginMember.java
 │   └── AuthArgumentResolver.java
 └── global/
+    ├── BaseEntity.java
+    ├── JpaConfig.java
     └── exception/
         ├── GlobalExceptionHandler.java
-        └── ErrorResponse.java
+        ├── ErrorResponse.java
+        └── UnauthorizedException.java
 ```
 
 ---
