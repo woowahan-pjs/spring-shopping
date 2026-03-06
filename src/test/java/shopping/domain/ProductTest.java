@@ -9,6 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class ProductTest {
 
@@ -78,17 +79,33 @@ class ProductTest {
     @Test
     @DisplayName("상품이미지는 URL 경로로 표현한다.")
     void productImage() {
-        String url = "https://www.naver.com";
+        String url = "https://www.naver.com/test.jpg";
         Product product = new Product("피자", new BigDecimal(15000), url);
 
         assertThat(product.getImageUrl()).isEqualTo(url);
     }
+
 
     @ParameterizedTest
     @DisplayName("상품이미지 경로가 잘못되면 예외처리")
     @NullAndEmptySource
     @ValueSource(strings = {"hhpp://naver.com", "dkjksjkjfd"})
     void invalidImageUrl(String url) {
+        assertThatThrownBy(() -> new Product("피자", new BigDecimal(0), url))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @ParameterizedTest
+    @DisplayName("상품이미지 파일 확장자는 jpg, jpeg, png, gif, svg만 가능")
+    @ValueSource(strings = {"http://a.com/a.jpg", "http://a.com/a.jpeg", "http://a.com/a.png", "http://a.com/a.gif", "http://a.com/a.svg"})
+    void productImageUrl_withValidExtension(String url) {
+        assertDoesNotThrow(() -> new Product("피자", new BigDecimal(0), url));
+    }
+
+    @ParameterizedTest
+    @DisplayName("상품이미지 파일 확장자가 잘못되면 예외처리")
+    @ValueSource(strings = {"http://a.com/a.txt", "http://a.com/a.mp3", "http://a.com/a", "http://a.com/a.pdf"})
+    void productImageUrl_withInvalidExtension(String url) {
         assertThatThrownBy(() -> new Product("피자", new BigDecimal(0), url))
                 .isInstanceOf(IllegalArgumentException.class);
     }

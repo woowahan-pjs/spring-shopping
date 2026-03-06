@@ -66,6 +66,11 @@ public class Product {
         } catch (Exception e) {
             throw new IllegalArgumentException("상품 이미지 URL이 올바르지 않습니다.");
         }
+
+        String lowerCaseUrl = imageUrl.toLowerCase();
+        if (!lowerCaseUrl.matches(".*\\.(jpg|jpeg|png|gif|svg)$")) {
+            throw new IllegalArgumentException("이미지 파일은 jpg, jpeg, png, gif, svg 형식만 지원합니다.");
+        }
     }
 
     public BigDecimal getPrice() {
