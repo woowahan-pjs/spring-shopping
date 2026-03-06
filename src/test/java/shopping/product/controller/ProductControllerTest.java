@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -22,6 +23,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
@@ -41,7 +44,9 @@ import shopping.product.domain.NotFoundProductException;
 import shopping.product.domain.Price;
 import shopping.product.dto.ProductResponse;
 import shopping.product.dto.ProductSaveRequest;
+import shopping.product.dto.ProductSearchRequest;
 import shopping.product.dto.ProductUpdateRequest;
+import shopping.product.dto.ProductsSearchResponse;
 import shopping.product.service.ProductService;
 
 @Import(TestSecurityConfig.class)
@@ -1110,6 +1115,47 @@ class ProductControllerTest {
             // when & then
             mockMvc.perform(delete("/api/products/{productId}", productId))
                 .andExpect(MockMvcResultMatchers.status().isOk());
+        }
+    }
+
+    @Nested
+    @DisplayName("상품을 검색할 때,")
+    class search {
+
+        @Test
+        @WithAuthUser
+        @DisplayName("성공적으로 검색합니다.")
+        void success() throws Exception {
+            // given
+            final Long productId = 3L;
+            final String name = "안녕하세요";
+            final Price price = Price.create(3500L);
+            final String imageUrl = "http://com";
+            final Pageable pageable = PageRequest.of(0, 20);
+
+            final ProductSearchRequest request = new ProductSearchRequest(name, Price.create(3000L), Price.create(5000L));
+            given(productService.searchProduct(request, pageable))
+                .willReturn(new ProductsSearchResponse(
+                    List.of(new ProductResponse(productId, name, price, imageUrl)), pageable
+                ));
+
+            // when
+            final MvcResult mvcResult = mockMvc.perform(get("/api/products")
+                    .queryParam("name", name)
+                    .queryParam("fromPrice", "3000"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+            final ProductsSearchResponse response = ConverterHelper.toDto(mvcResult.getResponse().getContentAsString(), ProductsSearchResponse.class);
+
+            // then
+            assertSoftly(it -> {
+                it.assertThat(response.products()).size().isEqualTo(1);
+                it.assertThat(response.products().get(0).productId()).isEqualTo(productId);
+                it.assertThat(response.products().get(0).name()).isEqualTo(name);
+                it.assertThat(response.products().get(0).price()).isEqualTo(price);
+                it.assertThat(response.products().get(0).imageUrl()).isEqualTo(imageUrl);
+            });
         }
     }
 }

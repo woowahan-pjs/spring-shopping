@@ -1,5 +1,6 @@
 package shopping.product.domain;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
@@ -39,7 +40,7 @@ public class Product extends AuditInformation {
     @NotNull
     @Embedded
     @Comment("가격")
-    @Column(name = "price", nullable = false, columnDefinition = "bigint")
+    @AttributeOverride(name = "value", column = @Column(name = "price", nullable = false))
     private Price price;
 
     @NotNull

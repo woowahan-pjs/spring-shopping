@@ -1,5 +1,6 @@
 package shopping.product.domain;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Embeddable;
@@ -23,5 +24,11 @@ public record Price(
         }
 
         return new Price(BigDecimal.valueOf(price));
+    }
+
+    @JsonValue
+    @Override
+    public BigDecimal value() {
+        return value;
     }
 }

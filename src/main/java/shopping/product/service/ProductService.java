@@ -1,5 +1,7 @@
 package shopping.product.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +12,9 @@ import shopping.product.domain.NotFoundProductException;
 import shopping.product.domain.Product;
 import shopping.product.dto.ProductResponse;
 import shopping.product.dto.ProductSaveRequest;
+import shopping.product.dto.ProductSearchRequest;
 import shopping.product.dto.ProductUpdateRequest;
+import shopping.product.dto.ProductsSearchResponse;
 import shopping.product.repository.ProductRepository;
 
 @Service
@@ -36,6 +40,20 @@ public class ProductService {
 
         return ProductResponse.from(
                 product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+
+    /**
+     * 상품 검색 조건과 페이징 정보를 사용하여 등록된 상품 리스트를 조회하고, ProductsSearchResponse 객체로 반환합니다.
+     *
+     * @param request 상품 검색 조건을 담고 있는 ProductSearchRequest 객체입니다. 검색 조건으로는 상품 이름, 최소 가격, 최대 가격이 포함됩니다.
+     * @param pageable 페이징 정보를 담고 있는 Pageable 객체입니다.
+     * @return 검색된 상품 리스트를 담고 있는 ProductsSearchResponse 객체를 반환합니다.
+     */
+    @Transactional(readOnly = true)
+    public ProductsSearchResponse searchProduct(final ProductSearchRequest request, final Pageable pageable) {
+        final Page<Product> products = productRepository.search(request.name(), request.fromPrice(), request.toPrice(), pageable);
+
+        return ProductsSearchResponse.from(products.toList(), products.getPageable());
     }
 
     /**

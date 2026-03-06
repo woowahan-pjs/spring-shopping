@@ -5,6 +5,9 @@ import java.net.URI;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +31,9 @@ import lombok.RequiredArgsConstructor;
 import shopping.infra.security.UserPrincipal;
 import shopping.product.dto.ProductResponse;
 import shopping.product.dto.ProductSaveRequest;
+import shopping.product.dto.ProductSearchRequest;
 import shopping.product.dto.ProductUpdateRequest;
+import shopping.product.dto.ProductsSearchResponse;
 import shopping.product.service.ProductService;
 
 @SecurityRequirement(name = "JWT")
@@ -108,8 +113,23 @@ class ProductController {
             @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
             @ApiResponse(responseCode = "500", description = "서버 오류")
         })
-    @Operation(summary = "상품 저장", description = "상품을 삭제합니다.")
+    @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
     public void removeProduct(@PathVariable @Min(value = 1, message = "상품 고유 ID는 0보다 큰 값이여야 합니다.") final Long productId, @AuthenticationPrincipal final UserPrincipal userPrincipal) {
         productService.removeProduct(userPrincipal.getId(), productId);
+    }
+
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
+    @GetMapping
+    @ApiResponses(
+        value = {
+            @ApiResponse(responseCode = "201", description = "상품 검색 성공"),
+            @ApiResponse(responseCode = "400", description = "입력 값이 잘못 되었을 경우"),
+            @ApiResponse(responseCode = "401", description = "인증 정보가 없을 때"),
+            @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+        })
+    @Operation(summary = "상품 검색", description = "상품을 검색 합니다.")
+    public ProductsSearchResponse search(@Valid final ProductSearchRequest request, @PageableDefault @ParameterObject final Pageable pageable) {
+        return productService.searchProduct(request, pageable);
     }
 }

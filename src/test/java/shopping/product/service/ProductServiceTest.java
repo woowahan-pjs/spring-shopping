@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -17,6 +18,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import shopping.infra.client.purgomalum.PurgoMalumAdapter;
 import shopping.infra.exception.ShoppingBusinessException;
 import shopping.product.domain.NotFoundProductException;
@@ -25,7 +29,9 @@ import shopping.product.domain.Product;
 import shopping.product.domain.ProductFixture;
 import shopping.product.dto.ProductResponse;
 import shopping.product.dto.ProductSaveRequest;
+import shopping.product.dto.ProductSearchRequest;
 import shopping.product.dto.ProductUpdateRequest;
+import shopping.product.dto.ProductsSearchResponse;
 import shopping.product.repository.ProductRepository;
 
 @ExtendWith(MockitoExtension.class)
@@ -246,6 +252,39 @@ class ProductServiceTest {
 
             // then
             assertThat(product.getIsUse()).isFalse();
+        }
+
+        @Nested
+        @DisplayName("상품을 검색할 때,")
+        class searchProduct {
+
+            @Test
+            @DisplayName("성공적으로 조회합니다.")
+            void success() {
+                // given
+                final Long productId = 1L;
+                final String name = "안녕하세요";
+                final Price price = Price.create(3500L);
+                final String imageUrl = "http://com";
+                final Pageable pageable = PageRequest.of(0, 20);
+                final ProductSearchRequest request = new ProductSearchRequest(name, Price.create(3000L), Price.create(3500L));
+
+                final List<Product> expectedProducts = List.of(ProductFixture.fixture(productId, name, price, imageUrl));
+                given(productRepository.search(request.name(), request.fromPrice(), request.toPrice(), pageable))
+                    .willReturn(new PageImpl<>(expectedProducts, pageable, expectedProducts.size()));
+
+                // when
+                final ProductsSearchResponse products = productService.searchProduct(request, pageable);
+                final ProductResponse response = products.products().get(0);
+
+                // then
+                assertSoftly(it -> {
+                    it.assertThat(response.productId()).isEqualTo(productId);
+                    it.assertThat(response.name()).isEqualTo(name);
+                    it.assertThat(response.price()).isEqualTo(price);
+                    it.assertThat(response.imageUrl()).isEqualTo(imageUrl);
+                });
+            }
         }
     }
 }
