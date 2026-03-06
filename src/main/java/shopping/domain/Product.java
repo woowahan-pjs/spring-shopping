@@ -3,6 +3,7 @@ package shopping.domain;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.net.URI;
 import java.net.URL;
 
 public class Product {
@@ -62,7 +63,11 @@ public class Product {
         }
 
         try {
-            new URL(imageUrl).toURI();
+            URI uri = new URI(imageUrl);
+            String scheme = uri.getScheme();
+            if (!"http".equals(scheme) && !"https".equals(scheme)) {
+                throw new IllegalArgumentException("상품 이미지 URL은 http/https 형식이어야 합니다.");
+            }
         } catch (Exception e) {
             throw new IllegalArgumentException("상품 이미지 URL이 올바르지 않습니다.");
         }
