@@ -76,6 +76,60 @@
 
 ## AI 활용 내용 기록
 ### 활용 방식
+- ChatGPT를 활용하여 JPA 엔티티 설계에 대한 설명을 참고하였다.
+- Wishlist와 WishlistItem 관계 설계 아이디어를 얻었다.
+- 생성된 코드는 그대로 사용하지 않고 프로젝트 구조에 맞게 수정하였다.
 ### 코드 수정 내용
+#### 수정 전
+```java
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    protected Product() {
+
+    }
+
+    public Product(String name, int stockQuantity, long price, String imageUrl) {
+        this.name = name;
+        this.stockQuantity = stockQuantity;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.createdAt = LocalDateTime.now();
+    }
+```
+#### 수정 후
+```java
+
+  private LocalDateTime createdAt;
+  
+  private LocalDateTime updatedAt;
+  
+  protected Product() {
+  
+  }
+   @PrePersist
+    void prePersist() {
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    void preUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    public Product(String name, int stockQuantity, long price, String imageUrl) {
+        this.name = name;
+        this.stockQuantity = stockQuantity;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+```
 ### 무엇을 학습했는지
+- JPA 엔티티 라이프사이클 콜백 어노테이션
+  - @PrePersist
+    - insert 전 실행
+  - @PreUpdate
+    - update 전 실행
 
