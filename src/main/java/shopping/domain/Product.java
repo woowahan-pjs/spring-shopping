@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 public class Product {
     private String name;
     private BigDecimal price;
+    private String imageUrl;
 
     public Product() {
 
@@ -17,10 +18,16 @@ public class Product {
     }
 
     public Product(String name, BigDecimal price) {
+        this(name, price, null);
+    }
+
+    public Product(String name, BigDecimal price, String imageUrl) {
         validateName(name);
         validatePrice(price);
+
         this.name = name;
         this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -49,5 +56,9 @@ public class Product {
 
     public BigDecimal getPrice() {
         return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 }
