@@ -1,4 +1,4 @@
-package shopping.product.api.dto;
+package shopping.product.api.query.dto;
 
 import shopping.product.domain.Product;
 

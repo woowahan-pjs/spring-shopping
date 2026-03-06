@@ -1,0 +1,82 @@
+package shopping.product.service;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
+import org.springframework.transaction.annotation.Transactional;
+import shopping.product.api.command.dto.ProductRegisterRequest;
+import shopping.product.api.query.dto.ProductDetailResponse;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+@SpringBootTest
+@Transactional
+class ProductQueryServiceTest {
+
+    @TestConfiguration
+    static class TestConfig {
+        @Bean
+        @Primary
+        public FakeProductNameValidator fakeProductNameValidator() {
+            return new FakeProductNameValidator();
+        }
+    }
+
+    @Autowired
+    private ProductCommandService productCommandService;
+
+    @Autowired
+    private ProductQueryService productQueryService;
+
+    @Autowired
+    private FakeProductNameValidator productNameValidator;
+
+    @BeforeEach
+    void setUp() {
+        productNameValidator.setProfane(false);
+    }
+
+    @Test
+    @DisplayName("상품 단건 조회가 가능하다")
+    void test01() {
+        // given
+        ProductDetailResponse saved = productCommandService.register(
+            new ProductRegisterRequest("상품명", 10000L, "https://example.com/image.jpg"));
+
+        // when
+        ProductDetailResponse response = productQueryService.findById(saved.id());
+
+        // then
+        assertThat(response.name()).isEqualTo("상품명");
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품 조회 시 예외가 발생한다")
+    void test02() {
+        assertThatThrownBy(() -> productQueryService.findById(999L))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("존재하지 않는 상품입니다.");
+    }
+
+    @Test
+    @DisplayName("상품 목록 조회가 가능하다")
+    void test03() {
+        // given
+        productCommandService.register(new ProductRegisterRequest("상품1", 1000L, "https://example.com/1.jpg"));
+        productCommandService.register(new ProductRegisterRequest("상품2", 2000L, "https://example.com/2.jpg"));
+
+        // when
+        List<ProductDetailResponse> responses = productQueryService.findAll();
+
+        // then
+        assertThat(responses).hasSize(2);
+    }
+}
