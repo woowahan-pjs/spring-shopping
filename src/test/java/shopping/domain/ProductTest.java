@@ -37,7 +37,7 @@ class ProductTest {
 
     @ParameterizedTest
     @DisplayName("상품명이 비어있거나, 1자 미만이거나 15자를 초과하면 예외 발생")
-    @ValueSource(strings = {"", "상품입니다상품입니다상품입니다상"})
+    @ValueSource(strings = {"", "  ", "상품입니다상품입니다상품입니다상"})
     void fail_invalidNameLength(String name) {
         assertThatThrownBy(() -> new Product(name))
                 .isInstanceOf(IllegalArgumentException.class);
