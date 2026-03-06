@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.common.client.ProfanityClient;
-import shopping.product.api.command.dto.ProductRegisterRequest;
-import shopping.product.api.query.dto.ProductDetailResponse;
 import shopping.product.repository.ProductRepository;
+import shopping.product.service.dto.ProductOutput;
+import shopping.product.service.dto.ProductRegisterInput;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -48,10 +48,10 @@ class ProductCommandServiceTest {
     @DisplayName("상품을 생성하면 ID가 부여된다")
     void test01() {
         // given
-        ProductRegisterRequest request = new ProductRegisterRequest("상품명", 10000L, "https://example.com/image.jpg");
+        ProductRegisterInput request = new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg");
 
         // when
-        ProductDetailResponse response = productCommandService.register(request);
+        ProductOutput response = productCommandService.register(request);
 
         // then
         assertThat(response.id()).isNotNull();
@@ -62,7 +62,7 @@ class ProductCommandServiceTest {
     @DisplayName("상품명이 15자를 초과하면 예외가 발생한다")
     void test02() {
         // given
-        ProductRegisterRequest request = new ProductRegisterRequest("열여섯자이상의긴상품명입니다초과", 10000L, "https://example.com/image.jpg");
+        ProductRegisterInput request = new ProductRegisterInput("열여섯자이상의긴상품명입니다초과", 10000L, "https://example.com/image.jpg");
 
         // when & then
         assertThatThrownBy(() -> productCommandService.register(request))
@@ -74,7 +74,7 @@ class ProductCommandServiceTest {
     @DisplayName("상품명에 허용되지 않은 특수문자가 있으면 예외가 발생한다")
     void test03() {
         // given
-        ProductRegisterRequest request = new ProductRegisterRequest("상품명!", 10000L, "https://example.com/image.jpg");
+        ProductRegisterInput request = new ProductRegisterInput("상품명!", 10000L, "https://example.com/image.jpg");
 
         // when & then
         assertThatThrownBy(() -> productCommandService.register(request))
@@ -87,7 +87,7 @@ class ProductCommandServiceTest {
     void test04() {
         // given
         profanityClient.setProfane(true);
-        ProductRegisterRequest request = new ProductRegisterRequest("badword", 10000L, "https://example.com/image.jpg");
+        ProductRegisterInput request = new ProductRegisterInput("badword", 10000L, "https://example.com/image.jpg");
 
         // when & then
         assertThatThrownBy(() -> productCommandService.register(request))
@@ -99,7 +99,7 @@ class ProductCommandServiceTest {
     @DisplayName("가격이 0 이하이면 예외가 발생한다")
     void test05() {
         // given
-        ProductRegisterRequest request = new ProductRegisterRequest("상품명", 0L, "https://example.com/image.jpg");
+        ProductRegisterInput request = new ProductRegisterInput("상품명", 0L, "https://example.com/image.jpg");
 
         // when & then
         assertThatThrownBy(() -> productCommandService.register(request))
@@ -111,12 +111,12 @@ class ProductCommandServiceTest {
     @DisplayName("상품을 수정할 수 있다")
     void test06() {
         // given
-        ProductDetailResponse saved = productCommandService.register(
-            new ProductRegisterRequest("상품명", 10000L, "https://example.com/image.jpg"));
+        ProductOutput saved = productCommandService.register(
+            new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
         // when
-        ProductDetailResponse response = productCommandService.update(
-            saved.id(), new ProductRegisterRequest("수정된상품명", 20000L, "https://example.com/new.jpg"));
+        ProductOutput response = productCommandService.update(
+            saved.id(), new ProductRegisterInput("수정된상품명", 20000L, "https://example.com/new.jpg"));
 
         // then
         assertThat(response.name()).isEqualTo("수정된상품명");
@@ -127,8 +127,8 @@ class ProductCommandServiceTest {
     @DisplayName("상품을 삭제할 수 있다")
     void test07() {
         // given
-        ProductDetailResponse saved = productCommandService.register(
-            new ProductRegisterRequest("상품명", 10000L, "https://example.com/image.jpg"));
+        ProductOutput saved = productCommandService.register(
+            new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
         // when
         productCommandService.delete(saved.id());

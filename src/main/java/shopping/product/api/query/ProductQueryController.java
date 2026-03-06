@@ -18,11 +18,13 @@ public class ProductQueryController {
 
     @GetMapping("/{productId}")
     public ProductDetailResponse findById(@PathVariable Long productId) {
-        return productQueryService.findById(productId);
+        return ProductDetailResponse.from(productQueryService.findById(productId));
     }
 
     @GetMapping
     public List<ProductDetailResponse> findAll() {
-        return productQueryService.findAll();
+        return productQueryService.findAll().stream()
+                                  .map(ProductDetailResponse::from)
+                                  .toList();
     }
 }

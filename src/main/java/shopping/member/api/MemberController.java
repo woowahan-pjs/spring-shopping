@@ -11,6 +11,8 @@ import shopping.member.api.dto.MemberLoginRequest;
 import shopping.member.api.dto.MemberRegisterRequest;
 import shopping.member.api.dto.TokenResponse;
 import shopping.member.service.MemberService;
+import shopping.member.service.dto.MemberLoginInput;
+import shopping.member.service.dto.MemberRegisterInput;
 
 @RestController
 @RequestMapping("/api/members")
@@ -22,11 +24,11 @@ public class MemberController {
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public TokenResponse register(@RequestBody MemberRegisterRequest request) {
-        return memberService.register(request);
+        return new TokenResponse(memberService.register(new MemberRegisterInput(request.email(), request.password())).token());
     }
 
     @PostMapping("/login")
     public TokenResponse login(@RequestBody MemberLoginRequest request) {
-        return memberService.login(request);
+        return new TokenResponse(memberService.login(new MemberLoginInput(request.email(), request.password())).token());
     }
 }

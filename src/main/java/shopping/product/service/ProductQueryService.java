@@ -3,9 +3,9 @@ package shopping.product.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.product.api.query.dto.ProductDetailResponse;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
+import shopping.product.service.dto.ProductOutput;
 
 import java.util.List;
 
@@ -15,13 +15,13 @@ import java.util.List;
 public class ProductQueryService {
     private final ProductRepository productRepository;
 
-    public ProductDetailResponse findById(Long id) {
-        return ProductDetailResponse.from(getProduct(id));
+    public ProductOutput findById(Long id) {
+        return ProductOutput.from(getProduct(id));
     }
 
-    public List<ProductDetailResponse> findAll() {
+    public List<ProductOutput> findAll() {
         return productRepository.findAll().stream()
-                                .map(ProductDetailResponse::from)
+                                .map(ProductOutput::from)
                                 .toList();
     }
 

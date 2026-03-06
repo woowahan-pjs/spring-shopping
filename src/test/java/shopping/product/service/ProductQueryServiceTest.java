@@ -10,8 +10,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.common.client.ProfanityClient;
-import shopping.product.api.command.dto.ProductRegisterRequest;
-import shopping.product.api.query.dto.ProductDetailResponse;
+import shopping.product.service.dto.ProductOutput;
+import shopping.product.service.dto.ProductRegisterInput;
 
 import java.util.List;
 
@@ -49,11 +49,11 @@ class ProductQueryServiceTest {
     @DisplayName("상품 단건 조회가 가능하다")
     void test01() {
         // given
-        ProductDetailResponse saved = productCommandService.register(
-            new ProductRegisterRequest("상품명", 10000L, "https://example.com/image.jpg"));
+        ProductOutput saved = productCommandService.register(
+            new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
         // when
-        ProductDetailResponse response = productQueryService.findById(saved.id());
+        ProductOutput response = productQueryService.findById(saved.id());
 
         // then
         assertThat(response.name()).isEqualTo("상품명");
@@ -71,11 +71,11 @@ class ProductQueryServiceTest {
     @DisplayName("상품 목록 조회가 가능하다")
     void test03() {
         // given
-        productCommandService.register(new ProductRegisterRequest("상품1", 1000L, "https://example.com/1.jpg"));
-        productCommandService.register(new ProductRegisterRequest("상품2", 2000L, "https://example.com/2.jpg"));
+        productCommandService.register(new ProductRegisterInput("상품1", 1000L, "https://example.com/1.jpg"));
+        productCommandService.register(new ProductRegisterInput("상품2", 2000L, "https://example.com/2.jpg"));
 
         // when
-        List<ProductDetailResponse> responses = productQueryService.findAll();
+        List<ProductOutput> responses = productQueryService.findAll();
 
         // then
         assertThat(responses).hasSize(2);

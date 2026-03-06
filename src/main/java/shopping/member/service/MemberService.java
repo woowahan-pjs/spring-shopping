@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import shopping.auth.AuthService;
 import shopping.member.domain.Member;
-import shopping.member.api.dto.MemberLoginRequest;
-import shopping.member.api.dto.MemberRegisterRequest;
-import shopping.member.api.dto.TokenResponse;
 import shopping.member.repository.MemberRepository;
+import shopping.member.service.dto.MemberLoginInput;
+import shopping.member.service.dto.MemberRegisterInput;
+import shopping.member.service.dto.TokenOutput;
 
 @Service
 @RequiredArgsConstructor
@@ -15,21 +15,21 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final AuthService authService;
 
-    public TokenResponse register(MemberRegisterRequest request) {
-        verifyEmail(request.email());
+    public TokenOutput register(MemberRegisterInput input) {
+        verifyEmail(input.email());
         Member saved = memberRepository.save(Member.builder()
-                                                   .email(request.email())
-                                                   .password(authService.encodePassword(request.password()))
+                                                   .email(input.email())
+                                                   .password(authService.encodePassword(input.password()))
                                                    .build());
         String token = authService.createToken(saved.getId());
-        return new TokenResponse(token);
+        return new TokenOutput(token);
     }
 
-    public TokenResponse login(MemberLoginRequest request) {
-        Member member = getMemberByEmail(request.email());
-        authService.verifyPassword(request.password(), member.getPassword());
+    public TokenOutput login(MemberLoginInput input) {
+        Member member = getMemberByEmail(input.email());
+        authService.verifyPassword(input.password(), member.getPassword());
         String token = authService.createToken(member.getId());
-        return new TokenResponse(token);
+        return new TokenOutput(token);
     }
 
     private void verifyEmail(String email) {

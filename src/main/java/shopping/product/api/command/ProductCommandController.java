@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shopping.product.api.command.dto.ProductRegisterRequest;
 import shopping.product.api.query.dto.ProductDetailResponse;
 import shopping.product.service.ProductCommandService;
+import shopping.product.service.dto.ProductRegisterInput;
 
 @RestController
 @RequestMapping("/api/products")
@@ -23,12 +24,12 @@ public class ProductCommandController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ProductDetailResponse register(@RequestBody ProductRegisterRequest request) {
-        return productCommandService.register(request);
+        return ProductDetailResponse.from(productCommandService.register(new ProductRegisterInput(request.name(), request.price(), request.imageUrl())));
     }
 
     @PutMapping("/{productId}")
     public ProductDetailResponse update(@PathVariable Long productId, @RequestBody ProductRegisterRequest request) {
-        return productCommandService.update(productId, request);
+        return ProductDetailResponse.from(productCommandService.update(productId, new ProductRegisterInput(request.name(), request.price(), request.imageUrl())));
     }
 
     @DeleteMapping("/{productId}")
