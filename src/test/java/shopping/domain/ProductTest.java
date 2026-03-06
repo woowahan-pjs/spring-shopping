@@ -58,8 +58,18 @@ class ProductTest {
 
     @Test
     @DisplayName("상품 가격이 음수면 실패한다.")
-    void fail_productPriceNegative() {
+    void fail_productPriceLessThanZero() {
         BigDecimal price = new BigDecimal(-1);
+
+        assertThatThrownBy(() -> new Product("피자", price))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+
+    @Test
+    @DisplayName("상품 가격이 10억 이상이면 실패한다.")
+    void fail_productPriceExceedsMax() {
+        BigDecimal price = new BigDecimal(1000000000);
 
         assertThatThrownBy(() -> new Product("피자", price))
                 .isInstanceOf(IllegalArgumentException.class);

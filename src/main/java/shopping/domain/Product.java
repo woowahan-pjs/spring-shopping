@@ -41,6 +41,10 @@ public class Product {
         if (price.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("상품 가격은 0원 이상이어야 합니다.");
         }
+
+        if (price.compareTo(new BigDecimal(999999999)) > 0) {
+            throw new IllegalArgumentException("상품 가격은 10억원 이하여야 합니다.");
+        }
     }
 
     public BigDecimal getPrice() {
