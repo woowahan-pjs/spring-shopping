@@ -13,11 +13,12 @@ public class Product {
     }
 
     public Product(String name) {
-        validNameLength(name);
-        this.name = name;
+        this(name, BigDecimal.ZERO);
     }
 
     public Product(String name, BigDecimal price) {
+        validateName(name);
+        validatePrice(price);
         this.name = name;
         this.price = price;
     }
@@ -26,13 +27,19 @@ public class Product {
         return name;
     }
 
-    private void validNameLength(String name) {
+    private void validateName(String name) {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("상품명은 필수입니다.");
         }
 
         if (name.length() > 15) {
             throw new IllegalArgumentException("상품명은 1자 이상 15자 이하여야 합니다.");
+        }
+    }
+
+    private void validatePrice(BigDecimal price) {
+        if (price.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("상품 가격은 0원 이상이어야 합니다.");
         }
     }
 
