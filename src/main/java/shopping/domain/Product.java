@@ -2,8 +2,11 @@ package shopping.domain;
 
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
+
 public class Product {
     private String name;
+    private BigDecimal price;
 
     public Product() {
 
@@ -12,6 +15,11 @@ public class Product {
     public Product(String name) {
         validNameLength(name);
         this.name = name;
+    }
+
+    public Product(String name, BigDecimal price) {
+        this.name = name;
+        this.price = price;
     }
 
     public String getName() {
@@ -26,5 +34,9 @@ public class Product {
         if (name.length() > 15) {
             throw new IllegalArgumentException("상품명은 1자 이상 15자 이하여야 합니다.");
         }
+    }
+
+    public BigDecimal getPrice() {
+        return price;
     }
 }
