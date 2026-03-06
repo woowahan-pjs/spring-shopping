@@ -55,4 +55,13 @@ class ProductTest {
 
         assertThat(product.getPrice()).isEqualTo(price);
     }
+
+    @Test
+    @DisplayName("상품 가격이 음수면 실패한다.")
+    void fail_productPriceNegative() {
+        BigDecimal price = new BigDecimal(-1);
+
+        assertThatThrownBy(() -> new Product("피자", price))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }
