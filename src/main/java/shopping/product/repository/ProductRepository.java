@@ -6,15 +6,15 @@ import jakarta.persistence.QueryHint;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
-import org.springframework.data.repository.CrudRepository;
 
 import org.springframework.data.repository.query.Param;
 import shopping.product.domain.Price;
 import shopping.product.domain.Product;
 
-public interface ProductRepository extends CrudRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @QueryHints(
             @QueryHint(
