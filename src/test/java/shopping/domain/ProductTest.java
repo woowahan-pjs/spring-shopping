@@ -83,4 +83,13 @@ class ProductTest {
 
         assertThat(product.getImageUrl()).isEqualTo(url);
     }
+
+    @ParameterizedTest
+    @DisplayName("상품이미지 경로가 잘못되면 예외처리")
+    @NullAndEmptySource
+    @ValueSource(strings = {"hhpp://naver.com", "dkjksjkjfd"})
+    void invalidImageUrl(String url) {
+        assertThatThrownBy(() -> new Product("피자", new BigDecimal(0), url))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 }

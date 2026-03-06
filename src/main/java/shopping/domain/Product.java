@@ -3,6 +3,7 @@ package shopping.domain;
 import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
+import java.net.URL;
 
 public class Product {
     private String name;
@@ -24,6 +25,7 @@ public class Product {
     public Product(String name, BigDecimal price, String imageUrl) {
         validateName(name);
         validatePrice(price);
+        validateImageUrl(imageUrl);
 
         this.name = name;
         this.price = price;
@@ -51,6 +53,18 @@ public class Product {
 
         if (price.compareTo(new BigDecimal(999999999)) > 0) {
             throw new IllegalArgumentException("상품 가격은 10억원 이하여야 합니다.");
+        }
+    }
+
+    private void validateImageUrl(String imageUrl) {
+        if (!StringUtils.hasText(imageUrl)) {
+            throw new IllegalArgumentException("상품 이미지는 필수입니다.");
+        }
+
+        try {
+            new URL(imageUrl).toURI();
+        } catch (Exception e) {
+            throw new IllegalArgumentException("상품 이미지 URL이 올바르지 않습니다.");
         }
     }
 
