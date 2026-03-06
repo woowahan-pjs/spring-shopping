@@ -13,8 +13,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.common.client.ProfanityClient;
 import shopping.product.api.command.dto.ProductRegisterRequest;
-import shopping.product.service.FakeProductNameValidator;
+import shopping.product.service.FakeProfanityClient;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -30,8 +31,8 @@ class ProductQueryControllerTest {
     static class TestConfig {
         @Bean
         @Primary
-        public FakeProductNameValidator fakeProductNameValidator() {
-            return new FakeProductNameValidator();
+        public ProfanityClient fakeProfanityClient() {
+            return new FakeProfanityClient();
         }
     }
 
@@ -42,11 +43,11 @@ class ProductQueryControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private FakeProductNameValidator productNameValidator;
+    private FakeProfanityClient profanityClient;
 
     @BeforeEach
     void setUp() {
-        productNameValidator.setProfane(false);
+        profanityClient.setProfane(false);
     }
 
     @Test

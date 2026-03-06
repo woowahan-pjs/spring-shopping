@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.common.client.ProfanityClient;
 import shopping.product.api.command.dto.ProductRegisterRequest;
 import shopping.product.api.query.dto.ProductDetailResponse;
 
@@ -25,8 +26,8 @@ class ProductQueryServiceTest {
     static class TestConfig {
         @Bean
         @Primary
-        public FakeProductNameValidator fakeProductNameValidator() {
-            return new FakeProductNameValidator();
+        public ProfanityClient fakeProfanityClient() {
+            return new FakeProfanityClient();
         }
     }
 
@@ -37,11 +38,11 @@ class ProductQueryServiceTest {
     private ProductQueryService productQueryService;
 
     @Autowired
-    private FakeProductNameValidator productNameValidator;
+    private FakeProfanityClient profanityClient;
 
     @BeforeEach
     void setUp() {
-        productNameValidator.setProfane(false);
+        profanityClient.setProfane(false);
     }
 
     @Test

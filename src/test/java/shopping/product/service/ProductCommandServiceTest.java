@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.common.client.ProfanityClient;
 import shopping.product.api.command.dto.ProductRegisterRequest;
 import shopping.product.api.query.dto.ProductDetailResponse;
 import shopping.product.repository.ProductRepository;
@@ -24,8 +25,8 @@ class ProductCommandServiceTest {
     static class TestConfig {
         @Bean
         @Primary
-        public FakeProductNameValidator fakeProductNameValidator() {
-            return new FakeProductNameValidator();
+        public ProfanityClient fakeProfanityClient() {
+            return new FakeProfanityClient();
         }
     }
 
@@ -36,11 +37,11 @@ class ProductCommandServiceTest {
     private ProductRepository productRepository;
 
     @Autowired
-    private FakeProductNameValidator productNameValidator;
+    private FakeProfanityClient profanityClient;
 
     @BeforeEach
     void setUp() {
-        productNameValidator.setProfane(false);
+        profanityClient.setProfane(false);
     }
 
     @Test
@@ -85,7 +86,7 @@ class ProductCommandServiceTest {
     @DisplayName("상품명에 비속어가 포함되면 예외가 발생한다")
     void test04() {
         // given
-        productNameValidator.setProfane(true);
+        profanityClient.setProfane(true);
         ProductRegisterRequest request = new ProductRegisterRequest("badword", 10000L, "https://example.com/image.jpg");
 
         // when & then
