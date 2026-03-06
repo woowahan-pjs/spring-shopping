@@ -4,7 +4,6 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.net.URI;
-import java.net.URL;
 
 public class Product {
     private String name;
@@ -44,6 +43,11 @@ public class Product {
 
         if (name.length() > 15) {
             throw new IllegalArgumentException("상품명은 1자 이상 15자 이하여야 합니다.");
+        }
+
+        String specialChar = "^[가-힣a-zA-Z0-9\\(\\)\\[\\]\\+\\-\\&\\/\\_\\s]+$";
+        if (!name.matches(specialChar)) {
+            throw new IllegalArgumentException("상품명 특수문자는 (), [], +, -, &, /, _ 만 가능합니다.");
         }
     }
 

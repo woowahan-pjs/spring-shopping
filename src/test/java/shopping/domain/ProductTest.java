@@ -48,6 +48,21 @@ class ProductTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @DisplayName("상품명에는 특수문자 (), [], +, -, &, /, _ 사용할 수 있다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"(", ")", "[", "]", "+", "-", "&", "/", "_"})
+    void productName_withSpecialChars(String specialChar) {
+        assertDoesNotThrow(() -> new Product(specialChar, new BigDecimal(0), "http://a.com/a.jpg"));
+    }
+
+    @DisplayName("상품명에는 특수문자 (), [], +, -, &, /, _ 제외하면 사용할 수 없다.")
+    @ParameterizedTest
+    @ValueSource(strings = {"@", "!", "*", "#", "=", "{", "}", "\\", "|"})
+    void productName_withDisallowedSpecialChars(String specialChar) {
+        assertThatThrownBy(() -> new Product(specialChar))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
     @Test
     @DisplayName("상품은 가격을 가진다")
     void productPrice() {
