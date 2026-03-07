@@ -18,7 +18,7 @@ public class Wish {
 	protected Wish() {
 	}
 
-	public Wish(Long id, Long memberId, Long productId) {
+	private Wish(Long id, Long memberId, Long productId) {
 		this.id = id;
 		this.memberId = memberId;
 		this.productId = productId;
@@ -34,5 +34,9 @@ public class Wish {
 
 	public Long getProductId() {
 		return productId;
+	}
+
+	public static Wish of(Long memberId, Long productId) {
+		return new Wish(null, memberId, productId);
 	}
 }

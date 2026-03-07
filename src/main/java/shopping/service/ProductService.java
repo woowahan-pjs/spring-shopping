@@ -48,6 +48,10 @@ public class ProductService {
 			.toList();
 	}
 
+	public List<Product> findProductsByIds(List<Long> ids) {
+		return productRepository.findByIdIn(ids);
+	}
+
 	@Transactional
 	public void updateProduct(UpdateProductRequestDto requestDto) {
 		Product product = productRepository.findById(requestDto.getId())
