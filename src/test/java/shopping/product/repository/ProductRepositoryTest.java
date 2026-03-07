@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import shopping.product.domain.Product;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -24,5 +26,21 @@ public class ProductRepositoryTest {
 
         //then
         assertThat(savedProduct.getName()).isEqualTo("아이폰");
+    }
+
+    @Test
+    void 특정_상품을_조회한다() {
+
+        //given
+        Product product = Product.create("아이폰", 1_000_000);
+        productRepository.save(product);
+
+        //when
+        Optional<Product> result = productRepository.findById(product.getId());
+
+        //then
+        assertThat(result).isPresent();
+        assertThat(result.get().getName()).isEqualTo("아이폰");
+        assertThat(result.get().getPrice()).isEqualTo(1_000_000);
     }
 }
