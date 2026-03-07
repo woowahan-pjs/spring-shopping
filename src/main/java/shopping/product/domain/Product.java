@@ -50,4 +50,12 @@ public class Product {
         this.price = price;
         this.imageUrl = imageUrl;
     }
+
+    public static Product create(String name, long price) {
+        return new Product(name, 0, price, null);
+    }
+
+    public String getName() {
+        return name;
+    }
 }
