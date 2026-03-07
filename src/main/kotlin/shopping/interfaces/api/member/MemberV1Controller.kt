@@ -20,4 +20,13 @@ class MemberV1Controller(
             .let { MemberV1Dto.RegisterResponse.from(it) }
             .let { ApiResponse.success(it) }
     }
+
+    @PostMapping("/login")
+    fun login(
+        @RequestBody request: MemberV1Dto.LoginRequest,
+    ): ApiResponse<MemberV1Dto.LoginResponse> {
+        return memberFacade.login(request)
+            .let { MemberV1Dto.LoginResponse.from(it) }
+            .let { ApiResponse.success(it) }
+    }
 }

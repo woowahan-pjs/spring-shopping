@@ -16,10 +16,25 @@ class MemberV1Dto {
         }
     }
 
-    class RegisterRequest(
+    data class RegisterRequest(
         val email: String,
         val password: String
     )
 
+    data class LoginRequest(
+        val email: String,
+        val password: String
+    )
 
+    data class LoginResponse(
+        val token: String
+    ) {
+        companion object {
+            fun from(token: String): LoginResponse {
+                return LoginResponse(
+                    token = token
+                )
+            }
+        }
+    }
 }

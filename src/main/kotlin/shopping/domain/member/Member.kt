@@ -9,7 +9,7 @@ import shopping.support.error.ErrorType
 @Table(name = "members")
 @Entity
 class Member(
-    email : String,
+    email: String,
     password: String
 ) : BaseEntity() {
     var email: String = email
@@ -21,6 +21,10 @@ class Member(
     init {
         if (email.isBlank()) throw CoreException(ErrorType.BAD_REQUEST, "이메일은 비어있을 수 없습니다.")
         if (password.isBlank()) throw CoreException(ErrorType.BAD_REQUEST, "비밀번호는 비어있을 수 없습니다.")
+    }
+
+    fun checkPassword(password: String): Boolean {
+        return password.equals(this.password)
     }
 
 }
