@@ -26,8 +26,29 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    void assignId(Long id) {
+        this.id = id;
+    }
+
+    public void changeName(String name) {
+        validateName(name);
+        this.name = name;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
     }
 
     private void validateName(String name) {
@@ -77,21 +98,5 @@ public class Product {
         if (!lowerCaseUrl.matches(".*\\.(jpg|jpeg|png|gif|svg)$")) {
             throw new IllegalArgumentException("이미지 파일은 jpg, jpeg, png, gif, svg 형식만 지원합니다.");
         }
-    }
-
-    void assignId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
     }
 }

@@ -23,9 +23,20 @@ class ProductTest {
     @Test
     @DisplayName("상품은 이름을 가진다")
     void productName() {
-        Product product = createProduct(VALID_NAME);
+        Product product = createProduct(VALID_PRICE);
 
         assertThat(product.getName()).isEqualTo(VALID_NAME);
+    }
+
+    @Test
+    @DisplayName("상품명은 변경이 된다")
+    void changeName() {
+        String name = "변경";
+        Product product = createProduct(VALID_PRICE);
+
+        product.changeName(name);
+
+        assertThat(product.getName()).isEqualTo(name);
     }
 
     @ParameterizedTest

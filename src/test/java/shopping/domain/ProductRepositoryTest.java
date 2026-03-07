@@ -33,4 +33,18 @@ public class ProductRepositoryTest {
 
         assertThat(found).isEqualTo(saved);
     }
+
+    @Test
+    @DisplayName("상품 내용을 수정한다.")
+    void update() {
+        String name = "새로운 이름";
+        Product saved = productRepository.save(createProduct());
+        Product found = productRepository.findById(saved.getId());
+
+        found.changeName(name);
+
+        Product updated = productRepository.update(found.getId(), found);
+
+        assertThat(updated.getName()).isEqualTo(name);
+    }
 }

@@ -20,4 +20,10 @@ public class InMemoryProductRepository implements ProductRepository {
     public Product findById(Long id) {
         return productMap.get(id);
     }
+
+    @Override
+    public Product update(Long id, Product product) {
+        productMap.put(id, product);
+        return productMap.get(id);
+    }
 }
