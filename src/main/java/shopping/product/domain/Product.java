@@ -55,7 +55,15 @@ public class Product {
         return new Product(name, 0, price, null);
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public long getPrice() {
+        return price;
     }
 }

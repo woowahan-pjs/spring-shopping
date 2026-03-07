@@ -1,11 +1,9 @@
 package shopping.product.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import shopping.product.dto.ProductCreateRequest;
+import shopping.product.dto.ProductResponse;
 import shopping.product.service.ProductService;
 
 @RestController
@@ -23,5 +21,13 @@ public class ProductController {
 
         productService.createProduct(request);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long productId) {
+
+        ProductResponse response = productService.getProduct(productId);
+
+        return ResponseEntity.ok(response);
     }
 }
