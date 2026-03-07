@@ -1,1 +1,79 @@
 # spring-shopping-product
+
+## 요구사항 정리
+
+```
+1. 상품
+```
+- [ ] 상품을 조회
+- [ ] 상품을 추가
+  - [ ] 이름, 가격, 이미지 URL을 입력받아 상품을 등록 
+  - [ ] 상품명 길이는 최대 15자까지 입력 가능
+  - [ ] 상품명 아래 특수 문자만 사용 가능:  `( ), [ ], +, -, &, /, _`
+  - [ ] 상품명에는 비속어가 포함될 수 없음([PurgoMalum](https://www.purgomalum.com/) API: 비속어 검사)
+- [ ] 상품을 수정
+- [ ] 상품을 삭제
+
+```
+2. 회원
+```
+- [ ] 회원 가입
+  - [ ] 이메일, 비밀번호를 입력받아 회원을 생성
+  - [ ] 이메일 중복 및 형식 유요성 검증
+- [ ] 로그인
+  - [ ] 이메일과 비밀번호를 검증 
+  - [ ] 로그인 성공 시 토큰을 발급
+
+```
+3. 위시 리스트
+인증된 회원을 대상으로 위시 리스트
+```
+- [ ] 위시 리스트에 등록된 상품 목록 조회
+- [ ] 위시 리스트에 상품을 추가
+- [ ] 위시 리스트에 있는 상품 삭제
+
+## 구현 전략
+
+```text
+src/main/java/com/shop
+│
+├── domain
+│   ├── user
+│   │   ├── Entity: User, Password
+│   │   └── Repository Interface: UserRepository
+│   ├── product
+│   │   ├── Entity: Product, ProductName
+│   │   ├── Service: ProfanityChecker
+│   │   └── Repository Interface: ProductRepository
+│   └── wishlist
+│       └── Entity: WishList
+│
+├── application
+│   ├── user
+│   │   ├── Service: LoginService, RegistrationService
+│   │   └── DTO: LoginRequest, TokenResponse
+│   ├── product
+│   │   └── Service: ProductCommandService
+│   └── wishlist
+│       └── Service: WishListService
+│
+├── infrastructure
+│   ├── persistence
+│   │   ├── JpaUserRepository
+│   │   └── JpaProductRepository
+│   ├── security
+│   │   ├── JwtTokenProvider
+│   │   ├── JwtAuthenticationFilter
+│   │   └── PasswordEncoder
+│   └── external_api
+│       └── PurgoMalumClient
+│
+└── ui
+├── controller
+│   ├── AuthController
+│   ├── ProductController
+│   └── WishListController
+└── exception
+└── GlobalExceptionHandler
+```
+
