@@ -168,40 +168,44 @@ board/
 
 ### DB 모델링
 ```sql
-CREATE TABLE members (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+CREATE TABLE members
+(
+  id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+  email      VARCHAR(255) NOT NULL UNIQUE,
+  password   VARCHAR(255) NOT NULL,
+  role       ENUM('USER', 'ADMIN') NOT NULL DEFAULT 'USER',
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 
-CREATE TABLE products (
-                        id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                        name VARCHAR(255) NOT NULL,
-                        price INT NOT NULL,
-                        image_url TEXT NOT NULL,
-                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-                        deleted BOOLEAN DEFAULT FALSE,
+CREATE TABLE products
+(
+  id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+  name       VARCHAR(255) NOT NULL,
+  price      INT          NOT NULL,
+  image_url  TEXT         NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  deleted    BOOLEAN   DEFAULT FALSE,
 );
 
 
-CREATE TABLE wishes (
-                      id BIGINT AUTO_INCREMENT PRIMARY KEY,
-                      member_id BIGINT NOT NULL,
-                      product_id BIGINT NOT NULL,
-                      quantity INT NOT NULL DEFAULT 1,
-                      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                      updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+CREATE TABLE wishes
+(
+  id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+  member_id  BIGINT NOT NULL,
+  product_id BIGINT NOT NULL,
+  quantity   INT    NOT NULL DEFAULT 1,
+  created_at TIMESTAMP       DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP       DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
                       CONSTRAINT fk_wish_member
                         FOREIGN KEY (member_id) REFERENCES members(id),
 
-                      CONSTRAINT fk_wish_product
-                        FOREIGN KEY (product_id) REFERENCES products(id),
+  CONSTRAINT fk_wish_product
+    FOREIGN KEY (product_id) REFERENCES products (id),
 
-                      UNIQUE KEY uk_member_product (member_id, product_id)
+  UNIQUE KEY uk_member_product (member_id, product_id)
 );
 ```
 
