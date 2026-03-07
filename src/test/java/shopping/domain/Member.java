@@ -27,5 +27,9 @@ public class Member {
         if (!StringUtils.hasText(password)) {
             throw new IllegalArgumentException("비밀번호를 입력해주세요");
         }
+
+        if (password.length() < 8 || password.length() > 20) {
+            throw new IllegalArgumentException("비밀번호는 8 ~ 20 자리로 입력해주세요");
+        }
     }
 }
