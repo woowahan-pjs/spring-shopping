@@ -16,7 +16,7 @@ public class InMemoryMemberRepository implements MemberRepository {
     @Override
     public Member save(Member member) {
         Long id = idGenerator.getAndIncrement();
-        Member saved = new Member(id, member.getEmail(), member.getPassword());
+        Member saved = member.withId(id);
         members.put(id, saved);
         return saved;
     }
