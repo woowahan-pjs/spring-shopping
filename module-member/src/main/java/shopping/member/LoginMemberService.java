@@ -2,9 +2,6 @@ package shopping.member;
 
 import java.util.UUID;
 
-import org.springframework.stereotype.Service;
-
-@Service
 public class LoginMemberService implements LoginMember {
 
     private final MemberRepository memberRepository;
