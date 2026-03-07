@@ -9,12 +9,9 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.*;
+import static shopping.domain.ProductFixture.*;
 
 class ProductTest {
-    private static final String VALID_NAME = "피자";
-    private static final BigDecimal VALID_PRICE = BigDecimal.ZERO;
-    private static final String VALID_IMAGE_URL = "http://a.com/a.jpg";
-
     private Product createProduct(String name) {
         return new Product(name, VALID_PRICE, VALID_IMAGE_URL);
     }
