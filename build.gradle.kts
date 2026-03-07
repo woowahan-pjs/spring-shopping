@@ -14,10 +14,6 @@ java {
     }
 }
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     implementation(project(":module-product"))
     implementation(project(":module-member"))
@@ -33,13 +29,19 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-spotless {
-    java {
-        target("src/**/*.java")
-        eclipse("4.26").configFile("google-style.xml")
-        removeUnusedImports()
-        trimTrailingWhitespace()
-        endWithNewline()
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+    apply(plugin = "com.diffplug.spotless")
+    configure<com.diffplug.gradle.spotless.SpotlessExtension> {
+        java {
+            target("src/**/*.java")
+            eclipse("4.26").configFile(rootProject.file("google-style.xml"))
+            removeUnusedImports()
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
     }
 }
 

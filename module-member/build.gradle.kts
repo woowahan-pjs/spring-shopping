@@ -1,6 +1,5 @@
 plugins {
     `java-library`
-    id("com.diffplug.spotless") version "6.25.0"
 }
 
 group = "camp.nextstep.edu"
