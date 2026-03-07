@@ -16,11 +16,11 @@
 
 ### 1. 상품 (Product)
 
-- [ ] 상품 생성 `POST /api/products`
-- [ ] 상품 단건 조회 `GET /api/products/{productId}`
-- [ ] 상품 목록 조회 `GET /api/products`
-- [ ] 상품 수정 `PUT /api/products/{productId}`
-- [ ] 상품 삭제 `DELETE /api/products/{productId}`
+- [x] 상품 생성 `POST /api/products`
+- [x] 상품 단건 조회 `GET /api/products/{productId}`
+- [x] 상품 목록 조회 `GET /api/products`
+- [x] 상품 수정 `PUT /api/products/{productId}`
+- [x] 상품 삭제 `DELETE /api/products/{productId}`
 
 #### 상품 도메인 규칙
 
@@ -38,9 +38,9 @@
 
 ### 2. 유효성 검사 및 예외 처리
 
-- [ ] 상품명 길이 검사 (공백 포함 최대 15자)
-- [ ] 상품명 허용 특수문자 검사 (정규식 기반)
-- [ ] 상품명 비속어 검사 (PurgoMalum API 연동)
+- [x] 상품명 길이 검사 (공백 포함 최대 15자)
+- [x] 상품명 허용 특수문자 검사 (정규식 기반)
+- [x] 상품명 비속어 검사 (PurgoMalum API 연동)
 - [x] 전역 예외 핸들러 구현 (`@RestControllerAdvice`)
 - [x] 유효성 검사 실패 시 400 Bad Request 응답
 
