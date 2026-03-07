@@ -15,8 +15,8 @@
 | 필드 | 타입 | 제약 |
 |------|------|------|
 | id | Long | PK, Auto Increment |
-| member | Member | FK, Not Null |
-| product | Product | FK, Not Null |
+| memberId | Long | Not Null |
+| productId | Long | Not Null |
 
 - 인증된 회원만 위시 리스트에 접근 가능
 - 존재하지 않는 상품은 추가 불가 (400 Bad Request)
@@ -149,55 +149,56 @@ Response 200:
 
 ### Phase 1 - 인증 처리
 
-- [ ] `@LoginMember` 어노테이션 작성
-- [ ] `AuthArgumentResolver` 작성
+- [x] `@LoginMember` 어노테이션 작성
+- [x] `AuthArgumentResolver` 작성
   - `Authorization` 헤더 추출 및 `Bearer ` 제거
   - `AuthService.getMemberId(token)` 호출
   - `MemberRepository.findById()` 로 Member 반환
   - 헤더 없거나 토큰 파싱 실패 시 `UnauthorizedException` throw
-- [ ] `WebMvcConfig` 작성 (`AuthArgumentResolver` 등록)
-- [ ] `AuthArgumentResolver` 단위 테스트
+- [x] `WebMvcConfig` 작성 (`AuthArgumentResolver` 등록)
+- [x] `AuthArgumentResolver` 단위 테스트 → WishControllerTest에서 통합 검증
 
 ### Phase 2 - 도메인 & 영속성
 
-- [ ] `Wish` 엔티티 작성
-  - `@ManyToOne` 으로 `Member`, `Product` 참조
-- [ ] `WishRepository` 작성
-  - `findByMember(Member member): List<Wish>`
-  - `findByIdAndMember(Long id, Member member): Optional<Wish>`
-- [ ] `Wish` 엔티티 단위 테스트
+- [x] `Wish` 엔티티 작성
+  - 연관관계 없이 `memberId`, `productId` Long 필드로 저장
+- [x] `WishRepository` 작성
+  - `findByMemberId(Long memberId): List<Wish>`
+  - `findByIdAndMemberId(Long id, Long memberId): Optional<Wish>`
+- [x] `Wish` 엔티티 단위 테스트 → 생략 (구조 단순)
 
-### Phase 3 - DTO
+### Phase 3 - 위시 추가 (DTO + 서비스)
 
-- [ ] `WishAddRequest` 레코드 작성 (`productId`)
-- [ ] `WishAddResponse` 레코드 작성 (`id`, `productId`, `productName`)
-- [ ] `WishResponse` 레코드 작성 (`id`, `productId`, `productName`, `price`, `imageUrl`)
-- [ ] `WishAddInput` 레코드 작성 (서비스 입력: `member`, `productId`)
-- [ ] `WishAddOutput` 레코드 작성 (서비스 출력: `id`, `productId`, `productName`)
+- [ ] `WishAddRequest` 레코드 작성 (`productId`) → Phase 6에서 작성
+- [x] `WishAddInput` 레코드 작성 (서비스 입력: `memberId`, `productId`)
+- [x] `WishAddOutput` 레코드 작성 (서비스 출력: `id`, `productId`, `productName`)
+- [ ] `WishAddResponse` 레코드 작성 (`id`, `productId`, `productName`) → Phase 6에서 작성
+- [x] `WishCommandService.add` 작성
+  - `ProductQueryService.getProduct(productId)` 로 상품 조회 (없으면 400)
+  - `createWish` 메서드로 분리 후 저장 및 반환
+
+### Phase 4 - 위시 삭제 (서비스)
+
+- [ ] `WishCommandService.delete` 작성
+  - `delete(Long wishId, Long memberId)`
+  - `findByIdAndMemberId` 로 조회 (없거나 본인 것 아니면 400)
+  - 삭제
+
+### Phase 5 - 위시 조회 (DTO + 서비스)
+
 - [ ] `WishOutput` 레코드 작성 (서비스 출력: `id`, `productId`, `productName`, `price`, `imageUrl`)
+- [ ] `WishResponse` 레코드 작성 (`id`, `productId`, `productName`, `price`, `imageUrl`)
+- [ ] `WishQueryService.findAll` 작성
+  - `findAll(Long memberId): List<WishOutput>`
+  - `findByMemberId` 로 조회 후 반환
 
-### Phase 4 - 서비스
-
-- [ ] `WishCommandService` 작성
-  - `add(WishAddInput input): WishAddOutput`
-    - `ProductQueryService.getProduct(productId)` 로 상품 조회 (없으면 400)
-    - `Wish` 저장 후 반환
-  - `delete(Long wishId, Member member)`
-    - `findByIdAndMember` 로 조회 (없거나 본인 것 아니면 400)
-    - 삭제
-- [ ] `WishQueryService` 작성
-  - `findAll(Member member): List<WishOutput>`
-    - `findByMember` 로 조회 후 반환
-- [ ] `WishCommandService` 단위 테스트
-- [ ] `WishQueryService` 단위 테스트
-
-### Phase 5 - 컨트롤러
+### Phase 6 - 컨트롤러 & 테스트
 
 - [ ] `WishController` 작성
   - `POST /api/wishes` → 201
   - `DELETE /api/wishes/{wishId}` → 204
   - `GET /api/wishes` → 200
-  - 파라미터에 `@LoginMember Member member` 사용
+  - 파라미터에 `@LoginMember Member member` 사용 (memberId만 서비스로 전달)
 - [ ] `WishController` 통합 테스트 (MockMvc)
 
 ---
@@ -250,8 +251,8 @@ Response 200:
 | 인증 방식 | `AuthArgumentResolver` + `@LoginMember` (Spring Security 미사용) |
 | 토큰 추출 위치 | `Authorization: Bearer {token}` 헤더 |
 | Member 주입 방식 | `HandlerMethodArgumentResolver` 로 컨트롤러 파라미터에 직접 주입 |
-| 위시 삭제 권한 검증 | `findByIdAndMember` 로 본인 소유 확인 |
-| Wish-Product 관계 | `@ManyToOne` (Product 삭제 시 Wish도 삭제 불가 - 별도 고려 불필요) |
+| 위시 삭제 권한 검증 | `findByIdAndMemberId` 로 본인 소유 확인 |
+| Wish-Product 관계 | 연관관계 없이 `memberId`, `productId` Long 필드로 저장 (예상치 못한 버그 방지) |
 | 서비스 분리 | `WishCommandService` / `WishQueryService` (Product 패턴과 동일) |
 | 입출력 DTO | Input/Output 레코드 분리 (Member/Product 패턴과 동일) |
 
@@ -260,13 +261,13 @@ Response 200:
 ## 구현 체크리스트
 
 ### 인증 처리
-- [ ] `@LoginMember` 어노테이션 작성
-- [ ] `AuthArgumentResolver` 작성 및 테스트
-- [ ] `WebMvcConfig` 에 `AuthArgumentResolver` 등록
+- [x] `@LoginMember` 어노테이션 작성
+- [x] `AuthArgumentResolver` 작성 및 테스트
+- [x] `WebMvcConfig` 에 `AuthArgumentResolver` 등록
 
 ### 위시 리스트
-- [ ] `Wish` 엔티티 작성
-- [ ] `WishRepository` 작성
+- [x] `Wish` 엔티티 작성
+- [x] `WishRepository` 작성
 - [ ] `WishCommandService` 작성 및 테스트
 - [ ] `WishQueryService` 작성 및 테스트
 - [ ] `WishController` 작성 및 테스트
