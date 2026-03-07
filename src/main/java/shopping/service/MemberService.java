@@ -7,6 +7,8 @@ import shopping.component.TokenStore;
 import shopping.controller.dto.member.LoginRequestDto;
 import shopping.controller.dto.member.SignUpMemberRequestDto;
 import shopping.domain.Member;
+import shopping.exception.CustomExceptionEnum;
+import shopping.exception.NotFoundMemberException;
 import shopping.repository.MemberRepository;
 import shopping.util.CryptoUtil;
 
@@ -28,8 +30,10 @@ public class MemberService {
 	}
 
 	public String login(LoginRequestDto requestDto) {
-		// TODO: DB에서 email/password 검증 후 memberId 조회
-		Long memberId = 1L;
+		Member member = memberRepository.findByEmail(requestDto.getEmail())
+			.orElseThrow(() -> new NotFoundMemberException(CustomExceptionEnum.NOT_EXIST_MEMBER));
+		member.validPassword(requestDto.getEncryptPassword());
+		Long memberId = member.getId();
 		return tokenStore.save(memberId);
 	}
 }
