@@ -1,5 +1,7 @@
 package shopping.controller.dto.product;
 
+import shopping.domain.Product;
+
 public class GetProductResponseDto {
 	private Long id;
 	private String name;
@@ -27,5 +29,9 @@ public class GetProductResponseDto {
 
 	public String getImageUrl() {
 		return imageUrl;
+	}
+
+	public static GetProductResponseDto of(Product product) {
+		return new GetProductResponseDto(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
 	}
 }

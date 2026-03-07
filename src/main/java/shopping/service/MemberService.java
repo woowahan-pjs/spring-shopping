@@ -8,7 +8,7 @@ import shopping.controller.dto.member.LoginRequestDto;
 import shopping.controller.dto.member.SignUpMemberRequestDto;
 import shopping.domain.Member;
 import shopping.exception.CustomExceptionEnum;
-import shopping.exception.NotFoundMemberException;
+import shopping.exception.NotFoundException;
 import shopping.repository.MemberRepository;
 
 @Service
@@ -30,7 +30,7 @@ public class MemberService {
 
 	public String login(LoginRequestDto requestDto) {
 		Member member = memberRepository.findByEmail(requestDto.getEmail())
-			.orElseThrow(() -> new NotFoundMemberException(CustomExceptionEnum.NOT_EXIST_MEMBER));
+			.orElseThrow(() -> new NotFoundException(CustomExceptionEnum.NOT_EXIST_MEMBER));
 		member.validPassword(requestDto.getEncryptPassword());
 		Long memberId = member.getId();
 		return tokenStore.save(memberId);

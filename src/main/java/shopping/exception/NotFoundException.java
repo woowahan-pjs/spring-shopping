@@ -1,8 +1,8 @@
 package shopping.exception;
 
-public class NotFoundMemberException extends RuntimeException {
+public class NotFoundException extends RuntimeException {
 	private final String code;
-	public NotFoundMemberException(CustomExceptionEnum customExceptionEnum) {
+	public NotFoundException(CustomExceptionEnum customExceptionEnum) {
 		super(customExceptionEnum.getMessage());
 		this.code = customExceptionEnum.getCode();
 	}
