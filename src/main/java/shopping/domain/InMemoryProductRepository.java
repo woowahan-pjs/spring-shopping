@@ -26,4 +26,9 @@ public class InMemoryProductRepository implements ProductRepository {
         productMap.put(id, product);
         return productMap.get(id);
     }
+
+    @Override
+    public void deleteById(Long id) {
+        productMap.remove(id);
+    }
 }

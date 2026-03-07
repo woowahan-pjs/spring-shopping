@@ -47,4 +47,16 @@ public class ProductRepositoryTest {
 
         assertThat(updated.getName()).isEqualTo(name);
     }
+
+    @Test
+    @DisplayName("상품은 삭제된다")
+    void delete() {
+        Product saved = productRepository.save(createProduct());
+
+        productRepository.deleteById(saved.getId());
+
+        Product deleted = productRepository.findById(saved.getId());
+
+        assertThat(deleted).isNull();
+    }
 }
