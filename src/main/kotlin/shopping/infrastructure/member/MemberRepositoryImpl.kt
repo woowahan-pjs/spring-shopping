@@ -16,4 +16,8 @@ class MemberRepositoryImpl(
     override fun existsByEmail(email: String): Boolean {
         return memberJpaRepository.existsByEmail(email);
     }
+
+    override fun save(member: Member): Member {
+        return memberJpaRepository.save(member)
+    }
 }
