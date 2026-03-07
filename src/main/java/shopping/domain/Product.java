@@ -4,23 +4,16 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 public class Product {
+    private static final int MAX_NAME_LENGTH = 15;
+    private static final BigDecimal MAX_PRICE = BigDecimal.valueOf(999_999_999);
+    private static final String NAME_PATTERN = "^[가-힣a-zA-Z0-9()\\[\\]+\\-&/_\\s]+$";
+
     private String name;
     private BigDecimal price;
     private String imageUrl;
-
-    public Product() {
-
-    }
-
-    public Product(String name) {
-        this(name, BigDecimal.ZERO);
-    }
-
-    public Product(String name, BigDecimal price) {
-        this(name, price, null);
-    }
 
     public Product(String name, BigDecimal price, String imageUrl) {
         validateName(name);
@@ -41,22 +34,25 @@ public class Product {
             throw new IllegalArgumentException("상품명은 필수입니다.");
         }
 
-        if (name.length() > 15) {
+        if (name.length() > MAX_NAME_LENGTH) {
             throw new IllegalArgumentException("상품명은 1자 이상 15자 이하여야 합니다.");
         }
 
-        String specialChar = "^[가-힣a-zA-Z0-9\\(\\)\\[\\]\\+\\-\\&\\/\\_\\s]+$";
-        if (!name.matches(specialChar)) {
+        if (!name.matches(NAME_PATTERN)) {
             throw new IllegalArgumentException("상품명 특수문자는 (), [], +, -, &, /, _ 만 가능합니다.");
         }
     }
 
     private void validatePrice(BigDecimal price) {
+        if (price == null) {
+            throw new IllegalArgumentException("상품 가격은 필수입니다.");
+        }
+
         if (price.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("상품 가격은 0원 이상이어야 합니다.");
         }
 
-        if (price.compareTo(new BigDecimal(999999999)) > 0) {
+        if (price.compareTo(MAX_PRICE) > 0) {
             throw new IllegalArgumentException("상품 가격은 10억원 이하여야 합니다.");
         }
     }
@@ -72,7 +68,7 @@ public class Product {
             if (!"http".equals(scheme) && !"https".equals(scheme)) {
                 throw new IllegalArgumentException("상품 이미지 URL은 http/https 형식이어야 합니다.");
             }
-        } catch (Exception e) {
+        } catch (URISyntaxException e) {
             throw new IllegalArgumentException("상품 이미지 URL이 올바르지 않습니다.");
         }
 

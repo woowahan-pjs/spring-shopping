@@ -14,18 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 class ProductTest {
 
     @Test
-    @DisplayName("상품을 생성한다")
-    void createProduct() {
-        Product product = new Product();
-
-        assertThat(product).isNotNull();
-    }
-
-    @Test
     @DisplayName("상품은 이름을 가진다")
     void productName() {
         String name = "피자";
-        Product product = new Product(name);
+        Product product = new Product(name, BigDecimal.ZERO, "http://a.com/a.jpg");
 
         assertThat(product.getName()).isEqualTo(name);
     }
@@ -34,7 +26,7 @@ class ProductTest {
     @DisplayName("상품명 길이는 최소 1자리 ~ 최대 15자리다")
     @ValueSource(strings = {"상", "상품입니다", "상품입니다상품입니다상품입니다"})
     void productNameMaxLength(String name) {
-        Product product = new Product(name);
+        Product product = new Product(name, BigDecimal.ZERO, "http://a.com/a.jpg");
 
         assertThat(product.getName()).isEqualTo(name);
     }
@@ -44,7 +36,7 @@ class ProductTest {
     @NullAndEmptySource
     @ValueSource(strings = {"  ", "상품입니다상품입니다상품입니다상"})
     void invalidNameLength(String name) {
-        assertThatThrownBy(() -> new Product(name))
+        assertThatThrownBy(() -> new Product(name, BigDecimal.ZERO, "http://a.com/a.jpg"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -59,7 +51,7 @@ class ProductTest {
     @ParameterizedTest
     @ValueSource(strings = {"@", "!", "*", "#", "=", "{", "}", "\\", "|"})
     void productName_withDisallowedSpecialChars(String specialChar) {
-        assertThatThrownBy(() -> new Product(specialChar))
+        assertThatThrownBy(() -> new Product(specialChar, BigDecimal.ZERO, "http://a.com/a.jpg"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -67,7 +59,7 @@ class ProductTest {
     @DisplayName("상품은 가격을 가진다")
     void productPrice() {
         BigDecimal price = new BigDecimal(15000);
-        Product product = new Product("피자", price);
+        Product product = new Product("피자", price, "http://a.com/a.jpg");
 
         assertThat(product.getPrice()).isEqualTo(price);
     }
@@ -77,7 +69,7 @@ class ProductTest {
     void productPriceLessThanZero() {
         BigDecimal price = new BigDecimal(-1);
 
-        assertThatThrownBy(() -> new Product("피자", price))
+        assertThatThrownBy(() -> new Product("피자", price, "http://a.com/a.jpg"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -87,7 +79,7 @@ class ProductTest {
     void productPriceExceedsMax() {
         BigDecimal price = new BigDecimal(1000000000);
 
-        assertThatThrownBy(() -> new Product("피자", price))
+        assertThatThrownBy(() -> new Product("피자", price, "http://a.com/a.jpg"))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
