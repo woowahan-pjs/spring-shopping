@@ -11,6 +11,7 @@ public class Product {
     private static final BigDecimal MAX_PRICE = BigDecimal.valueOf(999_999_999);
     private static final String NAME_PATTERN = "^[가-힣a-zA-Z0-9()\\[\\]+\\-&/_\\s]+$";
 
+    private Long id;
     private String name;
     private BigDecimal price;
     private String imageUrl;
@@ -76,6 +77,14 @@ public class Product {
         if (!lowerCaseUrl.matches(".*\\.(jpg|jpeg|png|gif|svg)$")) {
             throw new IllegalArgumentException("이미지 파일은 jpg, jpeg, png, gif, svg 형식만 지원합니다.");
         }
+    }
+
+    void assignId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public BigDecimal getPrice() {
