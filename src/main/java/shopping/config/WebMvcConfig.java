@@ -26,7 +26,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/members/register", "/api/members/login");
         registry.addInterceptor(adminInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns("/admin/**");
+                .excludePathPatterns("/api/members/register", "/api/members/login");
     }
 
     @Override
