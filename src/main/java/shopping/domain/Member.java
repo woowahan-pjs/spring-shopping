@@ -18,7 +18,7 @@ public class Member {
 	protected Member() {
 	}
 
-	public Member(Long id, String email, String password, String name) {
+	private Member(Long id, String email, String password, String name) {
 		this.id = id;
 		this.email = email;
 		this.password = password;
@@ -39,5 +39,9 @@ public class Member {
 
 	public String getName() {
 		return name;
+	}
+
+	public static Member create(String email, String password, String name) {
+		return new Member(null, email, password, name);
 	}
 }
