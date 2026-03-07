@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import shopping.component.MemberContext;
 import shopping.component.TokenStore;
 
 @Component
@@ -18,10 +19,17 @@ public class AuthInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 		String token = request.getHeader("Authorization");
-		if (token == null || tokenStore.findMemberId(token) == null) {
+		Long memberId = tokenStore.findMemberId(token);
+		if (token == null || memberId == null) {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return false;
 		}
+		MemberContext.setMemberId(memberId);
 		return true;
+	}
+
+	@Override
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+		MemberContext.clear();
 	}
 }

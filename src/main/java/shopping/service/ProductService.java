@@ -2,13 +2,21 @@ package shopping.service;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import shopping.controller.dto.product.AddProductRequestDto;
 import shopping.controller.dto.product.GetProductResponseDto;
 import shopping.controller.dto.product.UpdateProductRequestDto;
+import shopping.repository.ProductRepository;
 
 @Service
 public class ProductService {
 
-	public void addProduct() {
+	private final ProductRepository productRepository;
+
+	public ProductService(ProductRepository productRepository) {
+		this.productRepository = productRepository;
+	}
+
+	public void addProduct(AddProductRequestDto requestDto) {
 
 	}
 
