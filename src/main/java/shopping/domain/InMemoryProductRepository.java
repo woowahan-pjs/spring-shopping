@@ -1,6 +1,8 @@
 package shopping.domain;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -30,5 +32,10 @@ public class InMemoryProductRepository implements ProductRepository {
     @Override
     public void deleteById(Long id) {
         productMap.remove(id);
+    }
+
+    @Override
+    public List<Product> findAll() {
+        return new ArrayList<>(productMap.values());
     }
 }

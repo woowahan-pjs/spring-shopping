@@ -1,6 +1,8 @@
 package shopping.domain;
 
 
+import java.util.List;
+
 public interface ProductRepository {
 
     Product save(Product product);
@@ -10,4 +12,6 @@ public interface ProductRepository {
     Product update(Long id, Product product);
 
     void deleteById(Long id);
+
+    List<Product> findAll();
 }

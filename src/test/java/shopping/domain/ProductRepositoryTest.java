@@ -5,6 +5,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.*;
 import static shopping.domain.ProductFixture.*;
 
@@ -58,5 +60,17 @@ public class ProductRepositoryTest {
         Product deleted = productRepository.findById(saved.getId());
 
         assertThat(deleted).isNull();
+    }
+
+    @Test
+    @DisplayName("상품 목록을 조회한다")
+    void findAll() {
+        productRepository.save(createProduct());
+        productRepository.save(createProduct());
+        productRepository.save(createProduct());
+
+        List<Product> productList = productRepository.findAll();
+
+        assertThat(productList.size()).isEqualTo(3);
     }
 }
