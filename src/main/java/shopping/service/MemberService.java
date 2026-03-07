@@ -10,7 +10,6 @@ import shopping.domain.Member;
 import shopping.exception.CustomExceptionEnum;
 import shopping.exception.NotFoundMemberException;
 import shopping.repository.MemberRepository;
-import shopping.util.CryptoUtil;
 
 @Service
 public class MemberService {
