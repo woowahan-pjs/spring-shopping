@@ -9,7 +9,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 class ProductTest {
     private static final String VALID_NAME = "피자";
@@ -20,8 +19,8 @@ class ProductTest {
         return new Product(name, VALID_PRICE, VALID_IMAGE_URL);
     }
 
-    private Product createProduct(String name, BigDecimal price) {
-        return new Product(name, price, VALID_IMAGE_URL);
+    private Product createProduct(BigDecimal price) {
+        return new Product(VALID_NAME, price, VALID_IMAGE_URL);
     }
 
     @Test
@@ -54,7 +53,8 @@ class ProductTest {
     @ParameterizedTest
     @ValueSource(strings = {"(", ")", "[", "]", "+", "-", "&", "/", "_"})
     void productName_withSpecialChars(String specialChar) {
-        assertDoesNotThrow(() -> createProduct(specialChar));
+        assertThatCode(() -> createProduct(specialChar))
+                .doesNotThrowAnyException();
     }
 
     @DisplayName("상품명에는 특수문자 (), [], +, -, &, /, _ 제외하면 사용할 수 없다.")
@@ -65,13 +65,14 @@ class ProductTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    @Test
+    @ParameterizedTest
     @DisplayName("상품은 가격을 가진다")
-    void productPrice() {
-        BigDecimal price = new BigDecimal(15000);
-        Product product = createProduct(VALID_NAME, price);
+    @ValueSource(ints = {0, 15000, 999_999_999})
+    void productPrice(int price) {
+        BigDecimal actualPrice = new BigDecimal(price);
+        Product product = createProduct(actualPrice);
 
-        assertThat(product.getPrice()).isEqualTo(price);
+        assertThat(product.getPrice()).isEqualByComparingTo(actualPrice);
     }
 
     @Test
@@ -79,7 +80,7 @@ class ProductTest {
     void productPriceLessThanZero() {
         BigDecimal price = new BigDecimal(-1);
 
-        assertThatThrownBy(() -> createProduct(VALID_NAME, price))
+        assertThatThrownBy(() -> createProduct(price))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -89,7 +90,7 @@ class ProductTest {
     void productPriceExceedsMax() {
         BigDecimal price = new BigDecimal(1000000000);
 
-        assertThatThrownBy(() -> createProduct(VALID_NAME, price))
+        assertThatThrownBy(() -> createProduct(price))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -116,7 +117,8 @@ class ProductTest {
     @DisplayName("상품이미지 파일 확장자는 jpg, jpeg, png, gif, svg만 가능")
     @ValueSource(strings = {"http://a.com/a.jpg", "http://a.com/a.jpeg", "http://a.com/a.png", "http://a.com/a.gif", "http://a.com/a.svg"})
     void productImageUrl_withValidExtension(String url) {
-        assertDoesNotThrow(() -> new Product(VALID_NAME, VALID_PRICE, url));
+        assertThatCode(() -> new Product(VALID_NAME, VALID_PRICE, url))
+                .doesNotThrowAnyException();
     }
 
     @ParameterizedTest
