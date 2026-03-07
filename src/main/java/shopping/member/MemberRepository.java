@@ -21,13 +21,10 @@ public class MemberRepository {
     }
 
     public Optional<Member> findByEmail(String email) {
-        return members.values().stream()
-                .filter(m -> m.getEmail().equals(email))
-                .findFirst();
+        return members.values().stream().filter(m -> m.getEmail().equals(email)).findFirst();
     }
 
     public boolean existsByEmail(String email) {
-        return members.values().stream()
-                .anyMatch(m -> m.getEmail().equals(email));
+        return members.values().stream().anyMatch(m -> m.getEmail().equals(email));
     }
 }

@@ -12,8 +12,7 @@ public class MemberRequest {
     @NotBlank
     private String password;
 
-    public MemberRequest() {
-    }
+    public MemberRequest() {}
 
     public MemberRequest(String email, String password) {
         this.email = email;

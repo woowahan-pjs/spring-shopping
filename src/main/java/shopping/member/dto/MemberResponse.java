@@ -4,8 +4,7 @@ public class MemberResponse {
 
     private String token;
 
-    public MemberResponse() {
-    }
+    public MemberResponse() {}
 
     public MemberResponse(String token) {
         this.token = token;
