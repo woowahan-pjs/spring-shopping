@@ -1,7 +1,9 @@
 package shopping.common.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import shopping.common.dto.ErrorResponse;
@@ -17,6 +19,18 @@ public class GlobalExceptionHandler {
         return ResponseEntity
             .status(e.getHttpStatus())
             .body(new ErrorResponse(e.getErrorMessage(), e.getErrorType()));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        String message = e.getBindingResult().getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .findFirst()
+                .orElse("잘못된 요청입니다");
+        log.error("Validation Exception occurred. message={}", message);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorResponse(message, ErrorType.INVALID_PARAMETER));
     }
 
     @ExceptionHandler(Exception.class)
