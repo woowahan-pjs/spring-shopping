@@ -16,4 +16,17 @@ public class ProductCreateRequest {
     private long price;
 
     private String imageUrl;
+
+    public ProductCreateRequest(String name, long price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public long getPrice() {
+        return price;
+    }
 }

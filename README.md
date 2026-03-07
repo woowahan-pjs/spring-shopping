@@ -76,11 +76,28 @@
 
 ## AI 활용 내용 기록
 ### 활용 방식
-- ChatGPT를 활용하여 JPA 엔티티 설계에 대한 설명을 참고하였다.
-- Wishlist와 WishlistItem 관계 설계 아이디어를 얻었다.
-- 생성된 코드는 그대로 사용하지 않고 프로젝트 구조에 맞게 수정하였다.
-### 코드 수정 내용
-#### 수정 전
+- 2026.03.03 ~ 2026.03.04
+  - ChatGPT를 활용하여 JPA 엔티티 설계에 대한 설명을 참고하였다.
+  - Wishlist와 WishlistItem 관계 설계 아이디어를 얻었다.
+  - 생성된 코드는 그대로 사용하지 않고 프로젝트 구조에 맞게 수정하였다.
+- 2026.03.05 ~ 2026.03.06
+  - 상품 엔티티 작성 시 개선 사항에 대한 설명을 참고하였다.
+  - 코드 작성 전 패키지 구조를 어떻게 만들지에 관한 설명을 참고하였다.
+  - 요구사항 구현을 위한 상품 이름 유효성 검사 및 예외처리 방법에 대한 설명을 참고하였다.
+- 2026.03.07
+  - 상품 이름 유효성 검사 및 예외 처리에 관한 실무에서 많이 쓰는 코드를 참고하였다.
+  - 
+
+### 기록 1
+#### 무엇을 학습했는지
+- JPA 엔티티 라이프사이클 콜백 어노테이션
+  - JPA 사용 시 DB insert 및 update 시점을 잡아 로직을 작성할 수 있음을 알게 되었다.
+    - @PrePersist
+      - insert 전 실행
+    - @PreUpdate
+      - update 전 실행
+#### 코드 수정 내용
+###### 수정 전
 ```java
     private LocalDateTime createdAt;
 
@@ -98,7 +115,7 @@
         this.createdAt = LocalDateTime.now();
     }
 ```
-#### 수정 후
+##### 수정 후
 ```java
 
   private LocalDateTime createdAt;
@@ -126,10 +143,48 @@
         this.imageUrl = imageUrl;
     }
 ```
-### 무엇을 학습했는지
-- JPA 엔티티 라이프사이클 콜백 어노테이션
-  - @PrePersist
-    - insert 전 실행
-  - @PreUpdate
-    - update 전 실행
 
+### 기록 2
+#### 무엇을 학습했는지
+- static factory method
+  - Product 엔티티에 생성자를 추가하려 할 때 생성자 추가보다 static factory method를 활용하는 방법이 있으며, 이로 인한 장점을 알게 되었다.
+    - 장점
+      - 메소드명을 통해 생성 의도를 나타낼 수 있다.
+        - Product.createForSale(name, price)
+        - Product.createForStock(name, price, stockQuantity)
+      - 생성 방식 변경 가능 -> 요구사항 변경 시 서비스 코드를 수정하지 않을 수 있다.
+        - 요구사항 변경 전
+          ```java
+            public static Product create(String name, long price) {
+                return new Product(name, 0, price, null);
+            }
+          ```
+         - 요구사항 변경 후 
+          ```java
+           public static Product create(String name, long price) {
+                return new Product(name, 10, price, DEFAULT_IMAGE);
+            }
+          ```
+#### 코드 수정 내용
+##### 수정 전
+```java
+   public Product(String name, int stockQuantity, long price, String imageUrl) {
+        this.name = name;
+        this.stockQuantity = stockQuantity;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+```
+##### 수정 후
+```java
+   public Product(String name, int stockQuantity, long price, String imageUrl) {
+        this.name = name;
+        this.stockQuantity = stockQuantity;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public static Product create(String name, long price) {
+        return new Product(name, 0, price, null);
+    }
+```
