@@ -27,6 +27,17 @@ class MemberServiceTest {
     }
 
     @Test
+    @DisplayName("존재하는 이메일은 예외가 발생.")
+    void invalidDuplicateEmail() {
+        Member member = new Member("test@gmail.com", "password");
+
+        service.register(member);
+
+        assertThatThrownBy(() -> service.register(member))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("잘못된 이메일은 예외가 발생한다.")
     void invalidEmail() {
         Member member = new Member("test", "password");

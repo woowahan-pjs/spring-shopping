@@ -19,6 +19,10 @@ public class MemberService {
             throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
         };
 
+        if (repository.findByEmail(member.getEmail()) != null) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
+
         member.changePassword(passwordEncryptor.encrypt(member.getPassword()));
 
         repository.save(member);
