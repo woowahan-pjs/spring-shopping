@@ -41,7 +41,7 @@ src/ (main app - Spring Boot)          module-product/         module-member/
 
 ## Code Rules
 
-- **No database yet** — only in-memory repositories (ConcurrentHashMap/HashMap). No JPA, JDBC, or MyBatis.
+- **No database yet** — only in-memory repositories using `ConcurrentHashMap`. No JPA, JDBC, or MyBatis.
 - **Domain modules are pure Java** — no Spring annotations (`@Service`, `@Repository`, `@Component`, etc.) and no Spring dependencies in their `build.gradle.kts`. They contain only POJOs, usecase interfaces, service implementations, and port interfaces.
 - **Main app module (`src/`)** contains controllers, DTOs, Spring `@Configuration` classes (that wire up module services as `@Bean`), and infrastructure adapters (concrete implementations of port interfaces with Spring annotations).
 - **Each usecase interface has 1–2 methods** (single responsibility). Create separate interfaces rather than combining operations.

@@ -23,4 +23,10 @@ public class JwtTokenProvider implements TokenProvider {
         return Jwts.builder().subject(email).issuedAt(now).expiration(expiration).signWith(key)
                 .compact();
     }
+
+    @Override
+    public String extractEmail(String token) {
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload()
+                .getSubject();
+    }
 }
