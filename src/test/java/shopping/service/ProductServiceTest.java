@@ -7,6 +7,7 @@ import shopping.domain.InMemoryProductRepository;
 import shopping.domain.Product;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -42,6 +43,29 @@ class ProductServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    @DisplayName("상품 조회한다")
+    void findProduct() {
+        Product product = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
+        Product saved = productService.save(product);
 
+        Product found = productService.findProduct(saved.getId());
 
+        assertThat(found).isNotNull();
+    }
+    @Test
+    @DisplayName("상품 목록을 조회한다")
+    void findProducts() {
+        Product product1 = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
+        Product product2 = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
+        Product product3 = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
+
+        productService.save(product1);
+        productService.save(product2);
+        productService.save(product3);
+
+        List<Product> products = productService.findProducts();
+
+        assertThat(products.size()).isEqualTo(3);
+    }
 }

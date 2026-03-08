@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import shopping.domain.Product;
 import shopping.domain.ProductRepository;
 
+import java.util.List;
+
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -21,5 +23,13 @@ public class ProductService {
         }
 
         return productRepository.save(product);
+    }
+
+    public Product findProduct(Long id) {
+        return productRepository.findById(id);
+    }
+
+    public List<Product> findProducts() {
+        return productRepository.findAll();
     }
 }
