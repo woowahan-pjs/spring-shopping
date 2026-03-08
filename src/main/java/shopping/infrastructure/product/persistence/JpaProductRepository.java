@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import shopping.domain.product.Product;
 import shopping.domain.repository.ProductRepository;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Repository
@@ -22,5 +23,10 @@ public class JpaProductRepository implements ProductRepository {
     @Override
     public Optional<Product> findById(Long id) {
         return repository.findById(id);
+    }
+
+    @Override
+    public Collection<Product> findAll() {
+        return repository.findAll();
     }
 }

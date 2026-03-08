@@ -1,6 +1,6 @@
 package shopping.application.product;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import shopping.domain.product.Price;
 import shopping.domain.product.Product;
@@ -10,6 +10,9 @@ import shopping.domain.product.exception.ProductNotFoundException;
 import shopping.domain.product.exception.ProfanityNameException;
 import shopping.domain.repository.ProductRepository;
 import shopping.dto.ProductRequest;
+import shopping.dto.ProductResponse;
+
+import java.util.List;
 
 @Service
 public class ProductService {
@@ -46,5 +49,20 @@ public class ProductService {
         Price newPrice = new Price(request.getPrice());
 
         product.update(newName, newPrice, request.getImageUrl());
+    }
+
+    @Transactional(readOnly = true)
+    public ProductResponse getProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+
+        return ProductResponse.from(product);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ProductResponse> getAllProducts() {
+        return productRepository.findAll().stream()
+                .map(ProductResponse::from)
+                .toList();
     }
 }
