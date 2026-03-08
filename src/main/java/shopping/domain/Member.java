@@ -16,7 +16,7 @@ public class Member {
         this.password = password;
     }
 
-    public void assignId(Long id) {
+    void assignId(Long id) {
         this.id = id;
     }
 
