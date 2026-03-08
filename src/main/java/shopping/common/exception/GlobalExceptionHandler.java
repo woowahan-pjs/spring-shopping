@@ -14,4 +14,11 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(new ErrorResponse("INVALID_PRODUCT_NAME", e.getMessage()));
     }
+
+    @ExceptionHandler(LoginFailedException.class)
+    public ResponseEntity<ErrorResponse> handleLoginFailed(LoginFailedException e) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse("LOGIN_FAILED", e.getMessage()));
+    }
 }
