@@ -35,6 +35,16 @@ public class Product {
         this.name = name;
     }
 
+    public void changePrice(BigDecimal price) {
+        validatePrice(price);
+        this.price = price;
+    }
+
+    public void changeImageUrl(String imageUrl) {
+        validateImageUrl(imageUrl);
+        this.imageUrl = imageUrl;
+    }
+
     public String getName() {
         return name;
     }

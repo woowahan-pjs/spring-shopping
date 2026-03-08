@@ -39,6 +39,28 @@ class ProductTest {
         assertThat(product.getName()).isEqualTo(name);
     }
 
+    @Test
+    @DisplayName("상품 가격은 변경이 된다")
+    void changePrice() {
+        BigDecimal changePrice = new BigDecimal(10000);
+        Product product = createProduct(VALID_PRICE);
+
+        product.changePrice(changePrice);
+
+        assertThat(product.getPrice()).isEqualTo(changePrice);
+    }
+
+    @Test
+    @DisplayName("상품 이미지 경로는 변경이 된다")
+    void changeImageUrl() {
+        String url = "https://www.naver.com/test.jpg";
+        Product product = createProduct(VALID_PRICE);
+
+        product.changeImageUrl(url);
+
+        assertThat(product.getImageUrl()).isEqualTo(url);
+    }
+
     @ParameterizedTest
     @DisplayName("상품명 길이는 최소 1자리 ~ 최대 15자리다")
     @ValueSource(strings = {"상", "상품입니다", "상품입니다상품입니다상품입니다"})
