@@ -7,15 +7,16 @@ public class Product {
     private long price;
     private String imageUrl;
 
-    public Product(Long id, ProductName name, long price, String imageUrl) {
-        this.id = id;
+    public Product(ProductName name, long price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public Product(ProductName name, long price, String imageUrl) {
-        this(null, name, price, imageUrl);
+    public void update(ProductName name, long price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
     }
 
     public Long getId() {

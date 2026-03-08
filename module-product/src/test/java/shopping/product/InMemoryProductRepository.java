@@ -2,29 +2,26 @@ package shopping.product;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.springframework.stereotype.Repository;
-
-@Repository
 public class InMemoryProductRepository implements ProductRepository {
 
-    private final Map<Long, Product> products = new ConcurrentHashMap<>();
-    private final AtomicLong sequence = new AtomicLong(0);
+    private final Map<Long, Product> store = new HashMap<>();
+    private final AtomicLong sequence = new AtomicLong(1);
 
     @Override
     public Product save(Product product) {
         if (product.getId() == null) {
-            long id = sequence.incrementAndGet();
+            Long id = sequence.getAndIncrement();
             setId(product, id);
-            products.put(id, product);
+            store.put(id, product);
             return product;
         }
-        products.put(product.getId(), product);
+        store.put(product.getId(), product);
         return product;
     }
 
@@ -40,16 +37,16 @@ public class InMemoryProductRepository implements ProductRepository {
 
     @Override
     public Optional<Product> findById(Long id) {
-        return Optional.ofNullable(products.get(id));
+        return Optional.ofNullable(store.get(id));
     }
 
     @Override
     public List<Product> findAll() {
-        return new ArrayList<>(products.values());
+        return new ArrayList<>(store.values());
     }
 
     @Override
     public void deleteById(Long id) {
-        products.remove(id);
+        store.remove(id);
     }
 }

@@ -1,0 +1,50 @@
+package shopping.wish;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.NoSuchElementException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import shopping.member.InMemoryMemberRepository;
+import shopping.member.Member;
+
+class AddWishServiceTest {
+
+    private InMemoryMemberRepository memberRepository;
+    private AddWishService service;
+
+    @BeforeEach
+    void setUp() {
+        memberRepository = new InMemoryMemberRepository();
+        service = new AddWishService(memberRepository);
+    }
+
+    @Test
+    void 위시리스트에_상품을_추가한다() {
+        Member member = memberRepository.save(new Member("test@test.com", "password"));
+
+        Wish wish = service.execute(member.getId(), 100L);
+
+        assertEquals(100L, wish.getProductId());
+        assertEquals(1, memberRepository.findById(member.getId()).orElseThrow().getWishes().size());
+    }
+
+    @Test
+    void 존재하지_않는_회원이면_예외가_발생한다() {
+        NoSuchElementException exception =
+                assertThrows(NoSuchElementException.class, () -> service.execute(999L, 100L));
+
+        assertEquals("회원을 찾을 수 없습니다.", exception.getMessage());
+    }
+
+    @Test
+    void 이미_추가된_상품이면_예외가_발생한다() {
+        Member member = memberRepository.save(new Member("test@test.com", "password"));
+        service.execute(member.getId(), 100L);
+
+        assertThrows(IllegalArgumentException.class, () -> service.execute(member.getId(), 100L));
+    }
+}

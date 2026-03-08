@@ -16,10 +16,9 @@ public class UpdateProductService implements UpdateProduct {
     @Override
     public Product execute(Long id, String name, long price, String imageUrl) {
         ProductName productName = productNameFactory.create(name);
-        if (productRepository.findById(id).isEmpty()) {
-            throw new NoSuchElementException("상품이 존재하지 않습니다.");
-        }
-        Product updated = new Product(id, productName, price, imageUrl);
-        return productRepository.save(updated);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
+        product.update(productName, price, imageUrl);
+        return productRepository.save(product);
     }
 }
