@@ -54,10 +54,12 @@ class WishControllerTest {
     void setUp() throws Exception {
         given(profanityChecker.containsProfanity(anyString())).willReturn(false);
 
-        memberJpaRepository.save(new MemberEntity("admin@test.com", passwordEncoder.encode("password123"), Role.ADMIN));
+        memberJpaRepository.save(
+            new MemberEntity("admin@test.com", passwordEncoder.encode("password123"), Role.ADMIN));
         adminToken = loginAndGetToken("admin@test.com", "password123");
 
-        memberJpaRepository.save(new MemberEntity("user@test.com", passwordEncoder.encode("password123"), Role.USER));
+        memberJpaRepository.save(
+            new MemberEntity("user@test.com", passwordEncoder.encode("password123"), Role.USER));
         userToken = loginAndGetToken("user@test.com", "password123");
 
         productId = createProduct("테스트상품", 10000, "https://example.com/image.jpg");
@@ -66,36 +68,36 @@ class WishControllerTest {
     private String loginAndGetToken(String email, String password) throws Exception {
         MemberLoginRequest loginRequest = new MemberLoginRequest(email, password);
         MvcResult result = mockMvc.perform(post("/api/members/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andReturn();
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequest)))
+            .andExpect(status().isOk())
+            .andReturn();
         return objectMapper.readTree(result.getResponse().getContentAsString())
-                .path("data").path("token").asText();
+            .path("data").path("token").asText();
     }
 
     private Long createProduct(String name, int price, String imageUrl) throws Exception {
         ProductCreateRequest request = new ProductCreateRequest(name, price, imageUrl);
         MvcResult result = mockMvc.perform(post("/api/products")
-                        .header("Authorization", "Bearer " + adminToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andReturn();
+                .header("Authorization", "Bearer " + adminToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andReturn();
         return objectMapper.readTree(result.getResponse().getContentAsString())
-                .path("data").path("id").asLong();
+            .path("data").path("id").asLong();
     }
 
     private Long addWish(Long productId) throws Exception {
         WishAddRequest request = new WishAddRequest(productId);
         MvcResult result = mockMvc.perform(post("/api/wishes")
-                        .header("Authorization", "Bearer " + userToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andReturn();
+                .header("Authorization", "Bearer " + userToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andReturn();
         return objectMapper.readTree(result.getResponse().getContentAsString())
-                .path("data").path("wishId").asLong();
+            .path("data").path("wishId").asLong();
     }
 
     // ===== 위시리스트 추가 =====
@@ -106,12 +108,12 @@ class WishControllerTest {
         WishAddRequest request = new WishAddRequest(productId);
 
         mockMvc.perform(post("/api/wishes")
-                        .header("Authorization", "Bearer " + userToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.wishId").isNotEmpty())
-                .andExpect(jsonPath("$.data.productId").value(productId));
+                .header("Authorization", "Bearer " + userToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.data.wishId").isNotEmpty())
+            .andExpect(jsonPath("$.data.productId").value(productId));
     }
 
     @Test
@@ -120,9 +122,9 @@ class WishControllerTest {
         WishAddRequest request = new WishAddRequest(productId);
 
         mockMvc.perform(post("/api/wishes")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isUnauthorized());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -131,10 +133,10 @@ class WishControllerTest {
         WishAddRequest request = new WishAddRequest(99999L);
 
         mockMvc.perform(post("/api/wishes")
-                        .header("Authorization", "Bearer " + userToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isNotFound());
+                .header("Authorization", "Bearer " + userToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -144,10 +146,10 @@ class WishControllerTest {
 
         WishAddRequest request = new WishAddRequest(productId);
         mockMvc.perform(post("/api/wishes")
-                        .header("Authorization", "Bearer " + userToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict());
+                .header("Authorization", "Bearer " + userToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isConflict());
     }
 
     @Test
@@ -156,10 +158,10 @@ class WishControllerTest {
         WishAddRequest request = new WishAddRequest(null);
 
         mockMvc.perform(post("/api/wishes")
-                        .header("Authorization", "Bearer " + userToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .header("Authorization", "Bearer " + userToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest());
     }
 
     // ===== 위시리스트 삭제 =====
@@ -170,17 +172,17 @@ class WishControllerTest {
         Long wishId = addWish(productId);
 
         mockMvc.perform(delete("/api/wishes/" + wishId)
-                        .header("Authorization", "Bearer " + userToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").value(wishId));
+                .header("Authorization", "Bearer " + userToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data").value(wishId));
     }
 
     @Test
     @DisplayName("존재하지 않는 위시를 삭제하면 404를 반환한다")
     void delete_notFound() throws Exception {
         mockMvc.perform(delete("/api/wishes/99999")
-                        .header("Authorization", "Bearer " + userToken))
-                .andExpect(status().isNotFound());
+                .header("Authorization", "Bearer " + userToken))
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -189,12 +191,13 @@ class WishControllerTest {
         Long wishId = addWish(productId);
 
         // 다른 유저 생성
-        memberJpaRepository.save(new MemberEntity("other@test.com", passwordEncoder.encode("password123"), Role.USER));
+        memberJpaRepository.save(
+            new MemberEntity("other@test.com", passwordEncoder.encode("password123"), Role.USER));
         String otherToken = loginAndGetToken("other@test.com", "password123");
 
         mockMvc.perform(delete("/api/wishes/" + wishId)
-                        .header("Authorization", "Bearer " + otherToken))
-                .andExpect(status().isNotFound());
+                .header("Authorization", "Bearer " + otherToken))
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -203,7 +206,7 @@ class WishControllerTest {
         Long wishId = addWish(productId);
 
         mockMvc.perform(delete("/api/wishes/" + wishId))
-                .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized());
     }
 
     // ===== 위시리스트 조회 =====
@@ -216,27 +219,27 @@ class WishControllerTest {
         addWish(productId2);
 
         mockMvc.perform(get("/api/wishes")
-                        .header("Authorization", "Bearer " + userToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").isArray())
-                .andExpect(jsonPath("$.data.length()").value(2));
+                .header("Authorization", "Bearer " + userToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data").isArray())
+            .andExpect(jsonPath("$.data.length()").value(2));
     }
 
     @Test
     @DisplayName("위시리스트가 비어있으면 빈 배열을 반환한다")
     void getAll_empty() throws Exception {
         mockMvc.perform(get("/api/wishes")
-                        .header("Authorization", "Bearer " + userToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").isArray())
-                .andExpect(jsonPath("$.data.length()").value(0));
+                .header("Authorization", "Bearer " + userToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data").isArray())
+            .andExpect(jsonPath("$.data.length()").value(0));
     }
 
     @Test
     @DisplayName("토큰 없이 위시리스트 조회 시 401을 반환한다")
     void getAll_unauthorized() throws Exception {
         mockMvc.perform(get("/api/wishes"))
-                .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -244,12 +247,13 @@ class WishControllerTest {
     void getAll_onlyMyWish() throws Exception {
         addWish(productId);
 
-        memberJpaRepository.save(new MemberEntity("other@test.com", passwordEncoder.encode("password123"), Role.USER));
+        memberJpaRepository.save(
+            new MemberEntity("other@test.com", passwordEncoder.encode("password123"), Role.USER));
         String otherToken = loginAndGetToken("other@test.com", "password123");
 
         mockMvc.perform(get("/api/wishes")
-                        .header("Authorization", "Bearer " + otherToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.length()").value(0));
+                .header("Authorization", "Bearer " + otherToken))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.length()").value(0));
     }
 }
