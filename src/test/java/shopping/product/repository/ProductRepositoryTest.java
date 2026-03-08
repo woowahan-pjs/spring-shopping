@@ -43,4 +43,22 @@ public class ProductRepositoryTest {
         assertThat(result.get().getName()).isEqualTo("아이폰");
         assertThat(result.get().getPrice()).isEqualTo(1_000_000);
     }
+
+    @Test
+    void 상품을_삭제한다() {
+
+        //given
+        Product product = Product.create("아이폰", 1_000_000);
+        productRepository.save(product);
+
+        Long productId = product.getId();
+
+        //when
+        productRepository.deleteById(productId);
+
+        //then
+        Optional<Product> result = productRepository.findById(productId);
+
+        assertThat(result).isEmpty();
+    }
 }
