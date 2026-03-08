@@ -45,11 +45,11 @@ class ProductServiceTest {
 
     @Test
     @DisplayName("상품 조회한다")
-    void findProduct() {
+    void findProductById() {
         Product product = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
         Product saved = productService.save(product);
 
-        Product found = productService.findProduct(saved.getId());
+        Product found = productService.findProductById(saved.getId());
 
         assertThat(found).isNotNull();
     }
@@ -67,5 +67,21 @@ class ProductServiceTest {
         List<Product> products = productService.findProducts();
 
         assertThat(products.size()).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("상품 정보를 변경한다")
+    void update() {
+        Product product = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
+        productService.save(product);
+
+        product.changeName("의자");
+        product.changePrice(BigDecimal.valueOf(10000));
+        productService.update(product);
+
+        Product find = productService.findProductById(product.getId());
+
+        assertThat(find.getName()).isEqualTo("의자");
+        assertThat(find.getPrice()).isEqualByComparingTo(BigDecimal.valueOf(10000));
     }
 }

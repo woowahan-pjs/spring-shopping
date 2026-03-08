@@ -1,6 +1,5 @@
 package shopping.service;
 
-import org.springframework.stereotype.Service;
 import shopping.domain.Product;
 import shopping.domain.ProductRepository;
 
@@ -17,19 +16,27 @@ public class ProductService {
     }
 
     public Product save(Product product) {
-        //비속어 검증.
-        if (profanityValidator.containsProfanity(product.getName())) {
-            throw new IllegalArgumentException("비속어가 포함되어 있습니다.");
-        }
+        validateProductName(product);
 
         return productRepository.save(product);
     }
 
-    public Product findProduct(Long id) {
+    public Product findProductById(Long id) {
         return productRepository.findById(id);
     }
 
     public List<Product> findProducts() {
         return productRepository.findAll();
+    }
+
+    public Product update(Product product) {
+        validateProductName(product);
+        return productRepository.update(product.getId(), product);
+    }
+
+    private void validateProductName(Product product) {
+        if (profanityValidator.containsProfanity(product.getName())) {
+            throw new IllegalArgumentException("비속어가 포함되어 있습니다.");
+        }
     }
 }
