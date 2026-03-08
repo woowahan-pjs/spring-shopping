@@ -13,7 +13,7 @@ class MemberTest {
     @Test
     @DisplayName("회원을 생성한다")
     void createMember() {
-        Member member = new Member("email", "password");
+        Member member = new Member("test@gmail.com", "password");
 
         assertThat(member).isNotNull();
     }
@@ -38,7 +38,7 @@ class MemberTest {
     @DisplayName("패스워드는 필수값이다")
     @NullAndEmptySource
     void invalidPassword(String password) {
-        assertThatThrownBy(() -> new Member("email", password))
+        assertThatThrownBy(() -> new Member("test@gmail.com", password))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -46,7 +46,7 @@ class MemberTest {
     @DisplayName("패스워드는 8~20자다.")
     @ValueSource(strings = {"12345678", "12345678901234567890"})
     void validPasswordLength(String password) {
-        assertThatCode(() -> new Member("email", password))
+        assertThatCode(() -> new Member("test@gmail.com", password))
                 .doesNotThrowAnyException();
     }
 
@@ -54,7 +54,7 @@ class MemberTest {
     @DisplayName("패스워드는 8~20자가 아니면 예외.")
     @ValueSource(strings = {"1234567", "123456789012345678901"})
     void invalidPasswordLength(String password) {
-        assertThatThrownBy(() -> new Member("email", password))
+        assertThatThrownBy(() -> new Member("test@gmail.com", password))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }
