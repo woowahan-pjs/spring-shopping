@@ -1,3 +1,5 @@
+jwt:
+  secret: Vn8t4CqWl0Jz0zF1c5Hn4Rk9p7YxM2eB6dLQy+3sUaI=
 spring:
   h2:
     console:
