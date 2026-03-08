@@ -7,6 +7,8 @@ import shopping.product.dto.ProductResponse;
 import shopping.product.dto.ProductUpdateRequest;
 import shopping.product.service.ProductService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/products")
 public class ProductController {
@@ -46,5 +48,13 @@ public class ProductController {
         productService.deleteProduct(productId);
 
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ProductResponse>> getProducts() {
+
+        List<ProductResponse> products = productService.getProduct();
+
+        return ResponseEntity.ok(products);
     }
 }

@@ -7,6 +7,7 @@ import shopping.product.dto.ProductUpdateRequest;
 import shopping.product.repository.ProductRepository;
 import shopping.product.validator.ProductNameValidator;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 public class ProductService {
@@ -52,5 +53,14 @@ public class ProductService {
                 .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
 
         productRepository.delete(product);
+    }
+
+    public List<ProductResponse> getProduct() {
+
+        List<Product> products = productRepository.findAll();
+
+        return products.stream()
+                .map(ProductResponse::from)
+                .toList();
     }
 }

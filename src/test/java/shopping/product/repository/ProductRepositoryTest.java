@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import shopping.product.domain.Product;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,5 +61,22 @@ public class ProductRepositoryTest {
         Optional<Product> result = productRepository.findById(productId);
 
         assertThat(result).isEmpty();
+    }
+
+    @Test
+    void 상품_목록을_조회한다() {
+
+        //given
+        Product product1 = Product.create("아이폰", 1_000_000);
+        Product product2 = Product.create("맥북", 2_000_000);
+
+        productRepository.save(product1);
+        productRepository.save(product2);
+
+        //when
+        List<Product> products = productRepository.findAll();
+
+        //then
+        assertThat(products).hasSize(2);
     }
 }
