@@ -13,11 +13,10 @@ import static org.assertj.core.api.Assertions.*;
 class WishlistItemServiceTest {
 
     private WishlistItemService service;
-    private ProductRepository productRepository;
 
     @BeforeEach
     void setUp() {
-        productRepository = new InMemoryProductRepository();
+        ProductRepository productRepository = new InMemoryProductRepository();
         service = new WishlistItemService(new InMemoryWishlistItemRepository(), productRepository);
 
         productRepository.save(new Product("피자", BigDecimal.ZERO, "http://a.com/a.jpg"));

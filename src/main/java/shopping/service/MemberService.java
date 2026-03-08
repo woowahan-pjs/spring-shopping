@@ -17,7 +17,7 @@ public class MemberService {
     public void register(Member member) {
         if (!emailFormatValidator.isValid(member.getEmail())) {
             throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
-        };
+        }
 
         if (repository.findByEmail(member.getEmail()) != null) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
