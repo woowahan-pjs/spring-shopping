@@ -34,9 +34,15 @@ public class ProductEntity extends BaseTimeEntity {
     }
 
     public void update(String name, Integer price, String imageUrl) {
-        if (name != null) this.name = name;
-        if (price != null) this.price = price;
-        if (imageUrl != null) this.imageUrl = imageUrl;
+        if (name != null) {
+            this.name = name;
+        }
+        if (price != null) {
+            this.price = price;
+        }
+        if (imageUrl != null) {
+            this.imageUrl = imageUrl;
+        }
     }
 
     public void delete() {
