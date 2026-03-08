@@ -3,6 +3,7 @@ package shopping.domain;
 import org.springframework.util.StringUtils;
 
 public class Member {
+    private Long id;
     private String email;
     private String password;
 
@@ -11,6 +12,14 @@ public class Member {
         validatedPassword(password);
         this.email = email;
         this.password = password;
+    }
+
+    public void assignId(Long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getEmail() {
