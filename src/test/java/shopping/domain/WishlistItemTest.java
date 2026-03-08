@@ -14,6 +14,8 @@ public class WishlistItemTest {
     void addWishlistItem() {
         Member member = createMember();
         Product product = createProduct();
+        member.assignId(1L);
+        product.assignId(1L);
 
         WishlistItem wishlistItem = new WishlistItem(member.getId(), product.getId());
 
