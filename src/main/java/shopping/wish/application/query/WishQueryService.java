@@ -1,16 +1,15 @@
 package shopping.wish.application.query;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.common.exception.ApiException;
-import shopping.common.exception.ErrorType;
-import shopping.product.domain.ProductErrorMessage;
 import shopping.product.domain.ProductEntity;
 import shopping.product.domain.ProductRepository;
 import shopping.wish.application.dto.WishGetResponse;
+import shopping.wish.domain.WishEntity;
 import shopping.wish.domain.WishRepository;
 
 @Service
@@ -22,12 +21,18 @@ public class WishQueryService {
     private final ProductRepository productRepository;
 
     public List<WishGetResponse> getAll(Long memberId) {
-        return wishRepository.findAllByMemberId(memberId).stream()
-                .map(wish -> {
-                    ProductEntity product = productRepository.findByIdNotDeleted(wish.getProductId())
-                            .orElseThrow(() -> new ApiException(ProductErrorMessage.NOT_FOUND.getDescription(), ErrorType.NO_RESOURCE, HttpStatus.NOT_FOUND));
-                    return WishGetResponse.of(wish, product);
-                })
-                .toList();
+        List<WishEntity> wishes = wishRepository.findAllByMemberId(memberId);
+        Map<Long, ProductEntity> productMap = getProductMap(wishes);
+        return wishes.stream()
+            .map(wish -> WishGetResponse.of(wish, productMap.get(wish.getProductId())))
+            .toList();
+    }
+
+    private Map<Long, ProductEntity> getProductMap(List<WishEntity> wishes) {
+        List<Long> productIds = wishes.stream()
+            .map(WishEntity::getProductId)
+            .toList();
+        return productRepository.findAllByIdsNotDeleted(productIds).stream()
+            .collect(Collectors.toMap(ProductEntity::getId, p -> p));
     }
 }

@@ -28,4 +28,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     public List<ProductEntity> findAllNotDeleted() {
         return productJpaRepository.findAllByDeletedFalse();
     }
+
+    @Override
+    public List<ProductEntity> findAllByIdsNotDeleted(List<Long> ids) {
+        return productJpaRepository.findAllByIdInAndDeletedFalse(ids);
+    }
 }
