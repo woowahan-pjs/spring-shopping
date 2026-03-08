@@ -23,4 +23,18 @@ public class MemberService {
 
         repository.save(member);
     }
+
+    public Member login(String email, String password) {
+        Member member = repository.findByEmail(email);
+
+        if (member == null) {
+            throw new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요");
+        }
+
+        if (!passwordEncryptor.matches(password, member.getPassword())) {
+            throw new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요");
+        }
+
+        return member;
+    }
 }
