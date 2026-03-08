@@ -3,20 +3,23 @@ package shopping.component;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.Field;
+import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class TokenStoreTest {
 
+    private AdjustableClock clock;
     private TokenStore tokenStore;
 
     @BeforeEach
     void setUp() {
-        tokenStore = new TokenStore();
+        clock = new AdjustableClock(Instant.now());
+        tokenStore = new TokenStore(clock);
     }
 
     @Test
@@ -44,9 +47,10 @@ class TokenStoreTest {
     }
 
     @Test
-    void findMemberId_만료된_토큰이면_null_반환() throws Exception {
+    void findMemberId_만료된_토큰이면_null_반환() {
         Long memberId = 1L;
-        String token = insertExpiredToken(memberId);
+        String token = tokenStore.save(memberId);
+        clock.advance(Duration.ofHours(1).plusSeconds(1));
 
         Long result = tokenStore.findMemberId(token);
 
@@ -54,68 +58,66 @@ class TokenStoreTest {
     }
 
     @Test
-    void findMemberId_만료된_토큰은_store에서_제거됨() throws Exception {
+    void findMemberId_만료된_토큰은_store에서_제거됨() {
         Long memberId = 1L;
-        String token = insertExpiredToken(memberId);
+        String token = tokenStore.save(memberId);
+        clock.advance(Duration.ofHours(1).plusSeconds(1));
 
         tokenStore.findMemberId(token);
-
         Long result = tokenStore.findMemberId(token);
+
         assertThat(result).isNull();
     }
 
     @Test
-    void findMemberId_만료_5분_전_토큰은_갱신됨() throws Exception {
+    void findMemberId_만료_5분_전_토큰은_갱신됨() {
         Long memberId = 1L;
-        String token = insertTokenExpiringIn(memberId, 299); // 4분 59초 후 만료
+        String token = tokenStore.save(memberId); // 만료: 현재 + 1시간
+        clock.advance(Duration.ofSeconds(3301));  // 만료까지 4분 59초 남음
 
-        tokenStore.findMemberId(token);
+        tokenStore.findMemberId(token); // 갱신 발생
 
-        Instant renewedExpiresAt = getExpiresAt(token);
-        assertThat(renewedExpiresAt).isAfter(Instant.now().plusSeconds(3500)); // 1시간으로 갱신됐는지 확인
+        clock.advance(Duration.ofSeconds(300));   // 원래 만료 시각 경과
+        Long result = tokenStore.findMemberId(token);
+        assertThat(result).isEqualTo(memberId);  // 갱신된 토큰은 여전히 유효
     }
 
     @Test
-    void findMemberId_만료_5분_이상_남은_토큰은_정상_통과() throws Exception {
+    void findMemberId_만료_5분_이상_남은_토큰은_정상_통과() {
         Long memberId = 1L;
-        String token = insertTokenExpiringIn(memberId, 301); // 5분 1초 후 만료
+        String token = tokenStore.save(memberId); // 만료: 현재 + 1시간
+        clock.advance(Duration.ofSeconds(3299));  // 만료까지 5분 1초 남음
 
         Long result = tokenStore.findMemberId(token);
 
         assertThat(result).isEqualTo(memberId);
     }
 
-    // 만료된 TokenEntry를 store에 직접 주입
-    @SuppressWarnings("unchecked")
-    private String insertExpiredToken(Long memberId) throws Exception {
-        return insertTokenExpiringIn(memberId, -1);
-    }
+    static class AdjustableClock extends Clock {
 
-    @SuppressWarnings("unchecked")
-    private String insertTokenExpiringIn(Long memberId, long secondsUntilExpiry) throws Exception {
-        Class<?> entryClass = Class.forName("shopping.component.TokenStore$TokenEntry");
-        var constructor = entryClass.getDeclaredConstructor(Long.class, Instant.class);
-        constructor.setAccessible(true);
-        Object entry = constructor.newInstance(memberId, Instant.now().plusSeconds(secondsUntilExpiry));
+        private Instant instant;
 
-        Field storeField = TokenStore.class.getDeclaredField("store");
-        storeField.setAccessible(true);
-        Map<String, Object> store = (Map<String, Object>) storeField.get(tokenStore);
+        AdjustableClock(Instant instant) {
+            this.instant = instant;
+        }
 
-        String token = "test-token-" + secondsUntilExpiry;
-        store.put(token, entry);
-        return token;
-    }
+        void advance(Duration duration) {
+            this.instant = this.instant.plus(duration);
+        }
 
-    @SuppressWarnings("unchecked")
-    private Instant getExpiresAt(String token) throws Exception {
-        Field storeField = TokenStore.class.getDeclaredField("store");
-        storeField.setAccessible(true);
-        Map<String, Object> store = (Map<String, Object>) storeField.get(tokenStore);
+        @Override
+        public ZoneOffset getZone() {
+            return ZoneOffset.UTC;
+        }
 
-        Object entry = store.get(token);
-        var expiresAtMethod = entry.getClass().getDeclaredMethod("expiresAt");
-        expiresAtMethod.setAccessible(true);
-        return (Instant) expiresAtMethod.invoke(entry);
+        @Override
+        public Clock withZone(ZoneId zone) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Instant instant() {
+            return instant;
+        }
     }
 }
