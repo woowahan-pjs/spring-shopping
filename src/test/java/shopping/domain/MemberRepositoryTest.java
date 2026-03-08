@@ -22,6 +22,16 @@ public class MemberRepositoryTest {
         assertThat(saved.getId()).isNotNull();
     }
 
+    @Test
+    @DisplayName("회원을 조회한다.")
+    void findById() {
+        Member saved = memberRepository.save(createMember());
+
+        Member found = memberRepository.findById(saved.getId());
+
+        assertThat(found).isNotNull();
+    }
+
     private Member createMember() {
         return new Member("email", "password");
     }
