@@ -34,7 +34,7 @@ public class WishController {
 		return ResponseEntity.ok().build();
 	}
 
-	@DeleteMapping("/delete")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Object> delete(@PathVariable Long id) {
 		wishService.delete(id);
 		return ResponseEntity.ok().build();
