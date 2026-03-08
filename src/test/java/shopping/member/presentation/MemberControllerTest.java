@@ -35,11 +35,11 @@ class MemberControllerTest {
         MemberSignUpRequest request = new MemberSignUpRequest("test@test.com", "password123");
 
         MvcResult result = mockMvc.perform(post("/api/members/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.data.token").isNotEmpty())
-                .andReturn();
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.data.token").isNotEmpty())
+            .andReturn();
     }
 
     @Test
@@ -48,13 +48,13 @@ class MemberControllerTest {
         MemberSignUpRequest request = new MemberSignUpRequest("duplicate@test.com", "password123");
 
         mockMvc.perform(post("/api/members/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(request)));
 
         mockMvc.perform(post("/api/members/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isConflict());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isConflict());
     }
 
     @Test
@@ -63,26 +63,27 @@ class MemberControllerTest {
         MemberSignUpRequest request = new MemberSignUpRequest("invalid-email", "password123");
 
         mockMvc.perform(post("/api/members/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isBadRequest());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("로그인 성공 시 토큰을 반환한다")
     void login_success() throws Exception {
-        MemberSignUpRequest signUpRequest = new MemberSignUpRequest("login@test.com", "password123");
+        MemberSignUpRequest signUpRequest = new MemberSignUpRequest("login@test.com",
+            "password123");
         mockMvc.perform(post("/api/members/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signUpRequest)));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(signUpRequest)));
 
         MemberLoginRequest loginRequest = new MemberLoginRequest("login@test.com", "password123");
 
         mockMvc.perform(post("/api/members/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.token").isNotEmpty());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequest)))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.token").isNotEmpty());
     }
 
     @Test
@@ -91,24 +92,25 @@ class MemberControllerTest {
         MemberLoginRequest request = new MemberLoginRequest("none@test.com", "password123");
 
         mockMvc.perform(post("/api/members/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
-                .andExpect(status().isUnauthorized());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isUnauthorized());
     }
 
     @Test
     @DisplayName("비밀번호가 틀리면 401을 반환한다")
     void login_wrongPassword() throws Exception {
-        MemberSignUpRequest signUpRequest = new MemberSignUpRequest("wrong@test.com", "password123");
+        MemberSignUpRequest signUpRequest = new MemberSignUpRequest("wrong@test.com",
+            "password123");
         mockMvc.perform(post("/api/members/register")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(signUpRequest)));
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsString(signUpRequest)));
 
         MemberLoginRequest loginRequest = new MemberLoginRequest("wrong@test.com", "wrongpassword");
 
         mockMvc.perform(post("/api/members/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isUnauthorized());
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(loginRequest)))
+            .andExpect(status().isUnauthorized());
     }
 }
