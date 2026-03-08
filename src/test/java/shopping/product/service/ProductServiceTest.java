@@ -13,6 +13,7 @@ import shopping.product.dto.ProductUpdateRequest;
 import shopping.product.repository.ProductRepository;
 import shopping.product.validator.ProductNameValidator;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -104,5 +105,25 @@ public class ProductServiceTest {
 
         //then
         verify(productRepository).delete(product);
+    }
+
+    @Test
+    void 상품_목록을_조회한다() {
+
+        //given
+        Product product1 = Product.create("아이폰", 1_000_000);
+        Product product2 = Product.create("맥북", 2_000_000);
+
+        given(productRepository.findAll())
+                .willReturn(List.of(product1, product2));
+
+        //when
+        List<ProductResponse> result = productService.getProduct();
+
+        //then
+        assertThat(result).hasSize(2);
+        assertThat(result.getFirst().getName()).isEqualTo("아이폰");
+
+        verify(productRepository).findAll();
     }
 }

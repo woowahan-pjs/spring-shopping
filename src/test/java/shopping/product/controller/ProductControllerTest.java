@@ -13,6 +13,8 @@ import shopping.product.dto.ProductResponse;
 import shopping.product.dto.ProductUpdateRequest;
 import shopping.product.service.ProductService;
 
+import java.util.List;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
@@ -52,7 +54,7 @@ public class ProductControllerTest {
     @Test
     void 특정_상품을_조회한다() throws Exception {
 
-        ProductResponse response = new ProductResponse(1L, "아이폰", 1_000_000);
+        ProductResponse response = new ProductResponse(1L, "아이폰", 1_000_000, "iphone.jpg");
 
         given(productService.getProduct(1L))
                 .willReturn(response);
@@ -87,5 +89,22 @@ public class ProductControllerTest {
                 .andExpect(status().isOk());
 
         verify(productService).deleteProduct(1L);
+    }
+
+    @Test
+    void 상품_목록을_조회한다() throws Exception {
+
+        List<ProductResponse> products = List.of(
+                new ProductResponse(1L, "아이폰", 1_000_000, "image.jpg"),
+                new ProductResponse(2L, "맥북", 2_000_000, "image2.jpg")
+        );
+
+        given(productService.getProduct()).willReturn(products);
+
+        mockMvc.perform(get("/api/products"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(2));  //응답 배열 크기
+
+        verify(productService).getProduct();
     }
 }
