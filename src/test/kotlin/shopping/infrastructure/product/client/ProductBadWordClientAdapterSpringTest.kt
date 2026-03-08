@@ -3,9 +3,12 @@ package shopping.infrastructure.product.client
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.extensions.spring.SpringExtension
 import io.kotest.matchers.shouldBe
+import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
+import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletAutoConfiguration
+import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration
+import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.context.annotation.Import
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,14 +16,23 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.reactive.function.client.WebClient
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@Import(ProductBadWordClientAdapterSpringTest.FakeProfanityController::class)
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = [
+        ProductBadWordClientAdapterSpringTest.FakeProfanityController::class,
+        ServletWebServerFactoryAutoConfiguration::class,
+        DispatcherServletAutoConfiguration::class,
+        WebMvcAutoConfiguration::class,
+        JacksonAutoConfiguration::class
+    ]
+)
 class ProductBadWordClientAdapterSpringTest(
     @LocalServerPort private val port: Int
 ) : BehaviorSpec({
 
     extension(SpringExtension)
 
+    // 테스트 대상 어댑터를 직접 생성 (Spring 빈으로 관리할 필요 없음)
     val webClient = WebClient.builder()
         .baseUrl("http://localhost:$port")
         .build()
@@ -29,7 +41,6 @@ class ProductBadWordClientAdapterSpringTest(
     given("비속어 확인을 위해 Spring 서버(Fake Controller)가 실행 중일 때") {
 
         `when`("텍스트에 '시발'이 포함되어 있으면") {
-            // "시발" -> URL 인코딩 시: %EC%8B%9C%EB%B0%9C
             val text = "시발"
             val result = productBadWordClientAdapter.containsProfanity(text)
 

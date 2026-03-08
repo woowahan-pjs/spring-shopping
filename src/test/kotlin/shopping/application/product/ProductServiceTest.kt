@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl
 import shopping.domain.product.Product
 import shopping.domain.product.ProductBadWordClient
 import shopping.domain.product.ProductRepository
+import shopping.support.config.jpa.BaseEntity
 import shopping.support.error.CoreException
 import java.math.BigDecimal
 
@@ -128,17 +129,15 @@ class ProductServiceTest : BehaviorSpec({
 
     given("상품을 삭제할 때") {
 
-        val product = Instancio.of(Product::class.java)
-            .set(field("id"), 1L)
-            .create()
+        val product = Instancio.create(Product::class.java)
 
         `when`("ID가 존재하면") {
-            every { productRepository.findById(1L) } returns product
-            every { productRepository.deleteById(1L) } returns Unit
+            every { productRepository.findById(any()) } returns product
+            every { productRepository.deleteById(any()) } returns Unit
 
             then("상품이 삭제된다") {
-                productService.delete(1L)
-                verify { productRepository.deleteById(1L) }
+                productService.delete(product.id)
+                verify { productRepository.deleteById(product.id) }
             }
         }
     }

@@ -7,6 +7,7 @@ import io.mockk.mockk
 import org.instancio.Instancio
 import org.instancio.Select.field
 import shopping.domain.member.Member
+import shopping.support.config.jpa.BaseEntity
 import shopping.interfaces.api.member.MemberV1Dto
 
 class MemberFacadeTest : FunSpec({
@@ -37,9 +38,7 @@ class MemberFacadeTest : FunSpec({
             email = "test@test.com",
             password = "password123"
         )
-        val member = Instancio.of(Member::class.java)
-            .set(field("id"), 1L)
-            .create()
+        val member = Instancio.create(Member::class.java)
         val token = "jwt-token"
 
         every { memberService.login(request.email, request.password) } returns member.id

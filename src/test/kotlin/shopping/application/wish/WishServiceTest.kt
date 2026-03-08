@@ -69,17 +69,15 @@ class WishServiceTest : BehaviorSpec({
         val wishId = 50L
 
         `when`("정상적으로 제거 요청하면") {
-            val wish = Instancio.of(Wish::class.java)
-                .set(field("id"), wishId)
-                .set(field("memberId"), memberId)
-                .create()
+            // ID를 직접 설정하는 대신 Instancio가 생성한 객체를 사용
+            val wish = Instancio.create(Wish::class.java)
 
             every { wishRepository.findByMemberId(memberId) } returns listOf(wish)
-            every { wishRepository.deleteById(wishId) } returns Unit
+            every { wishRepository.deleteById(any()) } returns Unit
 
             then("상품이 위시리스트에서 제거된다") {
-                wishService.removeWish(memberId, wishId)
-                verify { wishRepository.deleteById(wishId) }
+                wishService.removeWish(memberId, wish.id)
+                verify { wishRepository.deleteById(wish.id) }
             }
         }
 
@@ -100,10 +98,8 @@ class WishServiceTest : BehaviorSpec({
         val memberId = 1L
 
         `when`("조회 요청하면") {
-            val wishes = Instancio.ofList(Wish::class.java)
-                .size(3)
-                .set(field("memberId"), memberId)
-                .create()
+            // memberId를 생성자로 직접 주입하여 정확성 보장
+            val wishes = List(3) { Wish(memberId, it.toLong()) }
 
             every { wishRepository.findByMemberId(memberId) } returns wishes
 
