@@ -18,6 +18,9 @@ public class TokenStore {
 	}
 
 	public Long findMemberId(String token) {
+		if (token == null) {
+			return null;
+		}
 		return store.get(token);
 	}
 }
