@@ -23,7 +23,7 @@ public class Product {
 	protected Product() {
 	}
 
-	public Product(Long id, String name, Integer price, String imageUrl, Long createdBy,
+	private Product(Long id, String name, Integer price, String imageUrl, Long createdBy,
 		Long updatedBy,
 		LocalDateTime createdAt, LocalDateTime updatedAt) {
 		this.id = id;
