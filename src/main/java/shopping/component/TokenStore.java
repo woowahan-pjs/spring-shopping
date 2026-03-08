@@ -28,8 +28,10 @@ public class TokenStore {
 		}
 		TokenEntry entry = store.get(token);
 		if (entry == null || Instant.now().isAfter(entry.expiresAt())) {
-			store.remove(token);
-			return -1L;
+			return null;
+		}
+		if (Instant.now().isBefore(entry.expiresAt().minusSeconds(3000))) {
+			store.put(token, new TokenEntry(entry.memberId, Instant.now().plus(tokenTtl)));
 		}
 		return entry.memberId();
 	}
