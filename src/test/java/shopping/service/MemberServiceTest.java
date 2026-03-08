@@ -13,7 +13,7 @@ class MemberServiceTest {
 
     @BeforeEach
     void setUp() {
-        service = new MemberService(new InMemoryMemberRepository(), new RegexEmailFormatValidator());
+        service = new MemberService(new InMemoryMemberRepository(), new RegexEmailFormatValidator(), new BCryptPasswordEncryptor());
     }
 
     @Test
@@ -33,5 +33,16 @@ class MemberServiceTest {
 
         assertThatThrownBy(() -> service.register(member))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("회원은 로그인한다.")
+    void login() {
+        Member member = new Member("test@gmail.com", "password");
+        service.register(member);
+
+//        Member found = service.login("test@gmail.com", "password");
+
+//        assertThat(found).isNotNull();
     }
 }

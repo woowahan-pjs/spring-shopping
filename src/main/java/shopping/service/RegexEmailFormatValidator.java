@@ -1,7 +1,5 @@
 package shopping.service;
 
-import org.hibernate.validator.internal.constraintvalidators.bv.EmailValidator;
-
 import java.util.regex.Pattern;
 
 public class RegexEmailFormatValidator implements EmailFormatValidator {

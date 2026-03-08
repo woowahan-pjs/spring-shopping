@@ -20,12 +20,20 @@ public class Member {
         this.id = id;
     }
 
+    public void changePassword(String password) {
+        this.password = password;
+    }
+
     public Long getId() {
         return id;
     }
 
     public String getEmail() {
         return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 
     private void validatedEmail(String email) {
