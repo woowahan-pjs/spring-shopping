@@ -1,0 +1,38 @@
+= Spring Shopping API Guide
+:doctype: book
+:toc: left
+:toclevels: 2
+:sectlinks:
+:snippets: {snippets}
+
+== Member API
+
+=== Register
+
+operation::member-register[]
+
+=== Login
+
+operation::member-login[]
+
+== Product API
+
+=== Create
+
+operation::product-create[]
+
+=== Find by ID
+
+operation::product-find[]
+
+=== Find all
+
+operation::product-find-all[]
+
+=== Update
+
+operation::product-update[]
+
+=== Delete
+
+operation::product-delete[]
