@@ -23,8 +23,8 @@ public class JwtTokenProvider implements TokenProvider {
     private final long expirationMs;
 
     public JwtTokenProvider(
-            @Value("${jwt.secret}") String secret,
-            @Value("${jwt.expiration-ms}") long expirationMs
+        @Value("${jwt.secret}") String secret,
+        @Value("${jwt.expiration-ms}") long expirationMs
     ) {
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.expirationMs = expirationMs;
@@ -33,12 +33,12 @@ public class JwtTokenProvider implements TokenProvider {
     @Override
     public String generateToken(Long memberId, String role) {
         return Jwts.builder()
-                .subject(String.valueOf(memberId))
-                .claim(ROLE_CLAIM, role)
-                .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expirationMs))
-                .signWith(secretKey)
-                .compact();
+            .subject(String.valueOf(memberId))
+            .claim(ROLE_CLAIM, role)
+            .issuedAt(new Date())
+            .expiration(new Date(System.currentTimeMillis() + expirationMs))
+            .signWith(secretKey)
+            .compact();
     }
 
     @Override
@@ -54,12 +54,13 @@ public class JwtTokenProvider implements TokenProvider {
     private Claims parseClaims(String token) {
         try {
             return Jwts.parser()
-                    .verifyWith(secretKey)
-                    .build()
-                    .parseSignedClaims(token)
-                    .getPayload();
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
         } catch (JwtException | IllegalArgumentException e) {
-            throw new ApiException("유효하지 않은 토큰입니다", ErrorType.INVALID_TOKEN, HttpStatus.UNAUTHORIZED);
+            throw new ApiException("유효하지 않은 토큰입니다", ErrorType.INVALID_TOKEN,
+                HttpStatus.UNAUTHORIZED);
         }
     }
 }

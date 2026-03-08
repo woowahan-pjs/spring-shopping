@@ -22,19 +22,20 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(
+        MethodArgumentNotValidException e) {
         String message = extractFirstErrorMessage(e);
         log.error("Validation Exception occurred. message={}", message);
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ErrorResponse(message, ErrorType.INVALID_PARAMETER));
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new ErrorResponse(message, ErrorType.INVALID_PARAMETER));
     }
 
     private String extractFirstErrorMessage(MethodArgumentNotValidException e) {
         return e.getBindingResult().getFieldErrors().stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
-                .findFirst()
-                .orElse("잘못된 요청입니다");
+            .map(error -> error.getField() + ": " + error.getDefaultMessage())
+            .findFirst()
+            .orElse("잘못된 요청입니다");
     }
 
     @ExceptionHandler(Exception.class)
