@@ -100,9 +100,10 @@ class WishServiceTest : BehaviorSpec({
         val memberId = 1L
 
         `when`("조회 요청하면") {
-            val wishes = Instancio.of(Wish::class.java)
+            val wishes = Instancio.ofList(Wish::class.java)
+                .size(3)
                 .set(field("memberId"), memberId)
-                .createList(3)
+                .create()
 
             every { wishRepository.findByMemberId(memberId) } returns wishes
 
