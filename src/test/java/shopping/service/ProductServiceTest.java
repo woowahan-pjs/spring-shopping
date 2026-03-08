@@ -84,4 +84,17 @@ class ProductServiceTest {
         assertThat(find.getName()).isEqualTo("의자");
         assertThat(find.getPrice()).isEqualByComparingTo(BigDecimal.valueOf(10000));
     }
+
+    @Test
+    @DisplayName("상품을 삭제한다")
+    void delete() {
+        Product product = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
+        productService.save(product);
+
+        productService.deleteById(product.getId());
+
+        Product find = productService.findProductById(product.getId());
+
+        assertThat(find).isNull();
+    }
 }

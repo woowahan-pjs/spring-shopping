@@ -39,4 +39,8 @@ public class ProductService {
             throw new IllegalArgumentException("비속어가 포함되어 있습니다.");
         }
     }
+
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
+    }
 }
