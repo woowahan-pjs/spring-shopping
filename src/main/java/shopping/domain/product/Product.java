@@ -40,6 +40,12 @@ public class Product {
         return new Product(name, price, imageUrl);
     }
 
+    public void update(ProductName name, Price price, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     public Long getId() {
         return id;
     }

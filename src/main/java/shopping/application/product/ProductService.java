@@ -2,8 +2,11 @@ package shopping.application.product;
 
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import shopping.domain.product.Price;
 import shopping.domain.product.Product;
+import shopping.domain.product.ProductName;
 import shopping.domain.product.ProfanityChecker;
+import shopping.domain.product.exception.ProductNotFoundException;
 import shopping.domain.product.exception.ProfanityNameException;
 import shopping.domain.repository.ProductRepository;
 import shopping.dto.ProductRequest;
@@ -30,9 +33,18 @@ public class ProductService {
         return savedProduct.getId();
     }
 
-    private void validateProfanity(String name) {
-        if(profanityChecker.containsProfanity(name)) {
-            throw new IllegalArgumentException();
+    @Transactional
+    public void updateProduct(Long id, ProductRequest request) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+
+        if(profanityChecker.containsProfanity(request.getName())) {
+            throw new ProfanityNameException(request.getName());
         }
+
+        ProductName newName = new ProductName(request.getName());
+        Price newPrice = new Price(request.getPrice());
+
+        product.update(newName, newPrice, request.getImageUrl());
     }
 }
