@@ -1,4 +1,4 @@
-package shopping.product;
+package shopping;
 
 import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
 
@@ -10,8 +10,10 @@ import com.tngtech.archunit.lang.ArchCondition;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.SimpleConditionEvent;
+import shopping.product.ProductName;
+import shopping.product.ProductNameFactory;
 
-@AnalyzeClasses(packages = "shopping.product", importOptions = ImportOption.DoNotIncludeTests.class)
+@AnalyzeClasses(packages = "shopping", importOptions = ImportOption.DoNotIncludeTests.class)
 class ProductNameArchTest {
 
     @ArchTest
