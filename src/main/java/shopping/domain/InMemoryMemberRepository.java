@@ -16,7 +16,10 @@ public class InMemoryMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member findById(Long id) {
-        return memberMap.get(id);
+    public Member findByEmail(String email) {
+        return memberMap.values().stream()
+                .filter(m -> m.getEmail().equals(email))
+                .findFirst()
+                .orElse(null);
     }
 }

@@ -23,11 +23,11 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    @DisplayName("회원을 조회한다.")
-    void findById() {
+    @DisplayName("회원을 이메일로 조회한다.")
+    void findByEmail() {
         Member saved = memberRepository.save(createMember());
 
-        Member found = memberRepository.findById(saved.getId());
+        Member found = memberRepository.findByEmail(saved.getEmail());
 
         assertThat(found).isNotNull();
     }
