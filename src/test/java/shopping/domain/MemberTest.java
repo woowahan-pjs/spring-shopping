@@ -26,14 +26,6 @@ class MemberTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-
-    // 추후 Service 에서 체크.
-//    @Test
-//    @DisplayName("이메일 형식이 맞으면 통과")
-//    void validEmailFormat() {
-//        assertThatCode(() -> new Member("test@gmail.com", "password"))
-//                .doesNotThrowAnyException();
-//    }
     @ParameterizedTest
     @DisplayName("패스워드는 필수값이다")
     @NullAndEmptySource
