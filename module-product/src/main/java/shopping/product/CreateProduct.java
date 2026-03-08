@@ -2,5 +2,5 @@ package shopping.product;
 
 public interface CreateProduct {
 
-    Product execute(Product product);
+    Product execute(String name, long price, String imageUrl);
 }

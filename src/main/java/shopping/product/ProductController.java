@@ -35,7 +35,8 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<ProductResponse> create(@RequestBody ProductRequest request) {
-        Product product = createProduct.execute(request.toProduct());
+        Product product =
+                createProduct.execute(request.name(), request.price(), request.imageUrl());
         return ResponseEntity.created(URI.create("/api/products/" + product.getId()))
                 .body(ProductResponse.from(product));
     }
@@ -49,7 +50,8 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductResponse> update(@PathVariable Long id,
             @RequestBody ProductRequest request) {
-        Product product = updateProduct.execute(id, request.toProduct());
+        Product product =
+                updateProduct.execute(id, request.name(), request.price(), request.imageUrl());
         return ResponseEntity.ok(ProductResponse.from(product));
     }
 
