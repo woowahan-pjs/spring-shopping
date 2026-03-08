@@ -19,7 +19,8 @@ public class ProductDeleteUseCase {
     @Transactional
     public Long execute(Long productId) {
         ProductEntity product = productRepository.findByIdNotDeleted(productId)
-                .orElseThrow(() -> new ApiException(ProductErrorMessage.NOT_FOUND.getDescription(), ErrorType.NO_RESOURCE, HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException(ProductErrorMessage.NOT_FOUND.getDescription(),
+                ErrorType.NO_RESOURCE, HttpStatus.NOT_FOUND));
         product.delete();
         return product.getId();
     }

@@ -23,10 +23,12 @@ public class ProductUpdateUseCase {
     @Transactional
     public ProductUpdateResponse execute(Long productId, ProductUpdateRequest request) {
         if (request.name() != null && profanityChecker.containsProfanity(request.name())) {
-            throw new ApiException(ProductErrorMessage.PROFANITY_DETECTED.getDescription(), ErrorType.INVALID_PARAMETER, HttpStatus.BAD_REQUEST);
+            throw new ApiException(ProductErrorMessage.PROFANITY_DETECTED.getDescription(),
+                ErrorType.INVALID_PARAMETER, HttpStatus.BAD_REQUEST);
         }
         ProductEntity product = productRepository.findByIdNotDeleted(productId)
-                .orElseThrow(() -> new ApiException(ProductErrorMessage.NOT_FOUND.getDescription(), ErrorType.NO_RESOURCE, HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException(ProductErrorMessage.NOT_FOUND.getDescription(),
+                ErrorType.NO_RESOURCE, HttpStatus.NOT_FOUND));
         product.update(request.name(), request.price(), request.imageUrl());
         return ProductUpdateResponse.from(product);
     }

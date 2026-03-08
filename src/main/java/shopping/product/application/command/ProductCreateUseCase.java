@@ -23,9 +23,11 @@ public class ProductCreateUseCase {
     @Transactional
     public ProductCreateResponse execute(ProductCreateRequest request) {
         if (profanityChecker.containsProfanity(request.name())) {
-            throw new ApiException(ProductErrorMessage.PROFANITY_DETECTED.getDescription(), ErrorType.INVALID_PARAMETER, HttpStatus.BAD_REQUEST);
+            throw new ApiException(ProductErrorMessage.PROFANITY_DETECTED.getDescription(),
+                ErrorType.INVALID_PARAMETER, HttpStatus.BAD_REQUEST);
         }
-        ProductEntity product = new ProductEntity(request.name(), request.price(), request.imageUrl());
+        ProductEntity product = new ProductEntity(request.name(), request.price(),
+            request.imageUrl());
         return ProductCreateResponse.from(productRepository.save(product));
     }
 }

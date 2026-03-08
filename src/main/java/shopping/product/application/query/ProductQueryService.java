@@ -21,7 +21,8 @@ public class ProductQueryService {
     public ProductGetResponse getById(Long productId) {
         return productRepository.findByIdNotDeleted(productId)
             .map(ProductGetResponse::from)
-            .orElseThrow(() -> new ApiException(ProductErrorMessage.NOT_FOUND.getDescription(), ErrorType.NO_RESOURCE, HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException(ProductErrorMessage.NOT_FOUND.getDescription(),
+                ErrorType.NO_RESOURCE, HttpStatus.NOT_FOUND));
     }
 
     public List<ProductGetResponse> getAll() {

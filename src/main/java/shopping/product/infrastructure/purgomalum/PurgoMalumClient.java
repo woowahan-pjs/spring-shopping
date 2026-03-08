@@ -21,12 +21,13 @@ public class PurgoMalumClient implements ProfanityChecker {
     public boolean containsProfanity(String text) {
         try {
             String result = restClient.get()
-                    .uri(BASE_URL + "?text={text}", text)
-                    .retrieve()
-                    .body(String.class);
+                .uri(BASE_URL + "?text={text}", text)
+                .retrieve()
+                .body(String.class);
             return Boolean.parseBoolean(result);
         } catch (RestClientException e) {
-            throw new ApiException(ErrorType.EXTERNAL_API_ERROR.getDescription(), ErrorType.EXTERNAL_API_ERROR, HttpStatus.BAD_GATEWAY);
+            throw new ApiException(ErrorType.EXTERNAL_API_ERROR.getDescription(),
+                ErrorType.EXTERNAL_API_ERROR, HttpStatus.BAD_GATEWAY);
         }
     }
 }
