@@ -7,17 +7,17 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class MemberRepositoryTest {
-    private MemberRepository memberRepository;
+    private MemberRepository repository;
 
     @BeforeEach
     void setUp() {
-        memberRepository = new InMemoryMemberRepository();
+        repository = new InMemoryMemberRepository();
     }
 
     @Test
     @DisplayName("회원을 저장한다.")
     void save() {
-        Member saved = memberRepository.save(createMember());
+        Member saved = repository.save(createMember());
 
         assertThat(saved.getId()).isNotNull();
     }
@@ -25,9 +25,9 @@ public class MemberRepositoryTest {
     @Test
     @DisplayName("회원을 이메일로 조회한다.")
     void findByEmail() {
-        Member saved = memberRepository.save(createMember());
+        Member saved = repository.save(createMember());
 
-        Member found = memberRepository.findByEmail(saved.getEmail());
+        Member found = repository.findByEmail(saved.getEmail());
 
         assertThat(found).isEqualTo(saved);
     }
