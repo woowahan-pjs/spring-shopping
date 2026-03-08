@@ -15,7 +15,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public class AuditInformation {
+public abstract class AuditInformation {
 
     @CreatedBy
     @Comment("생성자")
