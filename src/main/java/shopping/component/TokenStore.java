@@ -30,7 +30,7 @@ public class TokenStore {
 		if (entry == null || Instant.now().isAfter(entry.expiresAt())) {
 			return null;
 		}
-		if (Instant.now().isBefore(entry.expiresAt().minusSeconds(3000))) {
+		if (Instant.now().isAfter(entry.expiresAt().minusSeconds(300))) {
 			store.put(token, new TokenEntry(entry.memberId, Instant.now().plus(tokenTtl)));
 		}
 		return entry.memberId();
