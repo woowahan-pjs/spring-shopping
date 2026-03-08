@@ -2,6 +2,8 @@ package shopping.component;
 
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,11 +11,14 @@ import java.util.concurrent.ConcurrentHashMap;
 @Component
 public class TokenStore {
 
-	private final Map<String, Long> store = new ConcurrentHashMap<>();
+	private record TokenEntry(Long memberId, Instant expiresAt) {}
+
+	private final Map<String, TokenEntry> store = new ConcurrentHashMap<>();
+	private final Duration tokenTtl = Duration.ofHours(1);
 
 	public String save(Long memberId) {
 		String token = UUID.randomUUID().toString();
-		store.put(token, memberId);
+		store.put(token, new TokenEntry(memberId, Instant.now().plus(tokenTtl)));
 		return token;
 	}
 
@@ -21,6 +26,11 @@ public class TokenStore {
 		if (token == null) {
 			return null;
 		}
-		return store.get(token);
+		TokenEntry entry = store.get(token);
+		if (entry == null || Instant.now().isAfter(entry.expiresAt())) {
+			store.remove(token);
+			return -1L;
+		}
+		return entry.memberId();
 	}
 }
