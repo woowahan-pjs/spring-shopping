@@ -25,6 +25,24 @@ public class WishlistItemTest {
         );
     }
 
+    @Test
+    @DisplayName("회원 아이디가 없으면 예외가 발생한다.")
+    void invalidMemberId() {
+        Product product = createProduct();
+
+        assertThatThrownBy(() -> new WishlistItem(null, product.getId()))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("상품 아이디가 없으면 예외가 발생한다.")
+    void invalidProductId() {
+        Member member = createMember();
+
+        assertThatThrownBy(() -> new WishlistItem(member.getId(), null))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
     private Member createMember() {
         return new Member("test@gmail.com", "password");
     }
