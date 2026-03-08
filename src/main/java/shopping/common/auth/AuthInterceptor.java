@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import shopping.common.exception.ApiException;
 import shopping.common.exception.ErrorType;
@@ -21,6 +22,15 @@ public class AuthInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+        if (!(handler instanceof HandlerMethod handlerMethod)) {
+            return true;
+        }
+
+        RoleRequired roleRequired = handlerMethod.getMethodAnnotation(RoleRequired.class);
+        if (roleRequired == null) {
+            return true;
+        }
+
         String token = extractToken(request);
         Long memberId = tokenProvider.extractMemberId(token);
         String role = tokenProvider.extractRole(token);
