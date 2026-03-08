@@ -19,7 +19,8 @@ public class WishDeleteUseCase {
     @Transactional
     public Long execute(Long memberId, Long wishId) {
         WishEntity wish = wishRepository.findByIdAndMemberId(wishId, memberId)
-                .orElseThrow(() -> new ApiException(WishErrorMessage.NOT_FOUND.getDescription(), ErrorType.NO_RESOURCE, HttpStatus.NOT_FOUND));
+            .orElseThrow(() -> new ApiException(WishErrorMessage.NOT_FOUND.getDescription(),
+                ErrorType.NO_RESOURCE, HttpStatus.NOT_FOUND));
         wishRepository.delete(wish);
         return wish.getId();
     }

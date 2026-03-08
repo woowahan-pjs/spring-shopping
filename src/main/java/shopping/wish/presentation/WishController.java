@@ -30,18 +30,18 @@ public class WishController {
     @RoleRequired(AuthRole.USER)
     @PostMapping
     public ResponseEntity<ApiResponse<WishAddResponse>> add(
-            @LoginMember Long memberId,
-            @Valid @RequestBody WishAddRequest request) {
+        @LoginMember Long memberId,
+        @Valid @RequestBody WishAddRequest request) {
         WishAddResponse response = wishAddUseCase.execute(memberId, request);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.of(HttpStatus.CREATED, response));
+            .body(ApiResponse.of(HttpStatus.CREATED, response));
     }
 
     @RoleRequired(AuthRole.USER)
     @DeleteMapping("/{wishId}")
     public ResponseEntity<ApiResponse<Long>> delete(
-            @LoginMember Long memberId,
-            @PathVariable Long wishId) {
+        @LoginMember Long memberId,
+        @PathVariable Long wishId) {
         Long response = wishDeleteUseCase.execute(memberId, wishId);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
@@ -49,7 +49,7 @@ public class WishController {
     @RoleRequired(AuthRole.USER)
     @GetMapping
     public ResponseEntity<ApiResponse<List<WishGetResponse>>> getAll(
-            @LoginMember Long memberId) {
+        @LoginMember Long memberId) {
         List<WishGetResponse> response = wishQueryService.getAll(memberId);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }

@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface WishJpaRepository extends JpaRepository<WishEntity, Long> {
+
     Optional<WishEntity> findByIdAndMemberId(Long id, Long memberId);
+
     List<WishEntity> findAllByMemberId(Long memberId);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
