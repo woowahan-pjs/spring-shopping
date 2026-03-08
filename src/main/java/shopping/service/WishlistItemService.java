@@ -21,6 +21,10 @@ public class WishlistItemService {
             throw new IllegalArgumentException("존재하지 않는 상품입니다.");
         }
 
+        if (wishlistItemRepository.existsByMemberIdAndProductId(wishlistItem.getMemberId(), wishlistItem.getProductId())) {
+            throw new IllegalArgumentException("이미 추가된 상품입니다.");
+        }
+
         wishlistItemRepository.save(wishlistItem);
     }
 

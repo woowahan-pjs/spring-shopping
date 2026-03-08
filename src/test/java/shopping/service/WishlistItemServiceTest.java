@@ -1,6 +1,5 @@
 package shopping.service;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +9,6 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class WishlistItemServiceTest {
 
@@ -36,8 +34,19 @@ class WishlistItemServiceTest {
     }
 
     @Test
+    @DisplayName("중복 상품을 추가하면 예외발생")
+    void addDuplicateWishlistItem() {
+        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
+
+        service.addWishlistItem(wishlistItem);
+
+        assertThatThrownBy(() -> service.addWishlistItem(wishlistItem))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     @DisplayName("존재하지 않은 상품을 추가한다")
-    void notFoundProduct() {
+    void addNotExistProduct() {
         WishlistItem wishlistItem = new WishlistItem(1L, 2L);
 
         assertThatThrownBy(() -> service.addWishlistItem(wishlistItem))
