@@ -13,6 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -622,7 +623,7 @@ class ProductControllerTest {
 
                     // when & then
                     mockMvc.perform(put("/api/products/{productId}", productId))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest());
                 }
 
                 @Test
@@ -634,11 +635,11 @@ class ProductControllerTest {
 
                     // when & then
                     mockMvc.perform(get("/api/products/{productId}", productId))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("상품 고유 ID는 0보다 큰 값이여야 합니다.")));
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem("상품 고유 ID는 0보다 큰 값이여야 합니다.")));
                 }
             }
 
@@ -655,25 +656,26 @@ class ProductControllerTest {
                     // given
                     final Long productId = 3L;
                     final String requestBody =
-                        """
+                            """
                         {
                           "name": "%s",
                           "price": "1650",
                           "imageUrl": "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg"
                         }
                         """
-                            .formatted(input);
+                                    .formatted(input);
 
                     // when & then
                     mockMvc.perform(
-                            put("/api/products/{productId}", productId)
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("상품명은 문자/숫자/공백과 특수문자 (, ), [, ], &, -, +, /, _, , 만 입력 가능하며 공백만은 불가합니다.")));
+                                    put("/api/products/{productId}", productId)
+                                            .content(requestBody)
+                                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem(
+                                                    "상품명은 문자/숫자/공백과 특수문자 (, ), [, ], &, -, +, /, _, , 만 입력 가능하며 공백만은 불가합니다.")));
                 }
 
                 @Test
@@ -685,25 +687,25 @@ class ProductControllerTest {
 
                     final String input = TestFixtureUtils.createStringWithLength(4);
                     final String requestBody =
-                        """
+                            """
                         {
                           "name": "%s",
                           "price": "1650",
                           "imageUrl": "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg"
                         }
                         """
-                            .formatted(input);
+                                    .formatted(input);
 
                     // when & then
                     mockMvc.perform(
-                            put("/api/products/{productId}", productId)
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("상품명은 최소 5자에서 최대 15자 까지 입력 가능합니다.")));
+                                    put("/api/products/{productId}", productId)
+                                            .content(requestBody)
+                                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem("상품명은 최소 5자에서 최대 15자 까지 입력 가능합니다.")));
                 }
 
                 @Test
@@ -715,25 +717,25 @@ class ProductControllerTest {
 
                     final String input = TestFixtureUtils.createStringWithLength(16);
                     final String requestBody =
-                        """
+                            """
                         {
                           "name": "%s",
                           "price": "1650",
                           "imageUrl": "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg"
                         }
                         """
-                            .formatted(input);
+                                    .formatted(input);
 
                     // when & then
                     mockMvc.perform(
-                            put("/api/products/{productId}", productId)
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("상품명은 최소 5자에서 최대 15자 까지 입력 가능합니다.")));
+                                    put("/api/products/{productId}", productId)
+                                            .content(requestBody)
+                                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem("상품명은 최소 5자에서 최대 15자 까지 입력 가능합니다.")));
                 }
 
                 @ParameterizedTest
@@ -745,25 +747,26 @@ class ProductControllerTest {
                     final Long productId = 3L;
 
                     final String requestBody =
-                        """
+                            """
                         {
                           "name": "%s",
                           "price": "1650",
                           "imageUrl": "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg"
                         }
                         """
-                            .formatted(input);
+                                    .formatted(input);
 
                     // when & then
                     mockMvc.perform(
-                            put("/api/products/{productId}", productId)
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("상품명은 문자/숫자/공백과 특수문자 (, ), [, ], &, -, +, /, _, , 만 입력 가능하며 공백만은 불가합니다.")));
+                                    put("/api/products/{productId}", productId)
+                                            .content(requestBody)
+                                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem(
+                                                    "상품명은 문자/숫자/공백과 특수문자 (, ), [, ], &, -, +, /, _, , 만 입력 가능하며 공백만은 불가합니다.")));
                 }
             }
 
@@ -780,21 +783,21 @@ class ProductControllerTest {
 
                     final String input = "가나디";
                     final String requestBody =
-                        """
+                            """
                         {
                           "name": "나na3()[]&-+/_",
                           "price": "%s",
                           "imageUrl": "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg"
                         }
                         """
-                            .formatted(input);
+                                    .formatted(input);
 
                     // when & then
                     mockMvc.perform(
-                            put("/api/products/{productId}", productId)
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                                    put("/api/products/{productId}", productId)
+                                            .content(requestBody)
+                                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest());
                 }
 
                 @Test
@@ -806,25 +809,25 @@ class ProductControllerTest {
 
                     final Long input = 0L;
                     final String requestBody =
-                        """
+                            """
                         {
                           "name": "나na3()[]&-+/_",
                           "price": "%s",
                           "imageUrl": "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg"
                         }
                         """
-                            .formatted(input);
+                                    .formatted(input);
 
                     // when & then
                     mockMvc.perform(
-                            put("/api/products/{productId}", productId)
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("가격은 1원 이상만 가능합니다.")));
+                                    put("/api/products/{productId}", productId)
+                                            .content(requestBody)
+                                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem("가격은 1원 이상만 가능합니다.")));
                 }
 
                 @Test
@@ -836,25 +839,25 @@ class ProductControllerTest {
 
                     final Long input = 100_000_000_000L;
                     final String requestBody =
-                        """
+                            """
                         {
                           "name": "나na3()[]&-+/_",
                           "price": "%s",
                           "imageUrl": "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg"
                         }
                         """
-                            .formatted(input);
+                                    .formatted(input);
 
                     // when & then
                     mockMvc.perform(
-                            put("/api/products/{productId}", productId)
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("가격은 99999999999원 이하만 가능합니다.")));
+                                    put("/api/products/{productId}", productId)
+                                            .content(requestBody)
+                                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem("가격은 99999999999원 이하만 가능합니다.")));
                 }
             }
 
@@ -871,25 +874,25 @@ class ProductControllerTest {
 
                     final String input = "https://";
                     final String requestBody =
-                        """
+                            """
                         {
                           "name": "나na3()[]&-+/_",
                           "price": "1650",
                           "imageUrl": "%s"
                         }
                         """
-                            .formatted(input);
+                                    .formatted(input);
 
                     // when & then
                     mockMvc.perform(
-                            put("/api/products/{productId}", productId)
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("이미지 URL은 최소 9자에서 최대 255자 까지 입력 가능합니다.")));
+                                    put("/api/products/{productId}", productId)
+                                            .content(requestBody)
+                                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem("이미지 URL은 최소 9자에서 최대 255자 까지 입력 가능합니다.")));
                 }
 
                 @Test
@@ -901,25 +904,25 @@ class ProductControllerTest {
 
                     final String input = "http://" + TestFixtureUtils.createStringWithLength(249);
                     final String requestBody =
-                        """
+                            """
                         {
                           "name": "나na3()[]&-+/_",
                           "price": "1650",
                           "imageUrl": "%s"
                         }
                         """
-                            .formatted(input);
+                                    .formatted(input);
 
                     // when & then
                     mockMvc.perform(
-                            put("/api/products/{productId}", productId)
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("이미지 URL은 최소 9자에서 최대 255자 까지 입력 가능합니다.")));
+                                    put("/api/products/{productId}", productId)
+                                            .content(requestBody)
+                                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem("이미지 URL은 최소 9자에서 최대 255자 까지 입력 가능합니다.")));
                 }
 
                 @Test
@@ -931,25 +934,25 @@ class ProductControllerTest {
 
                     final String input = TestFixtureUtils.createStringWithLength(20);
                     final String requestBody =
-                        """
+                            """
                             {
                               "name": "나na3()[]&-+/_",
                               "price": "1650",
                               "imageUrl": "%s"
                             }
                             """
-                            .formatted(input);
+                                    .formatted(input);
 
                     // when & then
                     mockMvc.perform(
-                            put("/api/products/{productId}", productId)
-                                .content(requestBody)
-                                .contentType(MediaType.APPLICATION_JSON))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("http:// 또는 https:// 형식만 입력 가능합니다.")));
+                                    put("/api/products/{productId}", productId)
+                                            .content(requestBody)
+                                            .contentType(MediaType.APPLICATION_JSON))
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem("http:// 또는 https:// 형식만 입력 가능합니다.")));
                 }
             }
         }
@@ -963,7 +966,7 @@ class ProductControllerTest {
             final Long productId = 3L;
 
             final String requestBody =
-                """
+                    """
                 {
                   "name": "GOOD WORD",
                   "price": "1650",
@@ -972,16 +975,19 @@ class ProductControllerTest {
                 """;
 
             willThrow(new NotFoundProductException())
-                .given(productService)
-                .modifyProduct(userId, productId, ConverterHelper.toDto(requestBody, ProductUpdateRequest.class));
+                    .given(productService)
+                    .modifyProduct(
+                            userId,
+                            productId,
+                            ConverterHelper.toDto(requestBody, ProductUpdateRequest.class));
 
             // when & then
             mockMvc.perform(
-                    put("/api/products/{productId}", productId)
-                        .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(jsonPath("$.detail").value("상품이 존재하지 않습니다."));
+                            put("/api/products/{productId}", productId)
+                                    .content(requestBody)
+                                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("상품이 존재하지 않습니다."));
         }
 
         @Test
@@ -993,7 +999,7 @@ class ProductControllerTest {
             final Long userId = 1L;
 
             final String requestBody =
-                """
+                    """
                 {
                   "name": "BAD WORD",
                   "price": "1650",
@@ -1002,16 +1008,19 @@ class ProductControllerTest {
                 """;
 
             willThrow(new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다."))
-                .given(productService)
-                .modifyProduct(userId, productId, ConverterHelper.toDto(requestBody, ProductUpdateRequest.class));
+                    .given(productService)
+                    .modifyProduct(
+                            userId,
+                            productId,
+                            ConverterHelper.toDto(requestBody, ProductUpdateRequest.class));
 
             // when & then
             mockMvc.perform(
-                    put("/api/products/{productId}", productId)
-                        .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(jsonPath("$.detail").value("상품명에 비속어가 포함되어 있습니다."));
+                            put("/api/products/{productId}", productId)
+                                    .content(requestBody)
+                                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("상품명에 비속어가 포함되어 있습니다."));
         }
 
         @Test
@@ -1021,7 +1030,7 @@ class ProductControllerTest {
             final Long productId = 3L;
 
             final String requestBody =
-                """
+                    """
                 {
                   "name": "GOOD WORD",
                   "price": "1650",
@@ -1030,16 +1039,16 @@ class ProductControllerTest {
                 """;
 
             given(
-                productService.registerProduct(
-                    ConverterHelper.toDto(requestBody, ProductSaveRequest.class)))
-                .willThrow(new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다."));
+                            productService.registerProduct(
+                                    ConverterHelper.toDto(requestBody, ProductSaveRequest.class)))
+                    .willThrow(new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다."));
 
             // when & then
             mockMvc.perform(
-                    put("/api/products/{productId}", productId)
-                        .content(requestBody)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                            put("/api/products/{productId}", productId)
+                                    .content(requestBody)
+                                    .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isOk());
         }
     }
 
@@ -1064,7 +1073,7 @@ class ProductControllerTest {
 
                     // when & then
                     mockMvc.perform(delete("/api/products/{productId}", productId))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest());
                 }
 
                 @Test
@@ -1076,11 +1085,11 @@ class ProductControllerTest {
 
                     // when & then
                     mockMvc.perform(delete("/api/products/{productId}", productId))
-                        .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                        .andExpect(
-                            jsonPath(
-                                "$.parameters[*].message",
-                                hasItem("상품 고유 ID는 0보다 큰 값이여야 합니다.")));
+                            .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                            .andExpect(
+                                    jsonPath(
+                                            "$.parameters[*].message",
+                                            hasItem("상품 고유 ID는 0보다 큰 값이여야 합니다.")));
                 }
             }
         }
@@ -1094,12 +1103,13 @@ class ProductControllerTest {
             final Long productId = 703L;
 
             willThrow(new ShoppingBusinessException("상품이 존재하지 않습니다."))
-                .given(productService).removeProduct(userId, productId);
+                    .given(productService)
+                    .removeProduct(userId, productId);
 
             // when & then
             mockMvc.perform(delete("/api/products/{productId}", productId))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(jsonPath("$.detail").value("상품이 존재하지 않습니다."));
+                    .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                    .andExpect(jsonPath("$.detail").value("상품이 존재하지 않습니다."));
         }
 
         @Test
@@ -1114,7 +1124,7 @@ class ProductControllerTest {
 
             // when & then
             mockMvc.perform(delete("/api/products/{productId}", productId))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                    .andExpect(MockMvcResultMatchers.status().isOk());
         }
     }
 
@@ -1133,29 +1143,37 @@ class ProductControllerTest {
             final String imageUrl = "http://com";
             final Pageable pageable = PageRequest.of(0, 20);
 
-            final ProductSearchRequest request = new ProductSearchRequest(name, Price.create(3000L), Price.create(5000L));
+            final ProductSearchRequest request =
+                    new ProductSearchRequest(name, Price.create(3000L), Price.create(5000L));
             given(productService.searchProduct(request, pageable))
-                .willReturn(new ProductsSearchResponse(
-                    List.of(new ProductResponse(productId, name, price, imageUrl)), pageable
-                ));
+                    .willReturn(
+                            new ProductsSearchResponse(
+                                    List.of(new ProductResponse(productId, name, price, imageUrl)),
+                                    pageable));
 
             // when
-            final MvcResult mvcResult = mockMvc.perform(get("/api/products")
-                    .queryParam("name", name)
-                    .queryParam("fromPrice", "3000"))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
+            final MvcResult mvcResult =
+                    mockMvc.perform(
+                                    get("/api/products")
+                                            .queryParam("name", name)
+                                            .queryParam("fromPrice", "3000"))
+                            .andExpect(MockMvcResultMatchers.status().isOk())
+                            .andReturn();
 
-            final ProductsSearchResponse response = ConverterHelper.toDto(mvcResult.getResponse().getContentAsString(), ProductsSearchResponse.class);
+            final ProductsSearchResponse response =
+                    ConverterHelper.toDto(
+                            mvcResult.getResponse().getContentAsString(),
+                            ProductsSearchResponse.class);
 
             // then
-            assertSoftly(it -> {
-                it.assertThat(response.products()).size().isEqualTo(1);
-                it.assertThat(response.products().get(0).productId()).isEqualTo(productId);
-                it.assertThat(response.products().get(0).name()).isEqualTo(name);
-                it.assertThat(response.products().get(0).price()).isEqualTo(price);
-                it.assertThat(response.products().get(0).imageUrl()).isEqualTo(imageUrl);
-            });
+            assertSoftly(
+                    it -> {
+                        it.assertThat(response.products()).size().isEqualTo(1);
+                        it.assertThat(response.products().get(0).productId()).isEqualTo(productId);
+                        it.assertThat(response.products().get(0).name()).isEqualTo(name);
+                        it.assertThat(response.products().get(0).price()).isEqualTo(price);
+                        it.assertThat(response.products().get(0).imageUrl()).isEqualTo(imageUrl);
+                    });
         }
     }
 }

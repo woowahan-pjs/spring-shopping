@@ -90,46 +90,54 @@ class ProductController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{productId}")
     @ApiResponses(
-        value = {
-            @ApiResponse(responseCode = "200", description = "상품 수정 성공"),
-            @ApiResponse(responseCode = "400", description = "입력 값이 문제, 상품이 없거나 비속어가 존재할 경우"),
-            @ApiResponse(responseCode = "401", description = "인증 정보가 없을 때"),
-            @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-        })
+            value = {
+                @ApiResponse(responseCode = "200", description = "상품 수정 성공"),
+                @ApiResponse(responseCode = "400", description = "입력 값이 문제, 상품이 없거나 비속어가 존재할 경우"),
+                @ApiResponse(responseCode = "401", description = "인증 정보가 없을 때"),
+                @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
+                @ApiResponse(responseCode = "500", description = "서버 오류")
+            })
     @Operation(summary = "상품 수정", description = "상품을 수정합니다.")
-    public void modifyProduct(@PathVariable @Min(value = 1, message = "상품 고유 ID는 0보다 큰 값이여야 합니다.") final Long productId, @AuthenticationPrincipal final UserPrincipal userPrincipal,
-        @RequestBody @Valid final ProductUpdateRequest request) {
+    public void modifyProduct(
+            @PathVariable @Min(value = 1, message = "상품 고유 ID는 0보다 큰 값이여야 합니다.")
+                    final Long productId,
+            @AuthenticationPrincipal final UserPrincipal userPrincipal,
+            @RequestBody @Valid final ProductUpdateRequest request) {
         productService.modifyProduct(userPrincipal.getId(), productId, request);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{productId}")
     @ApiResponses(
-        value = {
-            @ApiResponse(responseCode = "200", description = "상품 삭제 성공"),
-            @ApiResponse(responseCode = "400", description = "입력 값의 문제"),
-            @ApiResponse(responseCode = "401", description = "인증 정보가 없을 때"),
-            @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-        })
+            value = {
+                @ApiResponse(responseCode = "200", description = "상품 삭제 성공"),
+                @ApiResponse(responseCode = "400", description = "입력 값의 문제"),
+                @ApiResponse(responseCode = "401", description = "인증 정보가 없을 때"),
+                @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
+                @ApiResponse(responseCode = "500", description = "서버 오류")
+            })
     @Operation(summary = "상품 삭제", description = "상품을 삭제합니다.")
-    public void removeProduct(@PathVariable @Min(value = 1, message = "상품 고유 ID는 0보다 큰 값이여야 합니다.") final Long productId, @AuthenticationPrincipal final UserPrincipal userPrincipal) {
+    public void removeProduct(
+            @PathVariable @Min(value = 1, message = "상품 고유 ID는 0보다 큰 값이여야 합니다.")
+                    final Long productId,
+            @AuthenticationPrincipal final UserPrincipal userPrincipal) {
         productService.removeProduct(userPrincipal.getId(), productId);
     }
 
     @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     @GetMapping
     @ApiResponses(
-        value = {
-            @ApiResponse(responseCode = "201", description = "상품 검색 성공"),
-            @ApiResponse(responseCode = "400", description = "입력 값이 잘못 되었을 경우"),
-            @ApiResponse(responseCode = "401", description = "인증 정보가 없을 때"),
-            @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
-            @ApiResponse(responseCode = "500", description = "서버 오류")
-        })
+            value = {
+                @ApiResponse(responseCode = "201", description = "상품 검색 성공"),
+                @ApiResponse(responseCode = "400", description = "입력 값이 잘못 되었을 경우"),
+                @ApiResponse(responseCode = "401", description = "인증 정보가 없을 때"),
+                @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
+                @ApiResponse(responseCode = "500", description = "서버 오류")
+            })
     @Operation(summary = "상품 검색", description = "상품을 검색 합니다.")
-    public ProductsSearchResponse search(@Valid final ProductSearchRequest request, @PageableDefault @ParameterObject final Pageable pageable) {
+    public ProductsSearchResponse search(
+            @Valid final ProductSearchRequest request,
+            @PageableDefault @ParameterObject final Pageable pageable) {
         return productService.searchProduct(request, pageable);
     }
 }

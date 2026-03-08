@@ -1,6 +1,5 @@
 package shopping.product.domain;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import java.math.BigDecimal;
 
 import jakarta.persistence.Embeddable;
@@ -10,10 +9,11 @@ import jakarta.validation.constraints.DecimalMin;
 import org.springframework.util.ObjectUtils;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 @Embeddable
 public record Price(
-                @DecimalMin(value = "1", message = "가격은 {value}원 이상만 가능합니다.")
+        @DecimalMin(value = "1", message = "가격은 {value}원 이상만 가능합니다.")
                 @DecimalMax(value = "99999999999", message = "가격은 {value}원 이하만 가능합니다.")
                 BigDecimal value) {
 

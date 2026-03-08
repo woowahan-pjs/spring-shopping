@@ -17,10 +17,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
 import shopping.infra.client.purgomalum.PurgoMalumAdapter;
 import shopping.infra.exception.ShoppingBusinessException;
 import shopping.product.domain.NotFoundProductException;
@@ -148,18 +148,19 @@ class ProductServiceTest {
             // given
             final Long userId = 703L;
             final Long productId = 73L;
-            final ProductUpdateRequest request = new ProductUpdateRequest(
-                "ふろっこど～る なつめ",
-                Price.create(1650L),
-                "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg");
+            final ProductUpdateRequest request =
+                    new ProductUpdateRequest(
+                            "ふろっこど～る なつめ",
+                            Price.create(1650L),
+                            "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg");
 
             given(productRepository.findProductByIdAndUserIdAndIsUse(productId, userId, true))
-                .willReturn(Optional.empty());
+                    .willReturn(Optional.empty());
 
             // when & then
             assertThatThrownBy(() -> productService.modifyProduct(userId, productId, request))
-                .isInstanceOf(NotFoundProductException.class)
-                .hasMessage("상품이 존재하지 않습니다.");
+                    .isInstanceOf(NotFoundProductException.class)
+                    .hasMessage("상품이 존재하지 않습니다.");
         }
 
         @Test
@@ -168,20 +169,23 @@ class ProductServiceTest {
             // given
             final Long userId = 703L;
             final Long productId = 73L;
-            final ProductUpdateRequest request = new ProductUpdateRequest(
-                "ふろっこど～る なつめ",
-                Price.create(1650L),
-                "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg");
+            final ProductUpdateRequest request =
+                    new ProductUpdateRequest(
+                            "ふろっこど～る なつめ",
+                            Price.create(1650L),
+                            "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg");
 
-            final Product expectedProduct = ProductFixture.fixture(productId, "안녕하세요", Price.create(3000L), "http://hello.world");
+            final Product expectedProduct =
+                    ProductFixture.fixture(
+                            productId, "안녕하세요", Price.create(3000L), "http://hello.world");
             given(productRepository.findProductByIdAndUserIdAndIsUse(productId, userId, true))
-                .willReturn(Optional.of(expectedProduct));
+                    .willReturn(Optional.of(expectedProduct));
             given(purgoMalumAdapter.isProfanity(any(String.class))).willReturn(true);
 
             // when & then
             assertThatThrownBy(() -> productService.modifyProduct(userId, productId, request))
-                .isInstanceOf(ShoppingBusinessException.class)
-                .hasMessage("상품명에 비속어가 포함되어 있습니다.");
+                    .isInstanceOf(ShoppingBusinessException.class)
+                    .hasMessage("상품명에 비속어가 포함되어 있습니다.");
         }
 
         @Test
@@ -193,26 +197,28 @@ class ProductServiceTest {
             final String name = "안녕하세요";
             final Price price = Price.create(3000L);
             final String imageUrl = "http://hello.world";
-            final ProductUpdateRequest request = new ProductUpdateRequest(
-                "ふろっこど～る なつめ",
-                Price.create(1650L),
-                "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg");
+            final ProductUpdateRequest request =
+                    new ProductUpdateRequest(
+                            "ふろっこど～る なつめ",
+                            Price.create(1650L),
+                            "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg");
 
             final Product product = ProductFixture.fixture(productId, name, price, imageUrl);
             given(productRepository.findProductByIdAndUserIdAndIsUse(productId, userId, true))
-                .willReturn(Optional.of(product));
+                    .willReturn(Optional.of(product));
             given(purgoMalumAdapter.isProfanity(any(String.class))).willReturn(false);
 
             // when
             productService.modifyProduct(userId, productId, request);
 
             // then
-            assertSoftly(it -> {
-                it.assertThat(product.getId()).isEqualTo(productId);
-                it.assertThat(product.getName()).isEqualTo(name);
-                it.assertThat(product.getPrice()).isEqualTo(price);
-                it.assertThat(product.getImageUrl()).isEqualTo(imageUrl);
-            });
+            assertSoftly(
+                    it -> {
+                        it.assertThat(product.getId()).isEqualTo(productId);
+                        it.assertThat(product.getName()).isEqualTo(name);
+                        it.assertThat(product.getPrice()).isEqualTo(price);
+                        it.assertThat(product.getImageUrl()).isEqualTo(imageUrl);
+                    });
         }
     }
 
@@ -228,12 +234,12 @@ class ProductServiceTest {
             final Long productId = 73L;
 
             given(productRepository.findProductByIdAndUserIdAndIsUse(productId, userId, true))
-                .willReturn(Optional.empty());
+                    .willReturn(Optional.empty());
 
             // when & then
             assertThatThrownBy(() -> productService.removeProduct(userId, productId))
-                .isInstanceOf(NotFoundProductException.class)
-                .hasMessage("상품이 존재하지 않습니다.");
+                    .isInstanceOf(NotFoundProductException.class)
+                    .hasMessage("상품이 존재하지 않습니다.");
         }
 
         @Test
@@ -243,9 +249,10 @@ class ProductServiceTest {
             final Long userId = 703L;
             final Long productId = 73L;
 
-            final Product product = ProductFixture.fixture(productId, "안녕하세요", Price.create(3000L), "http://");
+            final Product product =
+                    ProductFixture.fixture(productId, "안녕하세요", Price.create(3000L), "http://");
             given(productRepository.findProductByIdAndUserIdAndIsUse(productId, userId, true))
-                .willReturn(Optional.of(product));
+                    .willReturn(Optional.of(product));
 
             // when
             productService.removeProduct(userId, productId);
@@ -267,23 +274,34 @@ class ProductServiceTest {
                 final Price price = Price.create(3500L);
                 final String imageUrl = "http://com";
                 final Pageable pageable = PageRequest.of(0, 20);
-                final ProductSearchRequest request = new ProductSearchRequest(name, Price.create(3000L), Price.create(3500L));
+                final ProductSearchRequest request =
+                        new ProductSearchRequest(name, Price.create(3000L), Price.create(3500L));
 
-                final List<Product> expectedProducts = List.of(ProductFixture.fixture(productId, name, price, imageUrl));
-                given(productRepository.search(request.name(), request.fromPrice(), request.toPrice(), pageable))
-                    .willReturn(new PageImpl<>(expectedProducts, pageable, expectedProducts.size()));
+                final List<Product> expectedProducts =
+                        List.of(ProductFixture.fixture(productId, name, price, imageUrl));
+                given(
+                                productRepository.search(
+                                        request.name(),
+                                        request.fromPrice(),
+                                        request.toPrice(),
+                                        pageable))
+                        .willReturn(
+                                new PageImpl<>(
+                                        expectedProducts, pageable, expectedProducts.size()));
 
                 // when
-                final ProductsSearchResponse products = productService.searchProduct(request, pageable);
+                final ProductsSearchResponse products =
+                        productService.searchProduct(request, pageable);
                 final ProductResponse response = products.products().get(0);
 
                 // then
-                assertSoftly(it -> {
-                    it.assertThat(response.productId()).isEqualTo(productId);
-                    it.assertThat(response.name()).isEqualTo(name);
-                    it.assertThat(response.price()).isEqualTo(price);
-                    it.assertThat(response.imageUrl()).isEqualTo(imageUrl);
-                });
+                assertSoftly(
+                        it -> {
+                            it.assertThat(response.productId()).isEqualTo(productId);
+                            it.assertThat(response.name()).isEqualTo(name);
+                            it.assertThat(response.price()).isEqualTo(price);
+                            it.assertThat(response.imageUrl()).isEqualTo(imageUrl);
+                        });
             }
         }
     }
