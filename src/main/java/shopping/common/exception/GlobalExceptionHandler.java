@@ -21,4 +21,11 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(new ErrorResponse("LOGIN_FAILED", e.getMessage()));
     }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExists(EmailAlreadyExistsException e) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse("EMAIL_ALREADY_EXISTS", e.getMessage()));
+    }
 }
