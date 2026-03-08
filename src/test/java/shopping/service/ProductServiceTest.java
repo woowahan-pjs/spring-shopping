@@ -19,7 +19,7 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        productService = new ProductService(new InMemoryProductRepository(), new PurgoMalumValidator());
+        productService = new ProductService(new InMemoryProductRepository(), new FakeProfanityValidator());
     }
 
     @Test
