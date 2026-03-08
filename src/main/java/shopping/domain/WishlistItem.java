@@ -1,6 +1,7 @@
 package shopping.domain;
 
 public class WishlistItem {
+    private Long id;
     private Long memberId;
     private Long productId;
 
@@ -9,6 +10,14 @@ public class WishlistItem {
         validateProductId(productId);
         this.memberId = memberId;
         this.productId = productId;
+    }
+
+    void assignId(long id) {
+        this.id = id;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Long getMemberId() {
@@ -30,5 +39,4 @@ public class WishlistItem {
             throw new IllegalArgumentException("상품 아이디는 필수입니다.");
         }
     }
-
 }
