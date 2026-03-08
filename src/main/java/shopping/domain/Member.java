@@ -2,6 +2,8 @@ package shopping.domain;
 
 import org.springframework.util.StringUtils;
 
+import java.util.Objects;
+
 public class Member {
     private Long id;
     private String email;
@@ -40,5 +42,17 @@ public class Member {
         if (password.length() < 8 || password.length() > 20) {
             throw new IllegalArgumentException("비밀번호는 8 ~ 20 자리로 입력해주세요");
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(id, member.id) && Objects.equals(email, member.email) && Objects.equals(password, member.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, email, password);
     }
 }

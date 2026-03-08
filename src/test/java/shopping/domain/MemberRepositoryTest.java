@@ -29,10 +29,10 @@ public class MemberRepositoryTest {
 
         Member found = memberRepository.findByEmail(saved.getEmail());
 
-        assertThat(found).isNotNull();
+        assertThat(found).isEqualTo(saved);
     }
 
     private Member createMember() {
-        return new Member("email", "password");
+        return new Member("test@gmail.com", "password");
     }
 }
