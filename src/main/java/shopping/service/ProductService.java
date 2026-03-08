@@ -54,6 +54,7 @@ public class ProductService {
 
 	@Transactional
 	public void updateProduct(UpdateProductRequestDto requestDto) {
+		productNameValidator.validate(requestDto.getName());
 		Product product = productRepository.findById(requestDto.getId())
 			.orElseThrow(() -> new NotFoundException(CustomExceptionEnum.NOT_EXIST_PRODUCT));
 		Long memberId = MemberContext.getMemberId();
