@@ -32,6 +32,6 @@ public class InMemoryWishlistItemRepository implements WishlistItemRepository {
     @Override
     public boolean existsByMemberIdAndProductId(long memberId, long productId) {
         return wisilistItemMap.values().stream()
-                .allMatch(w -> w.getMemberId().equals(memberId) && w.getProductId().equals(productId));
+                .anyMatch(w -> w.getMemberId().equals(memberId) && w.getProductId().equals(productId));
     }
 }

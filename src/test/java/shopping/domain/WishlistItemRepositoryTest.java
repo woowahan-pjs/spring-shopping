@@ -12,7 +12,7 @@ class WishlistItemRepositoryTest {
     @BeforeEach
     void setUp() {
         repository = new InMemoryWishlistItemRepository();
-    };
+    }
 
     @Test
     @DisplayName("위시리스트를 저장한다")
@@ -44,7 +44,7 @@ class WishlistItemRepositoryTest {
 
         repository.deleteById(wishlistItem.getId());
 
-        assertThat(repository.findAllByMemberId(wishlistItem.getId()).size()).isEqualTo(0);
+        assertThat(repository.findAllByMemberId(memberId).size()).isEqualTo(0);
     }
 
     @Test
