@@ -35,6 +35,7 @@ public class WishService {
 	}
 
 	public void addWish(Long productId) {
+		productService.findProduct(productId);
 		Wish wish = Wish.of(MemberContext.getMemberId(), productId);
 		wishRepository.save(wish);
 	}
