@@ -1,10 +1,12 @@
 package shopping.service;
 
+import org.springframework.stereotype.Service;
 import shopping.domain.Product;
 import shopping.domain.ProductRepository;
 
 import java.util.List;
 
+@Service
 public class ProductService {
 
     private final ProductRepository productRepository;

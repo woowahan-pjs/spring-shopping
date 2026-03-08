@@ -1,11 +1,14 @@
 package shopping.domain;
 
+import org.springframework.stereotype.Component;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Component
 public class InMemoryProductRepository implements ProductRepository {
     private final Map<Long, Product> productMap = new HashMap<>();
     private final AtomicLong idSequence = new AtomicLong(1L);

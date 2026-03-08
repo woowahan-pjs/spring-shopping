@@ -10,4 +10,10 @@ public class ProductFixture {
     public static Product createProduct() {
         return new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
     }
+
+    public static Product createWithId(Long id) {
+        Product product = createProduct();
+        product.assignId(id);
+        return product;
+    }
 }
