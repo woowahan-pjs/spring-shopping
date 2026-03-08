@@ -1,19 +1,17 @@
 package shopping.service;
 
 import org.springframework.stereotype.Service;
-import shopping.domain.InMemoryProductRepository;
 import shopping.domain.Product;
 import shopping.domain.ProductRepository;
 
-@Service
 public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProfanityValidator profanityValidator;
 
-    public ProductService() {
-        this.productRepository = new InMemoryProductRepository();
-        this.profanityValidator = new PurgoMalumValidator();
+    public ProductService(ProductRepository productRepository, ProfanityValidator profanityValidator) {
+        this.productRepository = productRepository;
+        this.profanityValidator = profanityValidator;
     }
 
     public Product save(Product product) {

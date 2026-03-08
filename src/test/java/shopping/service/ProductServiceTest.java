@@ -3,6 +3,7 @@ package shopping.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import shopping.domain.InMemoryProductRepository;
 import shopping.domain.Product;
 
 import java.math.BigDecimal;
@@ -18,7 +19,7 @@ class ProductServiceTest {
 
     @BeforeEach
     void setUp() {
-        productService = new ProductService();
+        productService = new ProductService(new InMemoryProductRepository(), new PurgoMalumValidator());
     }
 
     @Test
