@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import shopping.domain.*;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,5 +42,16 @@ class WishlistItemServiceTest {
 
         assertThatThrownBy(() -> service.addWishlistItem(wishlistItem))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    @DisplayName("위시리스트를 조회한다.")
+    void findAllByMemberId() {
+        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
+        service.addWishlistItem(wishlistItem);
+
+        List<WishlistItem> items = service.findWishlistItems(1L);
+
+        assertThat(items.size()).isEqualTo(1);
     }
 }

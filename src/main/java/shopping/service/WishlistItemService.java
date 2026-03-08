@@ -4,6 +4,8 @@ import shopping.domain.ProductRepository;
 import shopping.domain.WishlistItem;
 import shopping.domain.WishlistItemRepository;
 
+import java.util.List;
+
 public class WishlistItemService {
 
     private final WishlistItemRepository wishlistItemRepository;
@@ -20,5 +22,9 @@ public class WishlistItemService {
         }
 
         wishlistItemRepository.save(wishlistItem);
+    }
+
+    public List<WishlistItem> findWishlistItems(long memberId) {
+        return wishlistItemRepository.findAllByMemberId(memberId);
     }
 }
