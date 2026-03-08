@@ -18,6 +18,6 @@
 
 ### 위시리스트 API
 
-- [] `POST /api/wishes` — 위시리스트 상품 추가
-- [] `DELETE /api/wishes/{wishId}` — 위시리스트 상품 삭제
-- [] `GET /api/wishes` — 위시리스트 상품 조회
+- [x] `POST /api/wishes` — 위시리스트 상품 추가
+- [x] `DELETE /api/wishes/{wishId}` — 위시리스트 상품 삭제
+- [x] `GET /api/wishes` — 위시리스트 상품 조회

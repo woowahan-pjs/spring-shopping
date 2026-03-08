@@ -23,4 +23,11 @@ class WishRepositoryImpl(
         return wishJpaRepository.existsByMemberIdAndProductId(memberId, productId)
     }
 
+    override fun save(wish: Wish): Wish {
+        return wishJpaRepository.save(wish)
+    }
+
+    override fun deleteById(id: Long) {
+        wishJpaRepository.deleteById(id)
+    }
 }
