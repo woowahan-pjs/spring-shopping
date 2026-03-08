@@ -17,6 +17,7 @@ import org.hibernate.annotations.Comment;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shopping.infra.exception.ShoppingBusinessException;
 import shopping.infra.orm.AuditInformation;
 
 @Getter
@@ -39,5 +40,20 @@ public class WishList extends AuditInformation {
 
     public static WishList generate() {
         return new WishList();
+    }
+
+    /**
+     * 지정된 wishListItemId를 사용하여 위시 리스트에서 해당 항목을 비활성화합니다. 항목이 존재하지 않을 경우 예외를 발생시킵니다.
+     *
+     * @param wishListItemId 비활성화할 WishListItem의 고유 ID입니다.
+     */
+    public void removeItem(final Long wishListItemId) {
+        final WishListItem item =
+                items.stream()
+                        .filter(it -> it.getId().equals(wishListItemId))
+                        .findFirst()
+                        .orElseThrow(() -> new ShoppingBusinessException("존재하지 않는 위시 리스트 입니다."));
+
+        item.remove();
     }
 }

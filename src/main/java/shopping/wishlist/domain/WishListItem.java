@@ -47,4 +47,8 @@ public class WishListItem extends AuditInformation {
     @Convert(converter = BooleanYnConverter.class)
     @Column(name = "use_yn", nullable = false, columnDefinition = "char(1)")
     private Boolean isUse;
+
+    public void remove() {
+        this.isUse = false;
+    }
 }

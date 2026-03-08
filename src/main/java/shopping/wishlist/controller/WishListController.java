@@ -1,9 +1,13 @@
 package shopping.wishlist.controller;
 
+import jakarta.validation.constraints.Min;
+
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +35,7 @@ class WishListController {
     @GetMapping
     @ApiResponses(
             value = {
-                @ApiResponse(responseCode = "200", description = "상품 조회 성공"),
+                @ApiResponse(responseCode = "200", description = "위시 리스트 조회 성공"),
                 @ApiResponse(responseCode = "401", description = "인증 정보가 없을 때"),
                 @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
                 @ApiResponse(responseCode = "500", description = "서버 오류")
@@ -40,5 +44,23 @@ class WishListController {
     public WishListResponse getWishList(
             @AuthenticationPrincipal final UserPrincipal userPrincipal) {
         return wishListService.getWishList(userPrincipal.getId());
+    }
+
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @DeleteMapping("/{wishId}")
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "위시 리스트 항목 삭제 성공"),
+                @ApiResponse(responseCode = "400", description = "입력 값이 잘못 되었거나, 항목이 없는 경우"),
+                @ApiResponse(responseCode = "401", description = "인증 정보가 없을 때"),
+                @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
+                @ApiResponse(responseCode = "500", description = "서버 오류")
+            })
+    @Operation(summary = "위시 리스트 항목 삭제", description = "등록한 위시 리스트 항목을 삭제 합니다.")
+    public void removeWishList(
+            @AuthenticationPrincipal final UserPrincipal userPrincipal,
+            @PathVariable @Min(value = 1, message = "위시 리스트 항목 고유 ID는 0보다 큰 값이여야 합니다.")
+                    final Long wishId) {
+        wishListService.removeWishList(userPrincipal.getId(), wishId);
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
+import shopping.infra.exception.ShoppingBusinessException;
 import shopping.wishlist.domain.WishList;
 import shopping.wishlist.dto.WishListResponse;
 import shopping.wishlist.repository.WishListRepository;
@@ -26,5 +27,21 @@ public class WishListService {
                 wishListRepository.findByWishList(userId).orElse(WishList.generate());
 
         return WishListResponse.from(userId, wishList);
+    }
+
+    /**
+     * 특정 회원의 위시 리스트에서 지정된 항목을 비활성화합니다. 항목이 존재하지 않을 경우 예외를 발생시킵니다.
+     *
+     * @param userId 위시 리스트를 소유한 회원의 고유 ID입니다.
+     * @param wishListItemId 비활성화할 WishListItem의 고유 ID입니다.
+     */
+    @Transactional
+    public void removeWishList(final Long userId, final Long wishListItemId) {
+        final WishList wishList =
+                wishListRepository
+                        .findByWishList(userId)
+                        .orElseThrow(() -> new ShoppingBusinessException("등록된 위시 리스트가 존재하지 않습니다."));
+
+        wishList.removeItem(wishListItemId);
     }
 }
