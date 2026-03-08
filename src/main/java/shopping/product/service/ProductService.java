@@ -41,8 +41,16 @@ public class ProductService {
         productNameValidator.validate(request.getName());
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
+                .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
 
         product.update(request.getName(), request.getPrice(), request.getImageUrl());
+    }
+
+    public void deleteProduct(Long productId) {
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
+
+        productRepository.delete(product);
     }
 }

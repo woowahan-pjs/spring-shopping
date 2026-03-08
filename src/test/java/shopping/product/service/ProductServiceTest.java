@@ -89,4 +89,20 @@ public class ProductServiceTest {
 
         verify(productNameValidator).validate("아이폰16");
     }
+
+    @Test
+    void 상품을_삭제한다() {
+
+        //given
+        Product product  = Product.create("아이폰", 1_000_000);
+
+        given(productRepository.findById(1L))
+                .willReturn(Optional.of(product));
+
+        //when
+        productService.deleteProduct(1L);
+
+        //then
+        verify(productRepository).delete(product);
+    }
 }

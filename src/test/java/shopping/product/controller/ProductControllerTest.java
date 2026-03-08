@@ -19,6 +19,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Mockito.verify;
@@ -77,5 +78,14 @@ public class ProductControllerTest {
                 .andExpect(status().isOk());
 
         verify(productService).updateProduct(eq(1L), any());
+    }
+
+    @Test
+    void 상품을_삭제한다() throws Exception {
+
+        mockMvc.perform(delete("/api/products/1"))
+                .andExpect(status().isOk());
+
+        verify(productService).deleteProduct(1L);
     }
 }
