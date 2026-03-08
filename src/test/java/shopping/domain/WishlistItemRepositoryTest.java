@@ -24,6 +24,16 @@ class WishlistItemRepositoryTest {
         assertThat(saved.getId()).isNotNull();
     }
 
+    @Test
+    @DisplayName("위시리스트를 조회한다")
+    void findAllByMemberId() {
+        Long memberId = 1L;
+        repository.save(new WishlistItem(memberId, 1L));
+        repository.save(new WishlistItem(memberId, 2L));
+        repository.save(new WishlistItem(memberId, 3L));
+
+        assertThat(repository.findAllByMemberId(memberId).size()).isEqualTo(3);
+    }
 
 
 }

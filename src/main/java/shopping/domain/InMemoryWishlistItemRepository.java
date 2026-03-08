@@ -1,6 +1,7 @@
 package shopping.domain;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -14,5 +15,12 @@ public class InMemoryWishlistItemRepository implements WishlistItemRepository {
         wishlistItem.assignId(id);
         wisilistItemMap.put(id, wishlistItem);
         return wishlistItem;
+    }
+
+    @Override
+    public List<WishlistItem> findAllByMemberId(Long memberId) {
+        return wisilistItemMap.values().stream()
+                .filter(w -> w.getMemberId().equals(memberId))
+                .toList();
     }
 }
