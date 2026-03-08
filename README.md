@@ -6,12 +6,13 @@
 ```
 1. 상품
 ```
-- [ ] 상품을 조회
-- [ ] 상품을 추가
-  - [ ] 이름, 가격, 이미지 URL을 입력받아 상품을 등록 
+- [x] 상품을 조회
+- [x] 상품을 추가
+  - [x] 이름, 가격, 이미지 URL을 입력받아 상품을 등록 
   - [x] 상품명 길이는 최대 15자까지 입력 가능
   - [x] 상품명 아래 특수 문자만 사용 가능:  `( ), [ ], +, -, &, /, _`
-  - [ ] 상품명에는 비속어가 포함될 수 없음([PurgoMalum](https://www.purgomalum.com/) API: 비속어 검사)
+  - [x] 상품명에는 비속어가 포함될 수 없음([PurgoMalum](https://www.purgomalum.com/) API: 비속어 검사)
+  - [x] 상품 가격은 0 보다 작을 수 없음
 - [ ] 상품을 수정
 - [ ] 상품을 삭제
 
@@ -40,11 +41,14 @@
 src/main/java/com/shop
 │
 ├── domain
+│   ├── common
+│   │   └── exception: DomainException
 │   ├── user
 │   │   ├── Entity: User, Password
 │   │   └── Repository Interface: UserRepository
 │   ├── product
-│   │   ├── Entity: Product, ProductName
+│   │   ├── exception: ProductNameBlankException, ProductNameInvalidCharacterException, ProductNameLengthExceededException
+│   │   ├── Entity: Product, ProductName, ProfanityChecker
 │   │   ├── Service: ProfanityChecker
 │   │   └── Repository Interface: ProductRepository
 │   └── wishlist
@@ -55,7 +59,8 @@ src/main/java/com/shop
 │   │   ├── Service: LoginService, RegistrationService
 │   │   └── DTO: LoginRequest, TokenResponse
 │   ├── product
-│   │   └── Service: ProductCommandService
+│   │   ├── Service: ProductCommandService
+│   │   └── DTO: ProductRequest
 │   └── wishlist
 │       └── Service: WishListService
 │
