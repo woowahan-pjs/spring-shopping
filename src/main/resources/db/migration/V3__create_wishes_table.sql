@@ -5,5 +5,5 @@ CREATE TABLE wishes
     product_id BIGINT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY uq_member_product (member_id, product_id)
+    CONSTRAINT uq_member_product UNIQUE (member_id, product_id)
 );
