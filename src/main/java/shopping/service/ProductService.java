@@ -60,7 +60,6 @@ public class ProductService {
 		product.update(requestDto.getName(), requestDto.getPrice(), requestDto.getImageUrl(), memberId);
 	}
 
-	@Transactional
 	public void deleteProduct(Long id) {
 		productRepository.deleteById(id);
 	}
