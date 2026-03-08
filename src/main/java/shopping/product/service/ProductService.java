@@ -3,6 +3,7 @@ package shopping.product.service;
 import shopping.product.domain.Product;
 import shopping.product.dto.ProductCreateRequest;
 import shopping.product.dto.ProductResponse;
+import shopping.product.dto.ProductUpdateRequest;
 import shopping.product.repository.ProductRepository;
 import shopping.product.validator.ProductNameValidator;
 
@@ -33,5 +34,15 @@ public class ProductService {
                 .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
 
         return ProductResponse.from(product);
+    }
+
+    public void updateProduct(Long productId, ProductUpdateRequest request) {
+
+        productNameValidator.validate(request.getName());
+
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
+
+        product.update(request.getName(), request.getPrice(), request.getImageUrl());
     }
 }

@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shopping.product.dto.ProductCreateRequest;
 import shopping.product.dto.ProductResponse;
+import shopping.product.dto.ProductUpdateRequest;
 import shopping.product.service.ProductService;
 
 @RestController
@@ -29,5 +30,13 @@ public class ProductController {
         ProductResponse response = productService.getProduct(productId);
 
         return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{productId}")
+    public ResponseEntity<Void> updateProduct(@PathVariable Long productId, @RequestBody ProductUpdateRequest request) {
+
+        productService.updateProduct(productId, request);
+
+        return ResponseEntity.ok().build();
     }
 }
