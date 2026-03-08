@@ -3,6 +3,7 @@ package shopping.member.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import shopping.auth.JwtProvider;
+import shopping.common.exception.EmailAlreadyExistsException;
 import shopping.common.exception.LoginFailedException;
 import shopping.member.domain.Member;
 import shopping.member.dto.AuthResponse;
@@ -24,6 +25,10 @@ public class MemberService {
     }
 
     public AuthResponse register(RegisterRequest request) {
+
+        if (memberRepository.existsByEmail(request.getEmail())) {
+            throw new EmailAlreadyExistsException();
+        }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
 
