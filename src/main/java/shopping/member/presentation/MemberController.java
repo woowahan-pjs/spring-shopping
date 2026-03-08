@@ -25,14 +25,17 @@ public class MemberController {
     private final MemberSignUpUseCase memberSignUpUseCase;
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<MemberLoginResponse>> login(@Valid @RequestBody MemberLoginRequest request) {
+    public ResponseEntity<ApiResponse<MemberLoginResponse>> login(
+        @Valid @RequestBody MemberLoginRequest request) {
         MemberLoginResponse response = memberLoginUseCase.execute(request);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<MemberSignUpResponse>> register(@Valid @RequestBody MemberSignUpRequest request) {
+    public ResponseEntity<ApiResponse<MemberSignUpResponse>> register(
+        @Valid @RequestBody MemberSignUpRequest request) {
         MemberSignUpResponse response = memberSignUpUseCase.execute(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.of(HttpStatus.CREATED, response));
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ApiResponse.of(HttpStatus.CREATED, response));
     }
 }

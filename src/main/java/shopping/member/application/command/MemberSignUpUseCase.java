@@ -26,11 +26,13 @@ public class MemberSignUpUseCase {
     @Transactional
     public MemberSignUpResponse execute(MemberSignUpRequest request) {
         memberRepository.findByEmail(request.email()).ifPresent(m -> {
-            throw new ApiException(ALREADY_EXISTS_EMAIL.getDescription(), ErrorType.INVALID_PARAMETER, HttpStatus.CONFLICT);
+            throw new ApiException(ALREADY_EXISTS_EMAIL.getDescription(),
+                ErrorType.INVALID_PARAMETER, HttpStatus.CONFLICT);
         });
 
         String encodedPassword = passwordEncoder.encode(request.password());
-        MemberEntity member = memberRepository.save(new MemberEntity(request.email(), encodedPassword));
+        MemberEntity member = memberRepository.save(
+            new MemberEntity(request.email(), encodedPassword));
         String token = tokenProvider.generateToken(member.getId(), member.getRole().name());
         return new MemberSignUpResponse(token);
     }

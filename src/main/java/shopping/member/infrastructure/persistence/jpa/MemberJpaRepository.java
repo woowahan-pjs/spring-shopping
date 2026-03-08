@@ -6,5 +6,6 @@ import shopping.member.domain.MemberEntity;
 import java.util.Optional;
 
 public interface MemberJpaRepository extends JpaRepository<MemberEntity, Long> {
+
     Optional<MemberEntity> findByEmail(String email);
 }
