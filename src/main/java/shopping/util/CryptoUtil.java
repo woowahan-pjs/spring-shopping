@@ -1,12 +1,12 @@
 package shopping.util;
 
+import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
 
 public class CryptoUtil {
 
-	private static final String SECRET_KEY = "shopping-secret-key-1234-5678-90";
+	private static final String SECRET_KEY = "shopping-secret-key-1234-5678-90"; // 프로퍼티로 주입시켜야 하지만 과제 수행 목적으로 코드에 남겨둠
 	private static final String ALGORITHM = "AES";
 
 	public static String encrypt(String plainText) {
