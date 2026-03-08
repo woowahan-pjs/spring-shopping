@@ -2,6 +2,7 @@ package shopping.controller;
 
 import java.util.List;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,12 +44,12 @@ public class ProductController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Object> update(UpdateProductRequestDto requestDto) {
+	public ResponseEntity<Object> update(@RequestBody UpdateProductRequestDto requestDto) {
 		productService.updateProduct(requestDto);
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/delete")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<Object> delete(@PathVariable Long id) {
 		productService.deleteProduct(id);
 		return ResponseEntity.ok().build();
