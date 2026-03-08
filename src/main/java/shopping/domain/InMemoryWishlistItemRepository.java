@@ -23,4 +23,15 @@ public class InMemoryWishlistItemRepository implements WishlistItemRepository {
                 .filter(w -> w.getMemberId().equals(memberId))
                 .toList();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        wisilistItemMap.remove(id);
+    }
+
+    @Override
+    public boolean existsByMemberIdAndProductId(long memberId, long productId) {
+        return wisilistItemMap.values().stream()
+                .allMatch(w -> w.getMemberId().equals(memberId) && w.getProductId().equals(productId));
+    }
 }

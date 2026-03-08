@@ -35,5 +35,33 @@ class WishlistItemRepositoryTest {
         assertThat(repository.findAllByMemberId(memberId).size()).isEqualTo(3);
     }
 
+    @Test
+    @DisplayName("위시리스트를 삭제한다")
+    void deleteById() {
+        Long memberId = 1L;
+        WishlistItem wishlistItem = new WishlistItem(memberId, 1L);
+        repository.save(wishlistItem);
 
+        repository.deleteById(wishlistItem.getId());
+
+        assertThat(repository.findAllByMemberId(wishlistItem.getId()).size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("위시리스트에 존재하면 true를 반환한다.")
+    void existsByMemberIdAndProductId() {
+        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
+        repository.save(wishlistItem);
+
+        assertThat(repository.existsByMemberIdAndProductId(1L, 1L)).isTrue();
+    }
+
+    @Test
+    @DisplayName("위시리스트에 없으면 false를 반환한다.")
+    void existsByMemberIdAndProductId2() {
+        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
+        repository.save(wishlistItem);
+
+        assertThat(repository.existsByMemberIdAndProductId(1L, 2L)).isFalse();
+    }
 }
