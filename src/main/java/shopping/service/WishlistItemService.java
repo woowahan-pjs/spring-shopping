@@ -31,4 +31,8 @@ public class WishlistItemService {
     public List<WishlistItem> findWishlistItems(long memberId) {
         return wishlistItemRepository.findAllByMemberId(memberId);
     }
+
+    public void deleteWishlistItem(Long id) {
+        wishlistItemRepository.deleteById(id);
+    }
 }

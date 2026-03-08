@@ -33,7 +33,7 @@ class WishlistItemServiceTest {
     }
 
     @Test
-    @DisplayName("중복 상품을 추가하면 예외발생")
+    @DisplayName("이미 추가한 상품을 추가하면 예외발생")
     void addDuplicateWishlistItem() {
         WishlistItem wishlistItem = new WishlistItem(1L, 1L);
 
@@ -61,5 +61,18 @@ class WishlistItemServiceTest {
         List<WishlistItem> items = service.findWishlistItems(1L);
 
         assertThat(items.size()).isEqualTo(1);
+    }
+
+    @Test
+    @DisplayName("위시리스트 상품을 삭제한다")
+    void deleteWishlistItem() {
+        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
+        service.addWishlistItem(wishlistItem);
+
+        service.deleteWishlistItem(wishlistItem.getId());
+
+        List<WishlistItem> items = service.findWishlistItems(1L);
+
+        assertThat(items.size()).isEqualTo(0);
     }
 }
