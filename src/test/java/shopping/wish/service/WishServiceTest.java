@@ -6,19 +6,20 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
-import shopping.product.domain.Product;
-import shopping.product.service.ProductService;
-import shopping.wish.api.WishResponse;
+import shopping.product.port.out.ProductSnapshot;
+import shopping.product.port.out.ProductSnapshotProvider;
+import shopping.wish.adapter.in.api.WishResponse;
+import shopping.wish.domain.WishQuantity;
 import shopping.wish.domain.Wishlist;
 import shopping.wish.domain.WishlistItem;
 import shopping.wish.domain.WishlistItemRepository;
@@ -34,71 +35,86 @@ class WishServiceTest {
     private WishlistItemRepository wishlistItemRepository;
 
     @Mock
-    private ProductService productService;
+    private ProductSnapshotProvider productSnapshotProvider;
 
     private WishService wishService;
 
     @BeforeEach
     void setUp() {
-        wishService = new WishService(wishlistRepository, wishlistItemRepository, productService);
+        wishService = new WishService(wishlistRepository, wishlistItemRepository, productSnapshotProvider);
     }
 
     @Test
+    @DisplayName("삭제된 상품은 위시 목록에서 제외한다")
     void listSkipDeletedProductItems() {
+        // given
         Long memberId = 1L;
-        Wishlist wishlist = Wishlist.create(memberId);
-        setField(wishlist, "id", 10L);
-
-        WishlistItem validItem = WishlistItem.create(wishlist, 100L, 1);
-        setField(validItem, "id", 1L);
-        setField(validItem, "addedAt", LocalDateTime.of(2026, 3, 5, 12, 0));
-
-        WishlistItem deletedProductItem = WishlistItem.create(wishlist, 200L, 1);
-        setField(deletedProductItem, "id", 2L);
-        setField(deletedProductItem, "addedAt", LocalDateTime.of(2026, 3, 5, 12, 5));
-
-        Product activeProduct = Product.create(
-                "상품",
-                "설명",
-                "https://example.com/image.png",
-                new BigDecimal("10000"),
-                7L
-        );
-        setField(activeProduct, "id", 100L);
+        Wishlist wishlist = wishlist(memberId, 10L);
+        WishlistItem validItem = wishlistItem(wishlist, 1L, 100L, 1);
+        WishlistItem deletedProductItem = wishlistItem(wishlist, 2L, 200L, 1);
+        ProductSnapshot activeProduct = productSnapshot(100L);
 
         when(wishlistRepository.findByMemberIdAndStatus(memberId, WishlistStatus.ACTIVE))
                 .thenReturn(Optional.of(wishlist));
         when(wishlistItemRepository.findByWishlist_IdOrderByIdAsc(10L))
                 .thenReturn(List.of(validItem, deletedProductItem));
-        when(productService.findActive(100L)).thenReturn(activeProduct);
-        when(productService.findActive(200L)).thenThrow(new ApiException(ErrorCode.PRODUCT_NOT_FOUND));
+        when(productSnapshotProvider.findActiveProduct(100L)).thenReturn(Optional.of(activeProduct));
+        when(productSnapshotProvider.findActiveProduct(200L)).thenReturn(Optional.empty());
 
+        // when
         List<WishResponse> responses = wishService.list(memberId);
 
+        // then
         assertThat(responses).hasSize(1);
         assertThat(responses.get(0).wishId()).isEqualTo(1L);
         assertThat(responses.get(0).productId()).isEqualTo(100L);
     }
 
     @Test
+    @DisplayName("상품 조회 중 다른 예외가 나면 그대로 전파한다")
     void listThrowWhenProductLookupFailsWithOtherError() {
+        // given
         Long memberId = 1L;
-        Wishlist wishlist = Wishlist.create(memberId);
-        setField(wishlist, "id", 10L);
-
-        WishlistItem item = WishlistItem.create(wishlist, 300L, 1);
-        setField(item, "id", 1L);
-        setField(item, "addedAt", LocalDateTime.of(2026, 3, 5, 12, 0));
+        Wishlist wishlist = wishlist(memberId, 10L);
+        WishlistItem item = wishlistItem(wishlist, 1L, 300L, 1);
 
         when(wishlistRepository.findByMemberIdAndStatus(memberId, WishlistStatus.ACTIVE))
                 .thenReturn(Optional.of(wishlist));
         when(wishlistItemRepository.findByWishlist_IdOrderByIdAsc(10L)).thenReturn(List.of(item));
-        when(productService.findActive(300L)).thenThrow(new ApiException(ErrorCode.INTERNAL_ERROR));
+        when(productSnapshotProvider.findActiveProduct(300L)).thenThrow(new ApiException(ErrorCode.INTERNAL_ERROR));
 
+        // when
+        // then
         assertThatThrownBy(() -> wishService.list(memberId))
                 .isInstanceOf(ApiException.class)
                 .extracting("errorCode")
                 .isEqualTo(ErrorCode.INTERNAL_ERROR);
+    }
+
+    private Wishlist wishlist(Long memberId, Long wishlistId) {
+        Wishlist wishlist = Wishlist.create(memberId);
+        setField(wishlist, "id", wishlistId);
+        return wishlist;
+    }
+
+    private WishlistItem wishlistItem(
+            Wishlist wishlist,
+            Long wishId,
+            Long productId,
+            int quantity
+    ) {
+        WishlistItem item = WishlistItem.create(wishlist, productId, WishQuantity.from(quantity));
+        setField(item, "id", wishId);
+        return item;
+    }
+
+    private ProductSnapshot productSnapshot(Long productId) {
+        return new ProductSnapshot(
+                productId,
+                "상품",
+                new BigDecimal("10000"),
+                "https://example.com/image.png"
+        );
     }
 
     private void setField(Object target, String fieldName, Object value) {

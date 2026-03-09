@@ -1,4 +1,4 @@
-package shopping.wish.api;
+package shopping.wish.adapter.in.api;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

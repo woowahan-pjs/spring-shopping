@@ -1,4 +1,4 @@
-package shopping.wish.api;
+package shopping.wish.adapter.in.api;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

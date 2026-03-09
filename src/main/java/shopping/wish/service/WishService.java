@@ -1,17 +1,18 @@
 package shopping.wish.service;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
-import shopping.product.domain.Product;
-import shopping.product.service.ProductService;
-import shopping.wish.api.WishResponse;
+import shopping.product.port.out.ProductSnapshot;
+import shopping.product.port.out.ProductSnapshotProvider;
+import shopping.wish.adapter.in.api.WishResponse;
 import shopping.wish.domain.Wishlist;
 import shopping.wish.domain.WishlistItem;
+import shopping.wish.domain.WishQuantity;
 import shopping.wish.domain.WishlistItemRepository;
 import shopping.wish.domain.WishlistRepository;
 import shopping.wish.domain.WishlistStatus;
@@ -22,13 +23,13 @@ import shopping.wish.domain.WishlistStatus;
 public class WishService {
     private final WishlistRepository wishlistRepository;
     private final WishlistItemRepository wishlistItemRepository;
-    private final ProductService productService;
+    private final ProductSnapshotProvider productSnapshotProvider;
 
     public WishResponse add(Long memberId, Long productId, Integer requestedQuantity) {
         Wishlist wishlist = findOrCreateWishlist(memberId);
         validateNoDuplicate(wishlist.getId(), productId);
-        Product product = productService.findActive(productId);
-        Integer quantity = normalizeQuantity(requestedQuantity);
+        ProductSnapshot product = productSnapshotProvider.getActiveProduct(productId);
+        WishQuantity quantity = WishQuantity.from(requestedQuantity);
         WishlistItem item = WishlistItem.create(wishlist, productId, quantity);
         WishlistItem saved = wishlistItemRepository.save(item);
         return toResponse(saved, product);
@@ -48,8 +49,8 @@ public class WishService {
         }
         return wishlistItemRepository.findByWishlist_IdOrderByIdAsc(wishlist.getId())
                 .stream()
-                .map(this::toResponseOrNull)
-                .filter(Objects::nonNull)
+                .map(this::toResponseIfProductIsActive)
+                .flatMap(Optional::stream)
                 .toList();
     }
 
@@ -81,39 +82,18 @@ public class WishService {
         throw new ApiException(ErrorCode.WISH_ALREADY_EXISTS);
     }
 
-    private Integer normalizeQuantity(Integer requestedQuantity) {
-        if (requestedQuantity == null) {
-            return 1;
-        }
-        if (requestedQuantity > 0) {
-            return requestedQuantity;
-        }
-        throw new ApiException(ErrorCode.WISH_QUANTITY_INVALID);
+    private Optional<WishResponse> toResponseIfProductIsActive(WishlistItem item) {
+        return productSnapshotProvider.findActiveProduct(item.getProductId())
+                .map(product -> toResponse(item, product));
     }
 
-    private WishResponse toResponse(WishlistItem item) {
-        Product product = productService.findActive(item.getProductId());
-        return toResponse(item, product);
-    }
-
-    private WishResponse toResponseOrNull(WishlistItem item) {
-        try {
-            return toResponse(item);
-        } catch (ApiException exception) {
-            if (exception.getErrorCode() == ErrorCode.PRODUCT_NOT_FOUND) {
-                return null;
-            }
-            throw exception;
-        }
-    }
-
-    private WishResponse toResponse(WishlistItem item, Product product) {
+    private WishResponse toResponse(WishlistItem item, ProductSnapshot product) {
         return new WishResponse(
                 item.getId(),
-                product.getId(),
-                product.getName(),
-                product.getPrice(),
-                product.getImageUrl(),
+                product.productId(),
+                product.productName(),
+                product.productPrice(),
+                product.productImageUrl(),
                 item.getQuantity(),
                 item.getAddedAt()
         );

@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -41,14 +40,10 @@ public class WishlistItem {
         this.wishlist = wishlist;
         this.productId = productId;
         this.quantity = quantity;
+        this.addedAt = LocalDateTime.now();
     }
 
-    public static WishlistItem create(Wishlist wishlist, Long productId, Integer quantity) {
-        return new WishlistItem(wishlist, productId, quantity);
-    }
-
-    @PrePersist
-    protected void prePersist() {
-        addedAt = LocalDateTime.now();
+    public static WishlistItem create(Wishlist wishlist, Long productId, WishQuantity quantity) {
+        return new WishlistItem(wishlist, productId, quantity.value());
     }
 }

@@ -75,16 +75,6 @@ public class Product extends BaseDateEntity {
         return new Product(name, description, imageUrl, price, memberId);
     }
 
-    public static Product create(
-            String name,
-            String description,
-            String imageUrl,
-            BigDecimal price,
-            Long memberId
-    ) {
-        return create(new ProductName(name), description, new ProductImageUrl(imageUrl), new ProductPrice(price), memberId);
-    }
-
     public void update(
             ProductName name,
             String description,
@@ -95,10 +85,6 @@ public class Product extends BaseDateEntity {
         requireOwner(memberId);
         applyDetails(name, description, imageUrl, price);
         this.updatedMemberId = memberId;
-    }
-
-    public void update(String name, String description, String imageUrl, BigDecimal price, Long memberId) {
-        update(new ProductName(name), description, new ProductImageUrl(imageUrl), new ProductPrice(price), memberId);
     }
 
     public void delete(Long memberId) {
@@ -124,6 +110,7 @@ public class Product extends BaseDateEntity {
         this.price = price.value();
     }
 
+    // 설명이 비어 있으면 의미 없는 값으로 보지 않고 null로 저장한다.
     private String nullIfBlank(String description) {
         if (description == null || description.isBlank()) {
             return null;

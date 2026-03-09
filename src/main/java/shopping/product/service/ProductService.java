@@ -67,7 +67,7 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Product findActive(Long productId) {
+    private Product findActive(Long productId) {
         return productRepository.findByIdAndStatus(productId, ProductStatus.ACTIVE)
                 .orElseThrow(() -> new ApiException(ErrorCode.PRODUCT_NOT_FOUND));
     }
