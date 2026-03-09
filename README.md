@@ -348,6 +348,14 @@ CREATE TABLE wishes (
 길이: 1 이상 15 이하
 ```
 
+### Query 서비스 메서드 네이밍 규칙
+
+| 상황 | 접두사 | 예시 |
+|------|--------|------|
+| 단건 조회, 없으면 예외 | `get` | `getProduct(Long id)`, `getMember(String email)` |
+| 단건 조회, Optional 반환 | `find` | `findProduct(Long id)` |
+| 페이지 조회 | `findXWithPage` | `findProductWithPage(Pageable)`, `findWishWithPage(Long, Pageable)` |
+
 ### 예외 응답 형식
 ```json
 {

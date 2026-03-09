@@ -188,8 +188,8 @@ Response 200:
 
 - [x] `WishOutput` 레코드 작성 (서비스 출력: `id`, `productId`, `productName`, `price`, `imageUrl`)
 - [x] `WishResponse` 레코드 작성 (`id`, `productId`, `productName`, `price`, `imageUrl`)
-- [x] `WishQueryService.findAll` 작성
-  - `findAll(Long memberId): List<WishOutput>`
+- [x] `WishQueryService.findWishWithPage` 작성
+  - `findWishWithPage(Long memberId, Pageable): Page<WishOutput>`
   - `findByMemberId` 로 조회 후 반환
 
 ### Phase 6 - 컨트롤러 & 테스트
