@@ -4,6 +4,9 @@
 @authToken = eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiIxIn0.KtF41L_oTQFX-GsYLw1wNgW_moYv6iB2gc6PJKORfQH4qpEcZGNuOWHNa4XP4d3_
 @productId = 1
 @wishId = 1
+@page = 0
+@size = 10
+@sort = id
 
 ### 실행 순서
 # 1. 회원가입 또는 로그인 후 응답의 token 값을 @authToken 에 넣습니다.
@@ -33,13 +36,13 @@ POST {{baseUrl}}/api/products
 Content-Type: application/json
 
 {
-  "name": "fuck",
+  "name": "상품명",
   "price": 10000,
   "imageUrl": "https://example.com/image.jpg"
 }
 
-### 상품 목록 조회
-GET {{baseUrl}}/api/products
+### 상품 목록 조회 (페이징)
+GET {{baseUrl}}/api/products?page={{page}}&size={{size}}&sort={{sort}}
 
 ### 상품 단건 조회
 GET {{baseUrl}}/api/products/{{productId}}
@@ -63,8 +66,8 @@ Content-Type: application/json
   "productId": {{productId}}
 }
 
-### 위시리스트 목록 조회
-GET {{baseUrl}}/api/wishes
+### 위시리스트 목록 조회 (페이징)
+GET {{baseUrl}}/api/wishes?page={{page}}&size={{size}}&sort={{sort}}
 Authorization: Bearer {{authToken}}
 
 ### 위시리스트 삭제
