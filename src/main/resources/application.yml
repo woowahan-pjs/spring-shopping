@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: spring-shopping
+
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        use_sql_comments: true
+
+  mvc:
+    problemdetails:
+      enabled: true
+
+jwt:
+  secret: 63f4945d921d599f27ae4fdf5bada3f1
+  expiration: 900000
+
+api:
+  purgomalum:
+    base-uri: https://www.purgomalum.com
