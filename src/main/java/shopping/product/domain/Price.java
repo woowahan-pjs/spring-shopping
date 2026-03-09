@@ -10,6 +10,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
+import shopping.infra.exception.ShoppingBusinessException;
 
 @Embeddable
 public record Price(
@@ -24,6 +25,14 @@ public record Price(
         }
 
         return new Price(BigDecimal.valueOf(price));
+    }
+
+    public static Price create(final String price) {
+        try {
+            return create(Long.parseLong(price));
+        } catch (NumberFormatException e) {
+            throw new ShoppingBusinessException("잘못된 형식의 입력 값입니다.");
+        }
     }
 
     @JsonValue
