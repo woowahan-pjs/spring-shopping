@@ -24,4 +24,16 @@ public class WishList {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    protected WishList() {
+
+    }
+
+    public static WishList create(Long id) {
+        return new WishList();
+    }
+
+    public Long getId() {
+        return id;
+    }
 }
