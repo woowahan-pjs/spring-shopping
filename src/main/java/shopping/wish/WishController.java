@@ -2,6 +2,7 @@ package shopping.wish;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,14 +27,14 @@ public class WishController {
 
     @PostMapping("/{productId}")
     public ResponseEntity<WishResponse> add(@RequestHeader("Authorization") String authorization,
-            @PathVariable Long productId) {
+            @PathVariable UUID productId) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(wishApplicationService.add(authorization, productId));
     }
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Void> remove(@RequestHeader("Authorization") String authorization,
-            @PathVariable Long productId) {
+            @PathVariable UUID productId) {
         wishApplicationService.remove(authorization, productId);
         return ResponseEntity.noContent().build();
     }

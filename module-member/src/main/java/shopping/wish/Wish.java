@@ -1,14 +1,18 @@
 package shopping.wish;
 
+import java.util.UUID;
+
 public class Wish {
 
-    private Long productId;
+    private UUID productId;
 
-    public Wish(Long productId) {
+    protected Wish() {}
+
+    public Wish(UUID productId) {
         this.productId = productId;
     }
 
-    public Long getProductId() {
+    public UUID getProductId() {
         return productId;
     }
 }

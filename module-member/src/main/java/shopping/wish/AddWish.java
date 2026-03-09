@@ -1,6 +1,8 @@
 package shopping.wish;
 
+import java.util.UUID;
+
 public interface AddWish {
 
-    Wish execute(Long memberId, Long productId);
+    Wish execute(UUID memberId, UUID productId);
 }

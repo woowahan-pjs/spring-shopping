@@ -15,7 +15,7 @@ public class AcceptanceTestContext {
 
     private final ManualRestDocumentation restDocumentation = new ManualRestDocumentation();
     private ExtractableResponse<Response> response;
-    private Long createdProductId;
+    private String createdProductId;
 
     public void setUp(String methodName) {
         restDocumentation.beforeTest(getClass(), methodName);
@@ -42,11 +42,11 @@ public class AcceptanceTestContext {
         this.response = response;
     }
 
-    public Long getCreatedProductId() {
+    public String getCreatedProductId() {
         return createdProductId;
     }
 
-    public void setCreatedProductId(Long createdProductId) {
+    public void setCreatedProductId(String createdProductId) {
         this.createdProductId = createdProductId;
     }
 }

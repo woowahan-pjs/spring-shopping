@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,8 +28,8 @@ class FindWishServiceTest {
     @Test
     void 위시리스트를_조회한다() {
         Member member = memberRepository.save(new Member("test@test.com", "password"));
-        member.wish(100L);
-        member.wish(200L);
+        member.wish(UUID.randomUUID());
+        member.wish(UUID.randomUUID());
         memberRepository.save(member);
 
         List<Wish> wishes = service.execute(member.getId());
@@ -47,8 +48,8 @@ class FindWishServiceTest {
 
     @Test
     void 존재하지_않는_회원이면_예외가_발생한다() {
-        NoSuchElementException exception =
-                assertThrows(NoSuchElementException.class, () -> service.execute(999L));
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+                () -> service.execute(UUID.randomUUID()));
 
         assertEquals("회원을 찾을 수 없습니다.", exception.getMessage());
     }

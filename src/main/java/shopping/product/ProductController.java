@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -42,13 +43,13 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponse> findById(@PathVariable UUID id) {
         Product product = findProduct.execute(id);
         return ResponseEntity.ok(ProductResponse.from(product));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> update(@PathVariable Long id,
+    public ResponseEntity<ProductResponse> update(@PathVariable UUID id,
             @RequestBody ProductRequest request) {
         Product product =
                 updateProduct.execute(id, request.name(), request.price(), request.imageUrl());
@@ -56,7 +57,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable UUID id) {
         deleteProduct.execute(id);
         return ResponseEntity.noContent().build();
     }

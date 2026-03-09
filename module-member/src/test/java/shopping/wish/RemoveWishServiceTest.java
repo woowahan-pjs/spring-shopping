@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,19 +26,20 @@ class RemoveWishServiceTest {
 
     @Test
     void 위시리스트에서_상품을_제거한다() {
+        UUID productId = UUID.randomUUID();
         Member member = memberRepository.save(new Member("test@test.com", "password"));
-        member.wish(100L);
+        member.wish(productId);
         memberRepository.save(member);
 
-        service.execute(member.getId(), 100L);
+        service.execute(member.getId(), productId);
 
         assertTrue(memberRepository.findById(member.getId()).orElseThrow().getWishes().isEmpty());
     }
 
     @Test
     void 존재하지_않는_회원이면_예외가_발생한다() {
-        NoSuchElementException exception =
-                assertThrows(NoSuchElementException.class, () -> service.execute(999L, 100L));
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+                () -> service.execute(UUID.randomUUID(), UUID.randomUUID()));
 
         assertEquals("회원을 찾을 수 없습니다.", exception.getMessage());
     }
@@ -46,7 +48,7 @@ class RemoveWishServiceTest {
     void 존재하지_않는_상품을_제거해도_예외가_발생하지_않는다() {
         Member member = memberRepository.save(new Member("test@test.com", "password"));
 
-        service.execute(member.getId(), 999L);
+        service.execute(member.getId(), UUID.randomUUID());
 
         assertTrue(memberRepository.findById(member.getId()).orElseThrow().getWishes().isEmpty());
     }

@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,7 +48,7 @@ class UpdateProductServiceTest {
     @Test
     void 존재하지_않는_상품을_수정하면_예외가_발생한다() {
         NoSuchElementException exception = assertThrows(NoSuchElementException.class,
-                () -> service.execute(999L, "상품", 1000, "http://img.png"));
+                () -> service.execute(UUID.randomUUID(), "상품", 1000, "http://img.png"));
 
         assertEquals("상품이 존재하지 않습니다.", exception.getMessage());
     }

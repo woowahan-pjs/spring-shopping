@@ -2,6 +2,7 @@ package shopping.wish;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import shopping.member.MemberRepository;
 
@@ -14,7 +15,7 @@ public class FindWishService implements FindWish {
     }
 
     @Override
-    public List<Wish> execute(Long memberId) {
+    public List<Wish> execute(UUID memberId) {
         return memberRepository.findById(memberId)
                 .orElseThrow(() -> new NoSuchElementException("회원을 찾을 수 없습니다.")).getWishes();
     }

@@ -1,5 +1,7 @@
 package shopping.auth;
 
+import java.util.UUID;
+
 import org.springframework.stereotype.Component;
 
 import shopping.member.MemberRepository;
@@ -16,7 +18,7 @@ public class AuthenticationService {
         this.memberRepository = memberRepository;
     }
 
-    public Long extractMemberId(String authorization) {
+    public UUID extractMemberId(String authorization) {
         String token = authorization.replace("Bearer ", "");
         String email = tokenProvider.extractEmail(token);
         return memberRepository.findByEmail(email)

@@ -1,7 +1,9 @@
 package shopping.auth;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,9 +37,9 @@ class AuthenticationServiceTest {
     void 토큰에서_회원ID를_추출한다() {
         String token = loginMember.execute("auth-test@test.com", "password123");
 
-        Long memberId = authenticationService.extractMemberId("Bearer " + token);
+        UUID memberId = authenticationService.extractMemberId("Bearer " + token);
 
-        assertEquals(Long.class, memberId.getClass());
+        assertNotNull(memberId);
     }
 
     @Test

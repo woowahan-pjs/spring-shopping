@@ -1,6 +1,8 @@
 package shopping.product;
 
+import java.util.UUID;
+
 public interface DeleteProduct {
 
-    void execute(Long id);
+    void execute(UUID id);
 }

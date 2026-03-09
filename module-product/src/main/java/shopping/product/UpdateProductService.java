@@ -1,6 +1,7 @@
 package shopping.product;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 public class UpdateProductService implements UpdateProduct {
 
@@ -14,7 +15,7 @@ public class UpdateProductService implements UpdateProduct {
     }
 
     @Override
-    public Product execute(Long id, String name, long price, String imageUrl) {
+    public Product execute(UUID id, String name, long price, String imageUrl) {
         ProductName productName = productNameFactory.create(name);
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));

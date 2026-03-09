@@ -2,9 +2,10 @@ package shopping.member;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 
@@ -15,18 +16,19 @@ class MemberTest {
     private final FakePasswordEncoder passwordEncoder = new FakePasswordEncoder();
 
     @Test
-    void ID_없이_생성하면_ID가_null이다() {
+    void ID_없이_생성하면_ID가_자동생성된다() {
         Member member = new Member("test@test.com", "password");
 
-        assertNull(member.getId());
+        assertNotNull(member.getId());
         assertEquals("test@test.com", member.getEmail());
     }
 
     @Test
     void ID와_함께_생성한다() {
-        Member member = new Member(1L, "test@test.com", "password");
+        UUID id = UUID.randomUUID();
+        Member member = new Member(id, "test@test.com", "password");
 
-        assertEquals(1L, member.getId());
+        assertEquals(id, member.getId());
     }
 
     @Test
@@ -48,41 +50,44 @@ class MemberTest {
 
     @Test
     void 위시리스트에_상품을_추가한다() {
-        Member member = new Member(1L, "test@test.com", "password");
+        UUID productId = UUID.randomUUID();
+        Member member = new Member("test@test.com", "password");
 
-        Wish wish = member.wish(100L);
+        Wish wish = member.wish(productId);
 
         assertNotNull(wish);
-        assertEquals(100L, wish.getProductId());
+        assertEquals(productId, wish.getProductId());
         assertEquals(1, member.getWishes().size());
     }
 
     @Test
     void 이미_추가된_상품을_위시리스트에_추가하면_예외가_발생한다() {
-        Member member = new Member(1L, "test@test.com", "password");
-        member.wish(100L);
+        UUID productId = UUID.randomUUID();
+        Member member = new Member("test@test.com", "password");
+        member.wish(productId);
 
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> member.wish(100L));
+                assertThrows(IllegalArgumentException.class, () -> member.wish(productId));
 
         assertEquals("이미 위시리스트에 추가된 상품입니다.", exception.getMessage());
     }
 
     @Test
     void 위시리스트에서_상품을_제거한다() {
-        Member member = new Member(1L, "test@test.com", "password");
-        member.wish(100L);
+        UUID productId = UUID.randomUUID();
+        Member member = new Member("test@test.com", "password");
+        member.wish(productId);
 
-        member.removeWish(100L);
+        member.removeWish(productId);
 
         assertTrue(member.getWishes().isEmpty());
     }
 
     @Test
     void 위시리스트는_불변_리스트를_반환한다() {
-        Member member = new Member(1L, "test@test.com", "password");
+        Member member = new Member("test@test.com", "password");
 
         assertThrows(UnsupportedOperationException.class,
-                () -> member.getWishes().add(new Wish(1L)));
+                () -> member.getWishes().add(new Wish(UUID.randomUUID())));
     }
 }

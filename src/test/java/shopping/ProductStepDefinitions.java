@@ -23,7 +23,7 @@ public class ProductStepDefinitions {
                 .body("{\"name\":\"" + name + "\",\"price\":" + price + ",\"imageUrl\":\""
                         + imageUrl + "\"}")
                 .when().post("/api/products").then().statusCode(201).extract();
-        context.setCreatedProductId(response.jsonPath().getLong("id"));
+        context.setCreatedProductId(response.jsonPath().getString("id"));
     }
 
     @When("I create a product with name {string} price {long} and imageUrl {string}")
@@ -33,9 +33,9 @@ public class ProductStepDefinitions {
                 .body("{\"name\":\"" + name + "\",\"price\":" + price + ",\"imageUrl\":\""
                         + imageUrl + "\"}")
                 .when().post("/api/products").then().extract());
-        Object id = context.getResponse().jsonPath().get("id");
-        if (id instanceof Number) {
-            context.setCreatedProductId(((Number) id).longValue());
+        String id = context.getResponse().jsonPath().getString("id");
+        if (id != null) {
+            context.setCreatedProductId(id);
         }
     }
 

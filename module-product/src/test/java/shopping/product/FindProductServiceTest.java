@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,8 +35,8 @@ class FindProductServiceTest {
 
     @Test
     void 존재하지_않는_ID로_조회하면_예외가_발생한다() {
-        NoSuchElementException exception =
-                assertThrows(NoSuchElementException.class, () -> service.execute(999L));
+        NoSuchElementException exception = assertThrows(NoSuchElementException.class,
+                () -> service.execute(UUID.randomUUID()));
 
         assertEquals("상품이 존재하지 않습니다.", exception.getMessage());
     }

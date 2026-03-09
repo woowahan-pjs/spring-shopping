@@ -3,6 +3,7 @@ package shopping.wish;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
@@ -27,19 +28,19 @@ public class WishApplicationService {
         this.authenticationService = authenticationService;
     }
 
-    public WishResponse add(String authorization, Long productId) {
-        Long memberId = authenticationService.extractMemberId(authorization);
+    public WishResponse add(String authorization, UUID productId) {
+        UUID memberId = authenticationService.extractMemberId(authorization);
         Wish wish = addWish.execute(memberId, productId);
         return WishResponse.of(wish, findProduct.execute(productId));
     }
 
-    public void remove(String authorization, Long productId) {
-        Long memberId = authenticationService.extractMemberId(authorization);
+    public void remove(String authorization, UUID productId) {
+        UUID memberId = authenticationService.extractMemberId(authorization);
         removeWish.execute(memberId, productId);
     }
 
     public List<WishResponse> findAll(String authorization) {
-        Long memberId = authenticationService.extractMemberId(authorization);
+        UUID memberId = authenticationService.extractMemberId(authorization);
         return findWish.execute(memberId).stream().map(wish -> {
             try {
                 return WishResponse.of(wish, findProduct.execute(wish.getProductId()));

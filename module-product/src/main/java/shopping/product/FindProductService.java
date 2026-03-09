@@ -2,6 +2,7 @@ package shopping.product;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 public class FindProductService implements FindProduct {
 
@@ -12,7 +13,7 @@ public class FindProductService implements FindProduct {
     }
 
     @Override
-    public Product execute(Long id) {
+    public Product execute(UUID id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
     }

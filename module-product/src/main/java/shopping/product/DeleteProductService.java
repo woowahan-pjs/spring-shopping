@@ -1,6 +1,7 @@
 package shopping.product;
 
 import java.util.NoSuchElementException;
+import java.util.UUID;
 
 public class DeleteProductService implements DeleteProduct {
 
@@ -11,7 +12,7 @@ public class DeleteProductService implements DeleteProduct {
     }
 
     @Override
-    public void execute(Long id) {
+    public void execute(UUID id) {
         if (productRepository.findById(id).isEmpty()) {
             throw new NoSuchElementException("상품이 존재하지 않습니다.");
         }

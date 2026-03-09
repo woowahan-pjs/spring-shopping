@@ -1,8 +1,13 @@
 package shopping.product;
 
+import jakarta.persistence.Embeddable;
+
+@Embeddable
 public class ProductName {
 
-    private final String value;
+    private String value;
+
+    protected ProductName() {}
 
     ProductName(String value) {
         this.value = value;
