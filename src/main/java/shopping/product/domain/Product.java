@@ -12,6 +12,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shopping.common.entity.BaseEntity;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Getter
 @Table(name = "products")
@@ -37,6 +39,12 @@ public class Product extends BaseEntity {
     @Column(name = "modified_by")
     private String modifiedBy;
 
+    @Column(nullable = false)
+    private boolean deleted = false;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
     @Builder
     public Product(Long id, String name, Long price, String imageUrl) {
         this.id = id;
@@ -49,5 +57,10 @@ public class Product extends BaseEntity {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+    }
+
+    public void delete() {
+        this.deleted = true;
+        this.deletedAt = LocalDateTime.now();
     }
 }

@@ -134,6 +134,7 @@ class ProductCommandServiceTest {
         productCommandService.delete(saved.id());
 
         // then
-        assertThat(productRepository.findById(saved.id())).isEmpty();
+        assertThat(productRepository.findById(saved.id())).isPresent();
+        assertThat(productRepository.findById(saved.id()).get().isDeleted()).isTrue();
     }
 }

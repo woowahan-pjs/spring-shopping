@@ -80,4 +80,36 @@ class ProductQueryServiceTest {
         // then
         assertThat(responses).hasSize(2);
     }
+
+    @Test
+    @DisplayName("삭제한 상품은 단건 조회할 수 없다")
+    void test04() {
+        // given
+        ProductOutput saved = productCommandService.register(
+            new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
+        productCommandService.delete(saved.id());
+
+        // when & then
+        assertThatThrownBy(() -> productQueryService.findById(saved.id()))
+            .isInstanceOf(IllegalArgumentException.class)
+            .hasMessage("존재하지 않는 상품입니다.");
+    }
+
+    @Test
+    @DisplayName("삭제한 상품은 상품 목록 조회에서 제외된다")
+    void test05() {
+        // given
+        ProductOutput active = productCommandService.register(
+            new ProductRegisterInput("상품1", 1000L, "https://example.com/1.jpg"));
+        ProductOutput deleted = productCommandService.register(
+            new ProductRegisterInput("상품2", 2000L, "https://example.com/2.jpg"));
+        productCommandService.delete(deleted.id());
+
+        // when
+        List<ProductOutput> responses = productQueryService.findAll();
+
+        // then
+        assertThat(responses).hasSize(1);
+        assertThat(responses.getFirst().id()).isEqualTo(active.id());
+    }
 }

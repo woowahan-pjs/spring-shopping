@@ -31,13 +31,13 @@ public class ProductCommandService {
     public ProductOutput update(Long id, ProductRegisterInput input) {
         productNameValidator.validate(input.name());
         validatePrice(input.price());
-        Product product = productQueryService.getProduct(id);
+        Product product = productQueryService.getActiveProduct(id);
         product.update(input.name(), input.price(), input.imageUrl());
         return ProductOutput.from(product);
     }
 
     public void delete(Long id) {
-        productRepository.delete(productQueryService.getProduct(id));
+        productQueryService.getActiveProduct(id).delete();
     }
 
     private void validatePrice(Long price) {

@@ -18,7 +18,7 @@ public class WishCommandService {
     private final ProductQueryService productQueryService;
 
     public WishAddOutput add(WishAddInput input) {
-        Product product = productQueryService.getProduct(input.productId());
+        Product product = productQueryService.getActiveProduct(input.productId());
         Wish wish = wishRepository.save(createWish(product, input.memberId()));
         return WishAddOutput.of(wish, product);
     }
