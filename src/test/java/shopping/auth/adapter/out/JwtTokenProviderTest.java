@@ -13,6 +13,7 @@ import shopping.auth.domain.JwtSubject;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
 
+@DisplayName("[인증] JWT 토큰 제공자 단위 테스트")
 class JwtTokenProviderTest {
     private static final String SECRET_KEY = "sJ55n8qtAW1mWL7v0ltWb6N7zseMqnPw5Y6x8tl1b2kvVDRj";
 

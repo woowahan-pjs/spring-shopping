@@ -17,6 +17,7 @@ import shopping.product.adapter.in.api.ProductResponse;
 import shopping.wish.adapter.in.api.WishCreateRequest;
 import shopping.wish.adapter.in.api.WishResponse;
 
+@DisplayName("[통합] 쇼핑 흐름 통합 테스트")
 class ShoppingFlowE2eTest extends AbstractE2eTest {
     @Test
     @DisplayName("판매자 상품 등록부터 사용자 위시 조회까지 핵심 흐름이 이어진다")

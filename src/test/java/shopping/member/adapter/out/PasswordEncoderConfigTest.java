@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@DisplayName("[회원] 비밀번호 인코더 설정 단위 테스트")
 class PasswordEncoderConfigTest {
     private final PasswordEncoderConfig passwordEncoderConfig = new PasswordEncoderConfig();
 

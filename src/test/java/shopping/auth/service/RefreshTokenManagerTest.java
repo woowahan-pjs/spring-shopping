@@ -24,6 +24,7 @@ import shopping.common.ApiException;
 import shopping.common.ErrorCode;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[인증] 리프레시 토큰 관리자 단위 테스트")
 class RefreshTokenManagerTest {
     @Mock
     private RefreshTokenRepository refreshTokenRepository;

@@ -11,6 +11,7 @@ import shopping.auth.adapter.in.web.annotation.MemberOnly;
 import shopping.auth.adapter.in.web.annotation.SellerOnly;
 
 @SpringJUnitConfig(AccessPolicyResolver.class)
+@DisplayName("[인증] 접근 정책 리졸버 단위 테스트")
 class AccessPolicyResolverTest {
     @Autowired
     private AccessPolicyResolver resolver;

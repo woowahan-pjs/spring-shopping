@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
+@DisplayName("[인증] 리프레시 토큰 쿠키 관리자 단위 테스트")
 class RefreshTokenCookieManagerTest {
     @Test
     @DisplayName("refresh token을 HttpOnly 쿠키로 내려준다")

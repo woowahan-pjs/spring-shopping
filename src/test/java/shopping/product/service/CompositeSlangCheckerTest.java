@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[상품] 복합 비속어 검사기 단위 테스트")
 class CompositeSlangCheckerTest {
     @Mock
     private EnglishSlangChecker englishSlangChecker;

@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("[상품] 비속어 텍스트 정규화기 단위 테스트")
 class SlangTextNormalizerTest {
     @Test
     @DisplayName("한국어 정규화는 구분자를 없애고 반복 문자를 줄인다")

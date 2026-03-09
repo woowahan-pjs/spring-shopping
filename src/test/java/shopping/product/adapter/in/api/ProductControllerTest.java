@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import shopping.product.service.ProductService;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[상품] 상품 컨트롤러 단위 테스트")
 class ProductControllerTest {
     @Mock
     private ProductService productService;

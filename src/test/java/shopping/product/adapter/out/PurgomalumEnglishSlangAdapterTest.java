@@ -22,11 +22,12 @@ import shopping.common.ApiException;
 import shopping.common.ErrorCode;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[상품] PurgoMalum 영어 비속어 어댑터 단위 테스트")
 class PurgomalumEnglishSlangAdapterTest {
     @Mock
     private PurgomalumFeignClient purgomalumFeignClient;
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "[{index}] 응답={0}, 결과={1}")
     @CsvSource({
             "true, true",
             "false, false"

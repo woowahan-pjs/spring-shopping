@@ -29,6 +29,7 @@ import shopping.member.domain.MemberRole;
 import shopping.member.domain.MemberStatus;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[회원] 회원 서비스 등록 단위 테스트")
 class MemberServiceTest {
     @Mock
     private MemberRepository memberRepository;

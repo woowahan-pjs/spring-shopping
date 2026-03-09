@@ -6,6 +6,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("[상품] 한국어 비속어 검사기 단위 테스트")
 class KoreanSlangCheckerTest {
     private final KoreanSlangChecker checker = new KoreanSlangChecker(
             new ClassPathResource("slang/korean-rules.csv")

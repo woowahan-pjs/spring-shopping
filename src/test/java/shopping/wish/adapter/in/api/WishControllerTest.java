@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import shopping.wish.service.WishService;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[위시] 위시 컨트롤러 단위 테스트")
 class WishControllerTest {
     @Mock
     private WishService wishService;

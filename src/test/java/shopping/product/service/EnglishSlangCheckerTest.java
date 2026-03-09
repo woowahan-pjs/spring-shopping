@@ -14,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import shopping.product.port.out.EnglishSlangVerificationPort;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[상품] 영어 비속어 검사기 단위 테스트")
 class EnglishSlangCheckerTest {
     @Mock
     private EnglishSlangVerificationPort englishSlangVerificationPort;

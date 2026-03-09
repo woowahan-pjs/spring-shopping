@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("[위시] 위시 아이템 도메인 단위 테스트")
 class WishlistItemTest {
     @Test
     @DisplayName("위시리스트 아이템을 만들면 전달한 값으로 저장한다")

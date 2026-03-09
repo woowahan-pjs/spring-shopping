@@ -34,6 +34,7 @@ import shopping.product.domain.ProductRepository;
 import shopping.product.domain.ProductStatus;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[상품] 상품 서비스 행위 단위 테스트")
 class ProductServiceBehaviorTest {
     @Mock
     private MemberService memberService;
@@ -52,6 +53,7 @@ class ProductServiceBehaviorTest {
     }
 
     @Nested
+    @DisplayName("생성")
     class Create {
         @Test
         @DisplayName("유효한 상품 입력이면 상품을 만들고 응답으로 돌려준다")
@@ -99,7 +101,7 @@ class ProductServiceBehaviorTest {
                     .isEqualTo(ErrorCode.PRODUCT_NAME_CONTAINS_SLANG);
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "[{index}] 상품명={0}")
         @ValueSource(strings = {"abcdefghijklmnop", "가가가가가가가가가가가가가가가가"})
         @DisplayName("상품 이름이 15자를 넘으면 만들지 않는다")
         void throwWhenNameIsTooLong(String name) {
@@ -119,7 +121,7 @@ class ProductServiceBehaviorTest {
                     .isEqualTo(ErrorCode.PRODUCT_NAME_TOO_LONG);
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "[{index}] 상품명={0}")
         @ValueSource(strings = {"상품!", "name*", "상품@"})
         @DisplayName("허용하지 않은 특수문자가 있으면 만들지 않는다")
         void throwWhenNameContainsDisallowedSpecialCharacters(String name) {
@@ -139,7 +141,7 @@ class ProductServiceBehaviorTest {
                     .isEqualTo(ErrorCode.PRODUCT_NAME_DISALLOWED_SPECIAL_CHARACTERS);
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "[{index}] 가격={0}")
         @ValueSource(strings = {"0", "-1"})
         @DisplayName("가격이 0 이하이면 만들지 않는다")
         void throwWhenPriceIsInvalid(String price) {

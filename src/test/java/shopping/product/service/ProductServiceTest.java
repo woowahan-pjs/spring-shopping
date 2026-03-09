@@ -20,6 +20,7 @@ import shopping.product.domain.Product;
 import shopping.product.domain.ProductRepository;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[상품] 상품 서비스 비속어 검증 단위 테스트")
 class ProductServiceTest {
     @Mock
     private MemberService memberService;

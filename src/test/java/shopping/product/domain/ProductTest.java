@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
 
+@DisplayName("[상품] 상품 도메인 단위 테스트")
 class ProductTest {
     @Test
     @DisplayName("상품을 만들면 기본 재고와 활성 상태로 시작한다")

@@ -12,8 +12,10 @@ import shopping.common.ErrorResponse;
 import shopping.e2e.support.AbstractE2eTest;
 import shopping.e2e.support.AuthSession;
 
+@DisplayName("[인증/회원] 인증 및 회원 통합 테스트")
 class AuthMemberE2eTest extends AbstractE2eTest {
     @Nested
+    @DisplayName("회원 가입")
     class Register {
         @Test
         @DisplayName("회원 가입은 access token과 refresh cookie를 발급한다")
@@ -26,6 +28,7 @@ class AuthMemberE2eTest extends AbstractE2eTest {
     }
 
     @Nested
+    @DisplayName("로그인")
     class Login {
         @Test
         @DisplayName("로그인은 새 access token과 refresh cookie를 발급한다")
@@ -41,6 +44,7 @@ class AuthMemberE2eTest extends AbstractE2eTest {
     }
 
     @Nested
+    @DisplayName("토큰 갱신")
     class Refresh {
         @Test
         @DisplayName("refresh는 access token과 refresh cookie를 회전한다")

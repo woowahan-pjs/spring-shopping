@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("[위시] 위시리스트 도메인 단위 테스트")
 class WishlistTest {
     @Test
     @DisplayName("위시리스트를 만들면 활성 상태로 시작한다")

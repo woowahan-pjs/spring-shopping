@@ -19,8 +19,10 @@ import shopping.product.domain.Product;
 import shopping.wish.adapter.in.api.WishCreateRequest;
 import shopping.wish.adapter.in.api.WishResponse;
 
+@DisplayName("[위시] 위시 통합 테스트")
 class WishE2eTest extends AbstractE2eTest {
     @Nested
+    @DisplayName("추가")
     class Add {
         @Test
         @DisplayName("로그인한 사용자는 상품을 위시에 추가할 수 있다")
@@ -86,6 +88,7 @@ class WishE2eTest extends AbstractE2eTest {
     }
 
     @Nested
+    @DisplayName("조회 및 삭제")
     class ListAndDelete {
         @Test
         @DisplayName("위시 목록은 현재 사용자 기준으로만 반환한다")

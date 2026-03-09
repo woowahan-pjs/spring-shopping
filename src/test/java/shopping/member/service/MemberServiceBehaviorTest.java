@@ -29,6 +29,7 @@ import shopping.member.domain.MemberRole;
 import shopping.member.domain.MemberStatus;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[회원] 회원 서비스 행위 단위 테스트")
 class MemberServiceBehaviorTest {
     @Mock
     private MemberRepository memberRepository;
@@ -63,6 +64,7 @@ class MemberServiceBehaviorTest {
     }
 
     @Nested
+    @DisplayName("로그인")
     class Login {
         @Test
         @DisplayName("이메일과 비밀번호가 맞으면 로그인 토큰을 발급한다")
@@ -127,6 +129,7 @@ class MemberServiceBehaviorTest {
     }
 
     @Nested
+    @DisplayName("판매자 권한 검사")
     class RequireActiveSeller {
         @Test
         @DisplayName("활성 판매자는 판매자 권한 검사를 통과한다")
@@ -186,7 +189,7 @@ class MemberServiceBehaviorTest {
         }
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "[{index}] 비밀번호={0}")
     @ValueSource(strings = {"password123", "Password123!", "1234567890"})
     @DisplayName("비밀번호 해시 전략이 바뀌어도 로그인 흐름을 유지한다")
     void loginSupportDifferentPasswordInputs(String password) {

@@ -12,6 +12,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 
+@DisplayName("[인증] 인증 설정 단위 테스트")
 class AuthConfigTest {
     @Test
     @DisplayName("인증 인터셉터를 MVC 설정에 등록한다")

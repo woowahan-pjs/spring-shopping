@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
 
+@DisplayName("[상품] 상품 값 객체 단위 테스트")
 class ProductValueObjectsTest {
     @Test
     @DisplayName("유효한 상품 값 객체를 만들 수 있다")
@@ -24,7 +25,7 @@ class ProductValueObjectsTest {
         assertThat(productImageUrl.value()).isEqualTo("https://example.com/image.png");
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "[{index}] 상품명={0}")
     @ValueSource(strings = {"abcdefghijklmnop", "가가가가가가가가가가가가가가가가"})
     @DisplayName("상품 이름이 15자를 넘으면 값 객체를 만들지 않는다")
     void rejectTooLongProductName(String name) {
@@ -34,7 +35,7 @@ class ProductValueObjectsTest {
                 .isEqualTo(ErrorCode.PRODUCT_NAME_TOO_LONG);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "[{index}] 상품명={0}")
     @ValueSource(strings = {"상품!", "name*", "상품@"})
     @DisplayName("허용하지 않은 특수문자가 있으면 상품 이름 값을 만들지 않는다")
     void rejectDisallowedCharacters(String name) {
@@ -44,7 +45,7 @@ class ProductValueObjectsTest {
                 .isEqualTo(ErrorCode.PRODUCT_NAME_DISALLOWED_SPECIAL_CHARACTERS);
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "[{index}] 가격={0}")
     @ValueSource(strings = {"0", "-1"})
     @DisplayName("가격이 0 이하이면 상품 가격 값을 만들지 않는다")
     void rejectInvalidPrice(String price) {

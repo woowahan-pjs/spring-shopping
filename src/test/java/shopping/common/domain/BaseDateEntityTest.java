@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+@DisplayName("[공통] 기본 날짜 엔티티 단위 테스트")
 class BaseDateEntityTest {
     @Test
     @DisplayName("생성 시 createdAt과 updatedAt을 함께 채운다")

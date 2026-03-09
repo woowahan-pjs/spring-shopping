@@ -23,6 +23,7 @@ import shopping.auth.service.AuthService;
 import shopping.member.service.MemberService;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[인증] 인증 인터셉터 단위 테스트")
 class AuthInterceptorTest {
     @Mock
     private AuthService authService;

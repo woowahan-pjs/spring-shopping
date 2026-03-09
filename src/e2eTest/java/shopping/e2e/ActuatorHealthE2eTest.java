@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import shopping.e2e.support.AbstractE2eTest;
 
+@DisplayName("[공통] Actuator 헬스체크 통합 테스트")
 class ActuatorHealthE2eTest extends AbstractE2eTest {
     @Test
     @DisplayName("헬스체크 엔드포인트는 인증 없이 status를 반환한다")
@@ -29,7 +30,7 @@ class ActuatorHealthE2eTest extends AbstractE2eTest {
         assertThat(body.get("status").asText()).isEqualTo("UP");
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "[{index}] 경로={0}")
     @ValueSource(strings = {
             "/actuator/health/liveness",
             "/actuator/health/readiness"

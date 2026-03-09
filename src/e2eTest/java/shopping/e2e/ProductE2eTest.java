@@ -23,8 +23,10 @@ import shopping.product.adapter.in.api.ProductResponse;
 import shopping.product.adapter.in.api.ProductUpdateRequest;
 import shopping.product.domain.Product;
 
+@DisplayName("[상품] 상품 통합 테스트")
 class ProductE2eTest extends AbstractE2eTest {
     @Nested
+    @DisplayName("조회")
     class Read {
         @Test
         @DisplayName("비회원은 상품 목록을 조회할 수 있다")
@@ -55,6 +57,7 @@ class ProductE2eTest extends AbstractE2eTest {
     }
 
     @Nested
+    @DisplayName("생성")
     class Create {
         @Test
         @DisplayName("판매자는 자기 상품을 만들 수 있다")
@@ -93,7 +96,7 @@ class ProductE2eTest extends AbstractE2eTest {
             assertThat(errorResponse.code()).isEqualTo("MEMBER_SELLER_REQUIRED");
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "[{index}] 상품명={0}")
         @ValueSource(strings = {
                 "abcdefghijklmnop",
                 "가가가가가가가가가가가가가가가가"
@@ -116,7 +119,7 @@ class ProductE2eTest extends AbstractE2eTest {
             assertThat(errorResponse.code()).isEqualTo("PRODUCT_NAME_TOO_LONG");
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "[{index}] 가격={0}")
         @ValueSource(strings = {
                 "0",
                 "-1"
@@ -218,6 +221,7 @@ class ProductE2eTest extends AbstractE2eTest {
     }
 
     @Nested
+    @DisplayName("수정 및 삭제")
     class UpdateAndDelete {
         @Test
         @DisplayName("판매자는 자기 상품을 수정할 수 있다")

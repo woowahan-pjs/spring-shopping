@@ -18,6 +18,7 @@ import shopping.auth.service.AuthTokens;
 import shopping.member.service.MemberService;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[회원] 회원 컨트롤러 단위 테스트")
 class MemberControllerTest {
     @Mock
     private MemberService memberService;

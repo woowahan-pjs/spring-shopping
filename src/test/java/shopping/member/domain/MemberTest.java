@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
 
+@DisplayName("[회원] 회원 도메인 단위 테스트")
 class MemberTest {
     @Test
     @DisplayName("회원을 만들면 전달한 값으로 초기화한다")
@@ -45,7 +46,7 @@ class MemberTest {
         assertThat(member.isActive()).isFalse();
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "[{index}] 역할={0}, 판매자 여부={1}")
     @CsvSource({
             "USER, false",
             "SELLER, true"

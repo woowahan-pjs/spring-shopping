@@ -13,6 +13,7 @@ import shopping.auth.adapter.in.web.annotation.CurrentMemberId;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
 
+@DisplayName("[인증] 현재 회원 ID 리졸버 단위 테스트")
 class MemberIdResolverTest {
     private MemberIdResolver memberIdResolver;
 

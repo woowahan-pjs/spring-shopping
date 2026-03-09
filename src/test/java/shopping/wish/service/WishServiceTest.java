@@ -27,6 +27,7 @@ import shopping.wish.domain.WishlistRepository;
 import shopping.wish.domain.WishlistStatus;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[위시] 위시 서비스 조회 단위 테스트")
 class WishServiceTest {
     @Mock
     private WishlistRepository wishlistRepository;

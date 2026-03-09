@@ -33,6 +33,7 @@ import shopping.wish.domain.WishlistStatus;
 import org.junit.jupiter.params.ParameterizedTest;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[위시] 위시 서비스 행위 단위 테스트")
 class WishServiceBehaviorTest {
     @Mock
     private WishlistRepository wishlistRepository;
@@ -51,6 +52,7 @@ class WishServiceBehaviorTest {
     }
 
     @Nested
+    @DisplayName("추가")
     class Add {
         @Test
         @DisplayName("수량이 없으면 기본 수량 1로 위시를 추가한다")
@@ -121,7 +123,7 @@ class WishServiceBehaviorTest {
                     .isEqualTo(ErrorCode.WISH_ALREADY_EXISTS);
         }
 
-        @ParameterizedTest
+        @ParameterizedTest(name = "[{index}] 수량={0}")
         @ValueSource(ints = {0, -1})
         @DisplayName("수량이 0 이하이면 위시를 추가하지 않는다")
         void addThrowWhenQuantityIsInvalid(int quantity) {
@@ -143,6 +145,7 @@ class WishServiceBehaviorTest {
     }
 
     @Nested
+    @DisplayName("삭제")
     class Delete {
         @Test
         @DisplayName("활성 위시 아이템이 있으면 삭제한다")

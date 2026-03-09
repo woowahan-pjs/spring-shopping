@@ -26,6 +26,7 @@ import shopping.auth.adapter.in.web.AuthAttributes;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
 
+@DisplayName("[공통] API 감사 로그 AOP 단위 테스트")
 class ApiAuditLoggingAspectTest {
     private final Logger logger = (Logger) LoggerFactory.getLogger(ApiAuditLoggingAspect.class);
     private final ListAppender<ILoggingEvent> listAppender = new ListAppender<>();

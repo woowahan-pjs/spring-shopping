@@ -25,6 +25,7 @@ import shopping.member.domain.MemberRole;
 import shopping.member.domain.MemberStatus;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("[인증] 인증 서비스 단위 테스트")
 class AuthServiceTest {
     @Mock
     private JwtTokenProvider jwtTokenProvider;
