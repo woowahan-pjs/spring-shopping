@@ -1,4 +1,4 @@
-package shopping.member.api;
+package shopping.member.api.command;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,7 +17,7 @@ import shopping.member.service.dto.MemberRegisterInput;
 @RestController
 @RequestMapping("/api/members")
 @RequiredArgsConstructor
-public class MemberController {
+public class MemberCommandController {
 
     private final MemberCommandService memberCommandService;
 

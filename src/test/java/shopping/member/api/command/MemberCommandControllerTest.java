@@ -1,4 +1,4 @@
-package shopping.member.api;
+package shopping.member.api.command;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class MemberControllerTest {
+class MemberCommandControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -31,6 +31,9 @@ class MemberControllerTest {
 
     @Autowired
     private MemberRepository memberRepository;
+
+    @Autowired
+    private MemberCommandController memberCommandController;
 
     @Test
     @DisplayName("회원가입 성공 시 201과 토큰을 반환한다")
@@ -46,6 +49,7 @@ class MemberControllerTest {
                 .andExpect(jsonPath("$.token").isNotEmpty());
 
         // then
+        assertThat(memberCommandController).isNotNull();
         assertThat(memberRepository.existsByEmail("user@example.com")).isTrue();
     }
 
