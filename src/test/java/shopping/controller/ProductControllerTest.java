@@ -59,7 +59,7 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("상품 목록을 가져온다.")
-    void findAll() throws JsonProcessingException {
+    void findAll() {
         given(service.findProducts()).willReturn(List.of(createWithId(1L), createWithId(2L), createWithId(3L)));
 
         assertThat(mockMvcTester.get().uri("/products"))
@@ -67,5 +67,16 @@ class ProductControllerTest {
                 .bodyJson()
                 .convertTo(InstanceOfAssertFactories.list(ProductResponse.class))
                 .hasSize(3);
+    }
+
+    @Test
+    @DisplayName("특정 상품을 조회한다")
+    void findById() {
+        given(service.findProductById(1L)).willReturn(createWithId(1L));
+
+        assertThat(mockMvcTester.get().uri("/products/1"))
+                .hasStatus(HttpStatus.OK)
+                .bodyJson()
+                .hasPathSatisfying("$.id", id -> assertThat(id).isEqualTo(1));
     }
 }

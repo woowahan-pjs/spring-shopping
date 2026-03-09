@@ -2,10 +2,7 @@ package shopping.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import shopping.domain.Product;
 import shopping.dto.ProductRequest;
 import shopping.dto.ProductResponse;
@@ -31,5 +28,11 @@ public class ProductController {
     public ResponseEntity<List<ProductResponse>> findAll() {
         List<Product> products = service.findProducts();
         return ResponseEntity.ok(products.stream().map(ProductResponse::from).toList());
+    }
+
+    @GetMapping("/products/{id}")
+    public ResponseEntity<ProductResponse> findById(@PathVariable("id") Long id) {
+        Product product = service.findProductById(id);
+        return ResponseEntity.ok(ProductResponse.from(product));
     }
 }
