@@ -26,4 +26,10 @@ public class ProductController {
         Product save = service.save(request.toProduct());
         return ResponseEntity.status(HttpStatus.CREATED).body(ProductResponse.from(save));
     }
+
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductResponse>> findAll() {
+        List<Product> products = service.findProducts();
+        return ResponseEntity.ok(products.stream().map(ProductResponse::from).toList());
+    }
 }

@@ -2,6 +2,7 @@ package shopping.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,8 @@ import shopping.domain.Product;
 import shopping.dto.ProductRequest;
 import shopping.dto.ProductResponse;
 import shopping.service.ProductService;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -54,4 +57,15 @@ class ProductControllerTest {
                 });
     }
 
+    @Test
+    @DisplayName("상품 목록을 가져온다.")
+    void findAll() throws JsonProcessingException {
+        given(service.findProducts()).willReturn(List.of(createWithId(1L), createWithId(2L), createWithId(3L)));
+
+        assertThat(mockMvcTester.get().uri("/products"))
+                .hasStatus(HttpStatus.OK)
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(ProductResponse.class))
+                .hasSize(3);
+    }
 }
