@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,28 +42,40 @@ class WishQueryControllerTest {
     private AuthService authService;
 
     @Test
-    @DisplayName("유효한 토큰으로 위시리스트 목록을 조회할 수 있다")
+    @DisplayName("유효한 토큰으로 위시리스트 페이징 목록을 조회할 수 있다")
     void test01() throws Exception {
         // arrange
         Member member = memberRepository.save(Member.builder()
                 .email("user@example.com")
                 .password("password123")
                 .build());
-        Product product = productRepository.save(
-                Product.builder().name("상품명").price(10000L).imageUrl("https://example.com/image.jpg").build()
+        Product firstProduct = productRepository.save(
+                Product.builder().name("상품1").price(10000L).imageUrl("https://example.com/1.jpg").build()
         );
-        wishRepository.save(Wish.builder().memberId(member.getId()).productId(product.getId()).build());
+        Product secondProduct = productRepository.save(
+                Product.builder().name("상품2").price(20000L).imageUrl("https://example.com/2.jpg").build()
+        );
+        wishRepository.save(Wish.builder().memberId(member.getId()).productId(firstProduct.getId()).build());
+        wishRepository.save(Wish.builder().memberId(member.getId()).productId(secondProduct.getId()).build());
         String token = authService.createToken(member.getId());
 
         // act & assert
         mockMvc.perform(get("/api/wishes")
+                        .param("page", String.valueOf(PageRequest.of(0, 1).getPageNumber()))
+                        .param("size", String.valueOf(PageRequest.of(0, 1).getPageSize()))
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].productId").value(product.getId()))
-                .andExpect(jsonPath("$[0].productName").value("상품명"))
-                .andExpect(jsonPath("$[0].price").value(10000))
-                .andExpect(jsonPath("$[0].imageUrl").value("https://example.com/image.jpg"));
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].productId").value(secondProduct.getId()))
+                .andExpect(jsonPath("$.content[0].productName").value("상품2"))
+                .andExpect(jsonPath("$.content[0].price").value(20000))
+                .andExpect(jsonPath("$.content[0].imageUrl").value("https://example.com/2.jpg"))
+                .andExpect(jsonPath("$.page").value(0))
+                .andExpect(jsonPath("$.size").value(1))
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.hasNext").value(true))
+                .andExpect(jsonPath("$.hasPrevious").value(false));
     }
 
     @Test
@@ -95,10 +108,10 @@ class WishQueryControllerTest {
         mockMvc.perform(get("/api/wishes")
                         .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.length()").value(1))
-                .andExpect(jsonPath("$[0].productId").value(product.getId()))
-                .andExpect(jsonPath("$[0].productName").value("삭제된 상품입니다."))
-                .andExpect(jsonPath("$[0].price").isEmpty())
-                .andExpect(jsonPath("$[0].imageUrl").isEmpty());
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].productId").value(product.getId()))
+                .andExpect(jsonPath("$.content[0].productName").value("삭제된 상품입니다."))
+                .andExpect(jsonPath("$.content[0].price").isEmpty())
+                .andExpect(jsonPath("$.content[0].imageUrl").isEmpty());
     }
 }

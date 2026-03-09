@@ -1,15 +1,17 @@
 package shopping.wish.api.query;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import shopping.auth.LoginMember;
+import shopping.common.response.PageResponse;
 import shopping.member.domain.Member;
 import shopping.wish.api.query.dto.WishResponse;
 import shopping.wish.service.WishQueryService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/wishes")
@@ -18,9 +20,13 @@ public class WishQueryController {
     private final WishQueryService wishQueryService;
 
     @GetMapping
-    public List<WishResponse> findAll(@LoginMember Member member) {
-        return wishQueryService.findAll(member.getId()).stream()
-                .map(WishResponse::from)
-                .toList();
+    public PageResponse<WishResponse> findAll(
+            @LoginMember Member member,
+            @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return PageResponse.from(
+                wishQueryService.findAll(member.getId(), pageable)
+                                .map(WishResponse::from)
+        );
     }
 }

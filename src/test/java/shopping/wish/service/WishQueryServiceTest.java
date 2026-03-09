@@ -7,6 +7,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.common.client.ProfanityClient;
 import shopping.product.domain.Product;
@@ -18,8 +21,6 @@ import shopping.product.service.dto.ProductRegisterInput;
 import shopping.wish.domain.Wish;
 import shopping.wish.repository.WishRepository;
 import shopping.wish.service.dto.WishOutput;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,29 +53,38 @@ class WishQueryServiceTest {
     private FakeProfanityClient profanityClient;
 
     @Test
-    @DisplayName("회원의 활성 위시리스트 목록을 조회한다")
+    @DisplayName("회원의 활성 위시리스트 목록을 페이징으로 조회한다")
     void test01() {
         // arrange
-        Product product = productRepository.save(
-                Product.builder().name("상품명").price(10000L).imageUrl("https://example.com/image.jpg").build()
+        Product firstProduct = productRepository.save(
+                Product.builder().name("상품1").price(10000L).imageUrl("https://example.com/1.jpg").build()
         );
         Product deletedProduct = productRepository.save(
                 Product.builder().name("삭제상품").price(20000L).imageUrl("https://example.com/deleted.jpg").build()
         );
-        wishRepository.save(Wish.builder().memberId(1L).productId(product.getId()).build());
+        Product secondProduct = productRepository.save(
+                Product.builder().name("상품2").price(30000L).imageUrl("https://example.com/2.jpg").build()
+        );
+        wishRepository.save(Wish.builder().memberId(1L).productId(firstProduct.getId()).build());
+        wishRepository.save(Wish.builder().memberId(1L).productId(secondProduct.getId()).build());
         Wish deletedWish = wishRepository.save(Wish.builder().memberId(1L).productId(deletedProduct.getId()).build());
         deletedWish.delete();
-        wishRepository.save(Wish.builder().memberId(2L).productId(product.getId()).build());
+        wishRepository.save(Wish.builder().memberId(2L).productId(firstProduct.getId()).build());
 
         // act
-        List<WishOutput> result = wishQueryService.findAll(1L);
+        Page<WishOutput> result = wishQueryService.findAll(
+                1L,
+                PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "id"))
+        );
 
         // assert
-        assertThat(result).hasSize(1);
-        assertThat(result.getFirst().productId()).isEqualTo(product.getId());
-        assertThat(result.getFirst().productName()).isEqualTo("상품명");
-        assertThat(result.getFirst().price()).isEqualTo(10000L);
-        assertThat(result.getFirst().imageUrl()).isEqualTo("https://example.com/image.jpg");
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().getFirst().productId()).isEqualTo(secondProduct.getId());
+        assertThat(result.getContent().getFirst().productName()).isEqualTo("상품2");
+        assertThat(result.getContent().getFirst().price()).isEqualTo(30000L);
+        assertThat(result.getContent().getFirst().imageUrl()).isEqualTo("https://example.com/2.jpg");
+        assertThat(result.getTotalElements()).isEqualTo(2);
+        assertThat(result.getTotalPages()).isEqualTo(2);
     }
 
     @Test
@@ -84,10 +94,13 @@ class WishQueryServiceTest {
         Long memberId = 1L;
 
         // act
-        List<WishOutput> result = wishQueryService.findAll(memberId);
+        Page<WishOutput> result = wishQueryService.findAll(
+                memberId,
+                PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"))
+        );
 
         // assert
-        assertThat(result).isEmpty();
+        assertThat(result.getContent()).isEmpty();
     }
 
     @Test
@@ -101,13 +114,16 @@ class WishQueryServiceTest {
         productCommandService.delete(product.id());
 
         // act
-        List<WishOutput> result = wishQueryService.findAll(1L);
+        Page<WishOutput> result = wishQueryService.findAll(
+                1L,
+                PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"))
+        );
 
         // assert
-        assertThat(result).hasSize(1);
-        assertThat(result.getFirst().productId()).isEqualTo(product.id());
-        assertThat(result.getFirst().productName()).isEqualTo("삭제된 상품입니다.");
-        assertThat(result.getFirst().price()).isNull();
-        assertThat(result.getFirst().imageUrl()).isNull();
+        assertThat(result.getContent()).hasSize(1);
+        assertThat(result.getContent().getFirst().productId()).isEqualTo(product.id());
+        assertThat(result.getContent().getFirst().productName()).isEqualTo("삭제된 상품입니다.");
+        assertThat(result.getContent().getFirst().price()).isNull();
+        assertThat(result.getContent().getFirst().imageUrl()).isNull();
     }
 }

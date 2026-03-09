@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -74,16 +75,25 @@ class ProductQueryControllerTest {
     }
 
     @Test
-    @DisplayName("상품 목록 조회 시 200과 전체 목록을 반환한다")
+    @DisplayName("상품 목록 조회 시 페이징 응답을 반환한다")
     void test03() throws Exception {
-        // given
+        // arrange
         register(new ProductRegisterRequest("상품1", 1000L, "https://example.com/1.jpg"));
         register(new ProductRegisterRequest("상품2", 2000L, "https://example.com/2.jpg"));
 
-        // when & then
-        mockMvc.perform(get("/api/products"))
+        // act & assert
+        mockMvc.perform(get("/api/products")
+                       .param("page", String.valueOf(PageRequest.of(0, 1).getPageNumber()))
+                       .param("size", String.valueOf(PageRequest.of(0, 1).getPageSize())))
                .andExpect(status().isOk())
-               .andExpect(jsonPath("$.length()").value(2));
+               .andExpect(jsonPath("$.content.length()").value(1))
+               .andExpect(jsonPath("$.content[0].name").value("상품2"))
+               .andExpect(jsonPath("$.page").value(0))
+               .andExpect(jsonPath("$.size").value(1))
+               .andExpect(jsonPath("$.totalElements").value(2))
+               .andExpect(jsonPath("$.totalPages").value(2))
+               .andExpect(jsonPath("$.hasNext").value(true))
+               .andExpect(jsonPath("$.hasPrevious").value(false));
     }
 
     private Long register(ProductRegisterRequest request) throws Exception {

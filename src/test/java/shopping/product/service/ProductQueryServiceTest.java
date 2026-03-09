@@ -7,12 +7,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.common.client.ProfanityClient;
 import shopping.product.service.dto.ProductOutput;
 import shopping.product.service.dto.ProductRegisterInput;
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -67,17 +68,21 @@ class ProductQueryServiceTest {
     }
 
     @Test
-    @DisplayName("상품 목록 조회가 가능하다")
+    @DisplayName("상품 목록은 페이징으로 조회할 수 있다")
     void test03() {
-        // given
+        // arrange
         productCommandService.register(new ProductRegisterInput("상품1", 1000L, "https://example.com/1.jpg"));
         productCommandService.register(new ProductRegisterInput("상품2", 2000L, "https://example.com/2.jpg"));
 
-        // when
-        List<ProductOutput> responses = productQueryService.findAll();
+        // act
+        Page<ProductOutput> responses = productQueryService.findAll(
+            PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "id")));
 
-        // then
-        assertThat(responses).hasSize(2);
+        // assert
+        assertThat(responses.getContent()).hasSize(1);
+        assertThat(responses.getContent().getFirst().name()).isEqualTo("상품2");
+        assertThat(responses.getTotalElements()).isEqualTo(2);
+        assertThat(responses.getTotalPages()).isEqualTo(2);
     }
 
     @Test
@@ -97,19 +102,20 @@ class ProductQueryServiceTest {
     @Test
     @DisplayName("삭제한 상품은 상품 목록 조회에서 제외된다")
     void test05() {
-        // given
+        // arrange
         ProductOutput active = productCommandService.register(
             new ProductRegisterInput("상품1", 1000L, "https://example.com/1.jpg"));
         ProductOutput deleted = productCommandService.register(
             new ProductRegisterInput("상품2", 2000L, "https://example.com/2.jpg"));
         productCommandService.delete(deleted.id());
 
-        // when
-        List<ProductOutput> responses = productQueryService.findAll();
+        // act
+        Page<ProductOutput> responses = productQueryService.findAll(
+            PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id")));
 
-        // then
-        assertThat(responses).hasSize(1);
-        assertThat(responses.getFirst().id()).isEqualTo(active.id());
+        // assert
+        assertThat(responses.getContent()).hasSize(1);
+        assertThat(responses.getContent().getFirst().id()).isEqualTo(active.id());
     }
 
     @Test
