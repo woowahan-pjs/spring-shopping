@@ -51,39 +51,21 @@ public class Product extends BaseDateEntity {
 
     private Long deletedMemberId;
 
-    private Product(
-            ProductName name,
-            String description,
-            ProductImageUrl imageUrl,
-            ProductPrice price,
-            Long memberId
-    ) {
+    private Product(ProductDetails details, Long memberId) {
         this.stockQuantity = 0;
         this.status = ProductStatus.ACTIVE;
         this.createdMemberId = memberId;
         this.updatedMemberId = memberId;
-        applyDetails(name, description, imageUrl, price);
+        applyDetails(details);
     }
 
-    public static Product create(
-            ProductName name,
-            String description,
-            ProductImageUrl imageUrl,
-            ProductPrice price,
-            Long memberId
-    ) {
-        return new Product(name, description, imageUrl, price, memberId);
+    public static Product create(ProductDetails details, Long memberId) {
+        return new Product(details, memberId);
     }
 
-    public void update(
-            ProductName name,
-            String description,
-            ProductImageUrl imageUrl,
-            ProductPrice price,
-            Long memberId
-    ) {
+    public void update(ProductDetails details, Long memberId) {
         requireOwner(memberId);
-        applyDetails(name, description, imageUrl, price);
+        applyDetails(details);
         this.updatedMemberId = memberId;
     }
 
@@ -98,24 +80,11 @@ public class Product extends BaseDateEntity {
         return status == ProductStatus.ACTIVE;
     }
 
-    private void applyDetails(
-            ProductName name,
-            String description,
-            ProductImageUrl imageUrl,
-            ProductPrice price
-    ) {
-        this.name = name.value();
-        this.description = nullIfBlank(description);
-        this.imageUrl = imageUrl.value();
-        this.price = price.value();
-    }
-
-    // 설명이 비어 있으면 의미 없는 값으로 보지 않고 null로 저장한다.
-    private String nullIfBlank(String description) {
-        if (description == null || description.isBlank()) {
-            return null;
-        }
-        return description;
+    private void applyDetails(ProductDetails details) {
+        this.name = details.name().value();
+        this.description = details.description();
+        this.imageUrl = details.imageUrl().value();
+        this.price = details.price().value();
     }
 
     private void requireOwner(Long memberId) {

@@ -3,7 +3,6 @@ package shopping.auth.adapter.in.api;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +23,6 @@ public class AuthController {
         String refreshToken = refreshTokenCookieManager.resolve(request);
         AuthTokens tokens = authService.refresh(refreshToken);
         refreshTokenCookieManager.write(response, tokens.refreshToken());
-        return ResponseEntity.status(HttpStatus.OK).body(new TokenResponse(tokens.accessToken()));
+        return ResponseEntity.ok(TokenResponse.from(tokens));
     }
 }

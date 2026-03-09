@@ -36,14 +36,14 @@ public class WishlistItem {
     @Column(nullable = false)
     private LocalDateTime addedAt;
 
-    private WishlistItem(Wishlist wishlist, Long productId, Integer quantity) {
+    private WishlistItem(Wishlist wishlist, Long productId, WishQuantity quantity) {
         this.wishlist = wishlist;
         this.productId = productId;
-        this.quantity = quantity;
+        this.quantity = quantity.value();
         this.addedAt = LocalDateTime.now();
     }
 
     public static WishlistItem create(Wishlist wishlist, Long productId, WishQuantity quantity) {
-        return new WishlistItem(wishlist, productId, quantity.value());
+        return new WishlistItem(wishlist, productId, quantity);
     }
 }

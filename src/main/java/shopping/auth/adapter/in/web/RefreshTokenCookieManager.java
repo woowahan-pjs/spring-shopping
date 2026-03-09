@@ -4,10 +4,10 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.time.Duration;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
+import shopping.auth.AuthProperties;
 
 @Component
 public class RefreshTokenCookieManager {
@@ -17,14 +17,10 @@ public class RefreshTokenCookieManager {
     private final long refreshTokenValidityDays;
     private final boolean secure;
 
-    public RefreshTokenCookieManager(
-            @Value("${app.auth.refresh-token-cookie-name}") String cookieName,
-            @Value("${app.auth.refresh-token-validity-days}") long refreshTokenValidityDays,
-            @Value("${app.auth.refresh-token-cookie-secure}") boolean secure
-    ) {
-        this.cookieName = cookieName;
-        this.refreshTokenValidityDays = refreshTokenValidityDays;
-        this.secure = secure;
+    public RefreshTokenCookieManager(AuthProperties authProperties) {
+        this.cookieName = authProperties.getRefreshTokenCookieName();
+        this.refreshTokenValidityDays = authProperties.getRefreshTokenValidityDays();
+        this.secure = authProperties.isRefreshTokenCookieSecure();
     }
 
     public void write(HttpServletResponse response, String refreshToken) {

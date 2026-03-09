@@ -45,6 +45,10 @@ public class MemberController {
             HttpStatus status
     ) {
         refreshTokenCookieManager.write(response, tokens.refreshToken());
-        return ResponseEntity.status(status).body(new TokenResponse(tokens.accessToken()));
+        TokenResponse tokenResponse = TokenResponse.from(tokens);
+        if (status == HttpStatus.OK) {
+            return ResponseEntity.ok(tokenResponse);
+        }
+        return ResponseEntity.status(status).body(tokenResponse);
     }
 }

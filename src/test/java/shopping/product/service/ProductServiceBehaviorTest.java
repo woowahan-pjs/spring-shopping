@@ -27,6 +27,7 @@ import shopping.product.adapter.in.api.ProductCreateRequest;
 import shopping.product.adapter.in.api.ProductResponse;
 import shopping.product.adapter.in.api.ProductUpdateRequest;
 import shopping.product.domain.Product;
+import shopping.product.domain.ProductDetails;
 import shopping.product.domain.ProductImageUrl;
 import shopping.product.domain.ProductName;
 import shopping.product.domain.ProductPrice;
@@ -322,15 +323,18 @@ class ProductServiceBehaviorTest {
     }
 
     private Product createProduct(Long productId, Long memberId) {
-        Product product = Product.create(
-                new ProductName("상품"),
-                "설명",
-                new ProductImageUrl("https://example.com/image.png"),
-                new ProductPrice(new BigDecimal("10000")),
-                memberId
-        );
+        Product product = Product.create(productDetails("상품", "설명", "https://example.com/image.png", "10000"), memberId);
         setField(product, "id", productId);
         return product;
+    }
+
+    private ProductDetails productDetails(String name, String description, String imageUrl, String price) {
+        return new ProductDetails(
+                new ProductName(name),
+                description,
+                new ProductImageUrl(imageUrl),
+                new ProductPrice(new BigDecimal(price))
+        );
     }
 
     private void setField(Object target, String fieldName, Object value) {

@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import javax.crypto.SecretKey;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import shopping.auth.AuthProperties;
 import shopping.auth.domain.JwtSubject;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
@@ -19,12 +19,9 @@ public class JwtTokenProvider {
     private final SecretKey signingKey;
     private final long tokenValidityMinutes;
 
-    public JwtTokenProvider(
-            @Value("${app.auth.jwt-secret}") String secret,
-            @Value("${app.auth.token-validity-minutes}") long tokenValidityMinutes
-    ) {
-        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-        this.tokenValidityMinutes = tokenValidityMinutes;
+    public JwtTokenProvider(AuthProperties authProperties) {
+        this.signingKey = Keys.hmacShaKeyFor(authProperties.getJwtSecret().getBytes(StandardCharsets.UTF_8));
+        this.tokenValidityMinutes = authProperties.getTokenValidityMinutes();
     }
 
     public String create(Long memberId) {

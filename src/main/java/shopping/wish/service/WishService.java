@@ -32,7 +32,7 @@ public class WishService {
         WishQuantity quantity = WishQuantity.from(requestedQuantity);
         WishlistItem item = WishlistItem.create(wishlist, productId, quantity);
         WishlistItem saved = wishlistItemRepository.save(item);
-        return toResponse(saved, product);
+        return WishResponse.from(saved, product);
     }
 
     public void delete(Long memberId, Long wishId) {
@@ -43,15 +43,9 @@ public class WishService {
 
     @Transactional(readOnly = true)
     public List<WishResponse> list(Long memberId) {
-        Wishlist wishlist = findWishlistForList(memberId);
-        if (wishlist == null) {
-            return List.of();
-        }
-        return wishlistItemRepository.findByWishlist_IdOrderByIdAsc(wishlist.getId())
-                .stream()
-                .map(this::toResponseIfProductIsActive)
-                .flatMap(Optional::stream)
-                .toList();
+        return findWishlistForList(memberId)
+                .map(this::listResponses)
+                .orElseGet(List::of);
     }
 
     private Wishlist findOrCreateWishlist(Long memberId) {
@@ -64,9 +58,16 @@ public class WishService {
                 .orElseThrow(() -> new ApiException(ErrorCode.WISHLIST_NOT_FOUND));
     }
 
-    private Wishlist findWishlistForList(Long memberId) {
-        return wishlistRepository.findByMemberIdAndStatus(memberId, WishlistStatus.ACTIVE)
-                .orElse(null);
+    private Optional<Wishlist> findWishlistForList(Long memberId) {
+        return wishlistRepository.findByMemberIdAndStatus(memberId, WishlistStatus.ACTIVE);
+    }
+
+    private List<WishResponse> listResponses(Wishlist wishlist) {
+        return wishlistItemRepository.findByWishlist_IdOrderByIdAsc(wishlist.getId())
+                .stream()
+                .map(this::toResponseIfProductIsActive)
+                .flatMap(Optional::stream)
+                .toList();
     }
 
     private WishlistItem findWishlistItem(Long wishlistId, Long wishId) {
@@ -84,18 +85,6 @@ public class WishService {
 
     private Optional<WishResponse> toResponseIfProductIsActive(WishlistItem item) {
         return productSnapshotProvider.findActiveProduct(item.getProductId())
-                .map(product -> toResponse(item, product));
-    }
-
-    private WishResponse toResponse(WishlistItem item, ProductSnapshot product) {
-        return new WishResponse(
-                item.getId(),
-                product.productId(),
-                product.productName(),
-                product.productPrice(),
-                product.productImageUrl(),
-                item.getQuantity(),
-                item.getAddedAt()
-        );
+                .map(product -> WishResponse.from(item, product));
     }
 }

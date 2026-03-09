@@ -29,6 +29,7 @@ import shopping.member.adapter.in.api.RegisterRequest;
 import shopping.member.domain.Member;
 import shopping.member.domain.MemberRepository;
 import shopping.product.domain.Product;
+import shopping.product.domain.ProductDetails;
 import shopping.product.domain.ProductImageUrl;
 import shopping.product.domain.ProductName;
 import shopping.product.domain.ProductPrice;
@@ -165,10 +166,12 @@ public abstract class AbstractE2eTest {
 
     protected Product seedProduct(Long sellerId, String name) {
         Product product = Product.create(
-                new ProductName(name),
-                "기본 설명",
-                new ProductImageUrl("https://example.com/image.png"),
-                new ProductPrice(new BigDecimal("10000")),
+                new ProductDetails(
+                        new ProductName(name),
+                        "기본 설명",
+                        new ProductImageUrl("https://example.com/image.png"),
+                        new ProductPrice(new BigDecimal("10000"))
+                ),
                 sellerId
         );
         return productRepository.save(product);

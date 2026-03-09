@@ -41,7 +41,7 @@ class AuthControllerTest {
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(result.getBody()).isEqualTo(new TokenResponse("new-access-token"));
+        assertThat(result.getBody()).isEqualTo(TokenResponse.from(new AuthTokens("new-access-token", "new-refresh-token")));
         verify(refreshTokenCookieManager).resolve(request);
         verify(refreshTokenCookieManager).write(response, "new-refresh-token");
     }

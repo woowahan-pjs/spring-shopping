@@ -1,5 +1,6 @@
 package shopping.auth.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.auth.adapter.out.JwtTokenProvider;
@@ -12,22 +13,13 @@ import shopping.member.domain.MemberRepository;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class AuthService {
     private static final String BEARER_PREFIX = "Bearer ";
 
     private final JwtTokenProvider jwtTokenProvider;
     private final MemberRepository memberRepository;
     private final RefreshTokenManager refreshTokenManager;
-
-    public AuthService(
-            JwtTokenProvider jwtTokenProvider,
-            MemberRepository memberRepository,
-            RefreshTokenManager refreshTokenManager
-    ) {
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.memberRepository = memberRepository;
-        this.refreshTokenManager = refreshTokenManager;
-    }
 
     public AuthTokens issueTokens(Long memberId) {
         String accessToken = jwtTokenProvider.create(memberId);

@@ -7,8 +7,8 @@ import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
 import java.util.HexFormat;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import shopping.auth.AuthProperties;
 import shopping.auth.domain.RefreshToken;
 import shopping.auth.domain.RefreshTokenRepository;
 import shopping.common.ApiException;
@@ -20,15 +20,11 @@ public class RefreshTokenManager {
 
     private final RefreshTokenRepository refreshTokenRepository;
     private final long refreshTokenValidityDays;
-    private final SecureRandom secureRandom;
+    private final SecureRandom secureRandom = new SecureRandom();
 
-    public RefreshTokenManager(
-            RefreshTokenRepository refreshTokenRepository,
-            @Value("${app.auth.refresh-token-validity-days}") long refreshTokenValidityDays
-    ) {
+    public RefreshTokenManager(RefreshTokenRepository refreshTokenRepository, AuthProperties authProperties) {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.refreshTokenValidityDays = refreshTokenValidityDays;
-        this.secureRandom = new SecureRandom();
+        this.refreshTokenValidityDays = authProperties.getRefreshTokenValidityDays();
     }
 
     public String issue(Long memberId) {

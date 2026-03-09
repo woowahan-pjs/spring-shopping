@@ -38,75 +38,45 @@ public class ApiAuditLoggingAspect {
     @Around("@within(org.springframework.web.bind.annotation.RestController) || within(shopping..adapter.in..*Controller)")
     public Object logApiCall(ProceedingJoinPoint joinPoint) throws Throwable {
         long startedAt = nanoTimeSupplier.getAsLong();
-        AuditContext context = auditContext(joinPoint);
+        AuditContext context = AuditContext.from(joinPoint, currentRequest());
 
         try {
             Object result = joinPoint.proceed();
-            writeLog(AuditLog.success(context, responseStatus(result), elapsedMillis(startedAt)));
+            logSuccess(context, responseStatus(result), elapsedMillis(startedAt));
             return result;
         } catch (Throwable throwable) {
-            writeLog(AuditLog.failure(context, failureStatus(throwable), elapsedMillis(startedAt), errorCode(throwable)));
+            logFailure(context, throwable, elapsedMillis(startedAt));
             throw throwable;
         }
     }
 
-    private void writeLog(AuditLog auditLog) {
-        if (shouldWarn(auditLog)) {
-            log.warn(auditLog.format(), auditLog.arguments());
+    private void logSuccess(AuditContext context, int status, long durationMs) {
+        Object[] arguments = auditArguments(context, status, durationMs, "SUCCESS");
+        if (durationMs >= WARN_THRESHOLD_MS) {
+            log.warn(AUDIT_LOG_FORMAT, arguments);
             return;
         }
-
-        log.info(auditLog.format(), auditLog.arguments());
+        log.info(AUDIT_LOG_FORMAT, arguments);
     }
 
-    private boolean shouldWarn(AuditLog auditLog) {
-        return auditLog.isFailure() || auditLog.durationMs() >= WARN_THRESHOLD_MS;
-    }
-
-    private AuditContext auditContext(ProceedingJoinPoint joinPoint) {
-        HttpServletRequest request = currentRequest();
-        return new AuditContext(
-                requestMethod(request),
-                requestPath(request),
-                controllerName(joinPoint),
-                memberId(request)
+    private void logFailure(AuditContext context, Throwable throwable, long durationMs) {
+        int status = failureStatus(throwable);
+        String errorCode = errorCode(throwable);
+        if (errorCode == null) {
+            log.warn(AUDIT_LOG_FORMAT, auditArguments(context, status, durationMs, "FAILURE"));
+            return;
+        }
+        log.warn(
+                AUDIT_LOG_WITH_ERROR_CODE_FORMAT,
+                auditArguments(context, status, durationMs, "FAILURE", errorCode)
         );
     }
 
     private HttpServletRequest currentRequest() {
-        if (!(RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attributes)) {
-            return null;
-        }
-        return attributes.getRequest();
-    }
-
-    private String requestMethod(HttpServletRequest request) {
-        if (request == null) {
-            return UNKNOWN;
-        }
-        return request.getMethod();
-    }
-
-    private String requestPath(HttpServletRequest request) {
-        if (request == null) {
-            return UNKNOWN;
-        }
-        return request.getRequestURI();
-    }
-
-    private Long memberId(HttpServletRequest request) {
-        if (request == null) {
-            return null;
-        }
-        Object authenticatedMemberId = request.getAttribute(AuthAttributes.MEMBER_ID_ATTRIBUTE);
-        if (authenticatedMemberId instanceof Long value) {
-            return value;
+        if (RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attributes) {
+            return attributes.getRequest();
         }
         return null;
-    }
-
-    private String controllerName(ProceedingJoinPoint joinPoint) {
-        return joinPoint.getSignature().getDeclaringType().getSimpleName();
     }
 
     private long elapsedMillis(long startedAt) {
@@ -134,57 +104,51 @@ public class ApiAuditLoggingAspect {
         return null;
     }
 
-    private enum Outcome {
-        SUCCESS,
-        FAILURE
+    private Object[] auditArguments(AuditContext context, int status, long durationMs, String outcome) {
+        return new Object[]{
+                context.method(),
+                context.path(),
+                context.controller(),
+                context.memberId(),
+                status,
+                durationMs,
+                outcome
+        };
+    }
+
+    private Object[] auditArguments(AuditContext context, int status, long durationMs, String outcome, String errorCode) {
+        return new Object[]{
+                context.method(),
+                context.path(),
+                context.controller(),
+                context.memberId(),
+                status,
+                durationMs,
+                outcome,
+                errorCode
+        };
     }
 
     private record AuditContext(String method, String path, String controller, Long memberId) {
-    }
-
-    private record AuditLog(AuditContext context, int status, long durationMs, Outcome outcome, String errorCode) {
-        private static AuditLog success(AuditContext context, int status, long durationMs) {
-            return new AuditLog(context, status, durationMs, Outcome.SUCCESS, null);
+        private static AuditContext from(ProceedingJoinPoint joinPoint, HttpServletRequest request) {
+            return new AuditContext(
+                    request == null ? UNKNOWN : request.getMethod(),
+                    request == null ? UNKNOWN : request.getRequestURI(),
+                    joinPoint.getSignature().getDeclaringType().getSimpleName(),
+                    memberId(request)
+            );
         }
 
-        private static AuditLog failure(AuditContext context, int status, long durationMs, String errorCode) {
-            return new AuditLog(context, status, durationMs, Outcome.FAILURE, errorCode);
-        }
-
-        private boolean isFailure() {
-            return outcome == Outcome.FAILURE;
-        }
-
-        private String format() {
-            if (errorCode == null) {
-                return AUDIT_LOG_FORMAT;
-            }
-            return AUDIT_LOG_WITH_ERROR_CODE_FORMAT;
-        }
-
-        private Object[] arguments() {
-            if (errorCode == null) {
-                return new Object[]{
-                        context.method(),
-                        context.path(),
-                        context.controller(),
-                        context.memberId(),
-                        status,
-                        durationMs,
-                        outcome
-                };
+        private static Long memberId(HttpServletRequest request) {
+            if (request == null) {
+                return null;
             }
 
-            return new Object[]{
-                    context.method(),
-                    context.path(),
-                    context.controller(),
-                    context.memberId(),
-                    status,
-                    durationMs,
-                    outcome,
-                    errorCode
-            };
+            Object authenticatedMemberId = request.getAttribute(AuthAttributes.MEMBER_ID_ATTRIBUTE);
+            if (authenticatedMemberId instanceof Long value) {
+                return value;
+            }
+            return null;
         }
     }
 }

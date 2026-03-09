@@ -9,6 +9,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import shopping.auth.AuthProperties;
 import shopping.auth.domain.JwtSubject;
 import shopping.common.ApiException;
 import shopping.common.ErrorCode;
@@ -20,7 +21,7 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("토큰을 만들고 다시 파싱하면 같은 회원 id가 나온다")
     void createAndParseReturnSameMemberId() {
-        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(SECRET_KEY, 30);
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(authProperties(SECRET_KEY, 30));
 
         String token = jwtTokenProvider.create(99L);
         JwtSubject subject = jwtTokenProvider.parse(token);
@@ -31,7 +32,7 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("토큰이 변조되면 파싱하지 못한다")
     void parseThrowWhenTokenIsTampered() {
-        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(SECRET_KEY, 30);
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(authProperties(SECRET_KEY, 30));
 
         String token = jwtTokenProvider.create(1L) + "tampered";
 
@@ -44,10 +45,9 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("다른 시크릿으로 서명한 토큰은 파싱하지 못한다")
     void parseThrowWhenTokenSignedWithDifferentSecret() {
-        JwtTokenProvider creator = new JwtTokenProvider(SECRET_KEY, 30);
+        JwtTokenProvider creator = new JwtTokenProvider(authProperties(SECRET_KEY, 30));
         JwtTokenProvider parser = new JwtTokenProvider(
-                "Pjdt3NQ5vLBG1s2PKv9nx2xGk36h5mU7fVPT0n7rQZzwgt9M",
-                30
+                authProperties("Pjdt3NQ5vLBG1s2PKv9nx2xGk36h5mU7fVPT0n7rQZzwgt9M", 30)
         );
 
         String token = creator.create(15L);
@@ -61,7 +61,7 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("만료된 토큰은 파싱하지 못한다")
     void parseThrowWhenTokenIsExpired() {
-        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(SECRET_KEY, 30);
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(authProperties(SECRET_KEY, 30));
         Date now = new Date();
         Date issuedAt = new Date(now.getTime() - 60_000L);
         Date expiredAt = new Date(now.getTime() - 1_000L);
@@ -81,7 +81,7 @@ class JwtTokenProviderTest {
     @Test
     @DisplayName("subject가 숫자가 아니면 파싱하지 못한다")
     void parseThrowWhenSubjectIsNotNumber() {
-        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(SECRET_KEY, 30);
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(authProperties(SECRET_KEY, 30));
         Date now = new Date();
         Date expiration = new Date(now.getTime() + 60_000L);
         String invalidSubjectToken = Jwts.builder()
@@ -95,5 +95,12 @@ class JwtTokenProviderTest {
                 .isInstanceOf(ApiException.class)
                 .extracting("errorCode")
                 .isEqualTo(ErrorCode.AUTHENTICATION_TOKEN_INVALID);
+    }
+
+    private AuthProperties authProperties(String secret, long tokenValidityMinutes) {
+        AuthProperties authProperties = new AuthProperties();
+        authProperties.setJwtSecret(secret);
+        authProperties.setTokenValidityMinutes(tokenValidityMinutes);
+        return authProperties;
     }
 }

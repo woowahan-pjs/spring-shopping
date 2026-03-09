@@ -19,10 +19,17 @@ class ProductValueObjectsTest {
         ProductName productName = new ProductName("상품명");
         ProductPrice productPrice = new ProductPrice(new BigDecimal("10000"));
         ProductImageUrl productImageUrl = new ProductImageUrl("https://example.com/image.png");
+        ProductDetails productDetails = new ProductDetails(
+                productName,
+                "  ",
+                productImageUrl,
+                productPrice
+        );
 
         assertThat(productName.value()).isEqualTo("상품명");
         assertThat(productPrice.value()).isEqualByComparingTo("10000");
         assertThat(productImageUrl.value()).isEqualTo("https://example.com/image.png");
+        assertThat(productDetails.description()).isNull();
     }
 
     @ParameterizedTest(name = "[{index}] 상품명={0}")

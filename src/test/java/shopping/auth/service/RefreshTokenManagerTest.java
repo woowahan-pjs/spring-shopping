@@ -18,6 +18,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import shopping.auth.AuthProperties;
 import shopping.auth.domain.RefreshToken;
 import shopping.auth.domain.RefreshTokenRepository;
 import shopping.common.ApiException;
@@ -36,7 +37,7 @@ class RefreshTokenManagerTest {
 
     @BeforeEach
     void setUp() {
-        refreshTokenManager = new RefreshTokenManager(refreshTokenRepository, 7L);
+        refreshTokenManager = new RefreshTokenManager(refreshTokenRepository, authProperties(7L));
     }
 
     @Test
@@ -116,5 +117,11 @@ class RefreshTokenManagerTest {
         assertThat(rotatedRefreshToken).isNotBlank();
         assertThat(refreshToken.getTokenHash()).isNotEqualTo("old-hash");
         assertThat(refreshToken.getExpiresAt()).isAfterOrEqualTo(previousExpiresAt.truncatedTo(ChronoUnit.SECONDS));
+    }
+
+    private AuthProperties authProperties(long refreshTokenValidityDays) {
+        AuthProperties authProperties = new AuthProperties();
+        authProperties.setRefreshTokenValidityDays(refreshTokenValidityDays);
+        return authProperties;
     }
 }

@@ -40,7 +40,7 @@ class MemberControllerTest {
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.CREATED);
-        assertThat(result.getBody()).isEqualTo(new TokenResponse("access-token"));
+        assertThat(result.getBody()).isEqualTo(TokenResponse.from(new AuthTokens("access-token", "refresh-token")));
         verify(refreshTokenCookieManager).write(response, "refresh-token");
     }
 
@@ -58,7 +58,7 @@ class MemberControllerTest {
 
         // then
         assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(result.getBody()).isEqualTo(new TokenResponse("access-token"));
+        assertThat(result.getBody()).isEqualTo(TokenResponse.from(new AuthTokens("access-token", "refresh-token")));
         verify(refreshTokenCookieManager).write(response, "refresh-token");
     }
 }

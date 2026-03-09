@@ -30,13 +30,7 @@ class ProductTest {
     void updateChangeFields() {
         Product product = createProduct(1L, "설명");
 
-        product.update(
-                new ProductName("새상품"),
-                "새설명",
-                new ProductImageUrl("https://example.com/new-image.png"),
-                new ProductPrice(new BigDecimal("20000")),
-                1L
-        );
+        product.update(productDetails("새상품", "새설명", "https://example.com/new-image.png", "20000"), 1L);
 
         assertThat(product.getName()).isEqualTo("새상품");
         assertThat(product.getDescription()).isEqualTo("새설명");
@@ -64,10 +58,7 @@ class ProductTest {
         Product product = createProduct(1L, "설명");
 
         assertThatThrownBy(() -> product.update(
-                new ProductName("새상품"),
-                "새설명",
-                new ProductImageUrl("https://example.com/new-image.png"),
-                new ProductPrice(new BigDecimal("20000")),
+                productDetails("새상품", "새설명", "https://example.com/new-image.png", "20000"),
                 2L
         ))
                 .isInstanceOf(ApiException.class)
@@ -99,24 +90,21 @@ class ProductTest {
     void updateNormalizeBlankDescriptionToNull() {
         Product product = createProduct(1L, "설명");
 
-        product.update(
-                new ProductName("새상품"),
-                "   ",
-                new ProductImageUrl("https://example.com/new-image.png"),
-                new ProductPrice(new BigDecimal("20000")),
-                1L
-        );
+        product.update(productDetails("새상품", "   ", "https://example.com/new-image.png", "20000"), 1L);
 
         assertThat(product.getDescription()).isNull();
     }
 
     private Product createProduct(Long memberId, String description) {
-        return Product.create(
-                new ProductName("상품"),
+        return Product.create(productDetails("상품", description, "https://example.com/image.png", "10000"), memberId);
+    }
+
+    private ProductDetails productDetails(String name, String description, String imageUrl, String price) {
+        return new ProductDetails(
+                new ProductName(name),
                 description,
-                new ProductImageUrl("https://example.com/image.png"),
-                new ProductPrice(new BigDecimal("10000")),
-                memberId
+                new ProductImageUrl(imageUrl),
+                new ProductPrice(new BigDecimal(price))
         );
     }
 }
