@@ -60,14 +60,4 @@ public class WishList extends AuditInformation {
 
         item.remove();
     }
-
-    public boolean isContainsItem(final Long productId) {
-        return items.stream()
-            .filter(it -> Boolean.TRUE.equals(it.getIsUse()))
-            .anyMatch(it -> it.getProduct().getId().equals(productId));
-    }
-
-    public void addItem(final WishListItem item) {
-        this.items.add(item);
-    }
 }
