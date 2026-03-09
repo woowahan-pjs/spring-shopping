@@ -17,6 +17,7 @@ import shopping.controller.dto.ProductResponse;
 import shopping.service.ProductService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -110,5 +111,25 @@ class ProductControllerTest {
 
         assertThat(mockMvcTester.delete().uri("/products/1"))
                 .hasStatus(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("유효하지 않은 상품 추가 시 예외 발생")
+    void addProduct_InvalidName() throws JsonProcessingException {
+        ProductRequest request = new ProductRequest("", VALID_PRICE, VALID_IMAGE_URL);
+
+        assertThat(mockMvcTester.post().uri("/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .hasStatus(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("존재하지 않은 상품을 조회 시 예외 발생")
+    void findById_notFound() {
+        willThrow(new NoSuchElementException()).given(service).findProductById(1L);
+
+        assertThat(mockMvcTester.get().uri("/products/1"))
+                .hasStatus(HttpStatus.NOT_FOUND);
     }
 }
