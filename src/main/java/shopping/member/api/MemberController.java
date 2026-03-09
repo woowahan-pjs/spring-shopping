@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import shopping.member.api.dto.MemberLoginRequest;
 import shopping.member.api.dto.MemberRegisterRequest;
 import shopping.member.api.dto.TokenResponse;
-import shopping.member.service.MemberService;
+import shopping.member.service.MemberCommandService;
 import shopping.member.service.dto.MemberLoginInput;
 import shopping.member.service.dto.MemberRegisterInput;
 
@@ -19,16 +19,16 @@ import shopping.member.service.dto.MemberRegisterInput;
 @RequiredArgsConstructor
 public class MemberController {
 
-    private final MemberService memberService;
+    private final MemberCommandService memberCommandService;
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
     public TokenResponse register(@RequestBody MemberRegisterRequest request) {
-        return new TokenResponse(memberService.register(new MemberRegisterInput(request.email(), request.password())).token());
+        return new TokenResponse(memberCommandService.register(new MemberRegisterInput(request.email(), request.password())).token());
     }
 
     @PostMapping("/login")
     public TokenResponse login(@RequestBody MemberLoginRequest request) {
-        return new TokenResponse(memberService.login(new MemberLoginInput(request.email(), request.password())).token());
+        return new TokenResponse(memberCommandService.login(new MemberLoginInput(request.email(), request.password())).token());
     }
 }
