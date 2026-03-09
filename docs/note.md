@@ -25,8 +25,8 @@
   - POST /api/members/login
   - 인증 토큰 (JWT)
   - 유효시간 30분
-  - 서버가 알아서 refresh 처리
-  - 클라이언트는 토큰을 신경쓰지 않는다.
+  - refresh token으로 7일 동안 로그인을 유지한다.
+  - 앱 인터셉터나 BFF가 POST /api/auth/refresh 를 호출하여 access token을 다시 발급한다.
 - 회원 조회
   - GET /api/members/{memberId}
 - 회원 목록 조회
@@ -50,7 +50,8 @@
 - 특수문자
   - 허용 : (), [], +, -, &, /, _
 - 비속어 처리
-  - [PurgoMalum](https://www.purgomalum.com/) API 활용
+  - 영문은 [PurgoMalum](https://www.purgomalum.com/) API로 검사
+  - 한국어는 로컬 필터로 검사
 
 ## 위시 리스트
 - 위시 리스트 상품 추가
@@ -73,5 +74,3 @@
 else도 사용하지 않는다.
 switch문도 사용하지 말자.
 3항 연산자도 쓰지말자.
-
-
