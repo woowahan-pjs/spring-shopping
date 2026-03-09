@@ -51,7 +51,7 @@ public final class WishListSaveContext {
     }
 
     public boolean isNotContainsProductId(final Long productId) {
-        return validProductMap.containsKey(productId);
+        return !validProductMap.containsKey(productId);
     }
 
     public void addSummary(final WishListItemSaveSummary wishListItemSaveSummary) {

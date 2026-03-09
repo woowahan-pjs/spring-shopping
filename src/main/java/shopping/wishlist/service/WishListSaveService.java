@@ -64,7 +64,7 @@ public class WishListSaveService {
             return WishListItemSaveSummary.fail(productId, "존재하지 않는 상품입니다.");
         }
 
-        final WishListItem item =  wishListItemRepository.save(WishListItem.generate(context.getWishListId(), context.getValidProduct(productId)));
+        final WishListItem item = wishListItemRepository.save(WishListItem.generate(context.getWishListId(), context.getValidProduct(productId)));
 
         return WishListItemSaveSummary.success(item.getWishListId(), productId);
     }
