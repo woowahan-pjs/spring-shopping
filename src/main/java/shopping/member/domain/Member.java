@@ -6,6 +6,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
+import jakarta.persistence.OneToOne;
+import shopping.wish.domain.WishList;
 
 import java.time.LocalDateTime;
 
@@ -48,6 +50,10 @@ public class Member {
         return new Member(email, password);
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -55,4 +61,7 @@ public class Member {
     public String getPassword() {
         return password;
     }
+
+    @OneToOne(mappedBy = "member")
+    private WishList wishList;
 }

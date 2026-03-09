@@ -45,6 +45,7 @@
   - WishListItem
     - id
     - wishList
+    - product
     - addedAt
   
   - Product
