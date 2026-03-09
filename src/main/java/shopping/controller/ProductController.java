@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shopping.domain.Product;
-import shopping.dto.ProductRequest;
-import shopping.dto.ProductResponse;
+import shopping.controller.dto.ProductRequest;
+import shopping.controller.dto.ProductResponse;
 import shopping.service.ProductService;
 
 import java.util.List;

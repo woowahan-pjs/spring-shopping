@@ -12,8 +12,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import shopping.domain.Product;
-import shopping.dto.ProductRequest;
-import shopping.dto.ProductResponse;
+import shopping.controller.dto.ProductRequest;
+import shopping.controller.dto.ProductResponse;
 import shopping.service.ProductService;
 
 import java.util.List;

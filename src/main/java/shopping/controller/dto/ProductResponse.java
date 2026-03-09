@@ -1,4 +1,4 @@
-package shopping.dto;
+package shopping.controller.dto;
 
 import shopping.domain.Product;
 
