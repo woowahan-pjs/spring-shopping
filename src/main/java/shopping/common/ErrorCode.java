@@ -1,9 +1,13 @@
 package shopping.common;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@AllArgsConstructor
 public enum ErrorCode {
     INVALID_INPUT(HttpStatus.BAD_REQUEST, "INVALID_INPUT", "Request input is invalid."),
+    RESOURCE_NOT_FOUND(HttpStatus.NOT_FOUND, "RESOURCE_NOT_FOUND", "Requested resource was not found."),
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "Unexpected server error."),
     MEMBER_EMAIL_DUPLICATE(HttpStatus.CONFLICT, "MEMBER_EMAIL_DUPLICATE", "Email is already registered."),
     MEMBER_CREDENTIALS_INVALID(HttpStatus.UNAUTHORIZED, "MEMBER_CREDENTIALS_INVALID", "Invalid email or password."),
@@ -34,12 +38,6 @@ public enum ErrorCode {
     private final HttpStatus status;
     private final String code;
     private final String message;
-
-    ErrorCode(HttpStatus status, String code, String message) {
-        this.status = status;
-        this.code = code;
-        this.message = message;
-    }
 
     public HttpStatus status() {
         return status;
