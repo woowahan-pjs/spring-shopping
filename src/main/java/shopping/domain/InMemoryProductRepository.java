@@ -28,6 +28,7 @@ public class InMemoryProductRepository implements ProductRepository {
 
     @Override
     public Product update(Long id, Product product) {
+        product.assignId(id);
         productMap.put(id, product);
         return productMap.get(id);
     }
