@@ -73,15 +73,15 @@ public class Product extends AuditInformation {
     }
 
     public void modify(final ProductUpdateRequest request) {
-        if (this.isEqualsNameTo(request.name())) {
+        if (!this.isEqualsNameTo(request.name())) {
             this.name = request.name();
         }
 
-        if (this.isEqualsPriceTo(request.price())) {
+        if (!this.isEqualsPriceTo(request.price())) {
             this.price = request.price();
         }
 
-        if (this.isEqualsImageUrl(request.imageUrl())) {
+        if (!this.isEqualsImageUrl(request.imageUrl())) {
             this.imageUrl = request.imageUrl();
         }
     }
