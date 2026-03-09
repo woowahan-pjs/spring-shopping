@@ -1,6 +1,7 @@
 package shopping.wishlist.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.util.ObjectUtils;
 import shopping.wishlist.domain.WishList;
 
 import java.util.List;
@@ -16,6 +17,10 @@ public record WishListResponse(
 ) {
 
     public static WishListResponse from(final Long userId, final WishList wishList) {
+        if (ObjectUtils.isEmpty(wishList)) {
+            return null;
+        }
+
         return new WishListResponse(
                 userId,
                 wishList.getItems().stream()

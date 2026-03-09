@@ -1,15 +1,16 @@
 package shopping.wishlist.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.util.ObjectUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Schema(name = "[위시 리스트] 위시 리스트 항목 저장 응답 DTO", description = "위시 리스트 저장 결과를 담은 응답 DTO입니다.")
 public class WishListSaveSummary {
 
