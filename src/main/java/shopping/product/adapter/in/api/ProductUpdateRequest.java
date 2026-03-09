@@ -1,4 +1,4 @@
-package shopping.product.api;
+package shopping.product.adapter.in.api;
 
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;

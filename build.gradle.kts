@@ -7,6 +7,7 @@ plugins {
 
 group = "camp.nextstep.edu"
 version = "0.0.1-SNAPSHOT"
+extra["springCloudVersion"] = "2025.0.1"
 
 java {
     toolchain {
@@ -18,11 +19,18 @@ repositories {
     mavenCentral()
 }
 
+dependencyManagement {
+    imports {
+        mavenBom("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudVersion")}")
+    }
+}
+
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
     implementation("org.springframework.security:spring-security-crypto")
     implementation("io.jsonwebtoken:jjwt-api:0.12.6")
     implementation("org.flywaydb:flyway-core")

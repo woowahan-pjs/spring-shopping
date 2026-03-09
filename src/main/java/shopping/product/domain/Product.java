@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shopping.common.ApiException;
+import shopping.common.ErrorCode;
 import shopping.common.domain.BaseDateEntity;
 
 @Entity
@@ -50,20 +52,27 @@ public class Product extends BaseDateEntity {
     private Long deletedMemberId;
 
     private Product(
-            String name,
+            ProductName name,
             String description,
-            String imageUrl,
-            BigDecimal price,
+            ProductImageUrl imageUrl,
+            ProductPrice price,
             Long memberId
     ) {
-        this.name = name;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.price = price;
         this.stockQuantity = 0;
         this.status = ProductStatus.ACTIVE;
         this.createdMemberId = memberId;
         this.updatedMemberId = memberId;
+        applyDetails(name, description, imageUrl, price);
+    }
+
+    public static Product create(
+            ProductName name,
+            String description,
+            ProductImageUrl imageUrl,
+            ProductPrice price,
+            Long memberId
+    ) {
+        return new Product(name, description, imageUrl, price, memberId);
     }
 
     public static Product create(
@@ -73,18 +82,27 @@ public class Product extends BaseDateEntity {
             BigDecimal price,
             Long memberId
     ) {
-        return new Product(name, description, imageUrl, price, memberId);
+        return create(new ProductName(name), description, new ProductImageUrl(imageUrl), new ProductPrice(price), memberId);
     }
 
-    public void update(String name, String description, String imageUrl, BigDecimal price, Long memberId) {
-        this.name = name;
-        this.description = description;
-        this.imageUrl = imageUrl;
-        this.price = price;
+    public void update(
+            ProductName name,
+            String description,
+            ProductImageUrl imageUrl,
+            ProductPrice price,
+            Long memberId
+    ) {
+        requireOwner(memberId);
+        applyDetails(name, description, imageUrl, price);
         this.updatedMemberId = memberId;
     }
 
+    public void update(String name, String description, String imageUrl, BigDecimal price, Long memberId) {
+        update(new ProductName(name), description, new ProductImageUrl(imageUrl), new ProductPrice(price), memberId);
+    }
+
     public void delete(Long memberId) {
+        requireOwner(memberId);
         this.status = ProductStatus.DELETED;
         this.deletedMemberId = memberId;
         markDeleted();
@@ -92,5 +110,31 @@ public class Product extends BaseDateEntity {
 
     public boolean isActive() {
         return status == ProductStatus.ACTIVE;
+    }
+
+    private void applyDetails(
+            ProductName name,
+            String description,
+            ProductImageUrl imageUrl,
+            ProductPrice price
+    ) {
+        this.name = name.value();
+        this.description = nullIfBlank(description);
+        this.imageUrl = imageUrl.value();
+        this.price = price.value();
+    }
+
+    private String nullIfBlank(String description) {
+        if (description == null || description.isBlank()) {
+            return null;
+        }
+        return description;
+    }
+
+    private void requireOwner(Long memberId) {
+        if (createdMemberId.equals(memberId)) {
+            return;
+        }
+        throw new ApiException(ErrorCode.PRODUCT_OWNER_FORBIDDEN);
     }
 }

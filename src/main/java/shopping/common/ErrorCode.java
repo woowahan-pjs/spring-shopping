@@ -20,20 +20,16 @@ public enum ErrorCode {
     WISH_QUANTITY_INVALID(HttpStatus.BAD_REQUEST, "INVALID_WISH_INPUT", "Wish quantity must be greater than 0."),
     PRODUCT_NOT_FOUND(HttpStatus.NOT_FOUND, "PRODUCT_NOT_FOUND", "Product not found."),
     PRODUCT_OWNER_FORBIDDEN(HttpStatus.FORBIDDEN, "PRODUCT_OWNER_FORBIDDEN", "Only product owner can modify this product."),
-    PRODUCT_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "INVALID_PRODUCT_INPUT", "Product name must be at most 15 characters."),
-    PRODUCT_NAME_DISALLOWED_SPECIAL_CHARACTERS(
-            HttpStatus.BAD_REQUEST,
-            "INVALID_PRODUCT_INPUT",
-            "Product name contains disallowed special characters."
-    ),
-    PRODUCT_PRICE_INVALID(HttpStatus.BAD_REQUEST, "INVALID_PRODUCT_INPUT", "Product price must be greater than 0."),
-    PRODUCT_IMAGE_URL_NOT_ABSOLUTE(HttpStatus.BAD_REQUEST, "INVALID_PRODUCT_INPUT", "Image URL must be absolute."),
-    PRODUCT_IMAGE_URL_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "INVALID_PRODUCT_INPUT", "Image URL format is invalid."),
-    PRODUCT_NAME_CONTAINS_PROFANITY(HttpStatus.BAD_REQUEST, "INVALID_PRODUCT_INPUT", "Product name must not contain profanity."),
-    PROFANITY_VERIFY_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "PROFANITY_API_ERROR", "Failed to verify profanity."),
-    PROFANITY_API_CALL_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "PROFANITY_API_ERROR", "Failed to call profanity API."),
-    PROFANITY_API_INTERRUPTED(HttpStatus.SERVICE_UNAVAILABLE, "PROFANITY_API_ERROR", "Profanity API call was interrupted."),
-    PROFANITY_API_INVALID_RESPONSE(HttpStatus.SERVICE_UNAVAILABLE, "PROFANITY_API_ERROR", "Profanity API response is invalid.");
+    PRODUCT_NAME_TOO_LONG(HttpStatus.BAD_REQUEST, "PRODUCT_NAME_TOO_LONG", "Product name must be at most 15 characters."),
+    PRODUCT_NAME_DISALLOWED_SPECIAL_CHARACTERS(HttpStatus.BAD_REQUEST, "PRODUCT_NAME_DISALLOWED_SPECIAL_CHARACTERS", "Product name contains disallowed special characters."),
+    PRODUCT_PRICE_INVALID(HttpStatus.BAD_REQUEST, "PRODUCT_PRICE_INVALID", "Product price must be greater than 0."),
+    PRODUCT_IMAGE_URL_NOT_ABSOLUTE(HttpStatus.BAD_REQUEST, "PRODUCT_IMAGE_URL_NOT_ABSOLUTE", "Image URL must be absolute."),
+    PRODUCT_IMAGE_URL_INVALID_FORMAT(HttpStatus.BAD_REQUEST, "PRODUCT_IMAGE_URL_INVALID_FORMAT", "Image URL format is invalid."),
+    PRODUCT_NAME_CONTAINS_SLANG(HttpStatus.BAD_REQUEST, "PRODUCT_NAME_CONTAINS_SLANG", "Product name must not contain slang."),
+    SLANG_VERIFY_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "SLANG_VERIFY_FAILED", "Failed to verify slang."),
+    SLANG_API_CALL_FAILED(HttpStatus.SERVICE_UNAVAILABLE, "SLANG_API_CALL_FAILED", "Failed to call slang API."),
+    SLANG_API_INTERRUPTED(HttpStatus.SERVICE_UNAVAILABLE, "SLANG_API_INTERRUPTED", "Slang API call was interrupted."),
+    SLANG_API_INVALID_RESPONSE(HttpStatus.SERVICE_UNAVAILABLE, "SLANG_API_INVALID_RESPONSE", "Slang API response is invalid.");
 
     private final HttpStatus status;
     private final String code;

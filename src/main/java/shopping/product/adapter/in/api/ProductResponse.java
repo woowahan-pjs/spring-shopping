@@ -1,4 +1,4 @@
-package shopping.product.api;
+package shopping.product.adapter.in.api;
 
 import java.math.BigDecimal;
 
