@@ -17,7 +17,7 @@ public class WishQueryService {
     private final WishRepository wishRepository;
     private final ProductQueryService productQueryService;
 
-    public Page<WishOutput> findAll(Long memberId, Pageable pageable) {
+    public Page<WishOutput> findWishWithPage(Long memberId, Pageable pageable) {
         return wishRepository.findByMemberIdAndDeletedFalse(memberId, pageable)
                              .map(this::toOutput);
     }

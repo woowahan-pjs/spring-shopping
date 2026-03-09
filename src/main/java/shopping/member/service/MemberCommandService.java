@@ -29,14 +29,14 @@ public class MemberCommandService {
     }
 
     public TokenOutput login(MemberLoginInput input) {
-        Member member = memberQueryService.getMemberByEmail(input.email());
+        Member member = memberQueryService.getMember(input.email());
         authService.verifyPassword(input.password(), member.getPassword());
         String token = authService.createToken(member.getId());
         return new TokenOutput(token);
     }
 
     private void verifyEmail(String email) {
-        if (memberQueryService.existsByEmail(email)) {
+        if (memberQueryService.existsMember(email)) {
             throw new IllegalArgumentException("이미 사용 중인 이메일입니다.");
         }
     }

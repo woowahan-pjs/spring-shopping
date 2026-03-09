@@ -53,7 +53,7 @@ class ProductQueryServiceTest {
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
         // when
-        ProductOutput response = productQueryService.findById(saved.id());
+        ProductOutput response = productQueryService.getProduct(saved.id());
 
         // then
         assertThat(response.name()).isEqualTo("상품명");
@@ -62,7 +62,7 @@ class ProductQueryServiceTest {
     @Test
     @DisplayName("존재하지 않는 상품 조회 시 예외가 발생한다")
     void test02() {
-        assertThatThrownBy(() -> productQueryService.findById(999L))
+        assertThatThrownBy(() -> productQueryService.getProduct(999L))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("존재하지 않는 상품입니다.");
     }
@@ -75,7 +75,7 @@ class ProductQueryServiceTest {
         productCommandService.register(new ProductRegisterInput("상품2", 2000L, "https://example.com/2.jpg"));
 
         // act
-        Page<ProductOutput> responses = productQueryService.findAll(
+        Page<ProductOutput> responses = productQueryService.findProductWithPage(
             PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "id")));
 
         // assert
@@ -94,7 +94,7 @@ class ProductQueryServiceTest {
         productCommandService.delete(saved.id());
 
         // when & then
-        assertThatThrownBy(() -> productQueryService.findById(saved.id()))
+        assertThatThrownBy(() -> productQueryService.getProduct(saved.id()))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("존재하지 않는 상품입니다.");
     }
@@ -110,7 +110,7 @@ class ProductQueryServiceTest {
         productCommandService.delete(deleted.id());
 
         // act
-        Page<ProductOutput> responses = productQueryService.findAll(
+        Page<ProductOutput> responses = productQueryService.findProductWithPage(
             PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id")));
 
         // assert

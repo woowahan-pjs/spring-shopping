@@ -20,7 +20,7 @@ public class ProductQueryController {
 
     @GetMapping("/{productId}")
     public ProductDetailResponse findById(@PathVariable Long productId) {
-        return ProductDetailResponse.from(productQueryService.findById(productId));
+        return ProductDetailResponse.from(productQueryService.getProduct(productId));
     }
 
     @GetMapping
@@ -28,7 +28,7 @@ public class ProductQueryController {
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return PageResponse.from(
-                productQueryService.findAll(pageable)
+                productQueryService.findProductWithPage(pageable)
                                    .map(ProductDetailResponse::from)
         );
     }

@@ -72,7 +72,7 @@ class WishQueryServiceTest {
         wishRepository.save(Wish.builder().memberId(2L).productId(firstProduct.getId()).build());
 
         // act
-        Page<WishOutput> result = wishQueryService.findAll(
+        Page<WishOutput> result = wishQueryService.findWishWithPage(
                 1L,
                 PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "id"))
         );
@@ -94,7 +94,7 @@ class WishQueryServiceTest {
         Long memberId = 1L;
 
         // act
-        Page<WishOutput> result = wishQueryService.findAll(
+        Page<WishOutput> result = wishQueryService.findWishWithPage(
                 memberId,
                 PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"))
         );
@@ -114,7 +114,7 @@ class WishQueryServiceTest {
         productCommandService.delete(product.id());
 
         // act
-        Page<WishOutput> result = wishQueryService.findAll(
+        Page<WishOutput> result = wishQueryService.findWishWithPage(
                 1L,
                 PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id"))
         );

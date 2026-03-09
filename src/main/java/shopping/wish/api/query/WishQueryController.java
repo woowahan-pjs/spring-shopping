@@ -25,7 +25,7 @@ public class WishQueryController {
             @PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return PageResponse.from(
-                wishQueryService.findAll(member.getId(), pageable)
+                wishQueryService.findWishWithPage(member.getId(), pageable)
                                 .map(WishResponse::from)
         );
     }

@@ -16,12 +16,12 @@ import java.util.Optional;
 public class ProductQueryService {
     private final ProductRepository productRepository;
 
-    public ProductOutput findById(Long id) {
+    public ProductOutput getProduct(Long id) {
         return findProduct(id)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
 
-    public Page<ProductOutput> findAll(Pageable pageable) {
+    public Page<ProductOutput> findProductWithPage(Pageable pageable) {
         return productRepository.findAllByDeletedFalse(pageable)
                                 .map(ProductOutput::from);
     }

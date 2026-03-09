@@ -12,11 +12,11 @@ import shopping.member.repository.MemberRepository;
 public class MemberQueryService {
     private final MemberRepository memberRepository;
 
-    public boolean existsByEmail(String email) {
+    public boolean existsMember(String email) {
         return memberRepository.existsByEmail(email);
     }
 
-    public Member getMemberByEmail(String email) {
+    public Member getMember(String email) {
         return memberRepository.findByEmail(email)
                                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
     }
