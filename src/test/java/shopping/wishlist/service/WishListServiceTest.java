@@ -59,7 +59,7 @@ class WishListServiceTest {
                     WishListItemFixture.fixture(wishListItemId, wishListId, expectedProduct);
             final WishList expected =
                     WishListFixture.fixture(wishListId, userId, List.of(expectedItem));
-            given(wishListRepository.findByWishList(userId)).willReturn(Optional.of(expected));
+            given(wishListRepository.findByWishListAndIsUse(userId)).willReturn(Optional.of(expected));
 
             // when
             final WishListResponse response = wishListService.getWishList(userId);
@@ -83,7 +83,7 @@ class WishListServiceTest {
             // given
             final Long userId = 57L;
 
-            given(wishListRepository.findByWishList(userId)).willReturn(Optional.empty());
+            given(wishListRepository.findByWishListAndIsUse(userId)).willReturn(Optional.empty());
 
             // when
             final WishListResponse response = wishListService.getWishList(userId);
@@ -145,11 +145,13 @@ class WishListServiceTest {
             final Long userId = 79L;
             final Long wishListItemId = 103L;
 
+            final Long wishListId = 1L;
+
             final Product expectedProduct =
                     ProductFixture.fixture(13L, "고나나", Price.create(1300L), "http://com");
             final WishListItem expectedItem =
-                    WishListItemFixture.fixture(1L, wishListItemId, expectedProduct);
-            final WishList expected = WishListFixture.fixture(1L, userId, List.of(expectedItem));
+                    WishListItemFixture.fixture(wishListItemId, wishListId, expectedProduct);
+            final WishList expected = WishListFixture.fixture(wishListId, userId, List.of(expectedItem));
             given(wishListRepository.findByWishList(userId)).willReturn(Optional.of(expected));
 
             // when

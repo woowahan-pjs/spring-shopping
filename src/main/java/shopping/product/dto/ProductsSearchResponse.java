@@ -5,10 +5,11 @@ import java.util.List;
 import org.springframework.data.domain.Pageable;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import shopping.product.domain.PageInfo;
 import shopping.product.domain.Product;
 
 @Schema(name = "[상품] 상품 리스트 검색 응답 DTO", description = "검색된 상품 리스트의 DTO 입니다.")
-public record ProductsSearchResponse(List<ProductResponse> products, Pageable pageable) {
+public record ProductsSearchResponse(List<ProductResponse> products, PageInfo pageInfo) {
 
     public static ProductsSearchResponse from(
             final List<Product> products, final Pageable pageable) {
@@ -22,6 +23,6 @@ public record ProductsSearchResponse(List<ProductResponse> products, Pageable pa
                                                 it.getPrice(),
                                                 it.getImageUrl()))
                         .toList(),
-                pageable);
+                PageInfo.from(pageable));
     }
 }

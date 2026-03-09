@@ -2,6 +2,8 @@ package shopping.product.controller;
 
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.hamcrest.Matchers.hasItem;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.BDDMockito.willThrow;
@@ -42,6 +44,7 @@ import shopping.auth.domain.Role;
 import shopping.infra.exception.ShoppingBusinessException;
 import shopping.infra.security.TestSecurityConfig;
 import shopping.product.domain.NotFoundProductException;
+import shopping.product.domain.PageInfo;
 import shopping.product.domain.Price;
 import shopping.product.dto.ProductResponse;
 import shopping.product.dto.ProductSaveRequest;
@@ -578,7 +581,7 @@ class ProductControllerTest {
         @DisplayName("성공적으로 등록합니다.")
         void success() throws Exception {
             // given
-            final Long userId = 79L;
+            final Long userId = 1L;
 
             final Long expectedProductId = 1L;
             final String expectedLocation = "http://localhost/api/products/" + expectedProductId;
@@ -1149,19 +1152,21 @@ class ProductControllerTest {
             final Pageable pageable = PageRequest.of(0, 20);
 
             final ProductSearchRequest request =
-                    new ProductSearchRequest(name, Price.create(3000L), Price.create(5000L));
-            given(productService.searchProduct(request, pageable))
+                    new ProductSearchRequest(name, Price.create(3000L), null);
+            given(productService.searchProduct(eq(request), any(Pageable.class)))
                     .willReturn(
                             new ProductsSearchResponse(
                                     List.of(new ProductResponse(productId, name, price, imageUrl)),
-                                    pageable));
+                                PageInfo.from(pageable)));
 
             // when
             final MvcResult mvcResult =
                     mockMvc.perform(
                                     get("/api/products")
                                             .queryParam("name", name)
-                                            .queryParam("fromPrice", "3000"))
+                                            .queryParam("fromPrice", "3000")
+                                            .queryParam("page", "0")
+                                            .queryParam("size", "10"))
                             .andExpect(MockMvcResultMatchers.status().isOk())
                             .andReturn();
 
