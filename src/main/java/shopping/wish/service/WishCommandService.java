@@ -25,7 +25,7 @@ public class WishCommandService {
 
     public void delete(Long wishId, Long memberId) {
         Wish wish = wishRepository.findByIdAndMemberIdAndDeletedFalse(wishId, memberId)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 위시리스트입니다."));
+                                  .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 위시리스트입니다."));
         wish.delete();
     }
 

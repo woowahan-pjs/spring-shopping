@@ -2,6 +2,8 @@ package shopping.wish.api.command;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,5 +26,11 @@ public class WishCommandController {
     @ResponseStatus(HttpStatus.CREATED)
     public WishAddResponse add(@LoginMember Member member, @RequestBody WishAddRequest request) {
         return WishAddResponse.from(wishCommandService.add(new WishAddInput(member.getId(), request.productId())));
+    }
+
+    @DeleteMapping("/{wishId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@LoginMember Member member, @PathVariable Long wishId) {
+        wishCommandService.delete(wishId, member.getId());
     }
 }

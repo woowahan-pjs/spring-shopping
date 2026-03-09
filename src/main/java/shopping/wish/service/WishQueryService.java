@@ -19,9 +19,10 @@ public class WishQueryService {
     private final ProductQueryService productQueryService;
 
     public List<WishOutput> findAll(Long memberId) {
-        return wishRepository.findByMemberIdAndDeletedFalse(memberId).stream()
-                .map(this::toOutput)
-                .toList();
+        return wishRepository.findByMemberIdAndDeletedFalse(memberId)
+                             .stream()
+                             .map(this::toOutput)
+                             .toList();
     }
 
     private WishOutput toOutput(Wish wish) {
