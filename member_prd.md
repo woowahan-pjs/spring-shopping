@@ -161,15 +161,9 @@ src/main/java/shopping/
 
 ### JWT 인증
 - [x] 회원 ID를 subject로 담아 JWT 생성
-- [ ] `Authorization: Bearer {token}` 헤더에서 토큰 추출
-- [ ] 토큰 검증 후 회원 식별
-- [ ] 토큰 없거나 유효하지 않으면 401 반환
-
-### Spring Security (후속 작업)
-- [ ] `spring-boot-starter-security` 도입
-- [ ] `SecurityFilterChain` 설정 (register/login은 permitAll, 나머지 authenticated)
-- [ ] JWT 검증 필터 (`OncePerRequestFilter`) 구현
-- [ ] Role 기반 인가 처리
+- [x] `Authorization: Bearer {token}` 헤더에서 토큰 추출
+- [x] 토큰 검증 후 회원 식별
+- [x] 토큰 없거나 유효하지 않으면 401 반환
 
 ### 예외 처리
 - [x] 예외 발생 시 `{"message": "..."}` 형태로 응답

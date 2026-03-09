@@ -2,9 +2,9 @@
 
 ## 기능 목록
 
-- [ ] 위시 리스트 상품 추가 `POST /api/wishes`
-- [ ] 위시 리스트 상품 삭제 `DELETE /api/wishes/{wishId}`
-- [ ] 위시 리스트 상품 조회 `GET /api/wishes`
+- [x] 위시 리스트 상품 추가 `POST /api/wishes`
+- [x] 위시 리스트 상품 삭제 `DELETE /api/wishes/{wishId}`
+- [x] 위시 리스트 상품 조회 `GET /api/wishes`
 
 > 모든 요청에 `Authorization: Bearer {token}` 헤더 필요
 
@@ -169,37 +169,37 @@ Response 200:
 
 ### Phase 3 - 위시 추가 (DTO + 서비스)
 
-- [ ] `WishAddRequest` 레코드 작성 (`productId`) → Phase 6에서 작성
+- [x] `WishAddRequest` 레코드 작성 (`productId`) → Phase 6에서 작성
 - [x] `WishAddInput` 레코드 작성 (서비스 입력: `memberId`, `productId`)
 - [x] `WishAddOutput` 레코드 작성 (서비스 출력: `id`, `productId`, `productName`)
-- [ ] `WishAddResponse` 레코드 작성 (`id`, `productId`, `productName`) → Phase 6에서 작성
+- [x] `WishAddResponse` 레코드 작성 (`id`, `productId`, `productName`) → Phase 6에서 작성
 - [x] `WishCommandService.add` 작성
   - `ProductQueryService.getProduct(productId)` 로 상품 조회 (없으면 400)
   - `createWish` 메서드로 분리 후 저장 및 반환
 
 ### Phase 4 - 위시 삭제 (서비스)
 
-- [ ] `WishCommandService.delete` 작성
+- [x] `WishCommandService.delete` 작성
   - `delete(Long wishId, Long memberId)`
   - `findByIdAndMemberId` 로 조회 (없거나 본인 것 아니면 400)
   - 삭제
 
 ### Phase 5 - 위시 조회 (DTO + 서비스)
 
-- [ ] `WishOutput` 레코드 작성 (서비스 출력: `id`, `productId`, `productName`, `price`, `imageUrl`)
-- [ ] `WishResponse` 레코드 작성 (`id`, `productId`, `productName`, `price`, `imageUrl`)
-- [ ] `WishQueryService.findAll` 작성
+- [x] `WishOutput` 레코드 작성 (서비스 출력: `id`, `productId`, `productName`, `price`, `imageUrl`)
+- [x] `WishResponse` 레코드 작성 (`id`, `productId`, `productName`, `price`, `imageUrl`)
+- [x] `WishQueryService.findAll` 작성
   - `findAll(Long memberId): List<WishOutput>`
   - `findByMemberId` 로 조회 후 반환
 
 ### Phase 6 - 컨트롤러 & 테스트
 
-- [ ] `WishController` 작성
+- [x] `WishController` 작성
   - `POST /api/wishes` → 201
   - `DELETE /api/wishes/{wishId}` → 204
   - `GET /api/wishes` → 200
   - 파라미터에 `@LoginMember Member member` 사용 (memberId만 서비스로 전달)
-- [ ] `WishController` 통합 테스트 (MockMvc)
+- [x] `WishController` 통합 테스트 (MockMvc)
 
 ---
 
@@ -268,11 +268,11 @@ Response 200:
 ### 위시 리스트
 - [x] `Wish` 엔티티 작성
 - [x] `WishRepository` 작성
-- [ ] `WishCommandService` 작성 및 테스트
-- [ ] `WishQueryService` 작성 및 테스트
-- [ ] `WishController` 작성 및 테스트
+- [x] `WishCommandService` 작성 및 테스트
+- [x] `WishQueryService` 작성 및 테스트
+- [x] `WishController` 작성 및 테스트
 
 ### 예외 처리
-- [ ] 인증 없이 위시 접근 시 401 반환
-- [ ] 존재하지 않는 상품 추가 시 400 반환
-- [ ] 존재하지 않는 위시 삭제 시 400 반환
+- [x] 인증 없이 위시 접근 시 401 반환
+- [x] 존재하지 않는 상품 추가 시 400 반환
+- [x] 존재하지 않는 위시 삭제 시 400 반환

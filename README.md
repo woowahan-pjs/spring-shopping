@@ -17,11 +17,11 @@
 
 ### 1. 상품 (Product)
 
-- [ ] 상품 생성 `POST /api/products`
-- [ ] 상품 단건 조회 `GET /api/products/{productId}`
-- [ ] 상품 목록 조회 `GET /api/products`
-- [ ] 상품 수정 `PUT /api/products/{productId}`
-- [ ] 상품 삭제 `DELETE /api/products/{productId}`
+- [x] 상품 생성 `POST /api/products`
+- [x] 상품 단건 조회 `GET /api/products/{productId}`
+- [x] 상품 목록 조회 `GET /api/products`
+- [x] 상품 수정 `PUT /api/products/{productId}`
+- [x] 상품 삭제 `DELETE /api/products/{productId}`
 
 #### 상품 도메인 규칙
 
@@ -39,20 +39,20 @@
 
 ### 2. 유효성 검사 및 예외 처리
 
-- [ ] 상품명 길이 검사 (공백 포함 최대 15자)
-- [ ] 상품명 허용 특수문자 검사 (정규식 기반)
-- [ ] 상품명 비속어 검사 (PurgoMalum API 연동)
-- [ ] 전역 예외 핸들러 구현 (`@RestControllerAdvice`)
-- [ ] 유효성 검사 실패 시 400 Bad Request 응답
+- [x] 상품명 길이 검사 (공백 포함 최대 15자)
+- [x] 상품명 허용 특수문자 검사 (정규식 기반)
+- [x] 상품명 비속어 검사 (PurgoMalum API 연동)
+- [x] 전역 예외 핸들러 구현 (`@RestControllerAdvice`)
+- [x] 유효성 검사 실패 시 400 Bad Request 응답
 
 ---
 
 ### 3. 회원 (Member)
 
-- [ ] 회원 가입 `POST /api/members/register`
+- [x] 회원 가입 `POST /api/members/register`
     - 이메일 + 비밀번호로 가입
     - 가입 성공 시 인증 토큰 발급
-- [ ] 로그인 `POST /api/members/login`
+- [x] 로그인 `POST /api/members/login`
     - 이메일 + 비밀번호 검증
     - 일치 시 인증 토큰 발급
 
@@ -64,9 +64,9 @@
 
 > 인증된 사용자만 접근 가능
 
-- [ ] 위시 리스트 상품 추가 `POST /api/wishes`
-- [ ] 위시 리스트 상품 삭제 `DELETE /api/wishes/{wishId}`
-- [ ] 위시 리스트 상품 조회 `GET /api/wishes`
+- [x] 위시 리스트 상품 추가 `POST /api/wishes`
+- [x] 위시 리스트 상품 삭제 `DELETE /api/wishes/{wishId}`
+- [x] 위시 리스트 상품 조회 `GET /api/wishes`
 
 **인증 방식:** 요청 헤더 `Authorization: Bearer {token}` → 토큰으로 회원 식별
 
@@ -374,14 +374,14 @@ test: 위시 리스트 서비스 단위 테스트 작성
 
 ## 프로그래밍 제약 사항 체크리스트
 
-- [ ] Google Java Style Guide 준수 (들여쓰기 4 spaces)
-- [ ] 들여쓰기 최대 2단계
-- [ ] 함수 최대 15줄
-- [ ] 함수는 한 가지 일만 수행
-- [ ] `else` 키워드 사용 금지
-- [ ] `switch` 문 사용 금지
-- [ ] 3항 연산자 사용 금지
-- [ ] JUnit 5 + AssertJ로 기능 테스트 작성
+- [x] Google Java Style Guide 준수 (들여쓰기 4 spaces)
+- [x] 들여쓰기 최대 2단계
+- [x] 함수 최대 15줄
+- [x] 함수는 한 가지 일만 수행
+- [x] `else` 키워드 사용 금지
+- [x] `switch` 문 사용 금지
+- [x] 3항 연산자 사용 금지
+- [x] JUnit 5 + AssertJ로 기능 테스트 작성
 
 ---
 

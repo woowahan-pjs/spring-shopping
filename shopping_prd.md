@@ -63,9 +63,9 @@
 
 > 인증된 사용자만 접근 가능
 
-- [ ] 위시 리스트 상품 추가 `POST /api/wishes`
-- [ ] 위시 리스트 상품 삭제 `DELETE /api/wishes/{wishId}`
-- [ ] 위시 리스트 상품 조회 `GET /api/wishes`
+- [x] 위시 리스트 상품 추가 `POST /api/wishes`
+- [x] 위시 리스트 상품 삭제 `DELETE /api/wishes/{wishId}`
+- [x] 위시 리스트 상품 조회 `GET /api/wishes`
 
 **인증 방식:** 요청 헤더 `Authorization: Bearer {token}` → 토큰으로 회원 식별
 
