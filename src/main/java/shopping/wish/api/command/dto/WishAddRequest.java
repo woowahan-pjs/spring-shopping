@@ -1,4 +1,4 @@
-package shopping.wish.api.dto;
+package shopping.wish.api.command.dto;
 
 public record WishAddRequest(Long productId) {
 }

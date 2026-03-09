@@ -1,4 +1,4 @@
-package shopping.wish.api.dto;
+package shopping.wish.api.query.dto;
 
 import shopping.wish.service.dto.WishOutput;
 

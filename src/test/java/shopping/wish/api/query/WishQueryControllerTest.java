@@ -1,6 +1,5 @@
-package shopping.wish.api;
+package shopping.wish.api.query;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,13 +23,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class WishControllerTest {
+class WishQueryControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -49,9 +45,9 @@ class WishControllerTest {
     void test01() throws Exception {
         // arrange
         Member member = memberRepository.save(Member.builder()
-                                                    .email("user@example.com")
-                                                    .password("password123")
-                                                    .build());
+                .email("user@example.com")
+                .password("password123")
+                .build());
         Product product = productRepository.save(
                 Product.builder().name("상품명").price(10000L).imageUrl("https://example.com/image.jpg").build()
         );
