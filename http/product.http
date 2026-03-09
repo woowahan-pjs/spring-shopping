@@ -26,3 +26,15 @@ Content-Type: application/json
 
 ### 상품 삭제
 DELETE http://localhost:8080/products/1
+
+
+### 상품명 예외 발생.
+PUT http://localhost:8080/products/100
+Content-Type: application/json
+
+{
+  "name" : "치킨",
+  "price" : 15000,
+  "imageUrl": "https://a.com/chicken.jpg"
+}
+

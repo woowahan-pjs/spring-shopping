@@ -5,6 +5,7 @@ import shopping.domain.Product;
 import shopping.domain.ProductRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ProductService {
@@ -24,6 +25,7 @@ public class ProductService {
     }
 
     public Product findProductById(Long id) {
+        validateProductExists(id);
         return productRepository.findById(id);
     }
 
@@ -32,8 +34,13 @@ public class ProductService {
     }
 
     public Product update(Long id, Product product) {
+        validateProductExists(id);
         validateProductName(product);
         return productRepository.update(id, product);
+    }
+
+    public void deleteById(Long id) {
+        productRepository.deleteById(id);
     }
 
     private void validateProductName(Product product) {
@@ -42,7 +49,9 @@ public class ProductService {
         }
     }
 
-    public void deleteById(Long id) {
-        productRepository.deleteById(id);
+    private void validateProductExists(Long id) {
+        if (productRepository.findById(id) == null) {
+            throw new NoSuchElementException("존재하지 않는 상품입니다.");
+        }
     }
 }
