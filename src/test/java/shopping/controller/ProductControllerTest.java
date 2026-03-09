@@ -21,7 +21,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.*;
 import static shopping.domain.ProductFixture.*;
 
 @WebMvcTest(ProductController.class)
@@ -101,5 +101,14 @@ class ProductControllerTest {
                    assertThat(res.getId()).isEqualTo(1L);
                    assertThat(res.getName()).isEqualTo("치킨");
                 });
+    }
+
+    @Test
+    @DisplayName("상품을 삭제한다")
+    void delete() {
+        willDoNothing().given(service).deleteById(1L);
+
+        assertThat(mockMvcTester.delete().uri("/products/1"))
+                .hasStatus(HttpStatus.NO_CONTENT);
     }
 }
