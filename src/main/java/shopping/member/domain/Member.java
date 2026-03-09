@@ -11,6 +11,8 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import shopping.common.ApiException;
+import shopping.common.ErrorCode;
 import shopping.common.domain.BaseDateEntity;
 
 @Entity
@@ -43,7 +45,15 @@ public class Member extends BaseDateEntity {
         this.role = role;
     }
 
-    public static Member create(
+    public static Member registerUser(String email, String encodedPassword) {
+        return new Member(email, encodedPassword, MemberStatus.ACTIVE, MemberRole.USER);
+    }
+
+    public static Member createSeller(String email, String encodedPassword) {
+        return new Member(email, encodedPassword, MemberStatus.ACTIVE, MemberRole.SELLER);
+    }
+
+    static Member create(
             String email,
             String password,
             MemberStatus status,
@@ -66,5 +76,31 @@ public class Member extends BaseDateEntity {
 
     public boolean isSeller() {
         return role == MemberRole.SELLER;
+    }
+
+    public void assertActiveSeller() {
+        assertActiveForAccess();
+        assertSellerRole();
+    }
+
+    public void assertCanLogin(boolean passwordMatches) {
+        if (isActive() && passwordMatches) {
+            return;
+        }
+        throw new ApiException(ErrorCode.MEMBER_CREDENTIALS_INVALID);
+    }
+
+    private void assertActiveForAccess() {
+        if (isActive()) {
+            return;
+        }
+        throw new ApiException(ErrorCode.MEMBER_INACTIVE_FORBIDDEN);
+    }
+
+    private void assertSellerRole() {
+        if (isSeller()) {
+            return;
+        }
+        throw new ApiException(ErrorCode.MEMBER_SELLER_REQUIRED);
     }
 }

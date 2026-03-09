@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shopping.auth.web.annotation.MemberOnly;
-import shopping.auth.web.annotation.CurrentMemberId;
+import shopping.auth.adapter.in.web.annotation.MemberOnly;
+import shopping.auth.adapter.in.web.annotation.CurrentMemberId;
 import shopping.wish.service.WishService;
 
 @RestController

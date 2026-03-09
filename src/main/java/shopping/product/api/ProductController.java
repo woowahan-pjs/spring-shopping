@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shopping.auth.web.annotation.CurrentMemberId;
-import shopping.auth.web.annotation.SellerOnly;
+import shopping.auth.adapter.in.web.annotation.CurrentMemberId;
+import shopping.auth.adapter.in.web.annotation.SellerOnly;
 import shopping.product.service.ProductService;
 
 @RestController
