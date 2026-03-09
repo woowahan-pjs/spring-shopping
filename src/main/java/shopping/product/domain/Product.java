@@ -56,13 +56,14 @@ public class Product extends AuditInformation {
 
     private Long userId;
 
-    public static Product of(final ProductSaveRequest request) {
+    public static Product of(final Long userId, final ProductSaveRequest request) {
         Product product = new Product();
 
         product.name = request.name();
         product.price = request.price();
         product.imageUrl = request.imageUrl();
         product.isUse = true;
+        product.userId = userId;
 
         return product;
     }

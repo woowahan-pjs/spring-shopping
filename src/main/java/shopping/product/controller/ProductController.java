@@ -75,8 +75,9 @@ class ProductController {
             })
     @Operation(summary = "상품 저장", description = "상품을 등록합니다.")
     public ResponseEntity<Void> registerProduct(
+            @AuthenticationPrincipal final UserPrincipal userPrincipal,
             @RequestBody @Valid final ProductSaveRequest request) {
-        final Long productId = productService.registerProduct(request);
+        final Long productId = productService.registerProduct(userPrincipal.getId(), request);
 
         final URI location =
                 ServletUriComponentsBuilder.fromCurrentRequest()

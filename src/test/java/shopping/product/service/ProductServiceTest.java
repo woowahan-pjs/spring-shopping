@@ -99,6 +99,8 @@ class ProductServiceTest {
         @DisplayName("비속어가 존재하면 예외가 발생합니다.")
         void profanityIsTrue() {
             // given
+            final Long userId = 79L;
+
             final ProductSaveRequest request =
                     new ProductSaveRequest(
                             "ふろっこど～る なつめ",
@@ -108,7 +110,7 @@ class ProductServiceTest {
             given(purgoMalumAdapter.isProfanity(eq(request.name()))).willReturn(true);
 
             // when & then
-            assertThatThrownBy(() -> productService.registerProduct(request))
+            assertThatThrownBy(() -> productService.registerProduct(userId, request))
                     .isInstanceOf(ShoppingBusinessException.class)
                     .hasMessage("상품명에 비속어가 포함되어 있습니다.");
         }
@@ -117,6 +119,7 @@ class ProductServiceTest {
         @DisplayName("성공적으로 상품을 등록합니다.")
         void success() {
             // given
+            final Long userId = 79L;
             final Long productId = 703L;
             final String name = "ふろっこど～る なつめ";
             final Price price = Price.create(1650L);
@@ -131,7 +134,7 @@ class ProductServiceTest {
             given(productRepository.save(any(Product.class))).willReturn(expectedProduct);
 
             // when
-            final Long result = productService.registerProduct(request);
+            final Long result = productService.registerProduct(userId, request);
 
             // then
             assertThat(result).isEqualTo(productId);

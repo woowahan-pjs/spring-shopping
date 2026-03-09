@@ -548,6 +548,8 @@ class ProductControllerTest {
         @DisplayName("상품명에 비속어가 포함되어 있으면 예외가 발생합니다.")
         void profanityIsTrue() throws Exception {
             // given
+            final Long userId = 79L;
+
             final String requestBody =
                     """
                     {
@@ -558,7 +560,7 @@ class ProductControllerTest {
                     """;
 
             given(
-                            productService.registerProduct(
+                            productService.registerProduct(userId,
                                     ConverterHelper.toDto(requestBody, ProductSaveRequest.class)))
                     .willThrow(new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다."));
 
@@ -576,6 +578,8 @@ class ProductControllerTest {
         @DisplayName("성공적으로 등록합니다.")
         void success() throws Exception {
             // given
+            final Long userId = 79L;
+
             final Long expectedProductId = 1L;
             final String expectedLocation = "http://localhost/api/products/" + expectedProductId;
             final String requestBody =
@@ -588,7 +592,7 @@ class ProductControllerTest {
                     """;
 
             given(
-                            productService.registerProduct(
+                            productService.registerProduct(userId,
                                     ConverterHelper.toDto(requestBody, ProductSaveRequest.class)))
                     .willReturn(expectedProductId);
 
@@ -1027,6 +1031,7 @@ class ProductControllerTest {
         @WithAuthUser(role = Role.ADMIN)
         @DisplayName("성공적으로 등록합니다.")
         void success() throws Exception {
+            final Long userId = 79L;
             final Long productId = 3L;
 
             final String requestBody =
@@ -1039,7 +1044,7 @@ class ProductControllerTest {
                 """;
 
             given(
-                            productService.registerProduct(
+                            productService.registerProduct(userId,
                                     ConverterHelper.toDto(requestBody, ProductSaveRequest.class)))
                     .willThrow(new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다."));
 

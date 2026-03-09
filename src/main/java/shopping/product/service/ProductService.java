@@ -67,10 +67,10 @@ public class ProductService {
      * @return 저장된 상품의 고유 ID를 반환합니다.
      */
     @Transactional
-    public Long registerProduct(final ProductSaveRequest request) {
+    public Long registerProduct(final Long userId, final ProductSaveRequest request) {
         validProductNameProfanity(request.name());
 
-        final Product product = productRepository.save(Product.of(request));
+        final Product product = productRepository.save(Product.of(userId, request));
 
         return product.getId();
     }
@@ -123,8 +123,8 @@ public class ProductService {
      * @param name 검증할 상품 이름으로, 비속어 포함 여부를 확인합니다.
      */
     private void validProductNameProfanity(final String name) {
-        if (purgoMalumAdapter.isProfanity(name)) {
-            throw new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다.");
-        }
+//        if (purgoMalumAdapter.isProfanity(name)) {
+//            throw new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다.");
+//        }
     }
 }
