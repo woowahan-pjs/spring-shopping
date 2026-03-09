@@ -5,8 +5,11 @@ import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
 import shopping.wish.domain.WishList;
 import shopping.wish.domain.WishListItem;
+import shopping.wish.dto.WishProductResponse;
 import shopping.wish.repository.WishListItemRepository;
 import shopping.wish.repository.WishListRepository;
+
+import java.util.List;
 
 @Service
 public class WishService {
@@ -41,5 +44,16 @@ public class WishService {
     public void deleteWish(Long wishId) {
 
         wishListItemRepository.deleteById(wishId);
+    }
+
+    public List<WishProductResponse> getWishList(Long memberId) {
+
+        WishList wishList = wishListRepository.findByMemberId(memberId)
+                .orElseThrow();
+
+        return wishListItemRepository.findByWishListId(wishList.getId())
+                .stream()
+                .map(WishProductResponse::from)
+                .toList();
     }
 }

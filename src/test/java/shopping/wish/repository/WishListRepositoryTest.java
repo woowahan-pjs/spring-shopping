@@ -7,9 +7,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.util.ReflectionTestUtils;
 import shopping.member.domain.Member;
 import shopping.product.domain.Product;
+import shopping.product.repository.ProductRepository;
 import shopping.wish.domain.WishList;
 import shopping.wish.domain.WishListItem;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,6 +26,9 @@ public class WishListRepositoryTest {
     private WishListItemRepository wishListItemRepository;
 
     @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
     private TestEntityManager em;
 
     @Test
@@ -32,7 +37,7 @@ public class WishListRepositoryTest {
         Member member = Member.create("test@test.com", "12345678");
         em.persist(member);
 
-        WishList wishList = new WishList();
+        WishList wishList = WishList.create(1L);
         ReflectionTestUtils.setField(wishList, "member", member);
 
         em.persist(wishList);
@@ -45,7 +50,7 @@ public class WishListRepositoryTest {
     @Test
     void 위시리스트_아이템을_삭제한다() {
 
-         WishList wishList = new WishList();
+         WishList wishList = WishList.create(1L);
          em.persist(wishList);
 
          Product product = Product.create("아이폰", 1_000_000);
@@ -64,5 +69,19 @@ public class WishListRepositoryTest {
          WishListItem result = em.find(WishListItem.class, id);
 
          assertThat(result).isNull();
+    }
+
+    @Test
+    void 위시리스트_아이템을_조회한다() {
+
+        WishList wishList = wishListRepository.save(WishList.create(1L));
+        Product product = productRepository.save(Product.create("아이폰", 1_000_000));
+
+        WishListItem item = WishListItem.create(wishList, product);
+        wishListItemRepository.save(item);
+
+        List<WishListItem> result = wishListItemRepository.findByWishListId(wishList.getId());
+
+        assertThat(result).hasSize(1);
     }
 }
