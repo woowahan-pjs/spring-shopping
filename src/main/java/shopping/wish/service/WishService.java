@@ -37,4 +37,9 @@ public class WishService {
 
         wishListItemRepository.save(item);
     }
+
+    public void deleteWish(Long wishId) {
+
+        wishListItemRepository.deleteById(wishId);
+    }
 }

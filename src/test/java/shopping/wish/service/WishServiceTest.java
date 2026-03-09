@@ -56,4 +56,14 @@ public class WishServiceTest {
         //then
         verify(wishListItemRepository).save(any(WishListItem.class));
     }
+
+    @Test
+    void 위시리스트_아이템을_삭제한다() {
+
+        Long wishId = 1L;
+
+        wishService.deleteWish(wishId);
+
+        verify(wishListItemRepository).deleteById(wishId);
+    }
 }
