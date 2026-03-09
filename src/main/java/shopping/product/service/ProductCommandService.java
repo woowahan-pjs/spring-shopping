@@ -15,11 +15,9 @@ import shopping.product.service.dto.ProductRegisterInput;
 public class ProductCommandService {
     private final ProductRepository productRepository;
     private final ProductNameValidator productNameValidator;
-    private final ProductQueryService productQueryService;
 
     public ProductOutput register(ProductRegisterInput input) {
-        productNameValidator.validate(input.name());
-        validatePrice(input.price());
+        validate(input);
         Product saved = productRepository.save(Product.builder()
                                                       .name(input.name())
                                                       .price(input.price())
@@ -29,20 +27,29 @@ public class ProductCommandService {
     }
 
     public ProductOutput update(Long id, ProductRegisterInput input) {
-        productNameValidator.validate(input.name());
-        validatePrice(input.price());
-        Product product = productQueryService.getActiveProduct(id);
+        validate(input);
+        Product product = getProduct(id);
         product.update(input.name(), input.price(), input.imageUrl());
         return ProductOutput.from(product);
     }
 
     public void delete(Long id) {
-        productQueryService.getActiveProduct(id).delete();
+        getProduct(id).delete();
+    }
+
+    private void validate(ProductRegisterInput input) {
+        productNameValidator.validate(input.name());
+        validatePrice(input.price());
     }
 
     private void validatePrice(Long price) {
         if (price <= 0) {
             throw new IllegalArgumentException("가격은 양수이어야 합니다.");
         }
+    }
+
+    private Product getProduct(Long id) {
+        return productRepository.findByIdAndDeletedFalse(id)
+                                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
 }

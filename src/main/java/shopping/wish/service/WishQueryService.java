@@ -3,7 +3,6 @@ package shopping.wish.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.product.domain.Product;
 import shopping.product.service.ProductQueryService;
 import shopping.wish.domain.Wish;
 import shopping.wish.repository.WishRepository;
@@ -26,7 +25,8 @@ public class WishQueryService {
     }
 
     private WishOutput toOutput(Wish wish) {
-        Product product = productQueryService.getProduct(wish.getProductId());
-        return WishOutput.of(wish, product);
+        return productQueryService.findProduct(wish.getProductId())
+                                  .map(product -> WishOutput.of(wish, product))
+                                  .orElseGet(() -> WishOutput.deleted(wish));
     }
 }

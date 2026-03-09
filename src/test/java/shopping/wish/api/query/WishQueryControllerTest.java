@@ -75,4 +75,30 @@ class WishQueryControllerTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.message").value("인증 토큰이 없습니다."));
     }
+
+    @Test
+    @DisplayName("삭제된 상품이 포함된 위시리스트는 삭제 안내 문구로 조회된다")
+    void test03() throws Exception {
+        // arrange
+        Member member = memberRepository.save(Member.builder()
+                .email("user@example.com")
+                .password("password123")
+                .build());
+        Product product = productRepository.save(
+                Product.builder().name("상품명").price(10000L).imageUrl("https://example.com/image.jpg").build()
+        );
+        wishRepository.save(Wish.builder().memberId(member.getId()).productId(product.getId()).build());
+        product.delete();
+        String token = authService.createToken(member.getId());
+
+        // act & assert
+        mockMvc.perform(get("/api/wishes")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].productId").value(product.getId()))
+                .andExpect(jsonPath("$[0].productName").value("삭제된 상품입니다."))
+                .andExpect(jsonPath("$[0].price").isEmpty())
+                .andExpect(jsonPath("$[0].imageUrl").isEmpty());
+    }
 }

@@ -106,6 +106,8 @@ class WishQueryServiceTest {
         // assert
         assertThat(result).hasSize(1);
         assertThat(result.getFirst().productId()).isEqualTo(product.id());
-        assertThat(result.getFirst().productName()).isEqualTo("상품명");
+        assertThat(result.getFirst().productName()).isEqualTo("삭제된 상품입니다.");
+        assertThat(result.getFirst().price()).isNull();
+        assertThat(result.getFirst().imageUrl()).isNull();
     }
 }

@@ -1,5 +1,4 @@
 package shopping.product.service;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -111,5 +110,35 @@ class ProductQueryServiceTest {
         // then
         assertThat(responses).hasSize(1);
         assertThat(responses.getFirst().id()).isEqualTo(active.id());
+    }
+
+    @Test
+    @DisplayName("활성 상품 조회는 Optional로 반환한다")
+    void test06() {
+        // given
+        ProductOutput saved = productCommandService.register(
+            new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
+
+        // when
+        var product = productQueryService.findProduct(saved.id());
+
+        // then
+        assertThat(product).isPresent();
+        assertThat(product.get().id()).isEqualTo(saved.id());
+    }
+
+    @Test
+    @DisplayName("삭제한 상품 조회는 빈 Optional을 반환한다")
+    void test07() {
+        // given
+        ProductOutput saved = productCommandService.register(
+            new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
+        productCommandService.delete(saved.id());
+
+        // when
+        var product = productQueryService.findProduct(saved.id());
+
+        // then
+        assertThat(product).isEmpty();
     }
 }
