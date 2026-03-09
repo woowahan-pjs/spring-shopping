@@ -1,55 +1,57 @@
 package shopping.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import shopping.domain.Product;
+import shopping.dto.ProductRequest;
+import shopping.dto.ProductResponse;
 import shopping.service.ProductService;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static shopping.domain.ProductFixture.createWithId;
+import static shopping.domain.ProductFixture.*;
 
 @WebMvcTest(ProductController.class)
 class ProductControllerTest {
 
     @Autowired
-    MockMvc mockMvc;
-
-    @MockitoBean
-    ProductService service;
+    MockMvcTester mockMvcTester;
 
     @Autowired
     ObjectMapper objectMapper;
 
+    @MockitoBean
+    ProductService service;
+
     @Test
     @DisplayName("상품을 추가한다.")
-    void addProduct() throws Exception {
+    void addProduct() throws JsonProcessingException {
         Product product = createWithId(1L);
+        ProductRequest request = new ProductRequest(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
 
         given(service.save(any())).willReturn(product);
 
-        ResultActions perform = mockMvc.perform(post("/products")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(product)))
-                        .andExpect(status().isCreated());
-
-        perform
-                .andDo(print())
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.id").isNotEmpty())
-                .andExpect(jsonPath("$.name").isNotEmpty())
-                .andExpect(jsonPath("$.price").isNotEmpty())
-                .andExpect(jsonPath("$.imageUrl").isNotEmpty());
+        assertThat(mockMvcTester.post().uri("/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .hasStatus(HttpStatus.CREATED)
+                .bodyJson()
+                .convertTo(ProductResponse.class)
+                .satisfies(response -> {
+                    assertThat(response.getId()).isEqualTo(1L);
+                    assertThat(response.getName()).isEqualTo(VALID_NAME);
+                    assertThat(response.getPrice()).isEqualTo(VALID_PRICE);
+                    assertThat(response.getImageUrl()).isEqualTo(VALID_IMAGE_URL);
+                });
     }
+
 }
