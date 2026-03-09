@@ -1,12 +1,11 @@
 package shopping.infra.client;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.client.RestClient;
-
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import shopping.infra.exception.ShoppingBusinessException;
 import shopping.infra.exception.ShoppingServerException;
 
@@ -25,12 +24,9 @@ class RestClientConfig {
 
         return RestClient.builder()
                 .requestFactory(requestFactory)
-                .defaultStatusHandler(
-                        statusCode ->
-                                statusCode.is4xxClientError() || statusCode.is5xxServerError(),
+                .defaultStatusHandler(statusCode -> statusCode.is4xxClientError() || statusCode.is5xxServerError(),
                         (request, response) -> {
-                            log.error(
-                                    "[외부 HTTP 요청 실패 ({})] : [{}] {}, {}",
+                            log.error("[외부 HTTP 요청 실패 ({})] : [{}] {}, {}",
                                     response.getStatusCode(),
                                     request.getMethod(),
                                     request.getURI(),

@@ -1,9 +1,8 @@
 package shopping.wishlist.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
 import shopping.infra.exception.ShoppingBusinessException;
 import shopping.wishlist.domain.WishList;
 import shopping.wishlist.dto.WishListResponse;
@@ -23,8 +22,7 @@ public class WishListService {
      */
     @Transactional(readOnly = true)
     public WishListResponse getWishList(final Long userId) {
-        final WishList wishList =
-                wishListRepository.findByWishListAndIsUse(userId).orElse(WishList.generate(userId));
+        final WishList wishList = wishListRepository.findByWishListAndIsUse(userId).orElse(WishList.generate(userId));
 
         return WishListResponse.from(userId, wishList);
     }
@@ -37,9 +35,7 @@ public class WishListService {
      */
     @Transactional
     public void removeWishList(final Long userId, final Long wishListItemId) {
-        final WishList wishList =
-                wishListRepository
-                        .findByWishList(userId)
+        final WishList wishList = wishListRepository.findByWishList(userId)
                         .orElseThrow(() -> new ShoppingBusinessException("등록된 위시 리스트가 존재하지 않습니다."));
 
         wishList.removeItem(wishListItemId);

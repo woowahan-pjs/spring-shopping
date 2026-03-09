@@ -1,10 +1,9 @@
 package shopping.auth.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
 import shopping.auth.domain.DuplicateEmailException;
 import shopping.auth.domain.InvalidUserException;
 import shopping.auth.domain.User;
@@ -34,9 +33,7 @@ public class UserService {
         }
 
         // 2. 회원 가입
-        final User user =
-                userRepository.save(
-                        User.generate(request, passwordEncoder.encode(request.password())));
+        final User user = userRepository.save(User.generate(request, passwordEncoder.encode(request.password())));
 
         return user.getId();
     }
@@ -50,10 +47,8 @@ public class UserService {
      */
     @Transactional(readOnly = true)
     public UserResponse getUser(final String email, final String password) {
-        final User user =
-                userRepository
-                        .findByEmailAndIsUse(email, true)
-                        .orElseThrow(InvalidUserException::new);
+        final User user = userRepository.findByEmailAndIsUse(email, true)
+                .orElseThrow(InvalidUserException::new);
 
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new InvalidUserException();

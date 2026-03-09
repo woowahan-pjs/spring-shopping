@@ -1,23 +1,21 @@
 package shopping.infra.orm;
 
-import java.util.Optional;
-
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
-
 import shopping.infra.security.UserPrincipal;
+
+import java.util.Optional;
 
 @Component
 class SecurityAuditorAware implements AuditorAware<Long> {
 
     @Override
     public Optional<Long> getCurrentAuditor() {
-        final Authentication authentication =
-                SecurityContextHolder.getContext().getAuthentication();
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (ObjectUtils.isEmpty(authentication) || !authentication.isAuthenticated()) {
             return Optional.of(0L);

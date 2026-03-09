@@ -1,7 +1,5 @@
 package shopping.infra.orm;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -10,9 +8,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import shopping.auth.domain.Role;
 import shopping.infra.security.UserPrincipal;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SecurityAuditorAwareTest {
 
@@ -33,11 +32,8 @@ class SecurityAuditorAwareTest {
             // given
             final Long userId = 703L;
 
-            final UserDetails userDetails =
-                    UserPrincipal.generate(userId, "test@test.com", Role.CUSTOMER);
-            final Authentication authentication =
-                    new UsernamePasswordAuthenticationToken(
-                            userDetails, "", userDetails.getAuthorities());
+            final UserDetails userDetails = UserPrincipal.generate(userId, "test@test.com", Role.CUSTOMER);
+            final Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             // when

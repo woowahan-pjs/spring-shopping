@@ -2,9 +2,9 @@ package shopping.infra.client;
 
 import org.springframework.web.client.RestClient;
 
-public class RestClientTestConfig {
+public final class RestClientTestConfig {
 
-    private static RestClientConfig restClientConfig = new RestClientConfig();
+    private static final RestClientConfig restClientConfig = new RestClientConfig();
 
     public static RestClient.Builder create() {
         return restClientConfig.restClientBuilderConfig();

@@ -1,22 +1,19 @@
 package shopping.auth.domain;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import org.springframework.util.ObjectUtils;
+import shopping.infra.exception.ShoppingBusinessException;
+
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import org.springframework.util.ObjectUtils;
-
-import com.fasterxml.jackson.annotation.JsonCreator;
-
-import shopping.infra.exception.ShoppingBusinessException;
 
 public enum Role {
     ADMIN,
     CUSTOMER;
 
-    private static final Map<String, Role> ROLE_MAP =
-            Arrays.stream(Role.values())
-                    .collect(Collectors.toUnmodifiableMap(Role::name, role -> role));
+    private static final Map<String, Role> ROLE_MAP = Arrays.stream(Role.values())
+            .collect(Collectors.toUnmodifiableMap(Role::name, role -> role));
 
     @JsonCreator
     public static Role from(final String name) {

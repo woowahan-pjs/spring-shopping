@@ -1,15 +1,5 @@
 package shopping.product.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -20,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
 import shopping.infra.client.purgomalum.PurgoMalumAdapter;
 import shopping.infra.exception.ShoppingBusinessException;
 import shopping.product.domain.NotFoundProductException;
@@ -33,6 +22,16 @@ import shopping.product.dto.ProductSearchRequest;
 import shopping.product.dto.ProductUpdateRequest;
 import shopping.product.dto.ProductsSearchResponse;
 import shopping.product.repository.ProductRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
 class ProductServiceTest {
@@ -67,7 +66,7 @@ class ProductServiceTest {
         void success() {
             // given
             final Long productId = 703L;
-            final String name = "ふろっこど～る なつめ";
+            final String name = "ふろっこど-る なつめ";
             final Price price = Price.create(1650L);
             final String imageUrl =
                     "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg";
@@ -103,7 +102,7 @@ class ProductServiceTest {
 
             final ProductSaveRequest request =
                     new ProductSaveRequest(
-                            "ふろっこど～る なつめ",
+                            "ふろっこど-る なつめ",
                             Price.create(1650L),
                             "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg");
 
@@ -121,7 +120,7 @@ class ProductServiceTest {
             // given
             final Long userId = 79L;
             final Long productId = 703L;
-            final String name = "ふろっこど～る なつめ";
+            final String name = "ふろっこど-る なつめ";
             final Price price = Price.create(1650L);
             final String imageUrl =
                     "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg";
@@ -153,7 +152,7 @@ class ProductServiceTest {
             final Long productId = 73L;
             final ProductUpdateRequest request =
                     new ProductUpdateRequest(
-                            "ふろっこど～る なつめ",
+                            "ふろっこど-る なつめ",
                             Price.create(1650L),
                             "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg");
 
@@ -174,7 +173,7 @@ class ProductServiceTest {
             final Long productId = 73L;
             final ProductUpdateRequest request =
                     new ProductUpdateRequest(
-                            "ふろっこど～る なつめ",
+                            "ふろっこど-る なつめ",
                             Price.create(1650L),
                             "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg");
 
@@ -202,7 +201,7 @@ class ProductServiceTest {
             final String imageUrl = "http://hello.world";
             final ProductUpdateRequest request =
                     new ProductUpdateRequest(
-                            "ふろっこど～る なつめ",
+                            "ふろっこど-る なつめ",
                             Price.create(1650L),
                             "https://tc-animate.techorus-cdn.com/resize_image/resize_image.php?image=4902273250051_1_1761649508.jpg");
 
@@ -218,9 +217,9 @@ class ProductServiceTest {
             assertSoftly(
                     it -> {
                         it.assertThat(product.getId()).isEqualTo(productId);
-                        it.assertThat(product.getName()).isEqualTo(name);
-                        it.assertThat(product.getPrice()).isEqualTo(price);
-                        it.assertThat(product.getImageUrl()).isEqualTo(imageUrl);
+                        it.assertThat(product.getName()).isEqualTo(request.name());
+                        it.assertThat(product.getPrice()).isEqualTo(request.price());
+                        it.assertThat(product.getImageUrl()).isEqualTo(request.imageUrl());
                     });
         }
     }

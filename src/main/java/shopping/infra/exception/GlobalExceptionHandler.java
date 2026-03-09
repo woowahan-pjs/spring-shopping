@@ -1,9 +1,7 @@
 package shopping.infra.exception;
 
-import java.util.List;
-
 import jakarta.validation.ConstraintViolationException;
-
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import lombok.extern.slf4j.Slf4j;
+import java.util.List;
 
 @Slf4j
 @RestControllerAdvice
@@ -33,15 +31,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         BindingResult bindingResult = ex.getBindingResult();
 
-        final List<InvalidResponse> responses =
-                bindingResult.getFieldErrors().stream()
-                        .map(
-                                fieldError ->
-                                        new InvalidResponse(
-                                                fieldError.getField(),
-                                                fieldError.getDefaultMessage(),
-                                                fieldError.getRejectedValue()))
-                        .toList();
+        final List<InvalidResponse> responses = bindingResult.getFieldErrors().stream()
+                .map(fieldError -> new InvalidResponse(
+                        fieldError.getField(),
+                        fieldError.getDefaultMessage(),
+                        fieldError.getRejectedValue()))
+                .toList();
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setProperty("parameters", responses);
@@ -55,21 +50,17 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             ConstraintViolationException ex, WebRequest request) {
         log.error("[ VALIDATE ERROR ] : ", ex);
 
-        List<InvalidResponse> responses =
-                ex.getConstraintViolations().stream()
-                        .map(
-                                constraintViolation ->
-                                        new InvalidResponse(
-                                                constraintViolation.getPropertyPath().toString(),
-                                                constraintViolation.getMessage(),
-                                                constraintViolation.getInvalidValue()))
-                        .toList();
+        List<InvalidResponse> responses = ex.getConstraintViolations().stream()
+                .map(constraintViolation -> new InvalidResponse(
+                        constraintViolation.getPropertyPath().toString(),
+                        constraintViolation.getMessage(),
+                        constraintViolation.getInvalidValue()))
+                .toList();
 
         ProblemDetail problemDetail = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problemDetail.setProperty("parameters", responses);
 
-        return handleExceptionInternal(
-                ex, problemDetail, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)

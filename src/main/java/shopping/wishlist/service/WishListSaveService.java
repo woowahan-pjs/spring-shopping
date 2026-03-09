@@ -1,6 +1,5 @@
 package shopping.wishlist.service;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +12,8 @@ import shopping.wishlist.dto.WishListSaveRequest;
 import shopping.wishlist.dto.WishListSaveSummary;
 import shopping.wishlist.repository.WishListItemRepository;
 import shopping.wishlist.repository.WishListRepository;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,8 +35,7 @@ public class WishListSaveService {
      */
     @Transactional
     public WishListSaveSummary registerWishList(final Long userId, final WishListSaveRequest request) {
-        final WishList wishList =
-            wishListRepository.findByWishList(userId)
+        final WishList wishList = wishListRepository.findByWishList(userId)
                 .orElseGet(() -> wishListRepository.save(WishList.generate(userId)));
 
         final WishListSaveContext context = createSaveContext(wishList, request.extractIds());

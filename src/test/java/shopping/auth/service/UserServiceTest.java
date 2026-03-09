@@ -1,13 +1,5 @@
 package shopping.auth.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
-
-import java.util.Optional;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,7 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 import shopping.auth.domain.DuplicateEmailException;
 import shopping.auth.domain.InvalidUserException;
 import shopping.auth.domain.Role;
@@ -26,14 +17,25 @@ import shopping.auth.dto.RegisterRequest;
 import shopping.auth.dto.UserResponse;
 import shopping.auth.repository.UserRepository;
 
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.BDDMockito.any;
+import static org.mockito.BDDMockito.given;
+
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @InjectMocks private UserService userService;
+    @InjectMocks
+    private UserService userService;
 
-    @Mock private UserRepository userRepository;
+    @Mock
+    private UserRepository userRepository;
 
-    @Mock private PasswordEncoder passwordEncoder;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     @Nested
     @DisplayName("회원 가입을 할 때,")
@@ -93,8 +95,7 @@ class UserServiceTest {
             final String email = "test73@test.com";
             final String password = "703703703";
 
-            given(userRepository.findByEmailAndIsUse(email, true))
-                    .willThrow(new InvalidUserException());
+            given(userRepository.findByEmailAndIsUse(email, true)).willThrow(new InvalidUserException());
 
             // when & then
             assertThatThrownBy(() -> userService.getUser(email, password))
@@ -138,12 +139,11 @@ class UserServiceTest {
             final UserResponse result = userService.getUser(email, password);
 
             // then
-            assertSoftly(
-                    it -> {
-                        it.assertThat(result.userId()).isEqualTo(userId);
-                        it.assertThat(result.email()).isEqualTo(email);
-                        it.assertThat(result.role()).isEqualTo(role);
-                    });
+            assertSoftly(it -> {
+                it.assertThat(result.userId()).isEqualTo(userId);
+                it.assertThat(result.email()).isEqualTo(email);
+                it.assertThat(result.role()).isEqualTo(role);
+            });
         }
     }
 }

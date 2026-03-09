@@ -1,16 +1,5 @@
 package shopping.infra.security;
 
-import java.nio.charset.StandardCharsets;
-import java.security.Key;
-import java.util.Date;
-
-import javax.crypto.SecretKey;
-
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -19,7 +8,16 @@ import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 import shopping.auth.domain.Role;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Date;
 
 @Slf4j
 @Component
@@ -39,8 +37,7 @@ public class JwtTokenProvider {
                 .claim("email", userPrincipal.getUsername())
                 .claim("role", userPrincipal.getRole())
                 .issuedAt(new Date())
-                .expiration(
-                        new Date(System.currentTimeMillis() + jwtTokenProperties.getExpiration()))
+                .expiration(new Date(System.currentTimeMillis() + jwtTokenProperties.getExpiration()))
                 .signWith(key)
                 .compact();
     }
@@ -74,8 +71,7 @@ public class JwtTokenProvider {
 
         final UserDetails userDetails = UserPrincipal.generate(id, email, userRole);
 
-        return new UsernamePasswordAuthenticationToken(
-                userDetails, "", userDetails.getAuthorities());
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     private Claims parseClaims(final String secretKey, final String token) {

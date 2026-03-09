@@ -1,9 +1,8 @@
 package shopping.auth.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
 import shopping.auth.domain.Role;
 import shopping.auth.dto.LoginRequest;
 import shopping.auth.dto.LoginResponse;
@@ -44,8 +43,7 @@ public class AuthFacade {
     public LoginResponse login(final LoginRequest request) {
         final UserResponse response = userService.getUser(request.email(), request.password());
 
-        return LoginResponse.of(
-                generateToken(response.userId(), response.email(), response.role()));
+        return LoginResponse.of(generateToken(response.userId(), response.email(), response.role()));
     }
 
     private String generateToken(final Long userId, final String email, final Role role) {

@@ -1,13 +1,5 @@
 package shopping.wishlist.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-import static org.mockito.BDDMockito.given;
-
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -15,7 +7,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import shopping.infra.exception.ShoppingBusinessException;
 import shopping.product.domain.Price;
 import shopping.product.domain.Product;
@@ -27,12 +18,22 @@ import shopping.wishlist.domain.WishListItemFixture;
 import shopping.wishlist.dto.WishListResponse;
 import shopping.wishlist.repository.WishListRepository;
 
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+import static org.mockito.BDDMockito.given;
+
 @ExtendWith(MockitoExtension.class)
 class WishListServiceTest {
 
-    @InjectMocks private WishListService wishListService;
+    @InjectMocks
+    private WishListService wishListService;
 
-    @Mock private WishListRepository wishListRepository;
+    @Mock
+    private WishListRepository wishListRepository;
 
     @Nested
     @DisplayName("위시 리스트를 조회할 때,")
@@ -53,28 +54,22 @@ class WishListServiceTest {
 
             final Long wishListId = 79L;
 
-            final Product expectedProduct =
-                    ProductFixture.fixture(productId, productName, productPrice, productImageUrl);
-            final WishListItem expectedItem =
-                    WishListItemFixture.fixture(wishListItemId, wishListId, expectedProduct);
-            final WishList expected =
-                    WishListFixture.fixture(wishListId, userId, List.of(expectedItem));
+            final Product expectedProduct = ProductFixture.fixture(productId, productName, productPrice, productImageUrl);
+            final WishListItem expectedItem = WishListItemFixture.fixture(wishListItemId, wishListId, expectedProduct);
+            final WishList expected = WishListFixture.fixture(wishListId, userId, List.of(expectedItem));
             given(wishListRepository.findByWishListAndIsUse(userId)).willReturn(Optional.of(expected));
 
             // when
             final WishListResponse response = wishListService.getWishList(userId);
 
             // then
-            assertSoftly(
-                    it -> {
-                        it.assertThat(response.userId()).isEqualTo(userId);
-                        it.assertThat(response.items().getFirst().wishId())
-                                .isEqualTo(wishListItemId);
-                        it.assertThat(response.items().getFirst().name()).isEqualTo(productName);
-                        it.assertThat(response.items().getFirst().price()).isEqualTo(productPrice);
-                        it.assertThat(response.items().getFirst().imageUrl())
-                                .isEqualTo(productImageUrl);
-                    });
+            assertSoftly(it -> {
+                it.assertThat(response.userId()).isEqualTo(userId);
+                it.assertThat(response.items().getFirst().wishId()).isEqualTo(wishListItemId);
+                it.assertThat(response.items().getFirst().name()).isEqualTo(productName);
+                it.assertThat(response.items().getFirst().price()).isEqualTo(productPrice);
+                it.assertThat(response.items().getFirst().imageUrl()).isEqualTo(productImageUrl);
+            });
         }
 
         @Test
@@ -89,11 +84,10 @@ class WishListServiceTest {
             final WishListResponse response = wishListService.getWishList(userId);
 
             // then
-            assertSoftly(
-                    it -> {
-                        it.assertThat(response.userId()).isEqualTo(userId);
-                        it.assertThat(response.items()).isEmpty();
-                    });
+            assertSoftly(it -> {
+                it.assertThat(response.userId()).isEqualTo(userId);
+                it.assertThat(response.items()).isEmpty();
+            });
         }
     }
 
@@ -125,10 +119,8 @@ class WishListServiceTest {
 
             final Long invalidWishListItemId = 30L;
 
-            final Product expectedProduct =
-                    ProductFixture.fixture(13L, "고나나", Price.create(1300L), "http://com");
-            final WishListItem expectedItem =
-                    WishListItemFixture.fixture(1L, invalidWishListItemId, expectedProduct);
+            final Product expectedProduct = ProductFixture.fixture(13L, "고나나", Price.create(1300L), "http://com");
+            final WishListItem expectedItem = WishListItemFixture.fixture(1L, invalidWishListItemId, expectedProduct);
             final WishList expected = WishListFixture.fixture(1L, userId, List.of(expectedItem));
             given(wishListRepository.findByWishList(userId)).willReturn(Optional.of(expected));
 
@@ -147,10 +139,8 @@ class WishListServiceTest {
 
             final Long wishListId = 1L;
 
-            final Product expectedProduct =
-                    ProductFixture.fixture(13L, "고나나", Price.create(1300L), "http://com");
-            final WishListItem expectedItem =
-                    WishListItemFixture.fixture(wishListItemId, wishListId, expectedProduct);
+            final Product expectedProduct = ProductFixture.fixture(13L, "고나나", Price.create(1300L), "http://com");
+            final WishListItem expectedItem = WishListItemFixture.fixture(wishListItemId, wishListId, expectedProduct);
             final WishList expected = WishListFixture.fixture(wishListId, userId, List.of(expectedItem));
             given(wishListRepository.findByWishList(userId)).willReturn(Optional.of(expected));
 

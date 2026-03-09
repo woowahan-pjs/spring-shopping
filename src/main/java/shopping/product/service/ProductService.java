@@ -1,11 +1,10 @@
 package shopping.product.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import lombok.RequiredArgsConstructor;
 import shopping.infra.client.purgomalum.PurgoMalumAdapter;
 import shopping.infra.exception.ShoppingBusinessException;
 import shopping.product.domain.NotFoundProductException;
@@ -33,13 +32,10 @@ public class ProductService {
      */
     @Transactional(readOnly = true)
     public ProductResponse getProduct(final Long productId) {
-        final Product product =
-                productRepository
-                        .findProductByIdAndIsUse(productId, true)
-                        .orElseThrow(NotFoundProductException::new);
+        final Product product = productRepository.findProductByIdAndIsUse(productId, true)
+                .orElseThrow(NotFoundProductException::new);
 
-        return ProductResponse.from(
-                product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+        return ProductResponse.from(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
 
     /**
@@ -51,11 +47,8 @@ public class ProductService {
      * @return 검색된 상품 리스트를 담고 있는 ProductsSearchResponse 객체를 반환합니다.
      */
     @Transactional(readOnly = true)
-    public ProductsSearchResponse searchProduct(
-            final ProductSearchRequest request, final Pageable pageable) {
-        final Page<Product> products =
-                productRepository.search(
-                        request.name(), request.fromPrice(), request.toPrice(), pageable);
+    public ProductsSearchResponse searchProduct(final ProductSearchRequest request, final Pageable pageable) {
+        final Page<Product> products = productRepository.search(request.name(), request.fromPrice(), request.toPrice(), pageable);
 
         return ProductsSearchResponse.from(products.toList(), products.getPageable());
     }
@@ -84,13 +77,11 @@ public class ProductService {
      * @param request 수정할 상품 정보를 포함한 ProductUpdateRequest 객체입니다.
      */
     @Transactional
-    public void modifyProduct(
-            final Long userId, final Long productId, final ProductUpdateRequest request) {
+    public void modifyProduct(final Long userId, final Long productId, final ProductUpdateRequest request) {
         // 1. 상품이 존재하는지 확인
-        final Product product =
-                productRepository
-                        .findProductByIdAndUserIdAndIsUse(productId, userId, true)
-                        .orElseThrow(NotFoundProductException::new);
+        final Product product = productRepository
+                .findProductByIdAndUserIdAndIsUse(productId, userId, true)
+                .orElseThrow(NotFoundProductException::new);
 
         // 2. 상품 명이 변경되었다면, 비속어가 존재하는지 확인
         if (!product.isEqualsNameTo(request.name())) {
@@ -109,10 +100,9 @@ public class ProductService {
      */
     @Transactional
     public void removeProduct(final Long userId, final Long productId) {
-        final Product product =
-                productRepository
-                        .findProductByIdAndUserIdAndIsUse(productId, userId, true)
-                        .orElseThrow(NotFoundProductException::new);
+        final Product product = productRepository
+                .findProductByIdAndUserIdAndIsUse(productId, userId, true)
+                .orElseThrow(NotFoundProductException::new);
 
         product.remove();
     }
@@ -123,8 +113,8 @@ public class ProductService {
      * @param name 검증할 상품 이름으로, 비속어 포함 여부를 확인합니다.
      */
     private void validProductNameProfanity(final String name) {
-//        if (purgoMalumAdapter.isProfanity(name)) {
-//            throw new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다.");
-//        }
+        if (purgoMalumAdapter.isProfanity(name)) {
+            throw new ShoppingBusinessException("상품명에 비속어가 포함되어 있습니다.");
+        }
     }
 }

@@ -1,10 +1,9 @@
 package shopping.infra.client.purgomalum;
 
-import org.springframework.http.MediaType;
-import org.springframework.web.client.RestClient;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
+import org.springframework.web.client.RestClient;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -16,8 +15,7 @@ class PurgoMalumClient {
 
         log.info("[HTTP GET 요청] : {}", endPoint + input.toString());
 
-        return restClient
-                .get()
+        return restClient.get()
                 .uri(endPoint + input)
                 .accept(MediaType.TEXT_PLAIN)
                 .retrieve()

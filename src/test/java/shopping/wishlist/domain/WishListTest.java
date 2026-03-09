@@ -1,17 +1,16 @@
 package shopping.wishlist.domain;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-
-import java.util.List;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-
 import shopping.infra.exception.ShoppingBusinessException;
 import shopping.product.domain.Price;
 import shopping.product.domain.ProductFixture;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class WishListTest {
 
@@ -46,11 +45,10 @@ class WishListTest {
             final Long wishListItemId = 99L;
 
             final Long wishListId = 1L;
-            final WishListItem item =
-                    WishListItemFixture.fixture(
-                            wishListItemId,
-                            wishListId,
-                            ProductFixture.fixture(1L, "고나나", Price.create(3000L), "http://com"));
+            final WishListItem item =  WishListItemFixture.fixture(
+                    wishListItemId,
+                    wishListId,
+                    ProductFixture.fixture(1L, "고나나", Price.create(3000L), "http://com"));
             final WishList wishList = WishListFixture.fixture(wishListId, 79L, List.of(item));
 
             // when

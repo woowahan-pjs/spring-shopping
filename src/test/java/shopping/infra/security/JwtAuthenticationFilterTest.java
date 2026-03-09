@@ -1,13 +1,7 @@
 package shopping.infra.security;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.SoftAssertions.assertSoftly;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
-
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -21,10 +15,13 @@ import org.springframework.mock.web.MockFilterChain;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.web.AuthenticationEntryPoint;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import shopping.auth.domain.Role;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 class JwtAuthenticationFilterTest {
 
@@ -33,13 +30,10 @@ class JwtAuthenticationFilterTest {
     private final String secretKey = "this-is-a-longer-test-secret-key-123456";
     private final Long expiration = 600000L;
 
-    private final JwtTokenProvider provider =
-            new JwtTokenProvider(new JwtTokenProperties(secretKey, expiration));
-    private final AuthenticationEntryPoint authenticationEntryPoint =
-            new CustomAuthenticationEntryPoint(new ObjectMapper());
+    private final JwtTokenProvider provider = new JwtTokenProvider(new JwtTokenProperties(secretKey, expiration));
+    private final AuthenticationEntryPoint authenticationEntryPoint = new CustomAuthenticationEntryPoint(new ObjectMapper());
 
-    private final JwtAuthenticationFilter authenticationFilter =
-            new JwtAuthenticationFilter(provider, authenticationEntryPoint);
+    private final JwtAuthenticationFilter authenticationFilter = new JwtAuthenticationFilter(provider, authenticationEntryPoint);
 
     @Nested
     @DisplayName("토큰을 검증할 때,")
@@ -61,12 +55,10 @@ class JwtAuthenticationFilterTest {
                 authenticationFilter.doFilterInternal(request, response, filterChain);
 
                 // then
-                assertSoftly(
-                        it -> {
-                            it.assertThat(response.getStatus())
-                                    .isEqualTo(HttpStatus.UNAUTHORIZED.value());
-                            it.assertThat(getResponseMessage(response)).contains("인증 정보가 없습니다.");
-                        });
+                assertSoftly(it -> {
+                    it.assertThat(response.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+                    it.assertThat(getResponseMessage(response)).contains("인증 정보가 없습니다.");
+                });
             }
 
             @ParameterizedTest
@@ -75,10 +67,8 @@ class JwtAuthenticationFilterTest {
             @DisplayName("`Bearer`로 시작하지 않으면 401를 반환합니다.")
             void invalidPrefix(final String invalidPrefix) throws ServletException, IOException {
                 // given
-                final String token =
-                        invalidPrefix
-                                + provider.generateToken(
-                                        UserPrincipal.generate(1L, "test@test.com", Role.CUSTOMER));
+                final String token = invalidPrefix + provider.generateToken(
+                        UserPrincipal.generate(1L, "test@test.com", Role.CUSTOMER));
 
                 MockHttpServletRequest request = new MockHttpServletRequest();
                 request.addHeader(HttpHeaders.AUTHORIZATION, token);
@@ -90,12 +80,10 @@ class JwtAuthenticationFilterTest {
                 authenticationFilter.doFilterInternal(request, response, filterChain);
 
                 // then
-                assertSoftly(
-                        it -> {
-                            it.assertThat(response.getStatus())
-                                    .isEqualTo(HttpStatus.UNAUTHORIZED.value());
-                            it.assertThat(getResponseMessage(response)).contains("잘못된 요청입니다.");
-                        });
+                assertSoftly(it -> {
+                    it.assertThat(response.getStatus()).isEqualTo(HttpStatus.UNAUTHORIZED.value());
+                    it.assertThat(getResponseMessage(response)).contains("잘못된 요청입니다.");
+                });
             }
         }
 
@@ -103,10 +91,8 @@ class JwtAuthenticationFilterTest {
         @DisplayName("유효한 토큰이 들어왔을 때, 인증에 성공합니다.")
         void success() throws ServletException, IOException {
             // given
-            final String token =
-                    AUTHORIZATION_BEARER
-                            + provider.generateToken(
-                                    UserPrincipal.generate(1L, "test@test.com", Role.CUSTOMER));
+            final String token = AUTHORIZATION_BEARER
+                    + provider.generateToken(UserPrincipal.generate(1L, "test@test.com", Role.CUSTOMER));
 
             MockHttpServletRequest request = new MockHttpServletRequest();
             request.addHeader(HttpHeaders.AUTHORIZATION, token);
@@ -127,20 +113,18 @@ class JwtAuthenticationFilterTest {
     class shouldNotFilter {
 
         @ParameterizedTest
-        @ValueSource(
-                strings = {
-                    "/swagger-ui",
-                    "/h2-console",
-                    "/v3/api-docs",
-                    "/favicon.ico",
-                    "/api/members/register",
-                    "/api/members/login"
-                })
+        @ValueSource(strings = {
+            "/swagger-ui",
+            "/h2-console",
+            "/v3/api-docs",
+            "/favicon.ico",
+            "/api/members/register",
+            "/api/members/login"
+        })
         @DisplayName("생략 여부가 true로 반환됩니다.")
         void isTrue(final String requestUri) {
             // given
-            MockHttpServletRequest request =
-                    new MockHttpServletRequest(HttpMethod.GET.name(), requestUri);
+            MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.GET.name(), requestUri);
 
             // when
             final boolean result = authenticationFilter.shouldNotFilter(request);
@@ -154,8 +138,7 @@ class JwtAuthenticationFilterTest {
         void isFalse() {
             // given
             final String requestUri = "/test";
-            MockHttpServletRequest request =
-                    new MockHttpServletRequest(HttpMethod.GET.name(), requestUri);
+            MockHttpServletRequest request = new MockHttpServletRequest(HttpMethod.GET.name(), requestUri);
 
             // when
             final boolean result = authenticationFilter.shouldNotFilter(request);
