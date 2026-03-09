@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static shopping.domain.ProductFixture.*;
 
@@ -78,5 +79,27 @@ class ProductControllerTest {
                 .hasStatus(HttpStatus.OK)
                 .bodyJson()
                 .hasPathSatisfying("$.id", id -> assertThat(id).isEqualTo(1));
+    }
+
+    @Test
+    @DisplayName("상품을 수정한다")
+    void update() throws JsonProcessingException {
+        Product product = createWithId(1L);
+        product.changeName("치킨");
+
+        ProductRequest request = new ProductRequest( "치킨", VALID_PRICE, VALID_IMAGE_URL);
+
+        given(service.update(eq(1L), any())).willReturn(product);
+
+        assertThat(mockMvcTester.put().uri("/products/1")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .hasStatus(HttpStatus.OK)
+                .bodyJson()
+                .convertTo(ProductResponse.class)
+                .satisfies(res -> {
+                   assertThat(res.getId()).isEqualTo(1L);
+                   assertThat(res.getName()).isEqualTo("치킨");
+                });
     }
 }

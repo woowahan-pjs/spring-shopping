@@ -77,7 +77,7 @@ class ProductServiceTest {
 
         product.changeName("의자");
         product.changePrice(BigDecimal.valueOf(10000));
-        productService.update(product);
+        productService.update(product.getId(), product);
 
         Product find = productService.findProductById(product.getId());
 

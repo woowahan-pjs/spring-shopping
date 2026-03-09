@@ -25,14 +25,21 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductResponse>> findAll() {
+    public ResponseEntity<List<ProductResponse>> getProducts() {
         List<Product> products = service.findProducts();
         return ResponseEntity.ok(products.stream().map(ProductResponse::from).toList());
     }
 
     @GetMapping("/products/{id}")
-    public ResponseEntity<ProductResponse> findById(@PathVariable("id") Long id) {
+    public ResponseEntity<ProductResponse> getProduct(@PathVariable("id") Long id) {
         Product product = service.findProductById(id);
+        return ResponseEntity.ok(ProductResponse.from(product));
+    }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<ProductResponse> updateProduct(@PathVariable("id") Long id,
+                                                      @RequestBody ProductRequest request) {
+        Product product = service.update(id, request.toProduct());
         return ResponseEntity.ok(ProductResponse.from(product));
     }
 }

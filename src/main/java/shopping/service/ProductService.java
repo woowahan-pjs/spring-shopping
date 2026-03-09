@@ -31,9 +31,9 @@ public class ProductService {
         return productRepository.findAll();
     }
 
-    public Product update(Product product) {
+    public Product update(Long id, Product product) {
         validateProductName(product);
-        return productRepository.update(product.getId(), product);
+        return productRepository.update(id, product);
     }
 
     private void validateProductName(Product product) {
