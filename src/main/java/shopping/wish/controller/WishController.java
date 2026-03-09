@@ -18,4 +18,10 @@ public class WishController {
 
         wishService.addWish(memberId, productId);
     }
+
+    @DeleteMapping("/{wishId}")
+    public void deleteWish(@PathVariable Long wishId) {
+
+        wishService.deleteWish(wishId);
+    }
 }
