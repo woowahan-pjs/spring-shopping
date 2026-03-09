@@ -48,6 +48,16 @@ public class WishListItem extends AuditInformation {
     @Column(name = "use_yn", nullable = false, columnDefinition = "char(1)")
     private Boolean isUse;
 
+    public static WishListItem generate(final Long wishListId, final Product product) {
+        WishListItem wishListItem = new WishListItem();
+
+        wishListItem.wishListId = wishListId;
+        wishListItem.product = product;
+        wishListItem.isUse = true;
+
+        return wishListItem;
+    }
+
     public void remove() {
         this.isUse = false;
     }

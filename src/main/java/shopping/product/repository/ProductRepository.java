@@ -1,5 +1,6 @@
 package shopping.product.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import jakarta.persistence.QueryHint;
@@ -50,4 +51,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("fromPrice") Price fromPrice,
             @Param("toPrice") Price toPrice,
             Pageable pageable);
+
+    @QueryHints(
+        @QueryHint(
+            name = "org.hibernate.comment",
+            value = "ProductRepository.findByIsUseAndIdIn : 활성화되어 있는 특정 ID의 상품을 조회합니다."))
+    List<Product> findByIsUseAndIdIn(Boolean isUse, List<Long> ids);
 }

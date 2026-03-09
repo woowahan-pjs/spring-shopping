@@ -38,8 +38,12 @@ public class WishList extends AuditInformation {
     @OneToMany(mappedBy = "wishListId", cascade = CascadeType.PERSIST)
     private List<WishListItem> items = new ArrayList<>();
 
-    public static WishList generate() {
-        return new WishList();
+    public static WishList generate(final Long userId) {
+        WishList wishList = new WishList();
+
+        wishList.userId = userId;
+
+        return wishList;
     }
 
     /**
@@ -55,5 +59,15 @@ public class WishList extends AuditInformation {
                         .orElseThrow(() -> new ShoppingBusinessException("존재하지 않는 위시 리스트 입니다."));
 
         item.remove();
+    }
+
+    public boolean isContainsItem(final Long productId) {
+        return items.stream()
+            .filter(it -> Boolean.TRUE.equals(it.getIsUse()))
+            .anyMatch(it -> it.getProduct().getId().equals(productId));
+    }
+
+    public void addItem(final WishListItem item) {
+        this.items.add(item);
     }
 }

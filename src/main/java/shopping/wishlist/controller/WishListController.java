@@ -1,5 +1,6 @@
 package shopping.wishlist.controller;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -8,6 +9,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +21,9 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import shopping.infra.security.UserPrincipal;
+import shopping.wishlist.dto.WishListSaveSummary;
 import shopping.wishlist.dto.WishListResponse;
+import shopping.wishlist.dto.WishListSaveRequest;
 import shopping.wishlist.service.WishListService;
 
 @SecurityRequirement(name = "JWT")
@@ -44,6 +49,21 @@ class WishListController {
     public WishListResponse getWishList(
             @AuthenticationPrincipal final UserPrincipal userPrincipal) {
         return wishListService.getWishList(userPrincipal.getId());
+    }
+
+    @PreAuthorize("hasRole('CUSTOMER')")
+    @PostMapping
+    @ApiResponses(
+        value = {
+            @ApiResponse(responseCode = "200", description = "위시 리스트 항목 저장 결과"),
+            @ApiResponse(responseCode = "401", description = "인증 정보가 없을 때"),
+            @ApiResponse(responseCode = "403", description = "유효하지 않은 권한의 회원이 요청했을 때"),
+            @ApiResponse(responseCode = "500", description = "서버 오류")
+        })
+    @Operation(summary = "위시 리스트 항목 저장", description = "위시 리스트에 원하는 상품을 저장합니다.")
+    public WishListSaveSummary registerWishList(@AuthenticationPrincipal final UserPrincipal userPrincipal,
+        @RequestBody @Valid final WishListSaveRequest request) {
+        return wishListService.registerWishList(userPrincipal.getId(), request);
     }
 
     @PreAuthorize("hasRole('CUSTOMER')")
