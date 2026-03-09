@@ -24,6 +24,7 @@ import shopping.infra.security.UserPrincipal;
 import shopping.wishlist.dto.WishListSaveSummary;
 import shopping.wishlist.dto.WishListResponse;
 import shopping.wishlist.dto.WishListSaveRequest;
+import shopping.wishlist.service.WishListSaveService;
 import shopping.wishlist.service.WishListService;
 
 @SecurityRequirement(name = "JWT")
@@ -35,6 +36,8 @@ import shopping.wishlist.service.WishListService;
 class WishListController {
 
     private final WishListService wishListService;
+
+    private final WishListSaveService wishListSaveService;
 
     @PreAuthorize("hasRole('CUSTOMER')")
     @GetMapping
@@ -63,7 +66,7 @@ class WishListController {
     @Operation(summary = "위시 리스트 항목 저장", description = "위시 리스트에 원하는 상품을 저장합니다.")
     public WishListSaveSummary registerWishList(@AuthenticationPrincipal final UserPrincipal userPrincipal,
         @RequestBody @Valid final WishListSaveRequest request) {
-        return wishListService.registerWishList(userPrincipal.getId(), request);
+        return wishListSaveService.registerWishList(userPrincipal.getId(), request);
     }
 
     @PreAuthorize("hasRole('CUSTOMER')")
