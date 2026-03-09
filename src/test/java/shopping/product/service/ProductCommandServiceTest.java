@@ -96,20 +96,8 @@ class ProductCommandServiceTest {
     }
 
     @Test
-    @DisplayName("가격이 0 이하이면 예외가 발생한다")
-    void test05() {
-        // given
-        ProductRegisterInput request = new ProductRegisterInput("상품명", 0L, "https://example.com/image.jpg");
-
-        // when & then
-        assertThatThrownBy(() -> productCommandService.register(request))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("가격은 양수이어야 합니다.");
-    }
-
-    @Test
     @DisplayName("상품을 수정할 수 있다")
-    void test06() {
+    void test05() {
         // given
         ProductOutput saved = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
@@ -125,7 +113,7 @@ class ProductCommandServiceTest {
 
     @Test
     @DisplayName("상품을 삭제할 수 있다")
-    void test07() {
+    void test06() {
         // given
         ProductOutput saved = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));

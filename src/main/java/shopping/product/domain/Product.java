@@ -1,6 +1,8 @@
 package shopping.product.domain;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,8 +29,9 @@ public class Product extends BaseEntity {
     @Column(nullable = false, length = 15)
     private String name;
 
-    @Column(nullable = false)
-    private Long price;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "price", nullable = false))
+    private Price price;
 
     @Column(name = "image_url", nullable = false, length = 500)
     private String imageUrl;
@@ -46,14 +49,14 @@ public class Product extends BaseEntity {
     private LocalDateTime deletedAt;
 
     @Builder
-    public Product(Long id, String name, Long price, String imageUrl) {
+    public Product(Long id, String name, Price price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
     }
 
-    public void update(String name, Long price, String imageUrl) {
+    public void update(String name, Price price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
