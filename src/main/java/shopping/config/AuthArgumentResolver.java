@@ -1,4 +1,4 @@
-package shopping.auth;
+package shopping.config;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +8,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
+import shopping.auth.service.AuthService;
 import shopping.common.exception.UnauthorizedException;
 import shopping.member.domain.Member;
 import shopping.member.repository.MemberRepository;

@@ -3,7 +3,7 @@ package shopping.member.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.auth.AuthService;
+import shopping.auth.service.AuthService;
 import shopping.member.domain.Member;
 import shopping.member.repository.MemberRepository;
 import shopping.member.service.dto.MemberLoginInput;

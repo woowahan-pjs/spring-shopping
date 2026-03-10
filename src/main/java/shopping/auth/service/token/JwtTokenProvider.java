@@ -1,4 +1,4 @@
-package shopping.auth;
+package shopping.auth.service.token;
 
 import io.jsonwebtoken.Jwts;
 import java.util.Date;

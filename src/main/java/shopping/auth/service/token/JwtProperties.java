@@ -1,4 +1,4 @@
-package shopping.auth;
+package shopping.auth.service.token;
 
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;

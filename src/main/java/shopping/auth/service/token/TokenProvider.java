@@ -1,4 +1,4 @@
-package shopping.auth;
+package shopping.auth.service.token;
 
 public interface TokenProvider {
     String createToken(Long memberId);

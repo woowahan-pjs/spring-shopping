@@ -7,7 +7,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import shopping.auth.LoginMember;
+import shopping.config.LoginMember;
 import shopping.common.response.PageResponse;
 import shopping.member.domain.Member;
 import shopping.wish.api.query.dto.WishResponse;
