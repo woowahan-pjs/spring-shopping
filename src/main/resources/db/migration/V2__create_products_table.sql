@@ -1,0 +1,10 @@
+CREATE TABLE products
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name       VARCHAR(255) NOT NULL,
+    price      INT          NOT NULL,
+    image_url  TEXT         NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted    BOOLEAN   DEFAULT FALSE
+);
