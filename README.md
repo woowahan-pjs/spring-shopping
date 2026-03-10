@@ -119,6 +119,7 @@ WishList 테이블 기준
 개발 초기에는 생산성을 위해 레이어드 아키텍처를 기반으로 구현했습니다.
 다만 서비스 클래스가 비대해지는 문제를 방지하기 위해 Application 계층에서 UseCase 단위로 책임을 분리했습니다.
 
+#### 아키텍처 예시
 ```text
 presentation (controller)
         ↓
