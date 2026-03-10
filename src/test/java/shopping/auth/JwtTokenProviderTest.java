@@ -52,4 +52,20 @@ class JwtTokenProviderTest {
         assertThatThrownBy(() -> tokenProvider.getMemberId(invalidToken))
             .isInstanceOf(JwtException.class);
     }
+
+    @Test
+    @DisplayName("만료된 토큰으로 memberId를 추출하면 예외가 발생한다")
+    void test04() {
+        // arrange
+        JwtProperties expiredProperties = new JwtProperties(
+            "spring-shopping-jwt-secret-key-must-be-long-enough",
+            -1L
+        );
+        JwtTokenProvider expiredTokenProvider = new JwtTokenProvider(expiredProperties);
+        String expiredToken = expiredTokenProvider.createToken(1L);
+
+        // act & assert
+        assertThatThrownBy(() -> expiredTokenProvider.getMemberId(expiredToken))
+            .isInstanceOf(JwtException.class);
+    }
 }

@@ -1,6 +1,7 @@
 package shopping.auth;
 
 import io.jsonwebtoken.Jwts;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +14,7 @@ public class JwtTokenProvider implements TokenProvider {
     public String createToken(Long memberId) {
         return Jwts.builder()
                    .subject(String.valueOf(memberId))
+                   .expiration(new Date(System.currentTimeMillis() + jwtProperties.expirationMs()))
                    .signWith(jwtProperties.secretKey())
                    .compact();
     }
