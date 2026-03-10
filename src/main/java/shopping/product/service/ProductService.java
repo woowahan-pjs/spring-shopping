@@ -1,5 +1,6 @@
 package shopping.product.service;
 
+import org.springframework.stereotype.Service;
 import shopping.product.domain.Product;
 import shopping.product.dto.ProductCreateRequest;
 import shopping.product.dto.ProductResponse;
@@ -10,6 +11,7 @@ import shopping.product.validator.ProductNameValidator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Service
 public class ProductService {
 
     private final ProductNameValidator productNameValidator;
