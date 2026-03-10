@@ -11,8 +11,10 @@ import shopping.domain.repository.MemberRepository;
 import shopping.domain.repository.ProductRepository;
 import shopping.domain.repository.WishlistRepository;
 import shopping.domain.wishlist.exception.DuplicateWishlistException;
+import shopping.dto.WishlistResponse;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -56,5 +58,26 @@ class WishlistServiceTest {
         // when & then
         assertThatThrownBy(() -> wishlistService.addWishlist(member.getId(), product.getId()))
                 .isInstanceOf(DuplicateWishlistException.class);
+    }
+
+    @Test
+    @DisplayName("사용자의 위시리스트 목록을 조회하면 상품 정보가 반환되어야 한다.")
+    void getWishlist_success() {
+        // given
+        Member member = memberRepository.save(Member.create("list@test.com", "pass123!"));
+        Product product1 = productRepository.save(Product.create("맥북", BigDecimal.valueOf(2000000), "test/image_1.jpg"));
+        Product product2 = productRepository.save(Product.create("아이폰", BigDecimal.valueOf(1000000), "test/image_1.jpg"));
+
+        wishlistService.addWishlist(member.getId(), product1.getId());
+        wishlistService.addWishlist(member.getId(), product2.getId());
+
+        // when
+        List<WishlistResponse> responses = wishlistService.getWishlist(member.getId());
+
+        // then
+        assertThat(responses).hasSize(2);
+        assertThat(responses).extracting("productName").containsExactlyInAnyOrder("맥북", "아이폰");
+        assertThat(responses).extracting("price")
+                .containsExactlyInAnyOrder(new BigDecimal("2000000"), new BigDecimal("1000000"));
     }
 }

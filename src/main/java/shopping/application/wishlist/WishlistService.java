@@ -11,6 +11,9 @@ import shopping.domain.repository.ProductRepository;
 import shopping.domain.repository.WishlistRepository;
 import shopping.domain.wishlist.Wishlist;
 import shopping.domain.wishlist.exception.DuplicateWishlistException;
+import shopping.dto.WishlistResponse;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -25,7 +28,6 @@ public class WishlistService {
         this.productRepository = productRepository;
     }
 
-    @Transactional
     public Long addWishlist(Long memberId, Long productId) {
         if (wishlistRepository.existsByMemberIdAndProductId(memberId, productId)) {
             throw new DuplicateWishlistException(productId);
@@ -38,5 +40,19 @@ public class WishlistService {
 
         Wishlist wishlist = Wishlist.create(member, product);
         return wishlistRepository.save(wishlist).getId();
+    }
+
+    @Transactional(readOnly = true)
+    public List<WishlistResponse> getWishlist(Long memberId) {
+        List<Wishlist> wishlists = wishlistRepository.findAllByMemberIdWithProduct(memberId);
+
+        return wishlists.stream()
+                .map(w -> new WishlistResponse(
+                        w.getId(),
+                        w.getProduct().getId(),
+                        w.getProduct().getName(),
+                        w.getProduct().getPrice()
+                ))
+                .toList();
     }
 }
