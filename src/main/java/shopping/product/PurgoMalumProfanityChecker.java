@@ -1,5 +1,7 @@
 package shopping.product;
 
+import shopping.product.domain.ProfanityChecker;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 

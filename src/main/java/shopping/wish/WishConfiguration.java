@@ -1,9 +1,12 @@
 package shopping.wish;
 
+import shopping.wish.domain.*;
+import shopping.wish.service.*;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import shopping.member.MemberRepository;
+import shopping.member.domain.MemberRepository;
 
 @Configuration
 public class WishConfiguration {

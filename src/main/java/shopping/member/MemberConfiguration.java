@@ -1,5 +1,8 @@
 package shopping.member;
 
+import shopping.member.domain.*;
+import shopping.member.service.*;
+
 import io.jsonwebtoken.Jwts;
 
 import org.springframework.context.annotation.Bean;

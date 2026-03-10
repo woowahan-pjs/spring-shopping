@@ -5,7 +5,7 @@ import java.util.Set;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-import shopping.product.ProfanityChecker;
+import shopping.product.domain.ProfanityChecker;
 
 @Component
 @Primary

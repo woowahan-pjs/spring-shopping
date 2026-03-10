@@ -10,8 +10,8 @@ import com.tngtech.archunit.lang.ArchCondition;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.SimpleConditionEvent;
-import shopping.product.Product;
-import shopping.product.SaveProductService;
+import shopping.product.domain.Product;
+import shopping.product.service.SaveProductService;
 
 @AnalyzeClasses(packages = "shopping", importOptions = ImportOption.DoNotIncludeTests.class)
 class ProductArchTest {

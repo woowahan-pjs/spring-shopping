@@ -10,8 +10,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import shopping.member.LoginMember;
-import shopping.member.RegisterMember;
+import shopping.member.domain.LoginMember;
+import shopping.member.domain.RegisterMember;
 
 @SpringBootTest
 class AuthenticationServiceTest {

@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
-import shopping.member.MemberRepository;
-import shopping.member.TokenProvider;
+import shopping.member.domain.MemberRepository;
+import shopping.member.domain.TokenProvider;
 
 @Component
 public class AuthenticationService {

@@ -1,5 +1,7 @@
 package shopping.member;
 
+import shopping.member.domain.PasswordEncoder;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 public class BcryptPasswordEncoder implements PasswordEncoder {

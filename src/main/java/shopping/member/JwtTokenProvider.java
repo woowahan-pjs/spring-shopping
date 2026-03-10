@@ -1,5 +1,7 @@
 package shopping.member;
 
+import shopping.member.domain.TokenProvider;
+
 import java.util.Date;
 
 import javax.crypto.SecretKey;

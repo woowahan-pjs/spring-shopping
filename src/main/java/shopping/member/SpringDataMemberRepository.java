@@ -1,5 +1,8 @@
 package shopping.member;
 
+import shopping.member.domain.Member;
+import shopping.member.domain.MemberRepository;
+
 import java.util.Optional;
 import java.util.UUID;
 
