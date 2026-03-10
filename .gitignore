@@ -42,3 +42,4 @@ out/
 ### Mac OS ###
 .DS_Store
 
+/.claude/worktrees/
