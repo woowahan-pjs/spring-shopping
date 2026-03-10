@@ -1,4 +1,4 @@
-package shopping.infrastructure.product.persistence;
+package shopping.infrastructure.persistence.product;
 
 import org.springframework.stereotype.Repository;
 import shopping.domain.product.Product;

@@ -15,6 +15,7 @@ import shopping.dto.ProductResponse;
 import java.util.List;
 
 @Service
+@Transactional
 public class ProductService {
     private final ProfanityChecker profanityChecker;
     private final ProductRepository productRepository;
@@ -24,7 +25,6 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    @Transactional
     public Long createProduct(ProductRequest request) {
         if(profanityChecker.containsProfanity(request.getName())) {
             throw new ProfanityNameException(request.getName());
@@ -36,7 +36,6 @@ public class ProductService {
         return savedProduct.getId();
     }
 
-    @Transactional
     public void updateProduct(Long id, ProductRequest request) {
         Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
