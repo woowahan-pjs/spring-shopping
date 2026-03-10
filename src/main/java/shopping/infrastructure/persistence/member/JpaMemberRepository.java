@@ -28,4 +28,9 @@ public class JpaMemberRepository implements MemberRepository {
     public Optional<Member> findById(Long id) {
         return repository.findById(id);
     }
+
+    @Override
+    public Optional<Member> findByEmail(String email) {
+        return repository.findByEmail(email);
+    }
 }
