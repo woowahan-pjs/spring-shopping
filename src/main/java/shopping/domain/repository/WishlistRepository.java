@@ -9,5 +9,6 @@ public interface WishlistRepository {
     Wishlist save(Wishlist wishlist);
     boolean existsByMemberIdAndProductId(Long memberId, Long productId);
     List<Wishlist> findAllByMemberIdWithProduct(Long memberId);
+    void deleteByMemberIdAndProductId(Long memberId, Long productId);
 }
 

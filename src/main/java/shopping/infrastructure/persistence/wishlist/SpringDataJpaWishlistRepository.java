@@ -11,4 +11,6 @@ public interface SpringDataJpaWishlistRepository extends JpaRepository<Wishlist,
 
     @Query("select w from Wishlist w join fetch w.product where w.member.id = :memberId")
     List<Wishlist> findAllByMemberIdWithProduct(Long memberId);
+
+    void deleteByMemberIdAndProductId(Long memberId, Long productId);
 }

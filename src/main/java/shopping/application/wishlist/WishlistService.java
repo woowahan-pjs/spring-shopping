@@ -55,4 +55,12 @@ public class WishlistService {
                 ))
                 .toList();
     }
+
+    public void removeWishlist(Long memberId, Long productId) {
+        if (!wishlistRepository.existsByMemberIdAndProductId(memberId, productId)) {
+            throw new ProductNotFoundException("위시리스트에 해당 상품이 존재하지 않습니다.");
+        }
+
+        wishlistRepository.deleteByMemberIdAndProductId(memberId, productId);
+    }
 }

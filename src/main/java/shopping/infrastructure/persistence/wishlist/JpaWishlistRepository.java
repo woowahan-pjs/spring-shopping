@@ -28,4 +28,9 @@ public class JpaWishlistRepository implements WishlistRepository {
     public List<Wishlist> findAllByMemberIdWithProduct(Long memberId) {
         return repository.findAllByMemberIdWithProduct(memberId);
     }
+
+    @Override
+    public void deleteByMemberIdAndProductId(Long memberId, Long productId) {
+        repository.deleteByMemberIdAndProductId(memberId, productId);
+    }
 }
