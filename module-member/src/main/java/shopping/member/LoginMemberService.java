@@ -1,5 +1,8 @@
 package shopping.member;
 
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional
 public class LoginMemberService implements LoginMember {
 
     private final MemberRepository memberRepository;

@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import shopping.member.MemberRepository;
 
+@Transactional
 public class FindWishService implements FindWish {
 
     private final MemberRepository memberRepository;

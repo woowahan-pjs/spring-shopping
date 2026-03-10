@@ -12,9 +12,19 @@ public class ProductConfiguration {
     }
 
     @Bean
-    public CreateProduct createProduct(ProductRepository productRepository,
-            ProductNameFactory productNameFactory) {
-        return new CreateProductService(productRepository, productNameFactory);
+    public SaveProductService saveProductService(ProductRepository productRepository) {
+        return new SaveProductService(productRepository);
+    }
+
+    @Bean
+    public ModifyProductService modifyProductService(ProductRepository productRepository) {
+        return new ModifyProductService(productRepository);
+    }
+
+    @Bean
+    public CreateProduct createProduct(ProductNameFactory productNameFactory,
+            SaveProductService saveProductService) {
+        return new CreateProductService(productNameFactory, saveProductService);
     }
 
     @Bean
@@ -23,9 +33,9 @@ public class ProductConfiguration {
     }
 
     @Bean
-    public UpdateProduct updateProduct(ProductRepository productRepository,
-            ProductNameFactory productNameFactory) {
-        return new UpdateProductService(productRepository, productNameFactory);
+    public UpdateProduct updateProduct(ProductNameFactory productNameFactory,
+            ModifyProductService modifyProductService) {
+        return new UpdateProductService(productNameFactory, modifyProductService);
     }
 
     @Bean

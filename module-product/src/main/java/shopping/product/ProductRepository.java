@@ -12,5 +12,9 @@ public interface ProductRepository {
 
     List<Product> findAll();
 
+    Optional<Product> findByIdAndStatus(UUID id, ProductStatus status);
+
+    List<Product> findAllByStatus(ProductStatus status);
+
     void deleteById(UUID id);
 }

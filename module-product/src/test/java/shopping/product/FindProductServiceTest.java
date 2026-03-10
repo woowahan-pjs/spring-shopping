@@ -24,8 +24,8 @@ class FindProductServiceTest {
 
     @Test
     void ID로_상품을_조회한다() {
-        Product saved =
-                productRepository.save(new Product(new ProductName("상품"), 1000, "http://img.png"));
+        Product saved = productRepository
+                .save(new Product(new ProductName("상품", true), 1000, "http://img.png"));
 
         Product found = service.execute(saved.getId());
 
@@ -43,8 +43,8 @@ class FindProductServiceTest {
 
     @Test
     void 전체_상품을_조회한다() {
-        productRepository.save(new Product(new ProductName("상품1"), 1000, "http://img1.png"));
-        productRepository.save(new Product(new ProductName("상품2"), 2000, "http://img2.png"));
+        productRepository.save(new Product(new ProductName("상품1", true), 1000, "http://img1.png"));
+        productRepository.save(new Product(new ProductName("상품2", true), 2000, "http://img2.png"));
 
         List<Product> products = service.execute();
 
@@ -56,5 +56,24 @@ class FindProductServiceTest {
         List<Product> products = service.execute();
 
         assertTrue(products.isEmpty());
+    }
+
+    @Test
+    void PENDING_상품은_조회되지_않는다() {
+        productRepository.save(new Product(new ProductName("상품1", true), 1000, "http://img1.png"));
+        productRepository.save(new Product(new ProductName("상품2", false), 2000, "http://img2.png"));
+
+        List<Product> products = service.execute();
+
+        assertEquals(1, products.size());
+        assertEquals("상품1", products.get(0).getName().getValue());
+    }
+
+    @Test
+    void PENDING_상품은_ID로_조회되지_않는다() {
+        Product saved = productRepository
+                .save(new Product(new ProductName("상품", false), 1000, "http://img.png"));
+
+        assertThrows(NoSuchElementException.class, () -> service.execute(saved.getId()));
     }
 }

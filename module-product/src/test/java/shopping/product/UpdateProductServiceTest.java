@@ -18,13 +18,14 @@ class UpdateProductServiceTest {
     void setUp() {
         productRepository = new InMemoryProductRepository();
         ProductNameFactory nameFactory = new ProductNameFactory(new FakeProfanityChecker());
-        service = new UpdateProductService(productRepository, nameFactory);
+        ModifyProductService modifyProductService = new ModifyProductService(productRepository);
+        service = new UpdateProductService(nameFactory, modifyProductService);
     }
 
     @Test
     void 상품을_수정한다() {
-        Product saved =
-                productRepository.save(new Product(new ProductName("상품"), 1000, "http://img.png"));
+        Product saved = productRepository
+                .save(new Product(new ProductName("상품", true), 1000, "http://img.png"));
 
         Product updated = service.execute(saved.getId(), "수정상품", 2000, "http://new.png");
 
@@ -32,12 +33,13 @@ class UpdateProductServiceTest {
         assertEquals("수정상품", updated.getName().getValue());
         assertEquals(2000, updated.getPrice());
         assertEquals("http://new.png", updated.getImageUrl());
+        assertEquals(ProductStatus.CREATED, updated.getStatus());
     }
 
     @Test
     void 수정된_상품이_저장소에_반영된다() {
-        Product saved =
-                productRepository.save(new Product(new ProductName("상품"), 1000, "http://img.png"));
+        Product saved = productRepository
+                .save(new Product(new ProductName("상품", true), 1000, "http://img.png"));
 
         service.execute(saved.getId(), "수정상품", 2000, "http://new.png");
 
@@ -55,10 +57,39 @@ class UpdateProductServiceTest {
 
     @Test
     void 유효하지_않은_이름으로_수정하면_예외가_발생한다() {
-        Product saved =
-                productRepository.save(new Product(new ProductName("상품"), 1000, "http://img.png"));
+        Product saved = productRepository
+                .save(new Product(new ProductName("상품", true), 1000, "http://img.png"));
 
         assertThrows(IllegalArgumentException.class,
                 () -> service.execute(saved.getId(), "", 2000, "http://new.png"));
+    }
+
+    @Test
+    void 비속어가_포함되면_예외가_발생한다() {
+        Product saved = productRepository
+                .save(new Product(new ProductName("상품", true), 1000, "http://img.png"));
+        ProductNameFactory nameFactory =
+                new ProductNameFactory(new FakeProfanityChecker("badword"));
+        ModifyProductService modifyProductService = new ModifyProductService(productRepository);
+        UpdateProductService serviceWithProfanity =
+                new UpdateProductService(nameFactory, modifyProductService);
+
+        assertThrows(IllegalArgumentException.class, () -> serviceWithProfanity
+                .execute(saved.getId(), "badword", 2000, "http://new.png"));
+    }
+
+    @Test
+    void 외부_API_실패시_예외가_발생한다() {
+        Product saved = productRepository
+                .save(new Product(new ProductName("상품", true), 1000, "http://img.png"));
+        ProductNameFactory nameFactory = new ProductNameFactory(text -> {
+            throw new RuntimeException("API failure");
+        });
+        ModifyProductService modifyProductService = new ModifyProductService(productRepository);
+        UpdateProductService serviceWithFailure =
+                new UpdateProductService(nameFactory, modifyProductService);
+
+        assertThrows(ProfanityCheckException.class,
+                () -> serviceWithFailure.execute(saved.getId(), "상품", 2000, "http://new.png"));
     }
 }

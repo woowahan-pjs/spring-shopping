@@ -1,7 +1,9 @@
 package shopping.product;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ class ProductNameFactoryTest {
         ProductName name = factory.create("상품이름");
 
         assertEquals("상품이름", name.getValue());
+        assertTrue(name.isVerified());
     }
 
     @Test
@@ -27,6 +30,7 @@ class ProductNameFactoryTest {
         ProductName name = factory.create("Product (1-A)+");
 
         assertEquals("Product (1-A)+", name.getValue());
+        assertTrue(name.isVerified());
     }
 
     @Test
@@ -83,5 +87,13 @@ class ProductNameFactoryTest {
                 assertThrows(IllegalArgumentException.class, () -> factory.create("badword"));
 
         assertEquals("상품 이름에 비속어가 포함되어 있습니다.", exception.getMessage());
+    }
+
+    @Test
+    void 미인증_이름을_생성한다() {
+        ProductName name = factory.createUnverified("상품");
+
+        assertEquals("상품", name.getValue());
+        assertFalse(name.isVerified());
     }
 }

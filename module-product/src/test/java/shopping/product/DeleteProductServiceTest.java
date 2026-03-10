@@ -23,8 +23,8 @@ class DeleteProductServiceTest {
 
     @Test
     void 상품을_삭제한다() {
-        Product saved =
-                productRepository.save(new Product(new ProductName("상품"), 1000, "http://img.png"));
+        Product saved = productRepository
+                .save(new Product(new ProductName("상품", true), 1000, "http://img.png"));
 
         service.execute(saved.getId());
 

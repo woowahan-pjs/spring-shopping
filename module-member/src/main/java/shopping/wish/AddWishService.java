@@ -3,9 +3,12 @@ package shopping.wish;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import shopping.member.Member;
 import shopping.member.MemberRepository;
 
+@Transactional
 public class AddWishService implements AddWish {
 
     private final MemberRepository memberRepository;

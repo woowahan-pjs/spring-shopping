@@ -6,6 +6,8 @@ import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
@@ -27,6 +29,10 @@ public class Product {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ProductStatus status;
+
     protected Product() {}
 
     public Product(ProductName name, long price, String imageUrl) {
@@ -34,12 +40,14 @@ public class Product {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.status = name.isVerified() ? ProductStatus.CREATED : ProductStatus.PENDING;
     }
 
     public void update(ProductName name, long price, String imageUrl) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.status = name.isVerified() ? ProductStatus.CREATED : ProductStatus.PENDING;
     }
 
     public UUID getId() {
@@ -56,5 +64,9 @@ public class Product {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public ProductStatus getStatus() {
+        return status;
     }
 }

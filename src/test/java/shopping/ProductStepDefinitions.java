@@ -3,6 +3,7 @@ package shopping;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
+import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -16,6 +17,14 @@ public class ProductStepDefinitions {
 
     @Autowired
     private AcceptanceTestContext context;
+
+    @Autowired
+    private FakeProfanityChecker fakeProfanityChecker;
+
+    @After
+    public void resetProfanityChecker() {
+        fakeProfanityChecker.setShouldFail(false);
+    }
 
     @Given("a product exists with name {string} price {long} and imageUrl {string}")
     public void aProductExistsWithNamePriceAndImageUrl(String name, long price, String imageUrl) {
@@ -97,5 +106,20 @@ public class ProductStepDefinitions {
     @And("the product response should have name {string}")
     public void theProductResponseShouldHaveName(String name) {
         assertThat(context.getResponse().jsonPath().getString("name")).isEqualTo(name);
+    }
+
+    @Given("the profanity API is unavailable")
+    public void theProfanityApiIsUnavailable() {
+        fakeProfanityChecker.setShouldFail(true);
+    }
+
+    @Then("the response status should be {int}")
+    public void theResponseStatusShouldBe(int statusCode) {
+        assertThat(context.getResponse().statusCode()).isEqualTo(statusCode);
+    }
+
+    @And("the response should have message {string}")
+    public void theResponseShouldHaveMessage(String message) {
+        assertThat(context.getResponse().jsonPath().getString("message")).isEqualTo(message);
     }
 }

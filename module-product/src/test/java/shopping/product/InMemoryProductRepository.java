@@ -28,6 +28,16 @@ public class InMemoryProductRepository implements ProductRepository {
     }
 
     @Override
+    public Optional<Product> findByIdAndStatus(UUID id, ProductStatus status) {
+        return Optional.ofNullable(store.get(id)).filter(p -> p.getStatus() == status);
+    }
+
+    @Override
+    public List<Product> findAllByStatus(ProductStatus status) {
+        return store.values().stream().filter(p -> p.getStatus() == status).toList();
+    }
+
+    @Override
     public void deleteById(UUID id) {
         store.remove(id);
     }
