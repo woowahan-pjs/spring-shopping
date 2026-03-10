@@ -258,9 +258,41 @@ Controller → Application → Domain
 다만 AI는 기능 구현에는 강점을 보였지만 동시성 처리와 같은 부분까지는 충분히 고려하지 못하는 경우가 있었습니다. <br>
 그래서 AI가 작성한 코드를 그대로 사용하는 것이 아니라, 제가 직접 검토하면서 구조적인 문제나 동시성 이슈를 확인하고 보완하는 방식으로 개발을 진행하였습니다. <br>
 
+## 실행방법
 
+#### 1. 프로젝트 클론
 
+```bash
+git clone https://github.com/cwangg897/spring-shopping.git
+cd spring-shopping
+```
 
+#### 2. Docker로 MySQL 실행
 
+```bash
+docker-compose up -d
+```
 
+> MySQL 8.0이 `localhost:3306`으로 실행됩니다.
+> - DB명: `spring_shopping`
+> - 사용자: `shopping` / 비밀번호: `shopping`
 
+#### 3. 애플리케이션 실행
+
+```bash
+./gradlew bootRun
+```
+
+> 서버가 `http://localhost:8080`으로 실행됩니다.
+
+#### 4. 실행 확인
+
+```bash
+curl http://localhost:8080/api/products
+```
+
+#### 종료
+
+```bash
+docker-compose down
+```
