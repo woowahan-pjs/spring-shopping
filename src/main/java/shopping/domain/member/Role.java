@@ -1,8 +1,8 @@
 package shopping.domain.member;
 
 public enum Role {
-    CONSUMER("CONSUMER", "일반 사용자"),
-    ADMIN("ADMIN", "관리자");
+    CONSUMER("ROLE_CONSUMER", "일반 사용자"),
+    ADMIN("ROLE_ADMIN", "관리자");
 
     private final String key;
     private final String title;
