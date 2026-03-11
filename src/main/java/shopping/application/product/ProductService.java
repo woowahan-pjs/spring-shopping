@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import shopping.domain.product.Price;
 import shopping.domain.product.Product;
 import shopping.domain.product.ProductName;
-import shopping.domain.product.ProfanityChecker;
+import shopping.application.profanity.ProfanityChecker;
 import shopping.domain.product.exception.ProductNotFoundException;
 import shopping.domain.product.exception.ProfanityNameException;
 import shopping.domain.repository.ProductRepository;

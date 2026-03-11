@@ -78,7 +78,6 @@ src/main/java/com/shop
 │   ├── product
 │   │   ├── exception: ProductNameBlankException, ProductNameInvalidCharacterException, ProductNameLengthExceededException
 │   │   ├── Entity: Product, ProductName, ProfanityChecker
-│   │   ├── Service: ProfanityChecker
 │   │   └── Repository Interface: ProductRepository
 │   └── wishlist
 │       └── Entity: WishList
@@ -90,8 +89,10 @@ src/main/java/com/shop
 │   ├── product
 │   │   ├── Service: ProductCommandService
 │   │   └── DTO: ProductRequest
-│   └── wishlist
-│       └── Service: WishListService
+│   ├── wishlist
+│   │   └── Service: WishListService
+│   └── profanity
+│       └── Service: ProfanityChecker
 │
 ├── infrastructure
 │   ├── persistence
@@ -102,15 +103,14 @@ src/main/java/com/shop
 │   │   ├── JwtAuthenticationFilter
 │   │   └── PasswordEncoder
 │   └── external_api
+│       ├── exception: ProfanityCheckException
 │       └── PurgoMalumClient
 │
 └── ui
-├── controller
-│   ├── AuthController
-│   ├── ProductController
-│   └── WishListController
-└── exception
-└── GlobalExceptionHandler
+    ├── AuthController
+    ├── ProductController
+    └── WishlistController
+
 ```
 
 ## 개인적인 작업 목표
