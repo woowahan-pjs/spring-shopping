@@ -75,7 +75,7 @@ class ProductControllerDocsTest : RestDocsTest() {
     }
 
     @Test
-    fun `상품 단건 조회 API 문서화`() {
+    fun `상품 단건 조회 API가 정상적으로 문서화된다`() {
         val result = ProductResult(1L, "멋진 셔츠", 15000, "http://image.url")
         whenever(productService.getProduct(1L)).thenReturn(result)
 
@@ -101,7 +101,7 @@ class ProductControllerDocsTest : RestDocsTest() {
     }
 
     @Test
-    fun `상품 목록 조회 API 문서화`() {
+    fun `상품 목록 조회 API가 정상적으로 문서화된다`() {
         val results = listOf(ProductResult(1L, "셔츠", 15000, "url1"))
         whenever(productService.getProducts()).thenReturn(results)
 
@@ -125,7 +125,7 @@ class ProductControllerDocsTest : RestDocsTest() {
     }
 
     @Test
-    fun `상품 수정 API 문서화`() {
+    fun `상품 수정 API가 정상적으로 문서화된다`() {
         val request = UpdateProductRequest("새 이름", 20000, "http://new.url")
         doNothing().whenever(productValidator).validateUpdate(any())
 
@@ -155,7 +155,7 @@ class ProductControllerDocsTest : RestDocsTest() {
     }
 
     @Test
-    fun `상품 삭제 API 문서화`() {
+    fun `상품 삭제 API가 정상적으로 문서화된다`() {
         mockController(ProductController(productService, productValidator))
             .pathParam("id", 1L)
             .delete("/api/v1/products/{id}")
