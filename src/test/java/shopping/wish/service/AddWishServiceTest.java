@@ -31,16 +31,17 @@ class AddWishServiceTest {
         UUID productId = UUID.randomUUID();
         Member member = memberRepository.save(new Member("test@test.com", "password"));
 
-        Wish wish = service.execute(member.getId(), productId);
+        Wish wish = service.execute(member.getId(), productId, 50000L);
 
         assertEquals(productId, wish.getProductId());
+        assertEquals(50000L, wish.getWishedPrice());
         assertEquals(1, memberRepository.findById(member.getId()).orElseThrow().getWishes().size());
     }
 
     @Test
     void 존재하지_않는_회원이면_예외가_발생한다() {
         NoSuchElementException exception = assertThrows(NoSuchElementException.class,
-                () -> service.execute(UUID.randomUUID(), UUID.randomUUID()));
+                () -> service.execute(UUID.randomUUID(), UUID.randomUUID(), 10000L));
 
         assertEquals("회원을 찾을 수 없습니다.", exception.getMessage());
     }
@@ -49,9 +50,9 @@ class AddWishServiceTest {
     void 이미_추가된_상품이면_예외가_발생한다() {
         UUID productId = UUID.randomUUID();
         Member member = memberRepository.save(new Member("test@test.com", "password"));
-        service.execute(member.getId(), productId);
+        service.execute(member.getId(), productId, 50000L);
 
         assertThrows(IllegalArgumentException.class,
-                () -> service.execute(member.getId(), productId));
+                () -> service.execute(member.getId(), productId, 50000L));
     }
 }

@@ -55,10 +55,11 @@ class MemberTest {
         UUID productId = UUID.randomUUID();
         Member member = new Member("test@test.com", "password");
 
-        Wish wish = member.wish(productId);
+        Wish wish = member.wish(productId, 50000L);
 
         assertNotNull(wish);
         assertEquals(productId, wish.getProductId());
+        assertEquals(50000L, wish.getWishedPrice());
         assertEquals(1, member.getWishes().size());
     }
 
@@ -66,10 +67,10 @@ class MemberTest {
     void 이미_추가된_상품을_위시리스트에_추가하면_예외가_발생한다() {
         UUID productId = UUID.randomUUID();
         Member member = new Member("test@test.com", "password");
-        member.wish(productId);
+        member.wish(productId, 50000L);
 
         IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> member.wish(productId));
+                assertThrows(IllegalArgumentException.class, () -> member.wish(productId, 50000L));
 
         assertEquals("이미 위시리스트에 추가된 상품입니다.", exception.getMessage());
     }
@@ -78,7 +79,7 @@ class MemberTest {
     void 위시리스트에서_상품을_제거한다() {
         UUID productId = UUID.randomUUID();
         Member member = new Member("test@test.com", "password");
-        member.wish(productId);
+        member.wish(productId, 50000L);
 
         member.removeWish(productId);
 
@@ -89,7 +90,7 @@ class MemberTest {
     void 위시리스트는_불변_리스트를_반환한다() {
         Member member = new Member("test@test.com", "password");
 
-        assertThrows(UnsupportedOperationException.class,
-                () -> member.getWishes().add(new Wish(UUID.randomUUID())));
+        assertThrows(UnsupportedOperationException.class, () -> member.getWishes()
+                .add(new Wish(UUID.randomUUID(), UUID.randomUUID(), 10000L)));
     }
 }

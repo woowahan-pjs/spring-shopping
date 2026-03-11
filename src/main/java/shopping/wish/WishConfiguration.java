@@ -25,4 +25,9 @@ public class WishConfiguration {
     public FindWish findWish(MemberRepository memberRepository) {
         return new FindWishService(memberRepository);
     }
+
+    @Bean
+    public RemoveWishByProduct removeWishByProduct(MemberRepository memberRepository) {
+        return new RemoveWishByProductService(memberRepository);
+    }
 }

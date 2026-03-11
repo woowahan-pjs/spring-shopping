@@ -31,8 +31,8 @@ class FindWishServiceTest {
     @Test
     void 위시리스트를_조회한다() {
         Member member = memberRepository.save(new Member("test@test.com", "password"));
-        member.wish(UUID.randomUUID());
-        member.wish(UUID.randomUUID());
+        member.wish(UUID.randomUUID(), 50000L);
+        member.wish(UUID.randomUUID(), 30000L);
         memberRepository.save(member);
 
         List<Wish> wishes = service.execute(member.getId());

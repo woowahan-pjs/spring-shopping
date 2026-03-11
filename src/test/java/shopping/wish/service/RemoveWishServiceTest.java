@@ -31,7 +31,7 @@ class RemoveWishServiceTest {
     void 위시리스트에서_상품을_제거한다() {
         UUID productId = UUID.randomUUID();
         Member member = memberRepository.save(new Member("test@test.com", "password"));
-        member.wish(productId);
+        member.wish(productId, 50000L);
         memberRepository.save(member);
 
         service.execute(member.getId(), productId);

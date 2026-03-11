@@ -35,6 +35,7 @@ After the review completes, summarize the results to the user with PASS/WARN/FAI
 3. **Transaction**: No external api calls within transaction. always mark which transactionManager is used in `@Transaction` annotation
 4. **Concurrency Problem**: if concurrency problem is showed, suggest solution, such as redis pub/sub, Optimistic Lock, Pessimistic Lock, etc
 5. **Post Request Idempotency**: all post request must be Idempotency. If it is not satisfied, mark FAIL check
+6. **Database Performance**: No full collection/table scans are acceptable. Ensure queries use proper indexes. For MongoDB operations like `updateMany` or `$pull` across documents, verify that the queried fields are indexed.
 
 ## Post-review: Add comment to PR
 

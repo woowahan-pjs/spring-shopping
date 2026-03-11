@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -16,13 +18,15 @@ class DeleteProductServiceTest {
 
     private InMemoryProductRepository productRepository;
     private ProductNameFactory nameFactory;
+    private List<Object> publishedEvents;
     private DeleteProductService service;
 
     @BeforeEach
     void setUp() {
         productRepository = new InMemoryProductRepository();
         nameFactory = new ProductNameFactory(new FakeProfanityChecker());
-        service = new DeleteProductService(productRepository);
+        publishedEvents = new ArrayList<>();
+        service = new DeleteProductService(productRepository, publishedEvents::add);
     }
 
     @Test
@@ -33,6 +37,8 @@ class DeleteProductServiceTest {
         service.execute(saved.getId());
 
         assertTrue(productRepository.findById(saved.getId()).isEmpty());
+        assertEquals(1, publishedEvents.size());
+        assertEquals(saved.getId(), ((ProductDeletedEvent) publishedEvents.get(0)).productId());
     }
 
     @Test

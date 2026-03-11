@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface AddWish {
 
-    Wish execute(UUID memberId, UUID productId);
+    Wish execute(UUID memberId, UUID productId, long wishedPrice);
 }

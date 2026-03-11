@@ -31,4 +31,9 @@ public class InMemoryMemberRepository implements MemberRepository {
     public boolean existsByEmail(String email) {
         return store.values().stream().anyMatch(m -> m.getEmail().equals(email));
     }
+
+    @Override
+    public void removeWishByProductId(UUID productId) {
+        store.values().forEach(member -> member.removeWish(productId));
+    }
 }

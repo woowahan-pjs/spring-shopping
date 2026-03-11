@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import shopping.auth.AuthenticationService;
 import shopping.product.domain.FindProduct;
+import shopping.product.domain.Product;
 
 @Service
 public class WishApplicationService {
@@ -33,8 +34,9 @@ public class WishApplicationService {
 
     public WishResponse add(String authorization, UUID productId) {
         UUID memberId = authenticationService.extractMemberId(authorization);
-        Wish wish = addWish.execute(memberId, productId);
-        return WishResponse.of(wish, findProduct.execute(productId));
+        Product product = findProduct.execute(productId);
+        Wish wish = addWish.execute(memberId, productId, product.getPrice());
+        return WishResponse.of(wish, product);
     }
 
     public void remove(String authorization, UUID productId) {

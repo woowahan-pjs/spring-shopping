@@ -3,6 +3,7 @@ package shopping.product;
 import shopping.product.domain.*;
 import shopping.product.service.*;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -42,7 +43,8 @@ public class ProductConfiguration {
     }
 
     @Bean
-    public DeleteProduct deleteProduct(ProductRepository productRepository) {
-        return new DeleteProductService(productRepository);
+    public DeleteProduct deleteProduct(ProductRepository productRepository,
+            ApplicationEventPublisher eventPublisher) {
+        return new DeleteProductService(productRepository, eventPublisher);
     }
 }
