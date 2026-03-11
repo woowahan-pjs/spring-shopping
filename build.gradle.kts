@@ -36,6 +36,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudDependenciesVersion")}"))
 
     // DB
     runtimeOnly("com.mysql:mysql-connector-j")
@@ -50,9 +51,13 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-impl:${property("jjwtVersion")}")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:${property("jjwtVersion")}")
 
+    // CircuitBreaker
+    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:${property("mockitoKotlinVersion")}")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // REST Docs & RestAssured

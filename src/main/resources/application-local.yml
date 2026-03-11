@@ -25,3 +25,25 @@ security:
       secret-key: jwt-secret-key-for-local-12345678901234567890
       access:
         expire-length: 3600000 # 1시간
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10000
+    instances:
+      purgomalum: # PurgoMalumClient에서 circuitBreaker.run("purgomalum")으로 호출한 이름과 반드시 일치해야 합니다.
+        base-config: default
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        slow-call-duration-threshold: 3000
+        slow-call-rate-threshold: 50
+        wait-duration-in-open-state: 30000
+        permitted-number-of-calls-in-half-open-state: 3
+        registerHealthIndicator: true
+        ignoreExceptions:
+          - org.springframework.web.client.HttpClientErrorException
