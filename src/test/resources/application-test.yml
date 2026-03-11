@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/coreDB
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: root
-    password: 1234
+    url: jdbc:h2:mem:coreDB;MODE=MySQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
     hikari:
       maximum-pool-size: 5
       pool-name: core-db-pool
@@ -13,15 +13,17 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+        format_sql: false
+        show_sql: false
   flyway:
     enabled: false
-    locations: classpath:db/migration
+  sql:
+    init:
+      mode: never
 
 security:
   jwt:
     token:
-      secret-key: jwt-secret-key-for-local-12345678901234567890
+      secret-key: jwt-secret-key-for-test-12345678901234567890
       access:
         expire-length: 3600000 # 1시간

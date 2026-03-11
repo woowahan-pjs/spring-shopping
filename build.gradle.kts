@@ -7,6 +7,7 @@ plugins {
     id("io.spring.dependency-management")
     id("org.jlleitschuh.gradle.ktlint")
     id("org.flywaydb.flyway")
+    id("org.asciidoctor.jvm.convert")
 }
 
 group = property("projectGroup").toString()
@@ -21,6 +22,8 @@ java {
 repositories {
     mavenCentral()
 }
+
+val snippetsDir = file("build/generated-snippets")
 
 dependencies {
     // Kotlin
@@ -41,10 +44,20 @@ dependencies {
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
 
+    // JWT
+    implementation("io.jsonwebtoken:jjwt-api:${property("jjwtVersion")}")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:${property("jjwtVersion")}")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:${property("jjwtVersion")}")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // REST Docs & RestAssured
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("org.springframework.restdocs:spring-restdocs-restassured")
+    testImplementation("io.rest-assured:spring-mock-mvc:${property("restAssuredVersion")}")
 }
 
 kotlin {
@@ -65,4 +78,11 @@ ktlint {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    outputs.dir(snippetsDir)
+}
+
+tasks.asciidoctor {
+    inputs.dir(snippetsDir)
+    // NOTE: 작업을 수행하기 전에 반드시 'Test' 타입의 작업들을 먼저 실행한다.
+    dependsOn(tasks.withType<Test>())
 }

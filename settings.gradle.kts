@@ -6,6 +6,7 @@ pluginManagement {
     val springDependencyManagementVersion: String by settings
     val ktlintVersion: String by settings
     val flywayVersion: String by settings
+    val asciidoctorConvertVersion: String by settings
 
     resolutionStrategy {
         eachPlugin {
@@ -18,6 +19,7 @@ pluginManagement {
                 "io.spring.dependency-management" -> useVersion(springDependencyManagementVersion)
                 "org.jlleitschuh.gradle.ktlint" -> useVersion(ktlintVersion)
                 "org.flywaydb.flyway" -> useVersion(flywayVersion)
+                "org.asciidoctor.jvm.convert" -> useVersion(asciidoctorConvertVersion)
             }
         }
     }

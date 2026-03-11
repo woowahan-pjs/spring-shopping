@@ -1,0 +1,27 @@
+spring.application.name: frame
+spring.profiles.active: test
+server.port: 8081
+
+server:
+  tomcat:
+    max-connections: 10000
+    accept-count: 200
+    threads:
+      max: 100
+      min-spare: 20
+    connection-timeout: 3000
+
+---
+spring.config.activate.on-profile: local
+
+
+---
+spring.config.activate.on-profile: dev
+
+
+---
+spring.config.activate.on-profile: staging
+
+
+---
+spring.config.activate.on-profile: live
