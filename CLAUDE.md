@@ -17,7 +17,13 @@
 # Backend (Spring Boot & Gradle)
 ./gradlew clean build           # 전체 빌드 (테스트 포함)
 ./gradlew clean build -x test   # 테스트 제외 빌드
-./gradlew test                  # 단위 및 통합 테스트 실행
+
+# Test & Docs
+./gradlew test                  # 일반 단위/통합 테스트만 빠르게 실행 (@Tag("restdocs") 제외)
+./gradlew restDocsTest          # API 문서화용 테스트만 실행 (@Tag("restdocs") 포함)
+./gradlew asciidoctor           # REST Docs API 문서(HTML) 생성 (내부적으로 restDocsTest를 먼저 실행함)
+
+# Run
 ./gradlew bootRun               # 스프링 부트 서버 실행
 ```
 
@@ -53,8 +59,8 @@
 ### 2. DTO 분리 원칙
 
 - 레이어 간 결합도를 낮추기 위해 용도에 맞는 DTO를 엄격히 분리합니다.
-- Web(Controller) 계층: `Request`, `Response` 네이밍을 사용합니다.
-- Service 계층: 비즈니스 로직 입력과 결과는 `Command`, `Result` 네이밍을 사용합니다.
+- Web(Controller) 계층: `Request`, `Response` 네이밍을 사용하며, 파일명은 `[도메인]ControllerDtos.kt`로 명명합니다. (예: `ProductControllerDto.kt`)
+- Service 계층: 비즈니스 로직 입력과 결과는 `Command`, `Result` 네이밍을 사용하며, 파일명은 `[도메인]ServiceDtos.kt`로 명명합니다. (예: `ProductServiceDto.kt`)
 
 ### 3. 검증(Validation) 및 예외 처리
 
@@ -72,6 +78,16 @@
 - 모든 API 응답은 JSON 형식을 사용합니다.
 - 실패 응답의 경우 클라이언트가 원인을 명확히 알 수 있도록 에러 메시지와 상태 코드를 일관된 포맷으로 반환하세요.
 - 에러 형식과 메시지는 "src.main.kotlin.shopping.support.error" 위치의 ErrorType 및 ErrorCode를 참고하세요.
+- 모든 API 응답은 `ApiResponse<T>` 객체를 사용하며 구조는 다음과 같습니다.
+  - `result`: SUCCESS 또는 ERROR 문자열
+  - `data`: 실제 데이터 (성공 시에만 포함, 데이터가 없는 경우 null 또는 빈 객체)
+  - `error`: 에러 발생 시 에러 코드와 메시지를 포함하는 객체 (성공 시 null)
+
+### 장애 격리를 위해 서킷 브레이커 적용
+
+- 외부 비속어 필터링 API 연동 시 `Resilience4j` 서킷 브레이커를 적용합니다.
+- 외부 서비스 장애가 우리 시스템으로 전파되는 것을 차단하고, 서킷이 열린 상태에서는 즉시 Fallback 처리를 수행합니다.
+- 타임아웃은 `3`초로 설정하여 스레드 차단을 최소화한다.
 
 ## Testing Strategy
 
@@ -84,3 +100,8 @@
 3. 독립성과 네이밍
     - 각 테스트는 독립적으로 실행 가능해야 하며, 상태를 공유하지 않습니다.
     - 테스트 메서드 이름은 비즈니스 관점에서 행위와 결과를 명확하게 나타내야 합니다. (예: `상품_이름이_15자를_초과하면_예외가_발생한다`)
+4. REST Docs 작성 규칙
+    - 문서화용 테스트 클래스에는 반드시 `@Tag("restdocs")`를 추가합니다.
+    - `pathParameters`를 문서화할 때는 `.get("/url/{id}", 1L)` 형식이 아닌, `.pathParam("id", 1L).get("/url/{id}")` 형식을 사용해야 템플릿 인식이 정상적으로 이루어집니다.
+    - 응답 필드 중 null이 가능하거나 성공 시 데이터가 없는 경우 반드시 `.optional()`을 붙여 `IllegalArgumentException`을 방지합니다.
+    - 테스트 어노테이션은 반드시 `org.junit.jupiter.api.Test`를 사용합니다. (`kotlin.test.Test` 사용 금지)
