@@ -12,8 +12,6 @@ operation::member-register[snippets='http-request,http-response,request-fields,r
 === 로그인
 operation::member-login[snippets='http-request,http-response,request-fields,response-fields']
 
----
-
 == Product API
 === 상품 등록
 operation::product-create[snippets='http-request,http-response,request-fields,response-fields']
