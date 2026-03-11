@@ -5,24 +5,28 @@ spring:
     username: root
     password: 1234
     hikari:
-      maximum-pool-size: 5
+      maximum-pool-size: 10
       pool-name: core-db-pool
+      connection-timeout: 3000
+      keepalive-time: 30000
+      validation-timeout: 2000
+      max-lifetime: 600000
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: validate
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+        format_sql: false
+        show_sql: false
   flyway:
-    enabled: false
+    enabled: true
     locations: classpath:db/migration
 
 security:
   jwt:
     token:
-      secret-key: J5!kP8@mR3#nT7$oW2^pY6&qZ1*rA4!sB9#tC0@uD5!vE8$wF3@xG7#yH2^zI6&j
+      secret-key: M2@lQ5#nS8$oV1!pX4^qB7&rC0*sE3!tF6#uG9@vH2!wI5$xJ8@yK1#zA4^bL7&m
       access:
         expire-length: 3600000 # 1시간
 
@@ -34,7 +38,7 @@ resilience4j:
         failure-rate-threshold: 50
         wait-duration-in-open-state: 10000
     instances:
-      purgomalum: # PurgoMalumClient에서 circuitBreaker.run("purgomalum")으로 호출한 이름과 반드시 일치해야 합니다.
+      purgomalum:
         base-config: default
         sliding-window-type: COUNT_BASED
         sliding-window-size: 10

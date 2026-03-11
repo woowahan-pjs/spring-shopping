@@ -1,5 +1,5 @@
 spring.application.name: spring-shopping
-spring.profiles.active: local
+spring.profiles.active: dev
 server.port: 8080
 
 spring:
