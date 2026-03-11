@@ -16,8 +16,7 @@ import shopping.domain.Member;
 import shopping.service.MemberService;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.*;
 import static shopping.domain.MemberFixture.*;
 
 @WebMvcTest(MemberController.class)
@@ -54,6 +53,19 @@ class MemberControllerTest {
     }
 
     @Test
+    @DisplayName("중복된 이메일이 존재하면 예외가 발생")
+    void invalidDuplicateEmail() throws JsonProcessingException {
+        MemberRequest request = createMemberRequest();
+
+        willThrow(new IllegalArgumentException("이미 존재하는 이메일입니다.")).given(service).register(any());
+
+        assertThat(mockMvcTester.post().uri("/members")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .hasStatus(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
     @DisplayName("로그인한다.")
     void login() throws JsonProcessingException {
         Member member = createWithId(1L);
@@ -70,4 +82,32 @@ class MemberControllerTest {
                 .bodyJson()
                 .hasPathSatisfying("$.token", t -> assertThat(t).isEqualTo(token));
     }
+
+    @Test
+    @DisplayName("로그인 시 이메일이 다를 경우 예외 발생")
+    void invalidEmail() throws JsonProcessingException {
+        MemberRequest request = new MemberRequest("test", "password");
+
+        willThrow(new IllegalArgumentException("이미 존재하는 이메일입니다.")).given(service).login(request.getEmail(), request.getPassword());
+
+        assertThat(mockMvcTester.post().uri("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .hasStatus(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("로그인 시 비밀번호가 다를 경우 예외 발생")
+    void invalidPassword() throws JsonProcessingException {
+        MemberRequest request = new MemberRequest("test@gmail.com", "pass");
+
+        willThrow(new IllegalArgumentException("이미 존재하는 이메일입니다.")).given(service).login(request.getEmail(), request.getPassword());
+
+        assertThat(mockMvcTester.post().uri("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .hasStatus(HttpStatus.BAD_REQUEST);
+    }
+
+
 }
