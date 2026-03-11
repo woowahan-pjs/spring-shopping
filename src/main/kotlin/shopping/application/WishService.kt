@@ -39,6 +39,8 @@ class WishService(
         wishRepository.deleteById(wishId)
     }
 
+    // NOTE: Wish가 Product 도메인의 Repository를 직접 참조합니다.
+    //       멀티 모듈 분리 시 도메인 이벤트 또는 ACL 패턴으로 의존 방향을 역전시켜야 합니다.
     private fun validateProductExists(productId: Long) {
         productRepository.findById(productId)
             ?: throw CoreException(ErrorType.PRODUCT_NOT_FOUND)

@@ -56,6 +56,7 @@ class WishController(
         return ApiResponse.success()
     }
 
+    // NOTE: 인증 API가 늘어날 경우 HandlerMethodArgumentResolver로 중앙화하는 것을 권장합니다.
     private fun extractMemberId(authorization: String): Long {
         val token = authorization.removePrefix("Bearer ")
         return tokenProvider.extractMemberId(token)
