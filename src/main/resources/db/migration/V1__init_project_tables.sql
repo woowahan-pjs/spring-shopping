@@ -1,0 +1,32 @@
+CREATE TABLE members
+(
+    id         BIGINT       NOT NULL AUTO_INCREMENT,
+    email      VARCHAR(255) NOT NULL UNIQUE,
+    password   VARCHAR(255) NOT NULL,
+    created_at DATETIME(6)  NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6)  NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE products
+(
+    id         BIGINT       NOT NULL AUTO_INCREMENT,
+    name       VARCHAR(15)  NOT NULL,
+    price      INT          NOT NULL,
+    image_url  VARCHAR(255) NOT NULL,
+    created_at DATETIME(6)  NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6)  NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE wishes
+(
+    id         BIGINT      NOT NULL AUTO_INCREMENT,
+    member_id  BIGINT      NOT NULL,
+    product_id BIGINT      NOT NULL,
+    created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
+    PRIMARY KEY (id),
+    CONSTRAINT fk_wishes_member FOREIGN KEY (member_id) REFERENCES members (id),
+    CONSTRAINT fk_wishes_product FOREIGN KEY (product_id) REFERENCES products (id)
+);
