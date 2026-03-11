@@ -1,0 +1,10 @@
+= Shopping Mall API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+== Member API
+=== 회원 가입
+operation::member-register[snippets='http-request,http-response,request-fields,response-fields']

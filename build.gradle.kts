@@ -24,6 +24,7 @@ repositories {
 }
 
 val snippetsDir = file("build/generated-snippets")
+val asciidoctorExt: Configuration by configurations.creating
 
 dependencies {
     // Kotlin
@@ -58,6 +59,7 @@ dependencies {
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.restdocs:spring-restdocs-restassured")
     testImplementation("io.rest-assured:spring-mock-mvc:${property("restAssuredVersion")}")
+    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
 }
 
 kotlin {
@@ -76,13 +78,27 @@ ktlint {
     verbose.set(true)
 }
 
+tasks.test {
+    useJUnitPlatform {
+        excludeTags("restdocs")
+    }
+}
+
+val restDocsTest by tasks.registering(Test::class) {
+    group = "verification"
+    useJUnitPlatform {
+        includeTags("restdocs")
+    }
+    outputs.dir(snippetsDir)
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
     outputs.dir(snippetsDir)
 }
 
 tasks.asciidoctor {
+    configurations("asciidoctorExt")
     inputs.dir(snippetsDir)
-    // NOTE: 작업을 수행하기 전에 반드시 'Test' 타입의 작업들을 먼저 실행한다.
-    dependsOn(tasks.withType<Test>())
+    dependsOn(restDocsTest)
 }
