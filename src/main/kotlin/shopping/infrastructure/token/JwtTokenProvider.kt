@@ -1,10 +1,13 @@
 package shopping.infrastructure.token
 
+import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import shopping.domain.TokenProvider
+import shopping.support.error.CoreException
+import shopping.support.error.ErrorType
 import java.nio.charset.StandardCharsets
 import java.time.Instant
 import java.util.Date
@@ -28,5 +31,21 @@ class JwtTokenProvider(
             .expiration(Date.from(validity))
             .signWith(key)
             .compact()
+    }
+
+    override fun extractMemberId(token: String): Long {
+        try {
+            val subject =
+                Jwts
+                    .parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .payload
+                    .subject
+            return subject.toLong()
+        } catch (e: JwtException) {
+            throw CoreException(ErrorType.UNAUTHORIZED_TOKEN)
+        }
     }
 }
