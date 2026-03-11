@@ -1,5 +1,7 @@
 package shopping.infrastructure.auth;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -37,13 +39,20 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public String getRole(String token) {
+        return parseClaims(token).get("role", String.class);
+    }
+
     public String getPayload(String token) {
+        return parseClaims(token).getSubject();
+    }
+
+    private Claims parseClaims(String token) {
         return Jwts.parser()
                 .verifyWith(key)
                 .build()
                 .parseSignedClaims(token)
-                .getPayload()
-                .getSubject();
+                .getPayload();
     }
 
     public boolean validateToken(String token) {

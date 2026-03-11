@@ -64,4 +64,11 @@ public class ProductService {
                 .map(ProductResponse::from)
                 .toList();
     }
+
+    public void deleteProduct(Long productId) {
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
+
+        productRepository.delete(product);
+    }
 }

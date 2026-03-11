@@ -29,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Transactional
-class WishlistApiTest {
+class WishlistControllerTest {
     private final MockMvc mockMvc;
     private final ObjectMapper objectMapper;
     private final MemberRepository memberRepository;
@@ -41,11 +41,11 @@ class WishlistApiTest {
     private Product savedProduct;
 
     @Autowired
-    public WishlistApiTest(MockMvc mockMvc,
-                           ObjectMapper objectMapper,
-                           MemberRepository memberRepository,
-                           ProductRepository productRepository,
-                           JwtTokenProvider jwtTokenProvider) {
+    public WishlistControllerTest(MockMvc mockMvc,
+                                  ObjectMapper objectMapper,
+                                  MemberRepository memberRepository,
+                                  ProductRepository productRepository,
+                                  JwtTokenProvider jwtTokenProvider) {
         this.mockMvc = mockMvc;
         this.objectMapper = objectMapper;
         this.memberRepository = memberRepository;
