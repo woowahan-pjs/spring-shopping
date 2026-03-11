@@ -24,7 +24,7 @@
   - [x] 이메일 중복 및 형식 유요성 검증
 - [x] 로그인
   - [x] 이메일과 비밀번호를 검증 
-  - [x] 로그인 성공 시 토큰을 발급
+  - [x] 로그인 회원이 맞을 시 토큰을 발급
 
 ```
 3. 위시 리스트
@@ -33,6 +33,35 @@
 - [x] 위시 리스트에 등록된 상품 목록 조회
 - [x] 위시 리스트에 상품을 추가
 - [x] 위시 리스트에 있는 상품 삭제
+
+```
+4. 기타
+```
+- [ ] 로그인 필터 기능
+
+## API 명세
+
+----
+| Method | Path | Description | Auth |
+|:---:|:---|:---|:---:|
+| `POST` | `/api/members/register` | 새 회원 등록 및 JWT 발급 | X |
+| `POST` | `/api/members/login` | 로그인 및 JWT 발급 | X |
+
+### 2. 상품 API (Product)
+| Method | Path | Description | Auth |
+|:---:|:---|:---|:---:|
+| `POST` | `/api/products` | 새 상품 등록 (Admin 전용) | O |
+| `GET` | `/api/products` | 전체 상품 목록 조회 | X |
+| `GET` | `/api/products/{productId}` | 상품 상세 조회 | X |
+| `PUT` | `/api/products/{productId}` | 상품 정보 수정 | O |
+| `DELETE` | `/api/products/{productId}` | 상품 삭제 | O |
+
+### 3. 위시리스트 API (Wishlist)
+| Method | Path | Description | Auth |
+|:---:|:---|:---|:---:|
+| `POST` | `/api/wishes` | 내 위시리스트에 상품 추가 | O |
+| `GET` | `/api/wishes` | 내 위시리스트 목록 조회 (Fetch Join 적용) | O |
+| `DELETE` | `/api/wishes/{wishId}` | 위시리스트 항목 삭제 | O |
 
 ## 구현 전략
 
