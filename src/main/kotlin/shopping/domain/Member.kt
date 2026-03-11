@@ -1,29 +1,15 @@
 package shopping.domain
 
+import shopping.domain.vo.MemberEmail
 import shopping.support.error.CoreException
 import shopping.support.error.ErrorType
 
 class Member(
     val id: Long = 0L,
-    val email: String,
+    email: String,
     val password: String,
 ) {
-    init {
-        validateEmail()
-        validatePassword()
-    }
-
-    private fun validateEmail() {
-        if (email.isBlank()) {
-            throw CoreException(ErrorType.INVALID_REQUEST, "이메일은 비어있을 수 없습니다.")
-        }
-    }
-
-    private fun validatePassword() {
-        if (password.isBlank()) {
-            throw CoreException(ErrorType.INVALID_REQUEST, "비밀번호는 비어있을 수 없습니다.")
-        }
-    }
+    val email: MemberEmail = MemberEmail(email)
 
     fun authenticate(
         rawPassword: String,

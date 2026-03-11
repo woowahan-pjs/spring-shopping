@@ -8,8 +8,6 @@ import shopping.support.error.ErrorType
 
 @Component
 class MemberValidator {
-    private val emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$".toRegex()
-
     fun validateRegister(request: RegisterMemberRequest) {
         validateEmail(request.email)
         validatePassword(request.password)
@@ -23,9 +21,6 @@ class MemberValidator {
     private fun validateEmail(email: String) {
         if (email.isBlank()) {
             throw CoreException(ErrorType.INVALID_REQUEST, "이메일을 입력해 주세요.")
-        }
-        if (!email.matches(emailRegex)) {
-            throw CoreException(ErrorType.INVALID_REQUEST, "올바른 이메일 형식이 아니에요.")
         }
     }
 

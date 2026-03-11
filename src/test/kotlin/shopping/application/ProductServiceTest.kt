@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.any
@@ -17,7 +18,6 @@ import shopping.domain.ProfanityFilter
 import shopping.storage.db.ProductJpaRepository
 import shopping.support.error.CoreException
 import shopping.support.error.ErrorType
-import org.junit.jupiter.api.Test
 
 @DisplayName("상품 생성, 수정, 삭제 및 조회")
 class ProductServiceTest : IntegrationTestSupport() {

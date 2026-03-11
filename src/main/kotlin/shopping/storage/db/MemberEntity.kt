@@ -23,7 +23,7 @@ class MemberEntity(
     companion object {
         fun from(member: Member): MemberEntity =
             MemberEntity(
-                email = member.email,
+                email = member.email.value,
                 password = member.password,
             )
     }

@@ -4,6 +4,7 @@ import io.restassured.http.ContentType
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
@@ -20,7 +21,6 @@ import shopping.api.presentation.v1.validator.MemberValidator
 import shopping.application.MemberService
 import shopping.application.dto.AuthTokenResult
 import shopping.test.RestDocsTest
-import org.junit.jupiter.api.Test
 
 @Tag("restdocs")
 @DisplayName("회원 API 문서화 테스트")

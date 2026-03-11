@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertAll
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,7 +14,6 @@ import shopping.application.dto.RegisterMemberCommand
 import shopping.storage.db.MemberJpaRepository
 import shopping.support.error.CoreException
 import shopping.support.error.ErrorType
-import org.junit.jupiter.api.Test
 
 @DisplayName("회원 가입 및 로그인")
 class MemberServiceTest : IntegrationTestSupport() {
