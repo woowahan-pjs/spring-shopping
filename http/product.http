@@ -1,0 +1,28 @@
+### 상품 등록
+POST http://localhost:8080/api/v1/products
+Content-Type: application/json
+
+{
+  "name": "멋진 셔츠",
+  "price": 15000,
+  "imageUrl": "https://example.com/shirt.jpg"
+}
+
+### 상품 단건 조회
+GET http://localhost:8080/api/v1/products/1
+
+### 상품 목록 조회
+GET http://localhost:8080/api/v1/products
+
+### 상품 수정
+PUT http://localhost:8080/api/v1/products/1
+Content-Type: application/json
+
+{
+  "name": "새로운 셔츠",
+  "price": 20000,
+  "imageUrl": "https://example.com/new-shirt.jpg"
+}
+
+### 상품 삭제
+DELETE http://localhost:8080/api/v1/products/1

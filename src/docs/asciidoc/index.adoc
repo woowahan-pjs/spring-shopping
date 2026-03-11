@@ -27,3 +27,13 @@ operation::product-update[snippets='http-request,http-response,path-parameters,r
 
 === 상품 삭제
 operation::product-delete[snippets='http-request,http-response,path-parameters']
+
+== Wish API
+=== 위시 리스트 추가
+operation::wish-create[snippets='http-request,http-response,request-headers,request-fields,response-fields']
+
+=== 위시 리스트 조회
+operation::wish-list[snippets='http-request,http-response,request-headers,response-fields']
+
+=== 위시 리스트 삭제
+operation::wish-delete[snippets='http-request,http-response,request-headers,path-parameters']

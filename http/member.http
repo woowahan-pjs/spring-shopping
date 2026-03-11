@@ -1,0 +1,17 @@
+### 회원 가입
+POST http://localhost:8080/api/v1/members/register
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "password1234"
+}
+
+### 로그인
+POST http://localhost:8080/api/v1/members/login
+Content-Type: application/json
+
+{
+  "email": "test@test.com",
+  "password": "password1234"
+}
