@@ -1,0 +1,14 @@
+package shopping.domain;
+
+public class MemberFixture {
+
+    public static Member createMember() {
+        return new Member("test@gmail.com", "password");
+    }
+
+    public static Member createWithId(Long id) {
+        Member member = createMember();
+        member.assignId(id);
+        return member;
+    }
+}
