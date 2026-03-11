@@ -1,8 +1,10 @@
 package shopping.service;
 
+import org.springframework.stereotype.Service;
 import shopping.domain.Member;
 import shopping.domain.MemberRepository;
 
+@Service
 public class MemberService {
     private final MemberRepository repository;
     private final EmailFormatValidator emailFormatValidator;

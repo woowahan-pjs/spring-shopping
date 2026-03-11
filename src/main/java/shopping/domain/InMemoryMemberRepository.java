@@ -1,8 +1,11 @@
 package shopping.domain;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Repository
 public class InMemoryMemberRepository implements MemberRepository {
     private final HashMap<Long, Member> memberMap = new HashMap<>();
     private final AtomicLong idSequence = new AtomicLong();
