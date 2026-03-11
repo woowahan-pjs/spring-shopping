@@ -12,6 +12,7 @@ import shopping.api.presentation.v1.dto.RegisterMemberRequest
 import shopping.api.presentation.v1.validator.MemberValidator
 import shopping.application.MemberService
 import shopping.application.dto.LoginMemberCommand
+import shopping.support.response.ApiResponse
 
 @RestController
 @RequestMapping("/api/v1/members")
@@ -23,24 +24,23 @@ class MemberController(
     @ResponseStatus(HttpStatus.CREATED)
     fun register(
         @RequestBody request: RegisterMemberRequest,
-    ): AuthTokenResponse {
+    ): ApiResponse<AuthTokenResponse> {
         memberValidator.validateRegister(request)
-
         memberService.register(request.toCommand())
 
         val loginCommand = LoginMemberCommand(request.email, request.password)
         val authResult = memberService.login(loginCommand)
 
-        return AuthTokenResponse(authResult.accessToken)
+        return ApiResponse.success(AuthTokenResponse(authResult.accessToken))
     }
 
     @PostMapping("/login")
     fun login(
         @RequestBody request: LoginMemberRequest,
-    ): AuthTokenResponse {
+    ): ApiResponse<AuthTokenResponse> {
         memberValidator.validateLogin(request)
 
         val authResult = memberService.login(request.toCommand())
-        return AuthTokenResponse(authResult.accessToken)
+        return ApiResponse.success(AuthTokenResponse(authResult.accessToken))
     }
 }

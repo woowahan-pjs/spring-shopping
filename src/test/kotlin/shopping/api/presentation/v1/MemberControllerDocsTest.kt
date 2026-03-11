@@ -6,6 +6,7 @@ import org.junit.jupiter.api.DisplayName
 import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.any
 import org.springframework.http.HttpStatus
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document
 import org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath
@@ -15,7 +16,6 @@ import shopping.api.presentation.v1.dto.RegisterMemberRequest
 import shopping.api.presentation.v1.validator.MemberValidator
 import shopping.application.MemberService
 import shopping.application.dto.AuthTokenResult
-import shopping.application.dto.LoginMemberCommand
 import shopping.test.RestDocsTest
 import kotlin.test.Test
 
@@ -39,8 +39,7 @@ class MemberControllerDocsTest : RestDocsTest() {
 
         doNothing().`when`(memberValidator).validateRegister(request)
         `when`(memberService.register(request.toCommand())).thenReturn(1L)
-        val loginCommand = LoginMemberCommand(request.email, request.password)
-        `when`(memberService.login(loginCommand)).thenReturn(authResult)
+        `when`(memberService.login(any())).thenReturn(authResult)
 
         // when & then
         mockController(controller)
@@ -57,7 +56,9 @@ class MemberControllerDocsTest : RestDocsTest() {
                         fieldWithPath("password").description("가입할 회원의 비밀번호"),
                     ),
                     responseFields(
-                        fieldWithPath("accessToken").description("발급된 인증 토큰"),
+                        fieldWithPath("result").description("응답 결과 (SUCCESS/ERROR)"),
+                        fieldWithPath("data.accessToken").description("발급된 인증 토큰"),
+                        fieldWithPath("error").description("에러 정보 (성공 시 null)").optional(),
                     ),
                 ),
             )
