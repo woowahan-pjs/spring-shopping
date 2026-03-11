@@ -13,7 +13,7 @@ import shopping.application.dto.RegisterMemberCommand
 import shopping.storage.db.MemberJpaRepository
 import shopping.support.error.CoreException
 import shopping.support.error.ErrorType
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 @DisplayName("회원 가입 및 로그인")
 class MemberServiceTest : IntegrationTestSupport() {

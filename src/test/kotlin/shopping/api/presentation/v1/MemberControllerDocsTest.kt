@@ -20,7 +20,7 @@ import shopping.api.presentation.v1.validator.MemberValidator
 import shopping.application.MemberService
 import shopping.application.dto.AuthTokenResult
 import shopping.test.RestDocsTest
-import kotlin.test.Test
+import org.junit.jupiter.api.Test
 
 @Tag("restdocs")
 @DisplayName("회원 API 문서화 테스트")

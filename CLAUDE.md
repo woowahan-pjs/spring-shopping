@@ -25,6 +25,11 @@
 
 # Run
 ./gradlew bootRun               # 스프링 부트 서버 실행
+
+# Infrastructure (Docker)
+docker compose up -d            # MySQL 컨테이너 실행
+docker compose down             # 컨테이너 중지 및 제거
+docker compose logs -f          # 컨테이너 로그 확인
 ```
 
 ## Coding Conventions
@@ -82,6 +87,11 @@
   - `result`: SUCCESS 또는 ERROR 문자열
   - `data`: 실제 데이터 (성공 시에만 포함, 데이터가 없는 경우 null 또는 빈 객체)
   - `error`: 에러 발생 시 에러 코드와 메시지를 포함하는 객체 (성공 시 null)
+
+### 6. 인증(Auth) 처리 방식
+
+- 위시 리스트 등 인증이 필요한 API는 `@RequestHeader("Authorization")`으로 Bearer 토큰을 수신합니다.
+- Controller 내 `extractMemberId(authorization)` 헬퍼 메서드를 통해 `Bearer ` 접두사를 제거한 후 `TokenProvider.extractMemberId(token)`을 호출해 memberId를 추출합니다.
 
 ### 장애 격리를 위해 서킷 브레이커 적용
 
