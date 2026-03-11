@@ -84,11 +84,11 @@ class MemberControllerTest {
     }
 
     @Test
-    @DisplayName("로그인 시 이메일이 다를 경우 예외 발생")
-    void invalidEmail() throws JsonProcessingException {
+    @DisplayName("로그인 시 이메일이 없을 경우 예외 발생")
+    void notFoundEmail() throws JsonProcessingException {
         MemberRequest request = new MemberRequest("test", "password");
 
-        willThrow(new IllegalArgumentException("이미 존재하는 이메일입니다.")).given(service).login(request.getEmail(), request.getPassword());
+        willThrow(new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요.")).given(service).login(request.getEmail(), request.getPassword());
 
         assertThat(mockMvcTester.post().uri("/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ class MemberControllerTest {
     void invalidPassword() throws JsonProcessingException {
         MemberRequest request = new MemberRequest("test@gmail.com", "pass");
 
-        willThrow(new IllegalArgumentException("이미 존재하는 이메일입니다.")).given(service).login(request.getEmail(), request.getPassword());
+        willThrow(new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요.")).given(service).login(request.getEmail(), request.getPassword());
 
         assertThat(mockMvcTester.post().uri("/login")
                 .contentType(MediaType.APPLICATION_JSON)

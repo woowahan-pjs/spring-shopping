@@ -1,9 +1,10 @@
 package shopping.auth;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,16 +13,14 @@ import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
-    @Value("${jwt.secret}")
-    private String secret;
-    @Value("${jwt.expiration-ms}")
+    private SecretKey key;
     private long expirationMs;
 
-    private SecretKey key;
-
-    @PostConstruct
-    private void init() {
+    public JwtTokenProvider(
+            @Value("${jwt.secret}") String secret,
+            @Value("${jwt.expiration-ms}") long expirationMs) {
         this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+        this.expirationMs = expirationMs;
     }
 
     public String generate(Long memberId) {
@@ -36,6 +35,21 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    public Long extract(String token) {
+        try {
+            String subject = Jwts.parser()
+                    .verifyWith(key)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload()
+                    .getSubject();
 
+            return Long.parseLong(subject);
+        } catch (ExpiredJwtException e) {
+            throw new IllegalArgumentException("만료된 토큰입니다.");
+        } catch (JwtException e) {
+            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+        }
+    }
 
 }
