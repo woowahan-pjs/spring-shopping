@@ -34,6 +34,7 @@ After the review completes, summarize the results to the user with PASS/WARN/FAI
 2. **UNIT TEST QUALITY**: Do tests cover success/failure paths, use proper assertions, mock external deps?
 3. **Transaction**: No external api calls within transaction. always mark which transactionManager is used in `@Transaction` annotation
 4. **Concurrency Problem**: if concurrency problem is showed, suggest solution, such as redis pub/sub, Optimistic Lock, Pessimistic Lock, etc
+5. **Post Request Idempotency**: all post request must be Idempotency. If it is not satisfied, mark FAIL check
 
 ## Post-review: Add comment to PR
 
