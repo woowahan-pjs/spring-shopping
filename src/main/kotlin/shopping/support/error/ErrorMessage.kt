@@ -1,6 +1,5 @@
 package shopping.support.error
 
-
 data class ErrorMessage private constructor(
     val code: String,
     val message: String,
