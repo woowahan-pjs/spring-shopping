@@ -15,11 +15,19 @@ class ApiControllerAdvice {
 
     @ExceptionHandler(CoreException::class)
     fun handleCoreException(e: CoreException): ResponseEntity<ApiResponse<Any>> {
-        when (e.errorType.logLevel) {
-            LogLevel.ERROR -> log.error("CoreException : {}", e.message, e)
-            LogLevel.WARN -> log.warn("CoreException : {}", e.message, e)
-            else -> log.info("CoreException : {}", e.message)
-        }
+        getLogByLevel(e)
         return ResponseEntity(ApiResponse.Companion.error(e.errorType, e.data), e.errorType.status)
+    }
+
+    private fun getLogByLevel(e: CoreException) {
+        if (e.errorType.logLevel == LogLevel.ERROR) {
+            log.error("CoreException : {}", e.message, e)
+            return
+        }
+        if (e.errorType.logLevel == LogLevel.WARN) {
+            log.warn("CoreException : {}", e.message, e)
+            return
+        }
+        log.info("CoreException : {}", e.message)
     }
 }
