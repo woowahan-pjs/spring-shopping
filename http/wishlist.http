@@ -1,0 +1,10 @@
+### GET request to example server
+POST http://localhost:8080/wishlist
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwIiwiaWF0IjoxNzczMjIxMTQwLCJleHAiOjE3NzMyMjQ3NDB9.26vg5MXKySRVImSIZOsC-z6WwLGHlFV86ZDGKEeTAiM
+
+{
+  "productId" : 1
+}
+
+###

@@ -1,10 +1,13 @@
 package shopping.domain;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
+@Repository
 public class InMemoryWishlistItemRepository implements WishlistItemRepository {
     private final Map<Long, WishlistItem> wisilistItemMap = new HashMap<>();
     private final AtomicLong idSequence = new AtomicLong();

@@ -1,13 +1,14 @@
 package shopping.service;
 
+import org.springframework.stereotype.Service;
 import shopping.domain.ProductRepository;
 import shopping.domain.WishlistItem;
 import shopping.domain.WishlistItemRepository;
 
 import java.util.List;
 
+@Service
 public class WishlistItemService {
-
     private final WishlistItemRepository wishlistItemRepository;
     private final ProductRepository productRepository;
 
