@@ -69,10 +69,20 @@ class WishlistItemServiceTest {
         WishlistItem wishlistItem = new WishlistItem(1L, 1L);
         service.addWishlistItem(wishlistItem);
 
-        service.deleteWishlistItem(wishlistItem.getId());
+        service.deleteWishlistItem(wishlistItem.getMemberId(), wishlistItem.getId());
 
         List<WishlistItem> items = service.findWishlistItems(1L);
 
         assertThat(items.size()).isEqualTo(0);
+    }
+
+    @Test
+    @DisplayName("위시리스트 존재하지 않으면 예외 발생")
+    void deleteWishlistItem_invalidMemberId() {
+        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
+        service.addWishlistItem(wishlistItem);
+
+        assertThatThrownBy(() -> service.deleteWishlistItem(100L, wishlistItem.getId()))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 }

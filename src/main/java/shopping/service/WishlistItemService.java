@@ -33,7 +33,10 @@ public class WishlistItemService {
         return wishlistItemRepository.findAllByMemberId(memberId);
     }
 
-    public void deleteWishlistItem(Long id) {
+    public void deleteWishlistItem(Long memberId, Long id) {
+        if (!wishlistItemRepository.existsByMemberIdAndId(memberId, id)) {
+            throw new IllegalArgumentException("존재하지 않은 위시리스트입니다.");
+        }
         wishlistItemRepository.deleteById(id);
     }
 }

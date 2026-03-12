@@ -33,4 +33,11 @@ public class WishlistItemController {
                 .map(WishlistItemResponse::from)
                 .toList());
     }
+
+    @DeleteMapping("/wishlist/{id}")
+    public ResponseEntity<Void> deleteWish(@RequestAttribute("memberId") Long memberId,
+                                           @PathVariable("id") Long id) {
+        service.deleteWishlistItem(memberId, id);
+        return ResponseEntity.noContent().build();
+    }
 }

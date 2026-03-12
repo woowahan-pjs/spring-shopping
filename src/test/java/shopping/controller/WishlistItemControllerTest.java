@@ -18,8 +18,6 @@ import shopping.auth.AuthInterceptor;
 import shopping.auth.JwtTokenProvider;
 import shopping.controller.dto.WishlistItemRequest;
 import shopping.controller.dto.WishlistItemResponse;
-import shopping.domain.WishlistItem;
-import shopping.domain.WishlistItemFixture;
 import shopping.service.WishlistItemService;
 
 import java.util.List;
@@ -27,8 +25,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.BDDMockito.*;
 import static shopping.domain.WishlistItemFixture.*;
 
 
@@ -76,6 +73,26 @@ class WishlistItemControllerTest {
                 .bodyJson()
                 .convertTo(InstanceOfAssertFactories.list(WishlistItemResponse.class))
                 .hasSize(2);
+    }
+
+    @Test
+    @DisplayName("위시리스트 상품을 삭제한다")
+    void deleteWishlistItemById() {
+        willDoNothing().given(service).deleteWishlistItem(1L, 1L);
+
+        assertThat(mockMvcTester.delete().uri("/wishlist/1")
+                .header("Authorization", "Bearer valid-token"))
+                .hasStatus(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    @DisplayName("위시리스트 존재하지않으면 예외 발생")
+    void deleteWishlistItemById_invalidMemberId() {
+        willThrow(new IllegalArgumentException()).given(service).deleteWishlistItem(1L, 1L);
+
+        assertThat(mockMvcTester.delete().uri("/wishlist/1")
+                .header("Authorization", "Bearer valid-token"))
+                .hasStatus(HttpStatus.BAD_REQUEST);
     }
 
     private MockMvcTester.MockMvcRequestBuilder authenticatedPost(String url) {
