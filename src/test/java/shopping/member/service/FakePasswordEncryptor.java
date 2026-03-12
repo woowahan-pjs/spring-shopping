@@ -1,6 +1,4 @@
-package shopping.product.service;
-
-import shopping.member.service.PasswordEncryptor;
+package shopping.member.service;
 
 public class FakePasswordEncryptor implements PasswordEncryptor {
     @Override

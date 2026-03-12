@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import shopping.member.domain.InMemoryMemberRepository;
 import shopping.member.domain.Member;
-import shopping.product.service.FakePasswordEncryptor;
 
 import static org.assertj.core.api.Assertions.*;
 
