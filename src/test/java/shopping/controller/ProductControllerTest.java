@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
+import shopping.auth.JwtTokenProvider;
 import shopping.domain.Product;
 import shopping.controller.dto.ProductRequest;
 import shopping.controller.dto.ProductResponse;
@@ -36,6 +37,9 @@ class ProductControllerTest {
 
     @MockitoBean
     ProductService service;
+
+    @MockitoBean
+    JwtTokenProvider provider;
 
     @Test
     @DisplayName("상품을 추가한다.")
