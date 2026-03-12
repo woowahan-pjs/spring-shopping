@@ -18,15 +18,15 @@ class DeleteProductServiceTest {
 
     private InMemoryProductRepository productRepository;
     private ProductNameFactory nameFactory;
-    private List<Object> publishedEvents;
+    private List<UUID> removedWishProductIds;
     private DeleteProductService service;
 
     @BeforeEach
     void setUp() {
         productRepository = new InMemoryProductRepository();
         nameFactory = new ProductNameFactory(new FakeProfanityChecker());
-        publishedEvents = new ArrayList<>();
-        service = new DeleteProductService(productRepository, publishedEvents::add);
+        removedWishProductIds = new ArrayList<>();
+        service = new DeleteProductService(productRepository, removedWishProductIds::add);
     }
 
     @Test
@@ -37,8 +37,8 @@ class DeleteProductServiceTest {
         service.execute(saved.getId());
 
         assertTrue(productRepository.findById(saved.getId()).isEmpty());
-        assertEquals(1, publishedEvents.size());
-        assertEquals(saved.getId(), ((ProductDeletedEvent) publishedEvents.get(0)).productId());
+        assertEquals(1, removedWishProductIds.size());
+        assertEquals(saved.getId(), removedWishProductIds.get(0));
     }
 
     @Test
