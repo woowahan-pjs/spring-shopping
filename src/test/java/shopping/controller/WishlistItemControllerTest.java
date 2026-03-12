@@ -3,6 +3,7 @@ package shopping.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,13 +17,19 @@ import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import shopping.auth.AuthInterceptor;
 import shopping.auth.JwtTokenProvider;
 import shopping.controller.dto.WishlistItemRequest;
+import shopping.controller.dto.WishlistItemResponse;
+import shopping.domain.WishlistItem;
+import shopping.domain.WishlistItemFixture;
 import shopping.service.WishlistItemService;
+
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
+import static shopping.domain.WishlistItemFixture.*;
 
 
 @WebMvcTest(WishlistItemController.class)
@@ -41,8 +48,6 @@ class WishlistItemControllerTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    private static final Long VALID_MEMBER_ID = 1L;
-
     @BeforeEach
     void setUp() {
         given(tokenProvider.extract(any())).willReturn(VALID_MEMBER_ID);
@@ -58,6 +63,19 @@ class WishlistItemControllerTest {
         assertThat(authenticatedPost("/wishlist")
                 .content(objectMapper.writeValueAsString(request)))
                 .hasStatus(HttpStatus.CREATED);
+    }
+
+    @Test
+    @DisplayName("위시리스트를 조회한다")
+    void findAllByMemberId() throws JsonProcessingException {
+        given(service.findWishlistItems(eq(VALID_MEMBER_ID))).willReturn(List.of(createWishItem(1L, 1L), createWishItem(2L, 2L)));
+
+        assertThat(mockMvcTester.get().uri("/wishlist")
+                .header("Authorization", "Bearer valid-token"))
+                .hasStatus(HttpStatus.OK)
+                .bodyJson()
+                .convertTo(InstanceOfAssertFactories.list(WishlistItemResponse.class))
+                .hasSize(2);
     }
 
     private MockMvcTester.MockMvcRequestBuilder authenticatedPost(String url) {
