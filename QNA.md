@@ -731,6 +731,51 @@ private final AtomicLong idSequence = new AtomicLong(1L);
 
 ---
 
+### Q. WishlistItem과 Wishlist 중 어떤 이름이 더 적합한가?
+
+`WishlistItem`이 더 적합하다.
+
+- `WishlistItem` = 위시리스트에 담긴 개별 상품 하나를 의미
+- `Wishlist`로 이름을 바꾸면 컬렉션인지 단일 항목인지 의미가 모호해짐
+- JPA 전환 시 `Wishlist`(컬렉션 엔티티) ↔ `WishlistItem`(자식 엔티티) 부모-자식 관계로 확장 가능성이 있으므로 `WishlistItem`을 유지하는 것이 자연스럽다.
+
+---
+
+### Q. `@WebMvcTest`에서 `AuthInterceptor`를 쓰지 않는 Controller도 `JwtTokenProvider` Mock이 필요한 이유?
+
+`AppConfig`(`WebMvcConfigurer` 구현체)가 `@Configuration`이라 `@WebMvcTest` 로딩 시 함께 로드된다.
+`AppConfig` → `AuthInterceptor` → `JwtTokenProvider` 의존 체인 때문에, 실제로 JWT를 사용하지 않는 Controller 테스트도 `JwtTokenProvider` 빈이 없으면 실패한다.
+
+`@MockitoBean JwtTokenProvider`는 "실제로 쓰기 위해서"가 아닌 **빈 생성 체인을 끊기 위해** 추가하는 것이다.
+
+---
+
+### Q. 현업에서 로깅 프레임워크는 주로 무엇을 쓰나?
+
+Spring Boot 기본값인 **SLF4J + Logback**이 가장 많이 쓰인다.
+Log4j2는 Logback보다 성능이 좋지만(특히 비동기 로깅) 설정이 복잡하고, log4j 1.x 보안 취약점(Log4Shell) 이슈로 일부 기피 심리가 존재한다(2.x는 무관).
+
+스터디/일반 프로젝트에서는 Logback 기본값을 그대로 사용하고 `@Slf4j`만 추가하는 방식이 실용적이다.
+
+---
+
+### Q. `@Slf4j`는 어떤 계층에 붙이는 게 적합한가?
+
+| 클래스 | 로그 내용 | 레벨 |
+|--------|-----------|------|
+| `AuthInterceptor` | 인증 성공/실패 | info/warn |
+| `GlobalControllerAdvice` | 예외 발생 | warn/error |
+| `*Service` | 주요 비즈니스 흐름 | info/warn |
+
+Controller는 인터셉터와 어드바이스에서 커버되므로 로그를 직접 찍는 경우가 많지 않다.
+
+로그 레벨 기준:
+- `log.info()` → 정상 흐름
+- `log.warn()` → 비즈니스 예외 (존재하지 않는 리소스, 소유자 불일치 등)
+- `log.error()` → 예상치 못한 예외
+
+---
+
 ### Q. 회원가입 성공 시 회원 정보를 응답으로 반환해야 하는가?
 
 보안상 최소한의 정보만 반환하는 것이 원칙이다.

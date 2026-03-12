@@ -898,6 +898,20 @@ private static final String TEST_SECRET = "dGVzdC1zZWNyZXQta2V5LWZvci10ZXN0aW5nL
 
 ---
 
+### [코드품질] Controller 필드에 `final` 누락
+
+```java
+// 누락
+private WishlistItemService service;
+
+// 올바름
+private final WishlistItemService service;
+```
+
+생성자 주입을 사용하는 경우 필드는 반드시 `final`로 선언해 불변성을 보장해야 한다.
+
+---
+
 ### [설계] void 메서드 BDDMockito 스텁 패턴
 
 `void` 메서드는 `given(service.method()).willXxx()` 패턴을 사용할 수 없다.
@@ -918,3 +932,27 @@ willDoNothing().given(service).deleteById(1L);
 |---|---|
 | 반환값 있음 | `given(service.save(any())).willReturn(product)` |
 | void | `willDoNothing().given(service).deleteById(1L)` |
+
+---
+
+## WishlistItemController
+
+### [버그] `@WebMvcTest`에서 `AuthInterceptor` 의존 체인으로 인한 전체 테스트 실패
+
+`AppConfig`가 `@Configuration`이라 `@WebMvcTest` 시 자동 로드된다.
+`AppConfig` → `AuthInterceptor` → `JwtTokenProvider` 체인이 존재하므로,
+`JwtTokenProvider`가 웹 슬라이스에 없으면 `AuthInterceptor`를 사용하지 않는 Controller 테스트도 실패한다.
+
+```
+Unsatisfied dependency: No qualifying bean of type 'JwtTokenProvider' available
+```
+
+해결: `JwtTokenProvider`를 실제로 쓰지 않아도 빈 생성 체인을 끊기 위해 `@MockitoBean` 추가
+
+```java
+// ProductControllerTest, MemberControllerTest 모두 추가 필요
+@MockitoBean
+JwtTokenProvider jwtTokenProvider;
+```
+
+`AuthInterceptor`를 `AppConfig`에 등록한 시점부터 모든 `@WebMvcTest`가 영향을 받는다.
