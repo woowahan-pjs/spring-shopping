@@ -12,8 +12,7 @@ import java.util.List;
 
 @RestController
 public class WishlistItemController {
-
-    private WishlistItemService service;
+    private final WishlistItemService service;
 
     public WishlistItemController(WishlistItemService service) {
         this.service = service;

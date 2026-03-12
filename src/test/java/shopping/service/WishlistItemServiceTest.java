@@ -73,7 +73,7 @@ class WishlistItemServiceTest {
 
         List<WishlistItem> items = service.findWishlistItems(1L);
 
-        assertThat(items.size()).isEqualTo(0);
+        assertThat(items).isEmpty();
     }
 
     @Test

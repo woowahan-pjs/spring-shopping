@@ -2,7 +2,6 @@ package shopping.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -93,6 +92,13 @@ class WishlistItemControllerTest {
         assertThat(mockMvcTester.delete().uri("/wishlist/1")
                 .header("Authorization", "Bearer valid-token"))
                 .hasStatus(HttpStatus.BAD_REQUEST);
+    }
+
+    @Test
+    @DisplayName("로그인 안하면 예외 발생")
+    void notLogin() {
+        assertThat(mockMvcTester.get().uri("/wishlist"))
+                .hasStatus(HttpStatus.UNAUTHORIZED);
     }
 
     private MockMvcTester.MockMvcRequestBuilder authenticatedPost(String url) {
