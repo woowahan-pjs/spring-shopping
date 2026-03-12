@@ -1,0 +1,746 @@
+# Q&A 정리
+
+> 세션 중 나온 질문과 답변 복기용 정리
+
+---
+
+## 코드 품질 / 리팩토링
+
+### Q. catch (Exception e) 로 잡으면 안 되나?
+`IllegalArgumentException` 도 `Exception` 의 하위 타입이라 의도한 예외까지 삼켜버린다.
+catch 범위는 항상 최소한으로 — 구체적인 예외 타입(e.g. `URISyntaxException`)을 사용해야 한다.
+
+---
+
+### Q. 정규식 문자 클래스 `[]` 안에서 `-` 를 리터럴로 쓰려면?
+맨 처음 또는 맨 끝에 위치시키거나 `\\-` 로 이스케이프해야 한다.
+중간에 오면 범위(range)로 해석되어 의도치 않은 동작 또는 `PatternSyntaxException` 발생.
+
+```java
+// 잘못됨 - +-& 가 범위로 해석
+"[+-&]"
+
+// 올바름
+"[+\\-&]"  // 이스케이프
+"[+&-]"    // 맨 끝에 위치
+```
+
+---
+
+### Q. BigDecimal 값 비교 시 `isEqualTo()` 써도 되나?
+`isEqualTo()` 는 `equals()` 를 사용하는데, `BigDecimal.equals()` 는 값과 scale을 모두 비교한다.
+`new BigDecimal("15000").equals(new BigDecimal("15000.0"))` → **false**
+
+BigDecimal 비교는 `isEqualByComparingTo()` 를 사용해야 한다. `compareTo()` 기반으로 수학적 값만 비교한다.
+
+```java
+assertThat(product.getPrice()).isEqualByComparingTo(price);
+```
+
+---
+
+## 테스트 코드
+
+### Q. 커밋 메시지에서 테스트 코드 개선은 `refactor` 인가?
+`refactor` 는 프로덕션 코드 구조 개선에 사용한다.
+테스트 코드 추가/수정/개선은 `test` 스코프를 사용한다.
+
+```
+test(Product): 테스트 픽스처 상수화 및 AssertJ 스타일 통일
+```
+
+---
+
+### Q. `assertDoesNotThrow` 와 `assertThatCode().doesNotThrowAnyException()` 차이?
+기능은 동일하지만, AssertJ 를 이미 사용하고 있다면 `assertThatCode` 로 통일하는 게 일관성 있다.
+JUnit 5 assertion 과 AssertJ 를 혼용하지 않는 것이 원칙.
+
+---
+
+### Q. `VALID_` 접두사를 쓰는 이유가 있나?
+강제된 컨벤션은 아니다. "검증을 통과하는 픽스처"임을 명시하기 위한 관례적 표현.
+실패 케이스 상수(`INVALID_`)와 구분이 명확해지는 장점이 있다.
+`@ValueSource` 로 실패값을 직접 넣는다면 굳이 안 써도 된다.
+
+---
+
+### Q. `ProductRepositoryTest` 에서 `ProductTest` 의 픽스처를 가져와서 써도 되나?
+안 된다. 테스트 클래스끼리 직접 참조하면 결합도가 생긴다.
+`ProductTest` 가 변경되면 `ProductRepositoryTest` 도 영향을 받는다.
+
+---
+
+### Q. 여러 테스트에서 공통으로 쓰이는 픽스처는 공용 클래스로 만들어도 되나?
+테스트 클래스끼리 직접 참조하는 건 비권장이지만,
+**픽스처 전용 클래스**를 만드는 건 괜찮다.
+
+```java
+public class ProductFixture {
+    public static Product createProduct() { ... }
+}
+```
+
+| 방식 | 권장 여부 |
+|------|-----------|
+| 테스트 클래스끼리 직접 참조 | ❌ |
+| 각 테스트에 자체 픽스처 | ✅ (소규모) |
+| `ProductFixture` 전용 클래스 | ✅ (중복 많을 때) |
+
+소규모에서는 자체 픽스처로 시작하고, 중복이 많아지면 전용 클래스로 추출하는 것이 자연스럽다.
+
+---
+
+### Q. `save` 테스트와 `findById` 테스트가 겹치지 않나?
+겹치는 게 아니라 **테스트 의도**가 다르다.
+
+- `save` 테스트 → id가 채번됐는지 확인
+- `findById` 테스트 → 저장된 데이터를 정확히 꺼내오는지 확인
+
+`findById` 테스트에서 `save` 를 호출하는 건 **준비(arrange)** 단계일 뿐이다.
+
+---
+
+### Q. `save` 와 `findById` 를 하나의 테스트로 합쳐도 되나?
+안 된다. 테스트는 하나의 행위만 검증해야 한다.
+합치면 실패 시 `save` 문제인지 `findById` 문제인지 알 수 없다.
+
+```java
+// 분리 - 실패 원인이 명확
+@Test
+void save() {
+    Product saved = repository.save(product);
+    assertThat(saved.getId()).isNotNull();
+}
+
+@Test
+void findById() {
+    Product saved = repository.save(product);   // arrange
+    Product found = repository.findById(saved.getId());
+    assertThat(found).isEqualTo(saved);
+}
+```
+
+---
+
+## 설계 / 아키텍처
+
+### Q. Bean Validation 라이브러리 쓰면 안 되나?
+쓸 수 있지만 도메인 객체에 적용 시 트레이드오프가 있다.
+
+| | Bean Validation | 직접 구현 |
+|--|--|--|
+| 코드량 | 적음 | 많음 |
+| 도메인 순수성 | 인프라 애노테이션이 섞임 | 순수 Java |
+| 실행 시점 | `@Valid` 트리거 필요 | 생성자에서 즉시 |
+
+Bean Validation 은 **Controller의 Request DTO** 에 쓰고,
+도메인은 생성자에서 직접 검증하는 게 일반적이다.
+
+---
+
+### Q. 이메일 형식 검증을 도메인에서 하지 않고 Service 에서 해도 되나?
+된다. 이메일 형식 규칙(TLD 등)은 외부 기준에 따라 바뀔 수 있어 Service 에 두면 교체가 쉽다.
+
+| 계층 | 담당 |
+|------|------|
+| 도메인 | null/blank 최소 불변식만 |
+| Service | 이메일 형식, 중복 체크 |
+
+비속어 검증(PurgoMalum API)을 Service 에서 처리하는 것과 같은 맥락이다.
+
+---
+
+### Q. 도메인 상태 변경 메서드를 `setName` 대신 `changeName` 으로 써야 하나?
+`changeName` 이 더 좋다. 이유:
+- 의도가 명확하게 드러남
+- 메서드 내부에서 검증 로직을 함께 실행 가능
+- `setter` 를 열어두면 검증을 우회할 수 있어 도메인 무결성이 깨질 수 있음
+
+```java
+public void changeName(String name) {
+    validateName(name);  // 검증 포함
+    this.name = name;
+}
+```
+
+---
+
+### Q. update 시 상품이 없으면 어떤 예외를 던져야 하나?
+InMemory 단계에서는 예외 처리를 생략해도 된다. 항상 데이터가 있는 상황만 테스트하면 충분.
+JPA 전환 시 `Optional` 반환과 함께 `NoSuchElementException` 또는 커스텀 예외를 추가하는 게 자연스럽다.
+
+---
+
+### Q. Repository 에서 유효성 검사를 해야 하나?
+안 한다. Repository 는 저장/조회만 담당한다.
+유효성은 도메인 생성자 또는 도메인 메서드(`changeName` 등)에서 이미 처리됐다고 가정한다.
+
+| 계층 | 책임 |
+|------|------|
+| 도메인 | 불변식 검증 |
+| Repository | 저장/조회만 |
+| Service | 비즈니스 규칙 (중복, 외부 API 등) |
+
+---
+
+### Q. MemberRepository에 findById가 필요한가?
+요구사항 기준으로 필요 없다. 회원 기능은 가입(`save`)과 로그인(`findByEmail`)뿐이다.
+요구사항에 없는 메서드는 추가하지 않는다 (YAGNI 원칙).
+
+---
+
+### Q. MemberRepository에 findAll이 필요한가?
+현재 요구사항에 회원 목록 조회가 없으므로 필요 없다.
+필요한 기능이 생기면 그때 추가한다.
+
+---
+
+### Q. MemberFixture를 별도 클래스로 분리해야 하나?
+`MemberRepositoryTest`에서만 사용한다면 테스트 내부 헬퍼 메서드로 두면 충분하다.
+여러 테스트 클래스에서 공유가 필요해질 때 `MemberFixture` 클래스로 추출한다.
+
+---
+
+### Q. Wishlist를 List<productId>로 가지면 안 되나?
+가능하지만 행(row) 방식이 더 낫다.
+- 삭제 시 id로 바로 삭제 가능 (List 조작 불필요)
+- JPA 전환 시 `@Entity` 하나로 자연스럽게 매핑
+- 소유자 확인도 `memberId`로 단순하게 처리
+
+---
+
+### Q. WishlistItem 삭제는 도메인에서 처리하나?
+아니다. 삭제는 Repository의 `deleteById(Long id)`로 처리한다.
+도메인 객체에 삭제 로직이 필요 없다.
+
+---
+
+### Q. AssertJ에서 JUnit5 assertAll 같은 기능이 있나? 현업에서 쓰나?
+AssertJ의 `SoftAssertions`가 대응된다.
+
+```java
+// JUnit5
+assertAll(
+    () -> assertThat(a).isEqualTo(1),
+    () -> assertThat(b).isEqualTo(2)
+);
+
+// AssertJ
+SoftAssertions.assertSoftly(softly -> {
+    softly.assertThat(a).isEqualTo(1);
+    softly.assertThat(b).isEqualTo(2);
+});
+```
+
+공통 장점: 첫 번째 실패 후에도 나머지를 모두 실행해 실패 목록을 한 번에 확인한다.
+
+현업에서는 자주 쓰지 않는다. 단위 테스트는 "하나의 테스트 = 하나의 검증" 원칙이 선호된다.
+DTO/응답 객체 전체 상태를 한 번에 검증할 때 유용하다.
+
+---
+
+### Q. InMemory save()가 같은 참조를 반환하면 findBy 테스트가 의미 없는 게 아닌가?
+맞다. InMemory 구현은 save()에 들어온 객체에 assignId()를 호출하고 같은 참조를 반환하기 때문에
+findByEmail 후 isEqualTo(saved) 검증은 동일 참조라 항상 통과한다.
+
+- save 후 id not null 확인은 유효 (id 채번 확인)
+- findBy 후 isEqualTo는 InMemory 단계의 구조적 한계로 허용
+
+JPA 전환 시 save()가 새로운 managed entity를 반환하므로 그때 equals 검증이 진짜 의미를 가진다.
+
+---
+
+## Service 계층
+
+### Q. 로그인 실패 시 이메일 없음과 비밀번호 불일치를 구분해야 하나?
+보안상 구분하지 않는 것이 일반적이다.
+구분하면 공격자가 이메일 존재 여부를 탐지할 수 있다.
+두 경우 모두 동일한 메시지를 반환한다.
+
+```
+"이메일 또는 비밀번호를 확인해주세요."
+```
+
+---
+
+### Q. 로그인 결과를 Session에 저장하는 건 Service에서 하나?
+아니다. Session은 웹 계층(Controller)의 관심사다.
+
+| 계층 | 역할 |
+|------|------|
+| Service | 인증 처리 후 Member 반환 |
+| Controller | Session/Cookie/Token에 저장 |
+
+Service는 "이 사람이 맞는지 확인"까지만 담당한다.
+
+---
+
+### Q. 비밀번호 암호화를 InMemory 단계에서 도입해도 되나?
+된다. BCrypt는 외부 API가 아닌 로컬 라이브러리이므로 InMemory 단계에서도 문제없다.
+일찍 도입하면 실제 구조에 더 가까운 설계를 유지할 수 있다.
+
+---
+
+### Q. BCryptPasswordEncoder를 테스트에서 직접 써도 되나?
+기능은 동작하지만 BCrypt는 의도적으로 느리게 설계되어 있어 단위 테스트 속도가 저하된다.
+FakePasswordEncryptor(평문 그대로 반환)를 만들어 테스트에서 주입하는 것이 권장된다.
+
+---
+
+### Q. BCryptPasswordEncryptor.matches() 첫 번째 인자는 무엇인가?
+첫 번째 인자는 반드시 **평문**이어야 한다. 순서를 바꾸면 항상 false가 반환된다.
+
+```java
+encoder.matches(rawPassword, encodedPassword)  // ✅ 평문, 해시 순서
+encoder.matches(encodedPassword, rawPassword)  // ❌ 항상 false
+```
+
+---
+
+### Q. WishlistService 테스트에서 ProductRepository가 왜 필요한가?
+WishlistItemService가 상품 존재 여부를 확인하기 위해 ProductRepository를 주입받기 때문이다.
+테스트에서 InMemoryProductRepository에 미리 상품을 저장해두어야
+"존재하는 상품" 시나리오를 테스트할 수 있다.
+
+---
+
+### Q. 비밀번호 암호화 시 Member.changePassword()가 public이어야 하는 이유?
+`assignId()`는 Repository(같은 패키지)에서 호출하므로 package-private이 맞다.
+`changePassword()`는 Service(다른 패키지)에서 호출하므로 public이 필요하다.
+
+| 메서드 | 호출자 패키지 | 접근제어 |
+|--------|-------------|----------|
+| `assignId()` | `shopping.domain` (Repository) | package-private |
+| `changePassword()` | `shopping.service` (Service) | public |
+
+---
+
+## Controller 계층 / MockMvc 테스트
+
+### Q. `@WebMvcTest`란 무엇인가?
+Spring의 슬라이스 테스트 중 하나로, **웹 계층만** 로딩한다.
+`DispatcherServlet`, `Filter`, `Controller` 등 MVC 관련 빈만 생성하고
+`Service`, `Repository` 등 나머지 빈은 로딩하지 않는다.
+Service 등 의존성은 `@MockitoBean`으로 대체해서 제공한다.
+
+---
+
+### Q. `@InjectMocks`와 `@MockitoBean`의 차이는?
+
+| | `@InjectMocks` | `@MockitoBean` |
+|---|---|---|
+| Spring 컨텍스트 | 없음 (순수 Mockito) | `@WebMvcTest`와 함께 Spring 컨텍스트 사용 |
+| 사용 위치 | 단위 테스트 | 슬라이스 테스트 |
+| MockMvc 사용 | 불가 (직접 주입 필요) | 가능 (`@Autowired MockMvc`) |
+| 속도 | 빠름 | 상대적으로 느림 |
+
+Controller 테스트에서 HTTP 요청/응답 흐름(직렬화, 상태코드 등)을 검증하려면 `@WebMvcTest` + `@MockitoBean`이 적합하다.
+
+---
+
+### Q. Controller 테스트에서 `ObjectMapper`를 왜 선언하는가?
+`MockMvc`의 `content()`에는 `String`을 전달해야 한다.
+`ObjectMapper.writeValueAsString(object)`를 사용해 Java 객체를 JSON 문자열로 변환하기 위해 필요하다.
+`@WebMvcTest` 환경에서는 Spring이 `ObjectMapper`를 자동으로 빈으로 등록하므로 `@Autowired`로 주입 가능하다.
+
+```java
+content(objectMapper.writeValueAsString(request))
+```
+
+---
+
+### Q. REST URL에서 단수(`/product`) vs 복수(`/products`) 어느 게 맞나?
+복수형 `/products`가 REST 컨벤션이다.
+URL은 **컬렉션 리소스**를 나타내고, `GET /products`는 "상품 목록", `POST /products`는 "상품 컬렉션에 추가" 의미이다.
+단수형을 쓰면 컬렉션과 단건 리소스를 구분하기 어렵고 팀 간 혼선이 생긴다.
+
+| URL | 의미 |
+|---|---|
+| `GET /products` | 상품 목록 조회 |
+| `POST /products` | 상품 생성 |
+| `GET /products/{id}` | 단건 상품 조회 |
+| `PUT /products/{id}` | 상품 수정 |
+| `DELETE /products/{id}` | 상품 삭제 |
+
+---
+
+### Q. MockMvcTester란 무엇이고 MockMvc와 어떻게 다른가?
+
+Spring Framework 6.2 / Spring Boot 3.4+에서 도입된 AssertJ 기반 MockMvc 래퍼다.
+
+| | MockMvc | MockMvcTester |
+|---|---|---|
+| Assertion 방식 | Hamcrest (`jsonPath`, `status`) | AssertJ (Fluent API) |
+| 예외 처리 | `throws Exception` 필요 | 내부 처리, 불필요 |
+| JSON → 객체 변환 | 불편 | `convertTo()`로 바로 변환 |
+| Spring Boot 지원 | 전 버전 | 3.4+ |
+
+`@WebMvcTest`에서 `@Autowired MockMvcTester`로 직접 주입 가능하다.
+
+---
+
+### Q. MockMvcTester에서 요청 바디를 어떻게 설정하나?
+
+`.content(String)` 또는 `.content(byte[])`만 지원한다. `.body(Object)` 메서드는 없다.
+`ObjectMapper`로 직접 직렬화해서 전달해야 한다.
+
+```java
+.contentType(MediaType.APPLICATION_JSON)
+.content(objectMapper.writeValueAsString(request))
+```
+
+---
+
+### Q. `bodyJson().satisfies()` 람다에서 `extractingPath()`를 찾을 수 없는 이유?
+
+`satisfies(consumer)`의 파라미터는 **assertion 객체가 아닌 실제 값**이다.
+따라서 `extractingPath()` 같은 assertion 메서드가 없다.
+
+여러 필드를 검증하는 올바른 방법:
+
+```java
+// 존재 여부만 확인 (체이닝 가능)
+.bodyJson().hasPath("$.id").hasPath("$.name")
+
+// 값 확인 (체이닝 가능)
+.bodyJson().hasPathSatisfying("$.price", p -> assertThat(p).isNotNull())
+
+// DTO로 변환 후 검증 (권장)
+.bodyJson().convertTo(ProductResponse.class)
+    .satisfies(response -> assertThat(response.getId()).isEqualTo(1L));
+```
+
+---
+
+### Q. `hasPathSatisfying`에서 BigDecimal 비교 시 타입 오류가 나는 이유?
+
+JSON 숫자 `0`은 Jackson이 `Integer`로 파싱한다. `VALID_PRICE`는 `BigDecimal`이라 타입 불일치 실패한다.
+`convertTo(ProductResponse.class)`로 DTO 역직렬화하면 필드 타입 그대로 `BigDecimal` 비교 가능하다.
+
+---
+
+### Q. `PUT /products/{id}` 요청 시 `ProductRequest`에 `id` 필드가 필요한가?
+
+필요 없다. REST API에서 `id`는 URL 경로(`@PathVariable`)로 전달한다.
+요청 바디에 `id`를 추가하면 JSON에 포함되지만 Controller는 경로의 값을 사용하므로 무시된다.
+불필요한 필드는 혼란을 유발한다.
+
+---
+
+### Q. `@PathVariable Long id`에서 파라미터명 오류가 나는 이유?
+
+Spring 6.x부터 파라미터명을 리플렉션으로 읽으려면 컴파일 시 `-parameters` 플래그가 필요하다.
+없으면 `Name for argument not specified` 예외가 발생한다.
+어노테이션에 이름을 명시하면 해결된다: `@PathVariable("id") Long id`.
+
+---
+
+### Q. void 메서드를 BDDMockito로 스텁하는 방법?
+
+`void` 메서드는 `given(service.method())` 패턴이 불가능하다 (컴파일 에러).
+`willDoNothing().given(service).method(args)` 순서로 사용한다.
+
+```java
+// 컴파일 에러
+given(service.deleteById(1L)).willDoNothing();
+
+// 올바름
+willDoNothing().given(service).deleteById(1L);
+```
+
+---
+
+### Q. `given().willReturn()`과 `willDoNothing().given()` 패턴을 혼용해도 되나?
+
+된다. 두 패턴은 역할이 다르므로 혼용이 자연스럽다.
+
+| 메서드 종류 | 패턴 |
+|---|---|
+| 반환값 있음 | `given(service.save(any())).willReturn(product)` |
+| void | `willDoNothing().given(service).deleteById(1L)` |
+
+---
+
+### Q. DTO 패키지는 어디에 두어야 하나?
+
+Request/Response DTO는 HTTP 계층의 관심사이므로 `controller/dto/` 하위가 적합하다.
+
+```
+controller/
+├── ProductController.java
+└── dto/
+    ├── ProductRequest.java
+    ├── ProductResponse.java
+    └── ErrorResponse.java
+```
+
+최상위 `dto/`는 어느 계층에서도 쓸 수 있는 것처럼 보여 책임이 불분명해진다.
+Service는 도메인 객체만, Controller는 DTO만 다룬다는 원칙을 패키지 구조에서도 드러낸다.
+
+---
+
+### Q. `.http` 파일은 어디에 두는 게 좋나?
+
+프로젝트 루트에 `http/` 폴더를 만들고 컨트롤러별로 분리한다.
+
+```
+http/
+├── product.http
+├── member.http
+└── wishlist.http
+```
+
+IntelliJ는 위치와 무관하게 `.http` 파일을 인식하므로 폴더 구성에 제약이 없다.
+
+---
+
+### Q. `@RestControllerAdvice`는 `@WebMvcTest`에서 자동으로 포함되나?
+
+된다. `@WebMvcTest(ProductController.class)`로 특정 컨트롤러를 지정해도
+`@ControllerAdvice` / `@RestControllerAdvice` 빈은 자동으로 스캔된다.
+별도 설정 없이 예외 핸들러 테스트가 동작한다.
+
+---
+
+### Q. Jackson 직렬화 시 getter가 없으면 어떻게 되나?
+
+Jackson은 기본적으로 getter를 통해 필드를 직렬화한다.
+getter가 없는 private 필드는 직렬화되지 않아 JSON에 해당 필드가 포함되지 않는다.
+
+```java
+// getter 없음 → {} 반환
+public class ErrorResponse {
+    private String message;
+    public ErrorResponse(String message) { this.message = message; }
+}
+
+// getter 추가 → {"message": "..."} 반환
+public String getMessage() { return message; }
+```
+
+---
+
+### Q. `NoSuchElementException`은 400과 404 중 어느 상태 코드가 맞나?
+
+404 Not Found가 맞다.
+
+| 상황 | 상태 코드 |
+|---|---|
+| 잘못된 입력값 (`IllegalArgumentException`) | 400 Bad Request |
+| 리소스가 없음 (`NoSuchElementException`) | 404 Not Found |
+
+400은 "요청 자체가 잘못됨", 404는 "요청은 올바르지만 리소스가 없음"이다.
+
+---
+
+### Q. `@MockBean`이 deprecated된 이유는?
+Spring Boot 3.4에서 `@MockBean` / `@SpyBean`이 `spring-boot-test`에서 deprecated되었다.
+Spring Framework 자체에서 `@MockitoBean` / `@MockitoSpyBean`을 `spring-test` 모듈에 공식 추가했기 때문이다.
+기능은 동일하므로 import 경로만 변경하면 된다.
+
+```java
+// 이전
+import org.springframework.boot.test.mock.mockito.MockBean;
+
+// 현재
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+```
+
+---
+
+### Q. `@WebMvcTest`에서 `@Component` 빈(AuthInterceptor)이 자동으로 로딩되지 않는 이유?
+
+`@WebMvcTest`는 슬라이스 테스트로 `@Controller`, `@ControllerAdvice` 등 웹 계층 빈만 로딩한다.
+`@Component`로 등록된 `AuthInterceptor`는 기본적으로 로딩되지 않는다.
+`WebMvcConfigurer`(`AppConfig`)도 마찬가지로 로딩되지 않아 인터셉터가 등록되지 않는다.
+
+인터셉터 동작(401 응답 등)을 테스트하려면 `@Import`로 명시적으로 로딩해야 한다.
+
+```java
+@WebMvcTest(WishlistItemController.class)
+@Import(AuthInterceptor.class)
+class WishlistItemControllerTest {
+    @MockitoBean JwtTokenProvider tokenProvider;
+    // AuthInterceptor는 real 빈 사용, JwtTokenProvider는 mock
+}
+```
+
+---
+
+### Q. Interceptor에서 `request.setAttribute()`로 설정한 값을 Controller에서 받는 방법?
+
+`@RequestBody`는 HTTP 요청 바디를 역직렬화하는 어노테이션이다. Interceptor가 `setAttribute()`로 설정한 값은 요청 바디가 아닌 서블릿 요청 속성(attribute)이다.
+`@RequestAttribute`를 사용해야 한다.
+
+```java
+// AuthInterceptor
+request.setAttribute("memberId", memberId);
+
+// Controller
+@PostMapping("/wishlist")
+public ResponseEntity<Void> create(
+        @RequestAttribute("memberId") Long memberId,  // ✅
+        @RequestBody WishlistItemRequest request) { ... }
+```
+
+---
+
+### Q. Controller 테스트에서 stub 설정 전에 mock을 호출하면 어떻게 되나?
+
+Mockito의 mock은 stub이 없으면 기본값을 반환한다 (객체 → null, 기본형 → 0 등).
+stub 설정 전에 mock을 호출한 결과를 변수에 담으면 항상 null이 들어간다.
+
+```java
+// 잘못됨 - stub 전에 호출 → token == null
+Member member = new Member(1L, "test@test.com", "password");
+String token = provider.generate(member.getId());  // null (stub 미설정)
+given(provider.generate(member.getId())).willReturn(token);  // null 스텁
+
+// 올바름 - 리터럴 값 사용
+String token = "mock-token";
+given(provider.generate(any())).willReturn(token);
+```
+
+---
+
+### Q. JwtTokenProvider를 `@PostConstruct` 대신 생성자에서 초기화하는 이유?
+
+생성자에서 초기화하면 Spring 컨텍스트 없이 직접 객체를 생성할 수 있어 단위 테스트가 쉬워진다.
+
+```java
+// @PostConstruct 방식 - Spring 없이 테스트 불가
+@PostConstruct
+private void init() { this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret)); }
+
+// 생성자 방식 - 직접 인스턴스 생성 가능
+public JwtTokenProvider(@Value("${jwt.secret}") String secret, ...) {
+    this.key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+}
+
+// 테스트에서 직접 생성 가능
+JwtTokenProvider provider = new JwtTokenProvider(secret, 3600000L);
+```
+
+---
+
+### Q. JJWT 0.11.x → 0.12.x에서 바뀐 API는?
+
+| 0.11.x (deprecated) | 0.12.x |
+|---|---|
+| `.setSubject(str)` | `.subject(str)` |
+| `.setIssuedAt(date)` | `.issuedAt(date)` |
+| `.setExpiration(date)` | `.expiration(date)` |
+| `signWith(key, SignatureAlgorithm.HS256)` | `signWith(key)` (알고리즘 자동 추론) |
+| `Jwts.parserBuilder()` | `Jwts.parser()` |
+| `.setSigningKey(key)` | `.verifyWith(key)` |
+| `.parseClaimsJws(token)` | `.parseSignedClaims(token)` |
+| `.getBody()` | `.getPayload()` |
+
+---
+
+### Q. `ExpiredJwtException`을 `JwtException`보다 먼저 catch해야 하는 이유?
+
+`ExpiredJwtException`은 `JwtException`의 하위 타입이다.
+catch 블록은 위에서 아래로 순서대로 매칭되므로, `JwtException`을 먼저 두면 `ExpiredJwtException`도 잡혀 구체적인 만료 메시지를 줄 수 없다.
+
+```java
+// 올바름 - 구체적 예외를 먼저
+try { ... }
+catch (ExpiredJwtException e) { throw new IllegalArgumentException("만료된 토큰입니다."); }
+catch (JwtException e) { throw new IllegalArgumentException("유효하지 않은 토큰입니다."); }
+
+// 잘못됨 - ExpiredJwtException도 JwtException으로 잡힘
+catch (JwtException e) { ... }
+catch (ExpiredJwtException e) { ... }  // 절대 실행되지 않음
+```
+
+---
+
+## 인증 / JWT
+
+### Q. Session 방식과 JWT 방식의 차이는?
+
+| | Session | JWT |
+|---|---|---|
+| 상태 | 서버에 저장 (Stateful) | 토큰 자체에 정보 (Stateless) |
+| 전송 | 브라우저가 Cookie로 자동 전송 | JS가 Authorization 헤더에 직접 전송 |
+| 서버 부담 | 세션 저장소 필요 | 검증만 수행 |
+| 확장성 | 서버 간 세션 공유 필요 | 토큰만 검증하면 됨 |
+
+---
+
+### Q. JWT 토큰을 응답 헤더가 아닌 바디로 전달하는 이유?
+
+두 방식 모두 사용된다. 이 프로젝트에서는 바디로 전달한다.
+
+```json
+{"token": "eyJhbGciOiJIUzI1NiJ9..."}
+```
+
+JS에서 바디를 파싱해 `localStorage`에 저장하고, 이후 요청마다 `Authorization: Bearer {token}` 헤더에 직접 담아 전송한다.
+헤더 전달 방식은 서버가 직접 헤더를 설정하며, 클라이언트가 바디 파싱 없이 바로 다음 요청에 사용할 수 있다.
+
+---
+
+### Q. HMAC-SHA256에서 `secret.getBytes()` 대신 `Decoders.BASE64.decode()` 를 써야 하는 이유?
+
+HMAC-SHA256은 최소 256비트(32바이트) 키를 요구한다.
+`getBytes()`는 문자열을 그대로 바이트 배열로 변환하므로, 문자열이 짧으면 키 길이 부족 예외가 발생한다.
+Base64로 인코딩된 시크릿을 디코딩하면 원본 바이트 배열을 복원하므로 키 길이를 보장할 수 있다.
+
+```java
+// 위험 - 문자열 길이에 따라 키 길이 미달 가능
+Keys.hmacShaKeyFor(secret.getBytes())
+
+// 안전 - Base64 디코딩으로 충분한 길이 보장
+Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret))
+```
+
+---
+
+### Q. JWT 시크릿 키를 Git에 올리지 않으려면?
+
+`application.properties`에는 환경변수 플레이스홀더만 남기고, 실제 값은 환경변수 또는 `.gitignore`된 파일에 둔다.
+
+```properties
+# application.properties (커밋됨)
+jwt.secret=${JWT_SECRET}
+jwt.expiration-ms=3600000
+
+# src/test/resources/application.properties (커밋됨, 테스트 전용 키)
+jwt.secret=dGVzdC1zZWNyZXQta2V5LWZvci10ZXN0aW5nLW9ubHk=
+```
+
+실제 운영 값은 CI/CD 환경변수 또는 `application-local.properties`(`.gitignore` 추가)에 설정한다.
+
+---
+
+### Q. `AtomicLong.getAndIncrement()`의 초기값과 동작 방식은?
+
+`new AtomicLong()` → 초기값 0. `getAndIncrement()`는 현재 값을 반환한 후 증가시킨다.
+따라서 첫 번째 `save()` 호출 시 id가 0이 된다.
+
+`new AtomicLong(1L)` → 초기값 1. 첫 번째 id가 1이 된다.
+
+```java
+// id 1부터 시작하려면
+private final AtomicLong idSequence = new AtomicLong(1L);
+```
+
+`InMemoryProductRepository`는 `1L`로 시작하지만 `InMemoryMemberRepository`는 기본값 `0`으로 시작하는 불일치가 있다.
+
+---
+
+### Q. 회원가입 성공 시 회원 정보를 응답으로 반환해야 하는가?
+
+보안상 최소한의 정보만 반환하는 것이 원칙이다.
+회원가입 완료 자체가 성공 신호이므로 `201 Created` + 빈 바디만으로 충분하다.
+이름, 이메일 등 개인정보를 응답에 포함하면 불필요한 데이터 노출이 된다.
+
+```java
+@PostMapping("/members")
+public ResponseEntity<Void> register(@RequestBody MemberRequest request) {
+    service.register(request.toMember());
+    return ResponseEntity.status(HttpStatus.CREATED).build();  // 빈 바디
+}
+```
