@@ -2,10 +2,12 @@ package shopping.auth;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 @Component
+@Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
 
     private final JwtTokenProvider provider;
@@ -19,6 +21,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         if (authorization == null || !authorization.startsWith("Bearer ")) {
             response.setStatus(401);
+            log.warn("로그인 정보가 없습니다.");
             return false;
         }
 
@@ -30,6 +33,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             return true;
         } catch (IllegalArgumentException e) {
             response.setStatus(401);
+            log.warn(e.getMessage());
             return false;
         }
     }
