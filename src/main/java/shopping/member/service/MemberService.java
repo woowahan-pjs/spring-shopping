@@ -21,7 +21,7 @@ public class MemberService {
             throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
         }
 
-        if (repository.findByEmail(member.getEmail()) != null) {
+        if (repository.findByEmail(member.getEmail()).isPresent()) {
             throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
         }
 
@@ -31,11 +31,8 @@ public class MemberService {
     }
 
     public Member login(String email, String password) {
-        Member member = repository.findByEmail(email);
-
-        if (member == null) {
-            throw new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요");
-        }
+        Member member = repository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요"));
 
         if (!passwordEncryptor.matches(password, member.getPassword())) {
             throw new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요");

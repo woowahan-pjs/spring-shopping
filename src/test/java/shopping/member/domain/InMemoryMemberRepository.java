@@ -1,11 +1,9 @@
 package shopping.member.domain;
 
-import org.springframework.stereotype.Repository;
-
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
 public class InMemoryMemberRepository implements MemberRepository {
     private final HashMap<Long, Member> memberMap = new HashMap<>();
     private final AtomicLong idSequence = new AtomicLong();
@@ -19,10 +17,9 @@ public class InMemoryMemberRepository implements MemberRepository {
     }
 
     @Override
-    public Member findByEmail(String email) {
+    public Optional<Member> findByEmail(String email) {
         return memberMap.values().stream()
                 .filter(m -> m.getEmail().equals(email))
-                .findFirst()
-                .orElse(null);
+                .findFirst();
     }
 }

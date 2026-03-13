@@ -16,6 +16,16 @@ public class Member {
         this.password = password;
     }
 
+    private Member(Long id, String email, String password) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+    }
+
+    public static Member of(Long id, String email, String password) {
+        return new Member(id, email, password);
+    }
+
     void assignId(Long id) {
         this.id = id;
     }

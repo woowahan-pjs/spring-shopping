@@ -1,18 +1,19 @@
 package shopping.member.domain;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import shopping.member.infrastructure.MemberRepositoryImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DataJpaTest
+@Import(MemberRepositoryImpl.class)
 public class MemberRepositoryTest {
+    @Autowired
     private MemberRepository repository;
-
-    @BeforeEach
-    void setUp() {
-        repository = new InMemoryMemberRepository();
-    }
 
     @Test
     @DisplayName("회원을 저장한다.")
@@ -27,7 +28,7 @@ public class MemberRepositoryTest {
     void findByEmail() {
         Member saved = repository.save(createMember());
 
-        Member found = repository.findByEmail(saved.getEmail());
+        Member found = repository.findByEmail(saved.getEmail()).get();
 
         assertThat(found).isEqualTo(saved);
     }
