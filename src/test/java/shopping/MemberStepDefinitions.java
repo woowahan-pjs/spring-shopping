@@ -28,6 +28,7 @@ public class MemberStepDefinitions {
     @After
     public void tearDown() {
         context.tearDown();
+        context.setToken(null);
     }
 
     @Given("a member exists with email {string} and password {string}")

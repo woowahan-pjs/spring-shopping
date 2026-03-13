@@ -2,8 +2,6 @@ package shopping.member.service;
 
 import shopping.member.domain.*;
 
-import java.util.UUID;
-
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -11,11 +9,13 @@ public class RegisterMemberService implements RegisterMember {
 
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenProvider tokenProvider;
 
-    public RegisterMemberService(MemberRepository memberRepository,
-            PasswordEncoder passwordEncoder) {
+    public RegisterMemberService(MemberRepository memberRepository, PasswordEncoder passwordEncoder,
+            TokenProvider tokenProvider) {
         this.memberRepository = memberRepository;
         this.passwordEncoder = passwordEncoder;
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
@@ -27,6 +27,6 @@ public class RegisterMemberService implements RegisterMember {
             throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
         }
         memberRepository.save(new Member(email, passwordEncoder.encode(password)));
-        return UUID.randomUUID().toString();
+        return tokenProvider.createToken(email);
     }
 }

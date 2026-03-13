@@ -23,8 +23,8 @@ public class MemberConfiguration {
 
     @Bean
     public RegisterMember registerMember(MemberRepository memberRepository,
-            PasswordEncoder passwordEncoder) {
-        return new RegisterMemberService(memberRepository, passwordEncoder);
+            PasswordEncoder passwordEncoder, TokenProvider tokenProvider) {
+        return new RegisterMemberService(memberRepository, passwordEncoder, tokenProvider);
     }
 
     @Bean

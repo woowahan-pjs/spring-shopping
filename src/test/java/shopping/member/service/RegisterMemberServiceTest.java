@@ -13,19 +13,22 @@ import org.junit.jupiter.api.Test;
 class RegisterMemberServiceTest {
 
     private InMemoryMemberRepository memberRepository;
+    private FakeTokenProvider tokenProvider;
     private RegisterMemberService service;
 
     @BeforeEach
     void setUp() {
         memberRepository = new InMemoryMemberRepository();
-        service = new RegisterMemberService(memberRepository, new FakePasswordEncoder());
+        tokenProvider = new FakeTokenProvider();
+        service = new RegisterMemberService(memberRepository, new FakePasswordEncoder(),
+                tokenProvider);
     }
 
     @Test
-    void 회원을_등록한다() {
+    void 회원을_등록하면_토큰을_반환한다() {
         String token = service.execute("test@test.com", "password123");
 
-        assertNotNull(token);
+        assertEquals("token:test@test.com", token);
         assertTrue(memberRepository.existsByEmail("test@test.com"));
     }
 

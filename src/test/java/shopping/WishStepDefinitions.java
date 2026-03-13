@@ -27,6 +27,7 @@ public class WishStepDefinitions {
                 .body("{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}").when()
                 .post("/api/members/login").then().statusCode(200).extract();
         token = loginResponse.jsonPath().getString("token");
+        context.setToken(token);
     }
 
     @Given("the product is in my wishlist")
@@ -38,7 +39,8 @@ public class WishStepDefinitions {
 
     @Given("the product is deleted")
     public void theProductIsDeleted() {
-        RestAssured.given().spec(context.spec()).when()
+        RestAssured.given().spec(context.spec())
+                .header("Authorization", "Bearer " + context.getToken()).when()
                 .delete("/api/products/{id}", context.getCreatedProductId()).then().statusCode(204);
     }
 
