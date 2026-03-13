@@ -1353,3 +1353,95 @@ JPA `save()`는 원본 객체를 변경하지 않고 새로운 영속 객체를 
 단, 도메인 모델 확장 가능성을 고려해야 한다.
 `Wishlist`(집합체) ↔ `WishlistItem`(개별 항목) 분리가 예상되면 처음부터 `wishlist_item`으로 유지하는 것이 자연스럽다.
 
+---
+
+## DB 설계 / ERD
+
+### [설계] DB 테이블명·컬럼명은 소문자 snake_case
+
+SQL 키워드는 대문자(`CREATE TABLE`, `NOT NULL`), 테이블명/컬럼명은 소문자 snake_case가 현업 표준이다.
+
+이유:
+- MySQL은 OS에 따라 대소문자 구분이 달라진다 (Linux: 구분, Mac/Windows: 무시). 소문자로 통일하면 OS 관계없이 동일하게 동작한다.
+- Hibernate 기본 네이밍 전략이 카멜케이스 → snake_case 자동 변환이므로 대문자 컬럼명을 쓰면 따옴표 처리가 필요해진다.
+
+```sql
+-- 현업 표준
+CREATE TABLE member (
+    id         BIGINT       NOT NULL AUTO_INCREMENT,
+    email      VARCHAR(255) NOT NULL UNIQUE,
+    created_at DATETIME(6)  NOT NULL
+);
+```
+
+---
+
+### [설계] BCrypt 비밀번호 컬럼은 VARCHAR(60)
+
+BCrypt는 **항상 고정 60자**를 출력한다. `VARCHAR(255)`는 길이를 모르는 사람이 설정한 신호다.
+
+| 알고리즘 | 출력 길이 | 권장 컬럼 |
+|---------|---------|---------|
+| BCrypt | 60자 고정 | `VARCHAR(60)` |
+| Argon2 | ~95자 | `VARCHAR(128)` |
+
+추후 알고리즘 변경 시 Flyway `V2__` 마이그레이션 파일로 대응한다.
+
+```sql
+ALTER TABLE member
+    MODIFY COLUMN password VARCHAR(60) NOT NULL;
+```
+
+---
+
+### [설계] N:M 관계는 중간 테이블(Junction Table)로 풀기
+
+DB에서 N:M 관계를 직접 표현할 수 없다. `wishlist` 테이블이 `member`와 `product`를 연결하는 중간 테이블 역할을 한다.
+
+```
+Member (1) ──────< Wishlist >────── (1) Product
+```
+
+- `member` : `wishlist` = 1:N
+- `product` : `wishlist` = 1:N
+- `member` : `product` = N:M (wishlist를 통해 간접 연결)
+
+---
+
+## 문서화
+
+### [설계] 용어 사전은 docs/ 별도 파일로 분리
+
+README.md는 "처음 보는 사람을 위한 진입점"이다. 용어 사전까지 포함하면 둘 다 읽기 어려워진다.
+
+```
+docs/
+├── domain-glossary.md   # DDD 용어 사전 (유비쿼터스 언어)
+├── architecture.md      # 아키텍처 결정 기록 (ADR)
+└── api-spec.md          # API 명세
+README.md                # 진입점 + docs/ 링크
+```
+
+과제 리뷰어 입장에서 README → 전체 구조 파악, domain-glossary.md → 도메인 설계 깊이 확인으로 분리되면 "문서화도 설계한다"는 인상을 준다.
+
+---
+
+### [설계] 용어 사전은 단순 표 나열이 전부가 아님
+
+진짜 DDD 용어 사전이 갖춰야 할 요소:
+
+1. **바운디드 컨텍스트 경계 명시** — 같은 단어라도 컨텍스트마다 목적이 다르다
+2. **용어 간 관계** — `Member`는 `Wish`를 소유한다. `Wish`는 `Product`를 참조한다
+3. **사용 금지 용어 (Anti-language)** — `유저` → `회원`, `장바구니` → `위시 리스트`
+4. **정책/제약사항 연결** — 단어 정의에서 끝내지 않고 비즈니스 규칙까지 연결
+
+최소한 ① 바운디드 컨텍스트 경계 + ② 용어 테이블 + ③ 정책 연결 세 가지는 갖춰야 한다.
+
+---
+
+### [설계] 용어 사전에 accessToken 포함
+
+`accessToken`은 `Member` 도메인 객체의 필드가 아니지만 용어 사전에 포함해야 한다.
+
+용어 사전은 코드 구조가 아닌 **비즈니스 개념**을 정의하는 문서다. `accessToken`은 "로그인"이라는 비즈니스 행위의 결과물이며, 기획자/프론트엔드 모두가 알아야 할 핵심 개념이다. `LoginResponse`라는 클래스명은 개발자만 아는 구현 세부사항이다.
+
