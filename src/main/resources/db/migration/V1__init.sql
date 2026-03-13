@@ -13,7 +13,7 @@ CREATE TABLE product
 (
     id         BIGINT         NOT NULL AUTO_INCREMENT,
     name       VARCHAR(255)   NOT NULL,
-    price      INT            NOT NULL,
+    price      DECIMAL(13, 2) NOT NULL,
     image_url  VARCHAR(2048)  NOT NULL,
     created_at DATETIME(6)    NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     updated_at DATETIME(6)    NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),

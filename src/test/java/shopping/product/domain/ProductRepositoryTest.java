@@ -1,22 +1,25 @@
 package shopping.product.domain;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import shopping.product.infrastructure.ProductRepositoryImpl;
 
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static shopping.product.domain.ProductFixture.*;
 
+@DataJpaTest
+@Import(ProductRepositoryImpl.class)
 public class ProductRepositoryTest {
-    private ProductRepository repository;
 
-    @BeforeEach
-    void setUp() {
-        repository = new InMemoryProductRepository();
-    }
+    @Autowired
+    private ProductRepository repository;
 
     @Test
     @DisplayName("상품을 저장한다.")
@@ -30,10 +33,14 @@ public class ProductRepositoryTest {
     @DisplayName("상품을 조회한다.")
     void findById() {
         Product saved = repository.save(createProduct());
-
         Product found = repository.findById(saved.getId());
 
-        assertThat(found).isEqualTo(saved);
+        assertAll(
+                () -> assertThat(found.getId()).isEqualTo(saved.getId()),
+                () -> assertThat(found.getName()).isEqualTo(saved.getName()),
+                () -> assertThat(found.getPrice()).isEqualTo(saved.getPrice()),
+                () -> assertThat(found.getImageUrl()).isEqualTo(saved.getImageUrl())
+        );
     }
 
     @Test
@@ -42,7 +49,6 @@ public class ProductRepositoryTest {
         String name = "새로운 이름";
         Product saved = repository.save(createProduct());
         Product found = repository.findById(saved.getId());
-
         found.changeName(name);
 
         Product updated = repository.update(found.getId(), found);

@@ -46,4 +46,10 @@ public class ProductEntity {
     public static ProductEntity from(Product product) {
         return new ProductEntity(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
     }
+
+    public void update(Product product) {
+        this.name = product.getName();
+        this.price = product.getPrice();
+        this.imageUrl = product.getImageUrl();
+    }
 }
