@@ -12,8 +12,6 @@ public class ProductFixture {
     }
 
     public static Product createWithId(Long id) {
-        Product product = createProduct();
-        product.assignId(id);
-        return product;
+        return Product.of(id, VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
     }
 }

@@ -26,6 +26,14 @@ public class Product {
         this.imageUrl = imageUrl;
     }
 
+    // DB 복원용.
+    private Product(Long id, String name, BigDecimal price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
     void assignId(Long id) {
         this.id = id;
     }
@@ -43,6 +51,10 @@ public class Product {
     public void changeImageUrl(String imageUrl) {
         validateImageUrl(imageUrl);
         this.imageUrl = imageUrl;
+    }
+
+    public static Product of(Long id, String name, BigDecimal price, String imageUrl) {
+        return new Product(id, name, price, imageUrl);
     }
 
     public String getName() {

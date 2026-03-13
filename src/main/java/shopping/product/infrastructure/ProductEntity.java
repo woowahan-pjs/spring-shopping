@@ -1,0 +1,49 @@
+package shopping.product.infrastructure;
+
+import jakarta.persistence.*;
+import org.hibernate.annotations.SQLRestriction;
+import shopping.product.domain.Product;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "product")
+@SQLRestriction("deleted_at IS NULL")
+public class ProductEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+    private BigDecimal price;
+
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;  // nullable → null 기본값
+
+    protected ProductEntity() {}
+
+    public ProductEntity(Long id, String name, BigDecimal price, String imageUrl) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+    }
+
+    public Product toDomain() {
+        return Product.of(id, name, price, imageUrl);
+    }
+
+    public static ProductEntity from(Product product) {
+        return new ProductEntity(product.getId(), product.getName(), product.getPrice(), product.getImageUrl());
+    }
+}
