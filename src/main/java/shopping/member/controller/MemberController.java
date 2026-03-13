@@ -30,7 +30,7 @@ public class MemberController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody MemberRequest request) {
         Member member = service.login(request.getEmail(), request.getPassword());
-        String token = provider.generate(member.getId());
-        return ResponseEntity.ok(new LoginResponse(token));
+        String accessToken = provider.generate(member.getId());
+        return ResponseEntity.ok(new LoginResponse(accessToken));
     }
 }
