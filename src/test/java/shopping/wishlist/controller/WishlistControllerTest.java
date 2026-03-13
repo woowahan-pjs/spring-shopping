@@ -15,8 +15,8 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import shopping.auth.AuthInterceptor;
 import shopping.auth.JwtTokenProvider;
-import shopping.wishlist.controller.dto.WishlistItemRequest;
-import shopping.wishlist.controller.dto.WishlistItemResponse;
+import shopping.wishlist.controller.dto.WishlistRequest;
+import shopping.wishlist.controller.dto.WishlistResponse;
 import shopping.wishlist.service.WishlistService;
 
 import java.util.List;
@@ -25,10 +25,10 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
-import static shopping.wishlist.domain.WishlistItemFixture.*;
+import static shopping.wishlist.domain.WishlistFixture.*;
 
 
-@WebMvcTest(WishlistItemController.class)
+@WebMvcTest(WishlistController.class)
 @Import(AuthInterceptor.class)
 class WishlistControllerTest {
 
@@ -52,7 +52,7 @@ class WishlistControllerTest {
     @Test
     @DisplayName("위시리스트를 추가한다")
     void addWishlistItem() throws JsonProcessingException {
-        WishlistItemRequest request = new WishlistItemRequest(1L);
+        WishlistRequest request = new WishlistRequest(1L);
 
         willDoNothing().given(service).addWishlist(any());
 
@@ -64,13 +64,13 @@ class WishlistControllerTest {
     @Test
     @DisplayName("위시리스트를 조회한다")
     void findAllByMemberId() throws JsonProcessingException {
-        given(service.findWishlistItems(eq(VALID_MEMBER_ID))).willReturn(List.of(createWishItem(1L, 1L), createWishItem(2L, 2L)));
+        given(service.findWishlistItems(eq(VALID_MEMBER_ID))).willReturn(List.of(createWish(1L, 1L), createWish(2L, 2L)));
 
         assertThat(mockMvcTester.get().uri("/wishlist")
                 .header("Authorization", "Bearer valid-token"))
                 .hasStatus(HttpStatus.OK)
                 .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(WishlistItemResponse.class))
+                .convertTo(InstanceOfAssertFactories.list(WishlistResponse.class))
                 .hasSize(2);
     }
 

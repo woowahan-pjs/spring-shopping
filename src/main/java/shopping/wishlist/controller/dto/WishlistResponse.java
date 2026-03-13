@@ -2,13 +2,13 @@ package shopping.wishlist.controller.dto;
 
 import shopping.wishlist.domain.Wishlist;
 
-public class WishlistItemResponse {
+public class WishlistResponse {
     private Long id;
     private Long productId;
 
-    public WishlistItemResponse() {}
+    public WishlistResponse() {}
 
-    public WishlistItemResponse(Long id, Long productId) {
+    public WishlistResponse(Long id, Long productId) {
         this.id = id;
         this.productId = productId;
     }
@@ -21,7 +21,7 @@ public class WishlistItemResponse {
         return productId;
     }
 
-    public static WishlistItemResponse from(Wishlist item) {
-        return new WishlistItemResponse(item.getId(), item.getProductId());
+    public static WishlistResponse from(Wishlist item) {
+        return new WishlistResponse(item.getId(), item.getProductId());
     }
 }

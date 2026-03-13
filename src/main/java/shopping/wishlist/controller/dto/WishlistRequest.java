@@ -1,12 +1,12 @@
 package shopping.wishlist.controller.dto;
 
-public class WishlistItemRequest {
+public class WishlistRequest {
     private Long productId;
 
-    public WishlistItemRequest() {
+    public WishlistRequest() {
     }
 
-    public WishlistItemRequest(Long productId) {
+    public WishlistRequest(Long productId) {
         this.productId = productId;
     }
 
