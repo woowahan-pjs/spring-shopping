@@ -15,10 +15,9 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import shopping.auth.AuthInterceptor;
 import shopping.auth.JwtTokenProvider;
-import shopping.member.domain.MemberFixture;
 import shopping.wishlist.controller.dto.WishlistItemRequest;
 import shopping.wishlist.controller.dto.WishlistItemResponse;
-import shopping.wishlist.service.WishlistItemService;
+import shopping.wishlist.service.WishlistService;
 
 import java.util.List;
 
@@ -31,13 +30,13 @@ import static shopping.wishlist.domain.WishlistItemFixture.*;
 
 @WebMvcTest(WishlistItemController.class)
 @Import(AuthInterceptor.class)
-class WishlistItemControllerTest {
+class WishlistControllerTest {
 
     @Autowired
     MockMvcTester mockMvcTester;
 
     @MockitoBean
-    WishlistItemService service;
+    WishlistService service;
 
     @MockitoBean
     JwtTokenProvider tokenProvider;
@@ -55,7 +54,7 @@ class WishlistItemControllerTest {
     void addWishlistItem() throws JsonProcessingException {
         WishlistItemRequest request = new WishlistItemRequest(1L);
 
-        willDoNothing().given(service).addWishlistItem(any());
+        willDoNothing().given(service).addWishlist(any());
 
         assertThat(authenticatedPost("/wishlist")
                 .content(objectMapper.writeValueAsString(request)))

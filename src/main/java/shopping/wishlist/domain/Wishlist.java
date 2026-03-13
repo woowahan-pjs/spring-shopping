@@ -1,15 +1,25 @@
 package shopping.wishlist.domain;
 
-public class WishlistItem {
+public class Wishlist {
     private Long id;
     private Long memberId;
     private Long productId;
 
-    public WishlistItem(Long memberId, Long productId) {
+    public Wishlist(Long memberId, Long productId) {
         validatedMemberId(memberId);
         validateProductId(productId);
         this.memberId = memberId;
         this.productId = productId;
+    }
+
+    private Wishlist(Long id, Long memberId, Long productId) {
+        this.id = id;
+        this.memberId = memberId;
+        this.productId = productId;
+    }
+
+    public static Wishlist of(Long id, Long memberId, Long productId) {
+        return new Wishlist(id, memberId, productId);
     }
 
     void assignId(long id) {

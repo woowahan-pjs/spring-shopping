@@ -1,25 +1,26 @@
 package shopping.wishlist.domain;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import shopping.wishlist.infrastructure.WishlistRepositoryImpl;
 
 import static org.assertj.core.api.Assertions.*;
 
-class WishlistItemRepositoryTest {
-    WishlistItemRepository repository;
-
-    @BeforeEach
-    void setUp() {
-        repository = new InMemoryWishlistItemRepository();
-    }
+@DataJpaTest
+@Import(WishlistRepositoryImpl.class)
+class WishlistRepositoryTest {
+    @Autowired
+    WishlistRepository repository;
 
     @Test
     @DisplayName("위시리스트를 저장한다")
     void save() {
-        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
+        Wishlist wishlist = new Wishlist(1L, 1L);
 
-        WishlistItem saved = repository.save(wishlistItem);
+        Wishlist saved = repository.save(wishlist);
 
         assertThat(saved.getId()).isNotNull();
     }
@@ -28,9 +29,9 @@ class WishlistItemRepositoryTest {
     @DisplayName("위시리스트를 조회한다")
     void findAllByMemberId() {
         Long memberId = 1L;
-        repository.save(new WishlistItem(memberId, 1L));
-        repository.save(new WishlistItem(memberId, 2L));
-        repository.save(new WishlistItem(memberId, 3L));
+        repository.save(new Wishlist(memberId, 1L));
+        repository.save(new Wishlist(memberId, 2L));
+        repository.save(new Wishlist(memberId, 3L));
 
         assertThat(repository.findAllByMemberId(memberId).size()).isEqualTo(3);
     }
@@ -39,19 +40,18 @@ class WishlistItemRepositoryTest {
     @DisplayName("위시리스트를 삭제한다")
     void deleteById() {
         Long memberId = 1L;
-        WishlistItem wishlistItem = new WishlistItem(memberId, 1L);
-        repository.save(wishlistItem);
+        Wishlist save = repository.save(new Wishlist(memberId, 1L));
 
-        repository.deleteById(wishlistItem.getId());
+        repository.deleteById(save.getId());
 
-        assertThat(repository.findAllByMemberId(memberId).size()).isEqualTo(0);
+        assertThat(repository.findAllByMemberId(memberId)).isEmpty();
     }
 
     @Test
     @DisplayName("위시리스트에 존재하면 true를 반환한다.")
     void existsByMemberIdAndProductId() {
-        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
-        repository.save(wishlistItem);
+        Wishlist wishlist = new Wishlist(1L, 1L);
+        repository.save(wishlist);
 
         assertThat(repository.existsByMemberIdAndProductId(1L, 1L)).isTrue();
     }
@@ -59,8 +59,8 @@ class WishlistItemRepositoryTest {
     @Test
     @DisplayName("위시리스트에 없으면 false를 반환한다.")
     void existsByMemberIdAndProductId2() {
-        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
-        repository.save(wishlistItem);
+        Wishlist wishlist = new Wishlist(1L, 1L);
+        repository.save(wishlist);
 
         assertThat(repository.existsByMemberIdAndProductId(1L, 2L)).isFalse();
     }

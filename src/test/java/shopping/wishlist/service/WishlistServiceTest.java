@@ -6,64 +6,63 @@ import org.junit.jupiter.api.Test;
 import shopping.product.domain.InMemoryProductRepository;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductRepository;
-import shopping.wishlist.domain.InMemoryWishlistItemRepository;
-import shopping.wishlist.domain.WishlistItem;
-import shopping.wishlist.service.WishlistItemService;
+import shopping.wishlist.domain.InMemoryWishlistRepository;
+import shopping.wishlist.domain.Wishlist;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
-class WishlistItemServiceTest {
+class WishlistServiceTest {
 
-    private WishlistItemService service;
+    private WishlistService service;
 
     @BeforeEach
     void setUp() {
         ProductRepository productRepository = new InMemoryProductRepository();
-        service = new WishlistItemService(new InMemoryWishlistItemRepository(), productRepository);
+        service = new WishlistService(new InMemoryWishlistRepository(), productRepository);
 
         productRepository.save(new Product("피자", BigDecimal.ZERO, "http://a.com/a.jpg"));
     }
 
     @Test
     @DisplayName("위시리스트에 상품을 추가한다")
-    void addWishlistItem() {
-        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
+    void addWishlist() {
+        Wishlist wishlist = new Wishlist(1L, 1L);
 
-        service.addWishlistItem(wishlistItem);
+        service.addWishlist(wishlist);
 
-        assertThat(wishlistItem.getId()).isNotNull();
+        assertThat(wishlist.getId()).isNotNull();
     }
 
     @Test
     @DisplayName("이미 추가한 상품을 추가하면 예외발생")
     void addDuplicateWishlistItem() {
-        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
+        Wishlist wishlist = new Wishlist(1L, 1L);
 
-        service.addWishlistItem(wishlistItem);
+        service.addWishlist(wishlist);
 
-        assertThatThrownBy(() -> service.addWishlistItem(wishlistItem))
+        assertThatThrownBy(() -> service.addWishlist(wishlist))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("존재하지 않은 상품을 추가한다")
     void addNotExistProduct() {
-        WishlistItem wishlistItem = new WishlistItem(1L, 2L);
+        Wishlist wishlist = new Wishlist(1L, 2L);
 
-        assertThatThrownBy(() -> service.addWishlistItem(wishlistItem))
+        assertThatThrownBy(() -> service.addWishlist(wishlist))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     @DisplayName("위시리스트를 조회한다.")
     void findAllByMemberId() {
-        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
-        service.addWishlistItem(wishlistItem);
+        Wishlist wishlist = new Wishlist(1L, 1L);
+        service.addWishlist(wishlist);
 
-        List<WishlistItem> items = service.findWishlistItems(1L);
+        List<Wishlist> items = service.findWishlistItems(1L);
 
         assertThat(items.size()).isEqualTo(1);
     }
@@ -71,12 +70,12 @@ class WishlistItemServiceTest {
     @Test
     @DisplayName("위시리스트 상품을 삭제한다")
     void deleteWishlistItem() {
-        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
-        service.addWishlistItem(wishlistItem);
+        Wishlist wishlist = new Wishlist(1L, 1L);
+        service.addWishlist(wishlist);
 
-        service.deleteWishlistItem(wishlistItem.getMemberId(), wishlistItem.getId());
+        service.deleteWishlistItem(wishlist.getMemberId(), wishlist.getId());
 
-        List<WishlistItem> items = service.findWishlistItems(1L);
+        List<Wishlist> items = service.findWishlistItems(1L);
 
         assertThat(items).isEmpty();
     }
@@ -84,10 +83,10 @@ class WishlistItemServiceTest {
     @Test
     @DisplayName("위시리스트 존재하지 않으면 예외 발생")
     void deleteWishlistItem_invalidMemberId() {
-        WishlistItem wishlistItem = new WishlistItem(1L, 1L);
-        service.addWishlistItem(wishlistItem);
+        Wishlist wishlist = new Wishlist(1L, 1L);
+        service.addWishlist(wishlist);
 
-        assertThatThrownBy(() -> service.deleteWishlistItem(100L, wishlistItem.getId()))
+        assertThatThrownBy(() -> service.deleteWishlistItem(100L, wishlist.getId()))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 }

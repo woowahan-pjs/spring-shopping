@@ -1,7 +1,7 @@
 ### 위시리스트 추가
 POST http://localhost:8080/wishlist
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwIiwiaWF0IjoxNzczMjk0MTc1LCJleHAiOjE3NzMyOTc3NzV9.ZkNiuElgZK8M_3WlxWEe7kDT4HJSkXU56_bF7hVi63k
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzczMzgzMzMwLCJleHAiOjE3NzMzODY5MzB9.YBYDkXi_xvPO-h_WrhrA5PO1Swy5-Yr0G0CHw0ZJmOA
 
 {
   "productId" : 3
@@ -9,13 +9,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwIiwiaWF0IjoxNzczMjk0MTc1L
 
 ### 위시리스트 조회
 GET http://localhost:8080/wishlist
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwIiwiaWF0IjoxNzczMjk0MTc1LCJleHAiOjE3NzMyOTc3NzV9.ZkNiuElgZK8M_3WlxWEe7kDT4HJSkXU56_bF7hVi63k
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzczMzgzMzMwLCJleHAiOjE3NzMzODY5MzB9.YBYDkXi_xvPO-h_WrhrA5PO1Swy5-Yr0G0CHw0ZJmOA
 
 
 ### 위시리스트 삭제
 DELETE http://localhost:8080/wishlist/1
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwIiwiaWF0IjoxNzczMjk0MTc1LCJleHAiOjE3NzMyOTc3NzV9.ZkNiuElgZK8M_3WlxWEe7kDT4HJSkXU56_bF7hVi63k
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzczMzgzMzMwLCJleHAiOjE3NzMzODY5MzB9.YBYDkXi_xvPO-h_WrhrA5PO1Swy5-Yr0G0CHw0ZJmOA
 
 ### 위시리스트 삭제 예외
 DELETE http://localhost:8080/wishlist/100
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIwIiwiaWF0IjoxNzczMjk0MTc1LCJleHAiOjE3NzMyOTc3NzV9.ZkNiuElgZK8M_3WlxWEe7kDT4HJSkXU56_bF7hVi63k
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNzczMzgzMzMwLCJleHAiOjE3NzMzODY5MzB9.YBYDkXi_xvPO-h_WrhrA5PO1Swy5-Yr0G0CHw0ZJmOA

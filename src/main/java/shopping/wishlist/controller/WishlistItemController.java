@@ -5,29 +5,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import shopping.wishlist.controller.dto.WishlistItemRequest;
 import shopping.wishlist.controller.dto.WishlistItemResponse;
-import shopping.wishlist.domain.WishlistItem;
-import shopping.wishlist.service.WishlistItemService;
+import shopping.wishlist.domain.Wishlist;
+import shopping.wishlist.service.WishlistService;
 
 import java.util.List;
 
 @RestController
 public class WishlistItemController {
-    private final WishlistItemService service;
+    private final WishlistService service;
 
-    public WishlistItemController(WishlistItemService service) {
+    public WishlistItemController(WishlistService service) {
         this.service = service;
     }
 
     @PostMapping("/wishlist")
     public ResponseEntity<Void> create(@RequestAttribute("memberId") Long memberId,
             @RequestBody WishlistItemRequest request) {
-        service.addWishlistItem(new WishlistItem(memberId, request.getProductId()));
+        service.addWishlist(new Wishlist(memberId, request.getProductId()));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @GetMapping("/wishlist")
     public ResponseEntity<List<WishlistItemResponse>> getWish(@RequestAttribute("memberId") Long memberId) {
-        List<WishlistItem> items = service.findWishlistItems(memberId);
+        List<Wishlist> items = service.findWishlistItems(memberId);
         return ResponseEntity.ok(items.stream()
                 .map(WishlistItemResponse::from)
                 .toList());

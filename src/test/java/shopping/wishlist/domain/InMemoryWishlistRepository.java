@@ -1,27 +1,24 @@
 package shopping.wishlist.domain;
 
-import org.springframework.stereotype.Repository;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-@Repository
-public class InMemoryWishlistItemRepository implements WishlistItemRepository {
-    private final Map<Long, WishlistItem> wisilistItemMap = new HashMap<>();
+public class InMemoryWishlistRepository implements WishlistRepository {
+    private final Map<Long, Wishlist> wisilistItemMap = new HashMap<>();
     private final AtomicLong idSequence = new AtomicLong();
 
     @Override
-    public WishlistItem save(WishlistItem wishlistItem) {
+    public Wishlist save(Wishlist wishlist) {
         long id = idSequence.getAndIncrement();
-        wishlistItem.assignId(id);
-        wisilistItemMap.put(id, wishlistItem);
-        return wishlistItem;
+        wishlist.assignId(id);
+        wisilistItemMap.put(id, wishlist);
+        return wishlist;
     }
 
     @Override
-    public List<WishlistItem> findAllByMemberId(Long memberId) {
+    public List<Wishlist> findAllByMemberId(Long memberId) {
         return wisilistItemMap.values().stream()
                 .filter(w -> w.getMemberId().equals(memberId))
                 .toList();

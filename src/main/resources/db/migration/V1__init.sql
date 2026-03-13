@@ -21,7 +21,7 @@ CREATE TABLE product
     PRIMARY KEY (id)
 );
 
-CREATE TABLE wishlist_item
+CREATE TABLE wishlist
 (
     id         BIGINT      NOT NULL AUTO_INCREMENT,
     member_id  BIGINT      NOT NULL,
@@ -29,7 +29,5 @@ CREATE TABLE wishlist_item
     created_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
     updated_at DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6),
     deleted_at DATETIME(6) NULL,
-    PRIMARY KEY (id),
-    FOREIGN KEY (member_id) REFERENCES member (id),
-    FOREIGN KEY (product_id) REFERENCES product (id)
+    PRIMARY KEY (id)
 );
