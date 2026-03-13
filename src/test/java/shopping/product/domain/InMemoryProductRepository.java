@@ -1,9 +1,6 @@
 package shopping.product.domain;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class InMemoryProductRepository implements ProductRepository {
@@ -19,8 +16,8 @@ public class InMemoryProductRepository implements ProductRepository {
     }
 
     @Override
-    public Product findById(Long id) {
-        return productMap.get(id);
+    public Optional<Product> findById(Long id) {
+        return Optional.ofNullable(productMap.get(id));
     }
 
     @Override
