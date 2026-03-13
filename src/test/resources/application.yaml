@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: spring-shopping
+
+jwt:
+  secret: dGVzdC1zZWNyZXQta2V5LWZvci10ZXN0aW5nLW9ubHk=
+  expiration-ms: 3600000
