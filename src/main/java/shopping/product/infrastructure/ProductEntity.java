@@ -2,6 +2,7 @@ package shopping.product.infrastructure;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.SQLRestriction;
+import shopping.common.BaseEntity;
 import shopping.product.domain.Product;
 
 import java.math.BigDecimal;
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "product")
 @SQLRestriction("deleted_at IS NULL")
-public class ProductEntity {
+public class ProductEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,15 +21,6 @@ public class ProductEntity {
 
     @Column(name = "image_url")
     private String imageUrl;
-
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt = LocalDateTime.now();
-
-    @Column(name = "deleted_at")
-    private LocalDateTime deletedAt;  // nullable → null 기본값
 
     protected ProductEntity() {}
 
