@@ -26,7 +26,8 @@ public class ProductService {
 
     public Product findProductById(Long id) {
         validateProductExists(id);
-        return productRepository.findById(id);
+        return productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
     }
 
     public List<Product> findProducts() {

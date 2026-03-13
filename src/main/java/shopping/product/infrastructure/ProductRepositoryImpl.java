@@ -7,6 +7,7 @@ import shopping.product.domain.ProductRepository;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Repository
 public class ProductRepositoryImpl implements ProductRepository {
@@ -22,10 +23,9 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Product findById(Long id) {
+    public Optional<Product> findById(Long id) {
         return repository.findById(id)
-                .map(ProductEntity::toDomain)
-                .orElse(null);
+                .map(ProductEntity::toDomain);
     }
 
     @Override

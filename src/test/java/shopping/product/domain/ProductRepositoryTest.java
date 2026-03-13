@@ -33,7 +33,7 @@ public class ProductRepositoryTest {
     @DisplayName("상품을 조회한다.")
     void findById() {
         Product saved = repository.save(createProduct());
-        Product found = repository.findById(saved.getId());
+        Product found = repository.findById(saved.getId()).get();
 
         assertAll(
                 () -> assertThat(found.getId()).isEqualTo(saved.getId()),
@@ -48,7 +48,7 @@ public class ProductRepositoryTest {
     void update() {
         String name = "새로운 이름";
         Product saved = repository.save(createProduct());
-        Product found = repository.findById(saved.getId());
+        Product found = repository.findById(saved.getId()).get();
         found.changeName(name);
 
         Product updated = repository.update(found.getId(), found);
@@ -63,9 +63,7 @@ public class ProductRepositoryTest {
 
         repository.deleteById(saved.getId());
 
-        Product deleted = repository.findById(saved.getId());
-
-        assertThat(deleted).isNull();
+        assertThat(repository.findById(saved.getId()).isPresent()).isFalse();
     }
 
     @Test
