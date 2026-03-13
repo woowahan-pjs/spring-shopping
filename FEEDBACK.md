@@ -1188,3 +1188,168 @@ class ProductRepositoryTest {
 
 `ProductServiceTest`는 `InMemoryProductRepository`를 계속 사용한다. Service 단위 테스트에 JPA는 불필요하다.
 
+---
+
+### [버그] `@DataJpaTest`에서 도메인 인터페이스를 `@Import`하면 기동 실패
+
+```java
+// 잘못됨 - 순수 Java 인터페이스는 Spring 빈으로 등록 불가
+@Import(MemberRepository.class)
+
+// 올바름 - @Repository가 붙은 구현체를 Import
+@Import(MemberRepositoryImpl.class)
+```
+
+`MemberRepository`는 순수 Java 인터페이스이므로 Spring이 빈으로 등록할 수 없어 컨텍스트 로딩 실패.
+항상 구현체(`MemberRepositoryImpl`)를 `@Import`하고, 주입은 인터페이스(`MemberRepository`)로 받아야 한다.
+
+---
+
+### [설계] `@MappedSuperclass`로 공통 컬럼 추출
+
+`created_at`, `updated_at`, `deleted_at`은 모든 Entity에 반복된다. 추상 클래스로 추출한다.
+
+```java
+// shopping/common/BaseEntity.java
+@MappedSuperclass
+public abstract class BaseEntity {
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt = LocalDateTime.now();
+
+    @Column(name = "updated_at", nullable = false)
+    private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+}
+
+// 각 Entity에서 상속
+@Entity
+@Table(name = "product")
+public class ProductEntity extends BaseEntity { ... }
+```
+
+`@MappedSuperclass` — 부모 테이블 없이 공통 컬럼만 상속. `@Inheritance`(부모 테이블 생성)와 다르다.
+
+---
+
+### [설계] YAGNI — 요구사항 없는 `@SQLRestriction` 추가 금지
+
+회원 탈퇴 기능이 없는 `MemberEntity`에 `@SQLRestriction("deleted_at IS NULL")`을 추가하지 않는다.
+`deleted_at` 컬럼은 미래 확장을 위해 DDL에만 존재하며, 실제 soft delete가 필요할 때 애노테이션을 추가한다.
+
+YAGNI(You Ain't Gonna Need It) — 필요한 시점에 추가하는 것이 원칙이다.
+
+---
+
+### [코드품질] Spring Data JPA 메서드 네이밍 컨벤션 활용
+
+단순 단건 조회에 `@Query`를 쓰는 것은 불필요한 유지보수 포인트를 만든다.
+Spring Data JPA는 메서드명만으로 쿼리를 자동 생성한다.
+
+```java
+// 불필요한 @Query
+@Query("SELECT m FROM MemberEntity m WHERE m.email = :email")
+Optional<MemberEntity> findByEmail(@Param("email") String email);
+
+// 메서드명으로 충분
+Optional<MemberEntity> findByEmail(String email);
+```
+
+`@Query`는 복잡한 조인, 서브쿼리, 네이티브 쿼리에서만 사용한다.
+
+---
+
+### [설계] 단건 조회는 항상 `Optional` 반환
+
+`null`을 반환하면 호출하는 쪽에서 null 체크를 해야 하고 빠뜨리면 NPE로 이어진다.
+Java 8 이후 단건 조회는 `Optional`이 표준이다.
+
+```java
+// 잘못됨 - null 반환 위험
+Member findByEmail(String email);
+
+// 올바름
+Optional<Member> findByEmail(String email);
+
+// Service에서 활용
+memberRepository.findByEmail(email)
+    .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요."));
+```
+
+`null` 반환은 1965년 Tony Hoare가 "billion dollar mistake"라고 인정한 설계다.
+
+---
+
+### [설계] 계층별 테스트 전략
+
+| 계층 | 테스트 방식 | 이유 |
+|------|------------|------|
+| `Service` | InMemory Repository | 비즈니스 로직만 검증, DB 불필요 |
+| `Repository` | `@DataJpaTest` | JPA 쿼리, 매핑 검증 |
+| `Controller` | `@WebMvcTest` | HTTP 요청/응답 검증 |
+
+Service는 `ProductRepository` 인터페이스에만 의존하므로 구현체가 무엇이든 상관없다.
+Service 테스트에 `@SpringBootTest`나 `@DataJpaTest` 쓰는 건 과잉이다. Spring 컨텍스트 로딩, DB 연결 — 불필요한 환경 의존성이 생긴다.
+
+---
+
+### [버그] `JpaRepository` 메서드 반환 타입에 도메인 객체 사용 금지
+
+```java
+// 잘못됨 - JpaRepository는 Entity를 반환해야 함
+List<Wishlist> findAllByMemberId(Long memberId);
+
+// 올바름
+List<WishlistEntity> findAllByMemberId(Long memberId);
+```
+
+도메인 변환은 `RepositoryImpl`에서 `.map(WishlistEntity::toDomain)`으로 처리한다.
+`JpaRepository`에 도메인 객체를 반환 타입으로 선언하면 Spring Data JPA가 타입을 맞출 수 없어 컴파일/런타임 오류 발생.
+
+---
+
+### [버그] `save()` 이후 원본 객체의 id는 null
+
+```java
+// 잘못됨 - 원본 객체에는 id가 없음
+Wishlist wishlist = new Wishlist(memberId, 1L);
+repository.save(wishlist);
+repository.deleteById(wishlist.getId());  // getId() == null → deleteById(null) → 삭제 안 됨
+
+// 올바름 - 반환된 객체 사용
+Wishlist saved = repository.save(new Wishlist(memberId, 1L));
+repository.deleteById(saved.getId());     // DB에서 생성된 id 사용
+```
+
+JPA `save()`는 원본 객체를 변경하지 않고 새로운 영속 객체를 반환한다. 항상 반환값을 사용해야 한다.
+
+---
+
+### [설계] FK 제거 — 애플리케이션 레벨 정합성
+
+운영 DB에서 Foreign Key 제약을 제거하고 애플리케이션 레벨에서 정합성을 보장한다.
+
+| FK 있음 | FK 없음 |
+|---------|---------|
+| INSERT/UPDATE/DELETE마다 DB 체크 쿼리 | 오버헤드 없음 |
+| DB 샤딩 어려움 | 샤딩 자유 |
+| 마이그레이션 순서 강제 | 순서 무관 |
+| 마이크로서비스 간 FK 불가 | 서비스 분리 자유 |
+
+네이버/카카오/토스 수준의 대규모 서비스에서는 FK를 거의 사용하지 않는다.
+
+---
+
+### [설계] 테이블명과 클래스명 일관성
+
+테이블명을 도메인 관점으로 변경하면 클래스명도 일관되게 변경해야 한다.
+
+```
+테이블명: wishlist   → 클래스명: Wishlist   ✅ 일관성
+테이블명: wishlist   → 클래스명: WishlistItem ❌ 불일치 (혼란)
+```
+
+단, 도메인 모델 확장 가능성을 고려해야 한다.
+`Wishlist`(집합체) ↔ `WishlistItem`(개별 항목) 분리가 예상되면 처음부터 `wishlist_item`으로 유지하는 것이 자연스럽다.
+

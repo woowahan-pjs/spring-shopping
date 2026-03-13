@@ -934,3 +934,185 @@ Password: (빈칸)
 ```
 
 `DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE` 옵션이 없으면 마지막 연결 끊김 시 DB가 사라진다.
+
+---
+
+### Q. DB 컬럼 DATETIME을 Java에서 어떤 타입으로 선언해야 하나?
+
+`LocalDateTime`을 사용한다. `java.util.Date`는 불변이 아니고 시간대 처리가 엉망이라 Java 8 이후 deprecated 수준이다.
+
+```java
+import java.time.LocalDateTime;
+
+private LocalDateTime createdAt = LocalDateTime.now();
+private LocalDateTime deletedAt;  // nullable → null 기본값
+```
+
+| DB 타입 | Java/Kotlin 타입 |
+|---------|-----------------|
+| `DATETIME(6)` | `LocalDateTime` ✅ |
+| `DATETIME(6)` | `java.util.Date` ❌ |
+| `DATE` | `LocalDate` |
+
+---
+
+### Q. 공통 컬럼(created_at, updated_at, deleted_at)을 추상 클래스로 분리해도 되나?
+
+된다. JPA는 `@MappedSuperclass`를 이 목적으로 제공한다.
+
+```java
+@MappedSuperclass
+public abstract class BaseEntity {
+    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime updatedAt = LocalDateTime.now();
+    private LocalDateTime deletedAt;
+}
+```
+
+- `@MappedSuperclass` — 부모 테이블 없음, 공통 컬럼만 상속
+- `@Inheritance` — 부모 테이블 생성 (상속 관계 표현 용도)
+
+네이버/카카오/토스에서 `BaseEntity` 없는 프로젝트는 거의 없다.
+
+---
+
+### Q. `@DataJpaTest`에서 도메인 인터페이스를 `@Import`하면 어떻게 되나?
+
+기동 실패한다. 도메인 인터페이스는 순수 Java 인터페이스이므로 Spring이 빈으로 등록할 수 없다.
+
+```java
+// 잘못됨 - 기동 실패
+@Import(MemberRepository.class)
+
+// 올바름 - 구현체 Import, 인터페이스로 주입
+@Import(MemberRepositoryImpl.class)
+...
+@Autowired
+private MemberRepository repository;  // 인터페이스로 주입
+```
+
+이것이 DI의 핵심이다. 인터페이스로 받고, 구현체가 주입된다.
+
+---
+
+### Q. `@Query`가 불필요한 경우는?
+
+Spring Data JPA는 메서드명만으로 쿼리를 자동 생성한다. 단순 조건 조회는 `@Query` 없이도 된다.
+
+```java
+// @Query 불필요
+Optional<MemberEntity> findByEmail(String email);
+Optional<MemberEntity> findByEmailAndDeletedAtIsNull(String email);
+List<MemberEntity> findByMemberId(Long memberId);
+```
+
+`@Query`는 복잡한 조인, 서브쿼리, 네이티브 쿼리에서만 사용한다.
+단순 조회에 `@Query`를 쓰면 불필요한 유지보수 포인트만 늘어난다.
+
+---
+
+### Q. 서비스 계층 테스트를 JPA 전환 후에도 InMemory로 유지하는 이유?
+
+Service는 Repository 인터페이스에만 의존하기 때문이다.
+
+```
+ProductService → ProductRepository (interface)
+                    ↙              ↘
+   InMemoryProductRepository    ProductRepositoryImpl
+   (테스트용)                    (운영용)
+```
+
+Service 테스트에 `@DataJpaTest`나 `@SpringBootTest`를 쓰면:
+- Spring 컨텍스트 로딩 → 느림
+- DB 연결 필요 → 환경 의존성 생김
+- 비즈니스 로직 테스트에 인프라가 끼어듦
+
+Service 테스트는 순수 Java 단위 테스트여야 한다.
+
+---
+
+### Q. 회원 탈퇴 기능이 없으면 `MemberEntity`에 `@SQLRestriction`이 필요한가?
+
+불필요하다. YAGNI(You Ain't Gonna Need It) 원칙.
+
+`deleted_at` 컬럼은 미래 확장을 위해 DDL에만 존재한다.
+실제 soft delete 기능이 생길 때 `@SQLRestriction`을 추가하면 된다.
+없는 기능을 위한 제약을 미리 추가하면 코드 복잡도만 올라간다.
+
+---
+
+### Q. 현업에서 FK(Foreign Key)를 실제로 사용하나?
+
+네이버/카카오/토스 수준의 대규모 서비스에서는 대부분 FK를 사용하지 않는다.
+
+이유:
+1. **성능** — INSERT/UPDATE/DELETE마다 FK 체크 쿼리 추가 발생
+2. **샤딩** — DB를 분산할 때 FK가 걸림돌
+3. **마이크로서비스** — 서비스별 DB가 분리되면 FK 자체가 불가능
+4. **배포 복잡도** — 테이블 간 의존성으로 마이그레이션 순서 강제
+
+대신 애플리케이션 레벨에서 정합성을 보장한다 (Service에서 존재 여부 확인 등).
+
+---
+
+### Q. `JpaRepository` 메서드에서 도메인 객체를 반환 타입으로 써도 되나?
+
+안 된다. `JpaRepository`는 반드시 Entity를 반환해야 한다.
+
+```java
+// 잘못됨 - Spring Data JPA가 타입을 맞출 수 없음
+List<Wishlist> findAllByMemberId(Long memberId);
+
+// 올바름
+List<WishlistEntity> findAllByMemberId(Long memberId);
+```
+
+도메인 변환(`toDomain()`)은 `RepositoryImpl`에서 처리한다.
+
+---
+
+### Q. JPA `save()` 이후 원본 객체의 id가 왜 null인가?
+
+JPA `save()`는 원본 객체를 수정하지 않고 **새로운 영속 객체를 반환**한다.
+
+```java
+Wishlist wishlist = new Wishlist(memberId, 1L);  // id = null
+Wishlist saved = repository.save(wishlist);       // id = 1 (DB 생성)
+
+wishlist.getId()  // null  ← 원본은 그대로
+saved.getId()     // 1     ← 반환된 객체에 id 있음
+```
+
+`save()` 이후 항상 반환값을 사용해야 한다. 원본 객체를 계속 쓰면 id가 null이라 예상치 못한 버그가 발생한다.
+
+---
+
+### Q. 테이블명과 클래스명이 다르면 어떻게 매핑하나?
+
+`@Table(name = "테이블명")`으로 명시적으로 지정한다.
+
+```java
+@Entity
+@Table(name = "wishlist")       // 테이블명
+public class WishlistEntity { } // 클래스명
+```
+
+테이블명과 클래스명이 일치하지 않아도 `@Table`로 매핑할 수 있다.
+단, 일관성 측면에서 가급적 테이블명과 클래스명의 도메인 개념을 통일하는 것이 좋다.
+
+---
+
+### Q. soft delete JPQL에서 `LocalDateTime.now()`와 `CURRENT_TIMESTAMP` 중 무엇이 나은가?
+
+`CURRENT_TIMESTAMP`(DB 서버 시간)가 더 안전하다.
+
+- `LocalDateTime.now()` — 애플리케이션 서버 시간. 서버가 여러 대면 시간이 미세하게 다를 수 있음
+- `CURRENT_TIMESTAMP` — DB 서버 시간 기준으로 통일. H2/MySQL 모두 JPQL 표준 함수
+
+```java
+@Modifying(clearAutomatically = true)
+@Query("UPDATE WishlistEntity w SET w.deletedAt = CURRENT_TIMESTAMP WHERE w.id = :id")
+void deleteById(@Param("id") Long id);
+```
+
+파라미터도 줄어들어 코드가 더 단순해진다.
