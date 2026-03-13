@@ -828,3 +828,109 @@ public ResponseEntity<Void> register(@RequestBody MemberRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).build();  // 빈 바디
 }
 ```
+
+---
+
+## JPA 전환
+
+### Q. Flyway란 무엇인가?
+
+DB 스키마를 코드처럼 버전 관리하는 도구다. 마이그레이션 파일을 순서대로 실행하여 어떤 서버, 어떤 개발자 로컬이든 동일한 스키마를 보장한다.
+
+- 앱 기동 시 `flyway_schema_history` 테이블 확인 → 미적용 파일 순서대로 실행
+- 한 번 적용된 파일은 절대 수정 불가 (체크섬 불일치 시 기동 실패)
+- 수정이 필요하면 새 버전 파일(`V2__xxx.sql`) 생성
+
+`ddl-auto: validate`와 함께 사용한다. `create`/`update`는 운영에서 절대 금지.
+
+---
+
+### Q. `created_at`, `updated_at`, `deleted_at`은 모든 테이블에 넣어야 하나?
+
+현업 과제테스트 기준으로 모든 테이블에 넣는 것이 권장된다.
+
+- `created_at`, `updated_at` — 장애 추적, 감사(audit), 정산 등에 필수
+- `deleted_at` (soft delete) — 커머스/금융에서는 실제 삭제 대신 표준
+- `DATETIME(6)` 사용 — 마이크로초 정밀도, 동시성 높은 환경에서 순서 보장
+
+---
+
+### Q. `updated_by` 컬럼을 product 테이블에 추가해야 하나?
+
+추가하지 않는다. "누가 언제 뭘 바꿨나"는 `product_history` 테이블의 관심사다.
+`updated_by` 하나로는 어떤 필드를, 뭐에서 뭐로, 왜 바꿨는지 알 수 없다.
+히스토리 테이블 없이 `updated_by`만 달랑 넣으면 설계를 이해 못 한다는 인상을 준다.
+
+---
+
+### Q. 도메인 객체와 JPA Entity를 왜 분리하나?
+
+도메인 객체가 `@Column`, `@SQLRestriction` 같은 인프라 관심사로 오염되고,
+JPA 제약(`var`, 기본 생성자, `open class`)으로 인해 도메인 설계가 왜곡되기 때문이다.
+분리하면 도메인은 JPA도 Spring도 모르는 순수 비즈니스 규칙 객체가 된다.
+
+의존 방향: `infrastructure → domain` (역방향 절대 금지)
+
+---
+
+### Q. JPA Entity에 getter가 필요한가?
+
+`@Id`를 필드에 붙이면 Hibernate가 리플렉션으로 직접 접근하므로 getter가 불필요하다.
+오히려 getter를 열어두면 외부에서 Entity를 도메인처럼 사용하는 나쁜 습관이 생긴다.
+`toDomain()`으로만 접근하도록 강제하는 것이 더 좋은 설계다.
+
+---
+
+### Q. JPA 영속성 컨텍스트(1차 캐시)란 무엇인가?
+
+JPA가 관리하는 엔티티 캐시다. `findById()`로 가져온 엔티티는 영속성 컨텍스트에 등록(managed)된다.
+
+- `findById()` → managed → 더티 체킹 동작 → `@Transactional` 종료 시 자동 UPDATE
+- `new Entity()` → detached → 더티 체킹 없음 → `save()` 호출 시 불안정
+
+`@Modifying` JPQL 실행 후에는 `clearAutomatically = true`로 캐시를 비워야 한다. 안 비우면 soft delete 후 `findById()` 호출 시 삭제된 엔티티가 반환된다.
+
+---
+
+### Q. `@SQLRestriction`이란 무엇인가?
+
+Hibernate 6에서 추가된 애노테이션. Entity에 항상 적용되는 WHERE 조건을 붙인다.
+
+```java
+@SQLRestriction("deleted_at IS NULL")
+public class ProductEntity { ... }
+```
+
+모든 SELECT 쿼리에 `AND deleted_at IS NULL` 자동 추가. soft delete 구현 시 필수.
+이전 버전(`@Where`)은 Hibernate 6에서 deprecated.
+
+soft delete UPDATE는 `@Modifying(clearAutomatically = true)` JPQL로 직접 작성해야 한다.
+(`@SQLRestriction` 때문에 `findById()` 후 `save()`로 update 불가)
+
+---
+
+### Q. `@DataJpaTest`와 `@SpringBootTest`의 차이는?
+
+| | `@DataJpaTest` | `@SpringBootTest` |
+|---|---|---|
+| 로딩 범위 | JPA 관련 빈만 | 전체 Spring 컨텍스트 |
+| 속도 | 빠름 | 느림 |
+| 사용 대상 | Repository 테스트 | 통합 테스트 |
+| DB | 기본 H2 인메모리 | 설정 따라 다름 |
+
+Repository 테스트는 `@DataJpaTest`를 사용하고, `@Import`로 실제 구현체를 주입한다.
+
+---
+
+### Q. H2 콘솔에서 인메모리 DB에 접속하는 방법은?
+
+`application.yaml`의 datasource URL과 동일하게 입력해야 한다.
+H2 콘솔 로그인 화면의 JDBC URL은 자동으로 연동되지 않는다.
+
+```
+JDBC URL: jdbc:h2:mem:shopping
+Username: sa
+Password: (빈칸)
+```
+
+`DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE` 옵션이 없으면 마지막 연결 끊김 시 DB가 사라진다.

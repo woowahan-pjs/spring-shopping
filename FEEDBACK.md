@@ -1008,3 +1008,183 @@ JwtTokenProvider jwtTokenProvider;
 ```
 
 `AuthInterceptor`를 `AppConfig`에 등록한 시점부터 모든 `@WebMvcTest`가 영향을 받는다.
+
+---
+
+## JPA 전환
+
+### [설계] 도메인 ↔ Entity 분리 (헥사고날 아키텍처)
+
+도메인 객체와 JPA Entity를 분리하고 `infrastructure` 패키지에 인프라 관심사를 격리한다.
+
+```
+product/
+├── domain/
+│   ├── Product.java              ← 순수 도메인 (JPA 의존 없음)
+│   └── ProductRepository.java   ← 인터페이스
+└── infrastructure/
+    ├── ProductEntity.java        ← JPA Entity
+    ├── ProductJpaRepository.java ← JpaRepository 인터페이스
+    └── ProductRepositoryImpl.java ← ProductRepository 구현체
+```
+
+의존 방향: `infrastructure → domain` (역방향 절대 금지)
+
+---
+
+### [설계] DB 복원용 생성자 분리
+
+`Product.of(id, ...)` 정적 팩토리를 통해 DB 복원 시 유효성 검증을 우회한다.
+검증을 통과한 데이터를 DB에서 복원할 때 재검증하면 규칙 변경 시 기존 데이터 복원 자체가 실패할 수 있다.
+
+```java
+// DB 복원 전용 private 생성자
+private Product(Long id, String name, BigDecimal price, String imageUrl) {
+    this.id = id; this.name = name; this.price = price; this.imageUrl = imageUrl;
+}
+
+// 정적 팩토리 - 복원 의도 명확
+public static Product of(Long id, String name, BigDecimal price, String imageUrl) {
+    return new Product(id, name, price, imageUrl);
+}
+```
+
+---
+
+### [설계] Entity에 getter 불필요
+
+`@Id`가 필드에 붙으면 Hibernate가 리플렉션으로 필드에 직접 접근한다 (getter 불필요).
+Entity에 getter를 열어두면 외부에서 Entity 필드를 직접 읽는 코드가 생겨 `toDomain()` 경유 원칙이 깨진다.
+
+---
+
+### [버그] `@GeneratedValue` strategy 누락
+
+```java
+// 누락 시 Hibernate가 별도 시퀀스 테이블 생성 시도
+@GeneratedValue
+
+// AUTO_INCREMENT 컬럼은 반드시 IDENTITY
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+```
+
+---
+
+### [버그] DB 타입 불일치 — `INT` vs `DECIMAL`
+
+DDL의 `INT`와 `BigDecimal` 필드의 Hibernate 기대 타입 `NUMERIC(38,2)`가 불일치하면 `ddl-auto: validate` 시 기동 실패.
+
+```sql
+-- 잘못됨
+price INT NOT NULL
+
+-- 올바름 (BigDecimal → DECIMAL)
+price DECIMAL(13, 2) NOT NULL
+```
+
+`DECIMAL(13, 2)` — 최대 999억, 소수점 2자리(원/전) 지원.
+
+---
+
+### [버그] `jakarta.transaction.Transactional` 사용 금지
+
+Spring 프로젝트에서는 반드시 `org.springframework.transaction.annotation.Transactional`을 사용해야 한다.
+`jakarta` 것은 JEE 표준으로 Spring의 `readOnly`, `propagation` 등 전용 옵션을 사용할 수 없다.
+
+```java
+// 잘못됨
+import jakarta.transaction.Transactional;
+
+// 올바름
+import org.springframework.transaction.annotation.Transactional;
+```
+
+---
+
+### [버그] `@Modifying` 후 1차 캐시 불일치
+
+`@Modifying` JPQL UPDATE 후 JPA 1차 캐시(영속성 컨텍스트)에 기존 엔티티가 남아있어
+soft delete 후 `findById()` 호출 시 삭제된 엔티티가 반환되는 버그.
+
+```java
+// 잘못됨 - 캐시 불일치 발생
+@Modifying
+@Query("UPDATE ProductEntity p SET p.deletedAt = CURRENT_TIMESTAMP WHERE p.id = :id")
+
+// 올바름 - 캐시 자동 초기화
+@Modifying(clearAutomatically = true)
+@Query("UPDATE ProductEntity p SET p.deletedAt = CURRENT_TIMESTAMP WHERE p.id = :id")
+```
+
+`@Modifying` 사용 시 `clearAutomatically = true`는 거의 항상 함께 사용해야 한다.
+
+---
+
+### [설계] JPA update는 더티 체킹 활용
+
+`new Entity()`로 만든 detached 엔티티를 `save()`하면 JPA가 새 객체로 인식해 INSERT가 발생할 수 있다.
+`findById()`로 가져온 managed 엔티티를 수정하면 `@Transactional` 종료 시 UPDATE가 자동 실행된다.
+
+```java
+// 잘못됨 - detached 엔티티
+public void update(Product product) {
+    repository.save(ProductEntity.from(product));  // INSERT 위험
+}
+
+// 올바름 - managed 엔티티 + 더티 체킹
+@Transactional
+public Product update(Long id, Product product) {
+    ProductEntity entity = repository.findById(id).orElseThrow(...);
+    entity.update(product);  // 더티 체킹 → 자동 UPDATE
+    return entity.toDomain();
+}
+```
+
+---
+
+### [설계] soft delete JPQL에서 `CURRENT_TIMESTAMP` 사용
+
+Java에서 `LocalDateTime.now()`를 파라미터로 넘기면 서버가 여러 대일 때 시간 불일치 가능.
+JPQL의 `CURRENT_TIMESTAMP`는 DB 서버 시간 기준으로 통일되며 H2/MySQL 모두 호환된다.
+
+```java
+// 올바름
+@Modifying(clearAutomatically = true)
+@Query("UPDATE ProductEntity p SET p.deletedAt = CURRENT_TIMESTAMP WHERE p.id = :id")
+void deleteById(@Param("id") Long id);
+```
+
+---
+
+### [설계] 도메인 객체에 `equals/hashCode` 추가 금지 (테스트 목적)
+
+테스트를 위해 도메인을 오염시키지 않는다. AssertJ의 필드 단위 검증으로 대체한다.
+
+```java
+// 도메인 오염 - 금지 (테스트 목적의 equals/hashCode)
+
+// 올바름 - AssertJ 활용
+assertAll(
+    () -> assertThat(found.getId()).isEqualTo(saved.getId()),
+    () -> assertThat(found.getName()).isEqualTo(saved.getName())
+);
+```
+
+---
+
+### [설계] `@DataJpaTest`로 Repository 계층 테스트
+
+JPA Repository 테스트는 `@DataJpaTest`를 사용한다. 전체 Spring 컨텍스트 없이 JPA 관련 빈만 로딩.
+`@Import`로 실제 Repository 구현체를 주입한다.
+
+```java
+@DataJpaTest
+@Import(ProductRepositoryImpl.class)
+class ProductRepositoryTest {
+    @Autowired
+    private ProductRepository repository;
+}
+```
+
+`ProductServiceTest`는 `InMemoryProductRepository`를 계속 사용한다. Service 단위 테스트에 JPA는 불필요하다.
+
