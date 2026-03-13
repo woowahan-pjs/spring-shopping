@@ -11,6 +11,7 @@ import shopping.wishlist.domain.Wishlist;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -87,6 +88,6 @@ class WishlistServiceTest {
         service.addWishlist(wishlist);
 
         assertThatThrownBy(() -> service.deleteWishlistItem(100L, wishlist.getId()))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(NoSuchElementException.class);
     }
 }

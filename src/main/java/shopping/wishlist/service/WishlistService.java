@@ -6,6 +6,7 @@ import shopping.wishlist.domain.Wishlist;
 import shopping.wishlist.domain.WishlistRepository;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class WishlistService {
@@ -35,7 +36,7 @@ public class WishlistService {
 
     public void deleteWishlistItem(Long memberId, Long id) {
         if (!wishlistRepository.existsByMemberIdAndId(memberId, id)) {
-            throw new IllegalArgumentException("존재하지 않은 위시리스트입니다.");
+            throw new NoSuchElementException("존재하지 않은 위시리스트입니다.");
         }
         wishlistRepository.deleteById(id);
     }

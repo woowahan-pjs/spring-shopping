@@ -29,7 +29,6 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    @Transactional
     public Product update(Long id, Product product) {
         ProductEntity entity = repository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));

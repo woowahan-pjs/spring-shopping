@@ -6,7 +6,6 @@ import shopping.common.BaseEntity;
 import shopping.product.domain.Product;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "product")
@@ -24,7 +23,7 @@ public class ProductEntity extends BaseEntity {
 
     protected ProductEntity() {}
 
-    public ProductEntity(Long id, String name, BigDecimal price, String imageUrl) {
+    private ProductEntity(Long id, String name, BigDecimal price, String imageUrl) {
         this.id = id;
         this.name = name;
         this.price = price;
