@@ -33,9 +33,10 @@ Feature: Wishlist management
     When I view my wishlist
     Then the wishlist should contain 0 product
 
-  Scenario: Add duplicate product to wishlist
+  Scenario: Add duplicate product to wishlist returns existing wish
     Given I am a registered member with email "wish-dup@example.com" and password "password123"
     And a product exists with name "Headset" price 80000 and imageUrl "https://example.com/hs.png"
     And the product is in my wishlist
     When I add the product to my wishlist
-    Then the request should fail
+    Then the wish should be created
+    And the wish response should have product name "Headset"

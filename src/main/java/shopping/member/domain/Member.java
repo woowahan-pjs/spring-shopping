@@ -67,13 +67,12 @@ public class Member {
     }
 
     public Wish wish(UUID productId, long wishedPrice) {
-        boolean exists = wishes.stream().anyMatch(w -> w.getProductId().equals(productId));
-        if (exists) {
-            throw new IllegalArgumentException("이미 위시리스트에 추가된 상품입니다.");
-        }
-        Wish wish = new Wish(this.id, productId, wishedPrice);
-        wishes.add(wish);
-        return wish;
+        return wishes.stream().filter(w -> w.getProductId().equals(productId)).findFirst()
+                .orElseGet(() -> {
+                    Wish wish = new Wish(this.id, productId, wishedPrice);
+                    wishes.add(wish);
+                    return wish;
+                });
     }
 
     public void removeWish(UUID productId) {

@@ -3,6 +3,8 @@ package shopping;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
+import java.util.UUID;
+
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -32,7 +34,8 @@ public class WishStepDefinitions {
 
     @Given("the product is in my wishlist")
     public void theProductIsInMyWishlist() {
-        RestAssured.given().spec(context.spec()).header("Authorization", "Bearer " + token).when()
+        RestAssured.given().spec(context.spec()).header("Authorization", "Bearer " + token)
+                .header("Idempotency-Key", UUID.randomUUID().toString()).when()
                 .post("/api/wishes/{productId}", context.getCreatedProductId()).then()
                 .statusCode(201);
     }
@@ -47,7 +50,8 @@ public class WishStepDefinitions {
     @When("I add the product to my wishlist")
     public void iAddTheProductToMyWishlist() {
         context.setResponse(RestAssured.given().spec(context.documentSpec("wish-add"))
-                .filter(document("wish-add")).header("Authorization", "Bearer " + token).when()
+                .filter(document("wish-add")).header("Authorization", "Bearer " + token)
+                .header("Idempotency-Key", UUID.randomUUID().toString()).when()
                 .post("/api/wishes/{productId}", context.getCreatedProductId()).then().extract());
     }
 

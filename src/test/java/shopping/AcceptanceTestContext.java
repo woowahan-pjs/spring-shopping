@@ -16,6 +16,7 @@ public class AcceptanceTestContext {
     private final ManualRestDocumentation restDocumentation = new ManualRestDocumentation();
     private ExtractableResponse<Response> response;
     private String createdProductId;
+    private String previousProductId;
     private String token;
 
     public void setUp(String methodName) {
@@ -57,5 +58,13 @@ public class AcceptanceTestContext {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getPreviousProductId() {
+        return previousProductId;
+    }
+
+    public void setPreviousProductId(String previousProductId) {
+        this.previousProductId = previousProductId;
     }
 }

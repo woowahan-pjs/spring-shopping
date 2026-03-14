@@ -3,6 +3,8 @@ package shopping;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.restdocs.restassured.RestAssuredRestDocumentation.document;
 
+import java.util.UUID;
+
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import io.cucumber.java.en.And;
@@ -52,6 +54,7 @@ public class ProductStepDefinitions {
     public void aProductExistsWithNamePriceAndImageUrl(String name, long price, String imageUrl) {
         var response = RestAssured.given().spec(context.spec())
                 .header("Authorization", "Bearer " + context.getToken())
+                .header("Idempotency-Key", UUID.randomUUID().toString())
                 .contentType(ContentType.JSON)
                 .body("{\"name\":\"" + name + "\",\"price\":" + price + ",\"imageUrl\":\""
                         + imageUrl + "\"}")
@@ -64,6 +67,7 @@ public class ProductStepDefinitions {
         context.setResponse(RestAssured.given().spec(context.documentSpec("product-create"))
                 .filter(document("product-create"))
                 .header("Authorization", "Bearer " + context.getToken())
+                .header("Idempotency-Key", UUID.randomUUID().toString())
                 .contentType(ContentType.JSON).body("{\"name\":\"" + name + "\",\"price\":" + price
                         + ",\"imageUrl\":\"" + imageUrl + "\"}")
                 .when().post("/api/products").then().extract());
@@ -152,5 +156,31 @@ public class ProductStepDefinitions {
     @And("the response should have message {string}")
     public void theResponseShouldHaveMessage(String message) {
         assertThat(context.getResponse().jsonPath().getString("message")).isEqualTo(message);
+    }
+
+    @When("I create a product with name {string} price {long} and imageUrl {string} using idempotency key {string}")
+    public void iCreateAProductWithIdempotencyKey(String name, long price, String imageUrl,
+            String idempotencyKey) {
+        context.setPreviousProductId(context.getCreatedProductId());
+        context.setResponse(RestAssured.given().spec(context.spec())
+                .header("Authorization", "Bearer " + context.getToken())
+                .header("Idempotency-Key", idempotencyKey).contentType(ContentType.JSON)
+                .body("{\"name\":\"" + name + "\",\"price\":" + price + ",\"imageUrl\":\""
+                        + imageUrl + "\"}")
+                .when().post("/api/products").then().extract());
+        String id = context.getResponse().jsonPath().getString("id");
+        if (id != null) {
+            context.setCreatedProductId(id);
+        }
+    }
+
+    @And("the product id should be the same as the previously created product")
+    public void theProductIdShouldBeTheSameAsThePreviouslyCreatedProduct() {
+        assertThat(context.getCreatedProductId()).isEqualTo(context.getPreviousProductId());
+    }
+
+    @And("the product id should be different from the previously created product")
+    public void theProductIdShouldBeDifferentFromThePreviouslyCreatedProduct() {
+        assertThat(context.getCreatedProductId()).isNotEqualTo(context.getPreviousProductId());
     }
 }

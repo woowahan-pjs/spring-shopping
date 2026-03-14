@@ -64,15 +64,16 @@ class MemberTest {
     }
 
     @Test
-    void 이미_추가된_상품을_위시리스트에_추가하면_예외가_발생한다() {
+    void 이미_추가된_상품을_위시리스트에_추가하면_기존_위시를_반환한다() {
         UUID productId = UUID.randomUUID();
         Member member = new Member("test@test.com", "password");
-        member.wish(productId, 50000L);
+        Wish first = member.wish(productId, 50000L);
 
-        IllegalArgumentException exception =
-                assertThrows(IllegalArgumentException.class, () -> member.wish(productId, 50000L));
+        Wish second = member.wish(productId, 60000L);
 
-        assertEquals("이미 위시리스트에 추가된 상품입니다.", exception.getMessage());
+        assertEquals(first.getId(), second.getId());
+        assertEquals(50000L, second.getWishedPrice());
+        assertEquals(1, member.getWishes().size());
     }
 
     @Test

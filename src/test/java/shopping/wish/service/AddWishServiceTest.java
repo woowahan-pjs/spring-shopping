@@ -47,12 +47,15 @@ class AddWishServiceTest {
     }
 
     @Test
-    void 이미_추가된_상품이면_예외가_발생한다() {
+    void 이미_추가된_상품이면_기존_위시를_반환한다() {
         UUID productId = UUID.randomUUID();
         Member member = memberRepository.save(new Member("test@test.com", "password"));
-        service.execute(member.getId(), productId, 50000L);
+        Wish first = service.execute(member.getId(), productId, 50000L);
 
-        assertThrows(IllegalArgumentException.class,
-                () -> service.execute(member.getId(), productId, 50000L));
+        Wish second = service.execute(member.getId(), productId, 60000L);
+
+        assertEquals(first.getId(), second.getId());
+        assertEquals(50000L, second.getWishedPrice());
+        assertEquals(1, memberRepository.findById(member.getId()).orElseThrow().getWishes().size());
     }
 }

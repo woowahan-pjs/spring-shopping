@@ -56,3 +56,17 @@ Feature: Product CRUD
     And the profanity API is unavailable
     When I update the product with name "NewName" price 20000 and imageUrl "https://example.com/new.png"
     Then the response status should be 500
+
+  Scenario: Duplicate product creation with same idempotency key is rejected
+    When I create a product with name "Laptop" price 1000000 and imageUrl "https://example.com/laptop.png" using idempotency key "idem-key-1"
+    Then the product should be created
+    When I create a product with name "Laptop" price 1000000 and imageUrl "https://example.com/laptop.png" using idempotency key "idem-key-1"
+    Then the response status should be 409
+    And the response should have message "이미 처리된 요청입니다."
+
+  Scenario: Different idempotency key creates separate product
+    When I create a product with name "ItemA" price 10000 and imageUrl "https://example.com/a.png" using idempotency key "key-a"
+    Then the product should be created
+    When I create a product with name "ItemB" price 20000 and imageUrl "https://example.com/b.png" using idempotency key "key-b"
+    Then the product should be created
+    And the product id should be different from the previously created product
