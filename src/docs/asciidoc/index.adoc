@@ -1,0 +1,40 @@
+= Spring Shopping API
+:toc: left
+:toclevels:2
+:source-highlighter: highlightjs
+
+== 위시리스트 API
+
+=== 위시리스트 추가
+operation::wishlist/add[snippets='http-request,http-response']
+
+=== 위시리스트 조회
+operation::wishlist/find-all[snippets='http-request,http-response,response-fields']
+
+=== 위시리스트 삭제
+operation::wishlist/delete[snippets='http-request,http-response']
+
+
+== 상품 API
+=== 상품 추가
+operation::products/add[snippets='http-request,http-response']
+
+=== 상품 목록 조회
+operation::products/find-all[snippets='http-request,http-response,response-fields']
+
+=== 상품 단건 조회
+operation::products/find-by-id[snippets='http-request,http-response,response-fields']
+
+=== 상품 수정
+operation::products/update[snippets='http-request,http-response,response-fields']
+
+=== 상품 삭제
+operation::products/delete[snippets='http-request,http-response']
+
+
+== 회원 API
+=== 회원 가입
+operation::members/register[snippets='http-request,http-response']
+
+=== 로그인
+operation::members/login[snippets='http-request,http-response,response-fields']

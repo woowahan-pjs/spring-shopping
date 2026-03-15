@@ -1,0 +1,25 @@
+### 회원 가입
+POST localhost:8080/members
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "password"
+}
+
+### 로그인
+POST localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "password"
+}
+### 관리자 로그인
+POST localhost:8080/login
+Content-Type: application/json
+
+{
+  "email": "admin@shop.com",
+  "password": "admin1234!"
+}

@@ -1,0 +1,42 @@
+### 상품 추가
+POST http://localhost:8080/products
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczNTcwOTcxLCJleHAiOjE3NzM1NzQ1NzF9.GTmKmYLl-uwumfigPPbSrW9CsScUArBPEqjoFX4NgaY
+
+{
+  "name" : "피자",
+  "price": 20000,
+  "imageUrl": "https://a.com/pizza.jpg"
+}
+
+### 상품 조회
+GET http://localhost:8080/products
+
+### 상품 단건 조회
+GET http://localhost:8080/products/1
+
+### 상품 수정
+PUT http://localhost:8080/products/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczNTcwOTcxLCJleHAiOjE3NzM1NzQ1NzF9.GTmKmYLl-uwumfigPPbSrW9CsScUArBPEqjoFX4NgaY
+
+{
+    "name" : "치킨",
+    "price" : 15000,
+    "imageUrl": "https://a.com/chicken.jpg"
+}
+
+### 상품 삭제
+DELETE http://localhost:8080/products/1
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczNTcwOTcxLCJleHAiOjE3NzM1NzQ1NzF9.GTmKmYLl-uwumfigPPbSrW9CsScUArBPEqjoFX4NgaY
+
+### 상품명 예외 발생.
+PUT http://localhost:8080/products/100
+Content-Type: application/json
+
+{
+  "name" : "치킨",
+  "price" : 15000,
+  "imageUrl": "https://a.com/chicken.jpg"
+}
+
