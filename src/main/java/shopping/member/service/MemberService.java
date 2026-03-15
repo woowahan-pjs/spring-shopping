@@ -3,6 +3,7 @@ package shopping.member.service;
 import org.springframework.stereotype.Service;
 import shopping.member.domain.Member;
 import shopping.member.domain.MemberRepository;
+import shopping.member.domain.MemberRole;
 
 @Service
 public class MemberService {
@@ -17,13 +18,7 @@ public class MemberService {
     }
 
     public void register(Member member) {
-        if (!emailFormatValidator.isValid(member.getEmail())) {
-            throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
-        }
-
-        if (repository.findByEmail(member.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
-        }
+        validationMember(member);
 
         member.changePassword(passwordEncryptor.encrypt(member.getPassword()));
 
@@ -39,5 +34,24 @@ public class MemberService {
         }
 
         return member;
+    }
+
+    public void adminRegister(Member member) {
+        validationMember(member);
+
+        member.changePassword(passwordEncryptor.encrypt(member.getPassword()));
+        member.changeRole(MemberRole.ADMIN);
+
+        repository.save(member);
+    }
+
+    private void validationMember(Member member) {
+        if (!emailFormatValidator.isValid(member.getEmail())) {
+            throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
+        }
+
+        if (repository.findByEmail(member.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다.");
+        }
     }
 }

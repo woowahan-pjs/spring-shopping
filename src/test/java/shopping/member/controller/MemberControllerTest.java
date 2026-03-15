@@ -84,7 +84,7 @@ class MemberControllerTest {
         String token = "mock-token";
 
         given(service.login(request.getEmail(), request.getPassword())).willReturn(member);
-        given(provider.generate(member.getId())).willReturn(token);
+        given(provider.generate(member)).willReturn(token);
 
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -127,6 +127,5 @@ class MemberControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
     }
-
 
 }

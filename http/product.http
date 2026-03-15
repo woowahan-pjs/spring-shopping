@@ -1,6 +1,7 @@
 ### 상품 추가
 POST http://localhost:8080/products
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczNTcwOTcxLCJleHAiOjE3NzM1NzQ1NzF9.GTmKmYLl-uwumfigPPbSrW9CsScUArBPEqjoFX4NgaY
 
 {
   "name" : "피자",
@@ -17,6 +18,7 @@ GET http://localhost:8080/products/1
 ### 상품 수정
 PUT http://localhost:8080/products/1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczNTcwOTcxLCJleHAiOjE3NzM1NzQ1NzF9.GTmKmYLl-uwumfigPPbSrW9CsScUArBPEqjoFX4NgaY
 
 {
     "name" : "치킨",
@@ -26,7 +28,7 @@ Content-Type: application/json
 
 ### 상품 삭제
 DELETE http://localhost:8080/products/1
-
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczNTcwOTcxLCJleHAiOjE3NzM1NzQ1NzF9.GTmKmYLl-uwumfigPPbSrW9CsScUArBPEqjoFX4NgaY
 
 ### 상품명 예외 발생.
 PUT http://localhost:8080/products/100

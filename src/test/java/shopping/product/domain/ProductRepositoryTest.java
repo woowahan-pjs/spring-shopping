@@ -69,9 +69,6 @@ public class ProductRepositoryTest {
     @Test
     @DisplayName("상품 목록을 조회한다")
     void findAll() {
-        repository.save(createProduct());
-        repository.save(createProduct());
-        repository.save(createProduct());
 
         List<Product> productList = repository.findAll();
 

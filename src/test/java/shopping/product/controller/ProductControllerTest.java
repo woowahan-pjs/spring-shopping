@@ -1,6 +1,7 @@
 package shopping.product.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -10,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import shopping.auth.JwtTokenProvider;
+import shopping.member.domain.MemberRole;
 import shopping.product.domain.Product;
 import shopping.product.controller.dto.ProductRequest;
 import shopping.product.service.ProductService;
@@ -29,6 +31,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static shopping.wishlist.domain.WishlistFixture.VALID_MEMBER_ID;
 
 
 @WebMvcTest(ProductController.class)
@@ -47,6 +50,11 @@ class ProductControllerTest {
     @MockitoBean
     JwtTokenProvider provider;
 
+    @BeforeEach
+    void setUp() {
+        given(provider.extractRole(any())).willReturn(MemberRole.ADMIN);
+    }
+
     @Test
     @DisplayName("상품을 추가한다.")
     void addProduct() throws Exception {
@@ -56,6 +64,7 @@ class ProductControllerTest {
         given(service.save(any())).willReturn(product);
 
         mockMvc.perform(post("/products")
+                        .header("Authorization", "Bearer valid-token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                         .andExpect(status().isCreated())
@@ -124,6 +133,7 @@ class ProductControllerTest {
         given(service.update(eq(1L), any())).willReturn(product);
 
         mockMvc.perform(put("/products/{id}", 1L)
+                        .header("Authorization", "Bearer valid-token")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(status().isOk(),
@@ -153,7 +163,8 @@ class ProductControllerTest {
     void deleteProduct() throws Exception {
         willDoNothing().given(service).deleteById(1L);
 
-        mockMvc.perform(delete("/products/{id}", 1L))
+        mockMvc.perform(delete("/products/{id}", 1L)
+                        .header("Authorization", "Bearer valid-token"))
                 .andExpect(status().isNoContent())
                 .andDo(document("products/delete",
                         pathParameters(
@@ -168,6 +179,7 @@ class ProductControllerTest {
         ProductRequest request = new ProductRequest("", VALID_PRICE, VALID_IMAGE_URL);
 
         mockMvc.perform(post("/products")
+                .header("Authorization", "Bearer valid-token")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
@@ -180,5 +192,19 @@ class ProductControllerTest {
 
         mockMvc.perform(get("/products/{id}", 1))
                         .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("관리자가 아니면 상품 등록 불가")
+    void addProduct_forbidden() throws Exception {
+        ProductRequest request = new ProductRequest("", VALID_PRICE, VALID_IMAGE_URL);
+
+        given(provider.extractRole(any())).willReturn(MemberRole.USER); // 이 테스트에서만 오버라이드
+
+        mockMvc.perform(post("/products")
+                .header("Authorization", "Bearer valid-token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isForbidden());
     }
 }

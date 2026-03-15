@@ -8,22 +8,25 @@ public class Member {
     private Long id;
     private String email;
     private String password;
+    private MemberRole role;
 
     public Member(String email, String password) {
         validatedEmail(email);
         validatedPassword(password);
         this.email = email;
         this.password = password;
+        this.role = MemberRole.USER;
     }
 
-    private Member(Long id, String email, String password) {
+    private Member(Long id, String email, String password, MemberRole role) {
         this.id = id;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
-    public static Member of(Long id, String email, String password) {
-        return new Member(id, email, password);
+    public static Member of(Long id, String email, String password, MemberRole role) {
+        return new Member(id, email, password, role);
     }
 
     void assignId(Long id) {
@@ -32,6 +35,10 @@ public class Member {
 
     public void changePassword(String password) {
         this.password = password;
+    }
+
+    public void changeRole(MemberRole role) {
+        this.role = role;
     }
 
     public Long getId() {
@@ -44,6 +51,10 @@ public class Member {
 
     public String getPassword() {
         return password;
+    }
+
+    public MemberRole getRole() {
+        return role;
     }
 
     private void validatedEmail(String email) {

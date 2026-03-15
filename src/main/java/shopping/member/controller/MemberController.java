@@ -27,10 +27,16 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    @PostMapping("/admin/members")
+    public ResponseEntity<Void> adminRegister(@RequestBody MemberRequest request) {
+        service.adminRegister(request.toMember());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody MemberRequest request) {
         Member member = service.login(request.getEmail(), request.getPassword());
-        String accessToken = provider.generate(member.getId());
+        String accessToken = provider.generate(member);
         return ResponseEntity.ok(new LoginResponse(accessToken));
     }
 }

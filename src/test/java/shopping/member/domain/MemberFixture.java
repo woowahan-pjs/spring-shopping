@@ -7,6 +7,6 @@ public class MemberFixture {
     }
 
     public static Member createWithId(Long id) {
-        return Member.of(id, "test@gmail.com", "password");
+        return Member.of(id, "test@gmail.com", "password", MemberRole.USER);
     }
 }
