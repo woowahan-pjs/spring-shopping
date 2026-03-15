@@ -32,6 +32,10 @@
 - `domain` 패키지는 JPA · Spring 의존성이 없어 분리 시 즉시 독립 모듈로 추출 가능합니다.
 - `WishService`의 `ProductRepository` 직접 참조는 멀티 모듈 분리 시 도메인 이벤트 또는 ACL 패턴으로 전환이 필요한 지점입니다.
 
+#### 패키지 의존성 방향
+
+![](./docs/images/package-dependency.png)
+
 ### 데이터 및 의존성 관리
 - 레이어 간 결합도를 낮추기 위해 용도에 맞는 DTO를 사용한다.
   - Web 계층: `@@Request`, `@@Response` (클라이언트와의 규약)
