@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import shopping.support.error.CoreException
+import shopping.support.error.ErrorType
 import shopping.support.response.ApiResponse
 
 @RestControllerAdvice
@@ -29,5 +30,11 @@ class ApiControllerAdvice {
             return
         }
         log.info("CoreException : {}", e.message)
+    }
+
+    @ExceptionHandler(Exception::class)
+    fun handleException(e: Exception): ResponseEntity<ApiResponse<Any>> {
+        log.error("Exception : {}", e.message, e)
+        return ResponseEntity(ApiResponse.Companion.error(ErrorType.DEFAULT_ERROR), ErrorType.DEFAULT_ERROR.status)
     }
 }
