@@ -1,0 +1,39 @@
+= Shopping Mall API Guide
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+== Member API
+=== 회원 가입
+operation::member-register[snippets='http-request,http-response,request-fields,response-fields']
+
+=== 로그인
+operation::member-login[snippets='http-request,http-response,request-fields,response-fields']
+
+== Product API
+=== 상품 등록
+operation::product-create[snippets='http-request,http-response,request-fields,response-fields']
+
+=== 상품 단건 조회
+operation::product-get[snippets='http-request,http-response,path-parameters,http-response,response-fields']
+
+=== 상품 목록 조회
+operation::product-list[snippets='http-request,http-response,response-fields']
+
+=== 상품 수정
+operation::product-update[snippets='http-request,http-response,path-parameters,request-fields']
+
+=== 상품 삭제
+operation::product-delete[snippets='http-request,http-response,path-parameters']
+
+== Wish API
+=== 위시 리스트 추가
+operation::wish-create[snippets='http-request,http-response,request-headers,request-fields,response-fields']
+
+=== 위시 리스트 조회
+operation::wish-list[snippets='http-request,http-response,request-headers,response-fields']
+
+=== 위시 리스트 삭제
+operation::wish-delete[snippets='http-request,http-response,request-headers,path-parameters']

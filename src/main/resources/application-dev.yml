@@ -1,0 +1,53 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/coreDB
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: 1234
+    hikari:
+      maximum-pool-size: 10
+      pool-name: core-db-pool
+      connection-timeout: 3000
+      keepalive-time: 30000
+      validation-timeout: 2000
+      max-lifetime: 600000
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+security:
+  jwt:
+    token:
+      secret-key: M2@lQ5#nS8$oV1!pX4^qB7&rC0*sE3!tF6#uG9@vH2!wI5$xJ8@yK1#zA4^bL7&m
+      access:
+        expire-length: 3600000 # 1시간
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10000
+    instances:
+      purgomalum:
+        base-config: default
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        slow-call-duration-threshold: 3000
+        slow-call-rate-threshold: 50
+        wait-duration-in-open-state: 30000
+        permitted-number-of-calls-in-half-open-state: 3
+        registerHealthIndicator: true
+        ignoreExceptions:
+          - org.springframework.web.client.HttpClientErrorException

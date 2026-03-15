@@ -1,0 +1,16 @@
+### 위시 리스트 추가
+POST http://localhost:8080/api/v1/wishes
+Content-Type: application/json
+Authorization: Bearer {accessToken}
+
+{
+  "productId": 1
+}
+
+### 위시 리스트 조회
+GET http://localhost:8080/api/v1/wishes
+Authorization: Bearer {accessToken}
+
+### 위시 리스트 삭제
+DELETE http://localhost:8080/api/v1/wishes/1
+Authorization: Bearer {accessToken}

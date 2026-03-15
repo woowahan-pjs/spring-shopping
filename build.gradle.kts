@@ -1,19 +1,21 @@
 plugins {
-    kotlin("jvm") version "1.9.25"
-    kotlin("plugin.spring") version "1.9.25"
-    kotlin("plugin.jpa") version "1.9.25"
-    id("org.springframework.boot") version "3.5.9"
-    id("io.spring.dependency-management") version "1.1.7"
-    id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
-    id("org.flywaydb.flyway") version "12.0.1"
+    kotlin("jvm")
+    kotlin("kapt")
+    kotlin("plugin.spring")
+    kotlin("plugin.jpa")
+    id("org.springframework.boot")
+    id("io.spring.dependency-management")
+    id("org.jlleitschuh.gradle.ktlint")
+    id("org.flywaydb.flyway")
+    id("org.asciidoctor.jvm.convert")
 }
 
-group = "camp.nextstep.edu"
-version = "0.0.1-SNAPSHOT"
+group = property("projectGroup").toString()
+version = property("applicationVersion").toString()
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(property("javaVersion").toString())
     }
 }
 
@@ -21,20 +23,48 @@ repositories {
     mavenCentral()
 }
 
+val snippetsDir = file("build/generated-snippets")
+val asciidoctorExt: Configuration by configurations.creating
+
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation("org.springframework.boot:spring-boot-starter-validation")
-    implementation("org.springframework.boot:spring-boot-starter-web")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    // Kotlin
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+
+    // Spring Boot
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-validation")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation(platform("org.springframework.cloud:spring-cloud-dependencies:${property("springCloudDependenciesVersion")}"))
+
+    // DB
+    runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("com.h2database:h2")
+
+    // Flyway
     implementation("org.flywaydb:flyway-core")
     implementation("org.flywaydb:flyway-mysql")
-    runtimeOnly("com.h2database:h2")
-    runtimeOnly("com.mysql:mysql-connector-j")
+
+    // JWT
+    implementation("io.jsonwebtoken:jjwt-api:${property("jjwtVersion")}")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:${property("jjwtVersion")}")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:${property("jjwtVersion")}")
+
+    // CircuitBreaker
+    implementation("org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j")
+
+    // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:${property("mockitoKotlinVersion")}")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // REST Docs & RestAssured
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("org.springframework.restdocs:spring-restdocs-restassured")
+    testImplementation("io.rest-assured:spring-mock-mvc:${property("restAssuredVersion")}")
+    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
 }
 
 kotlin {
@@ -53,6 +83,27 @@ ktlint {
     verbose.set(true)
 }
 
+tasks.test {
+    useJUnitPlatform {
+        excludeTags("restdocs")
+    }
+}
+
+val restDocsTest by tasks.registering(Test::class) {
+    group = "verification"
+    useJUnitPlatform {
+        includeTags("restdocs")
+    }
+    outputs.dir(snippetsDir)
+}
+
 tasks.withType<Test> {
     useJUnitPlatform()
+    outputs.dir(snippetsDir)
+}
+
+tasks.asciidoctor {
+    configurations("asciidoctorExt")
+    inputs.dir(snippetsDir)
+    dependsOn(restDocsTest)
 }

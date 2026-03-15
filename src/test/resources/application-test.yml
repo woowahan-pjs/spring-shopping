@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:coreDB;MODE=MySQL;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+    hikari:
+      maximum-pool-size: 5
+      pool-name: core-db-pool
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+  flyway:
+    enabled: false
+  sql:
+    init:
+      mode: never
+
+security:
+  jwt:
+    token:
+      secret-key: jwt-secret-key-for-test-12345678901234567890
+      access:
+        expire-length: 3600000 # 1시간
+
+
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10000
+    instances:
+      purgomalum: # PurgoMalumClient에서 circuitBreaker.run("purgomalum")으로 호출한 이름과 반드시 일치해야 합니다.
+        base-config: default
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        slow-call-duration-threshold: 3000
+        slow-call-rate-threshold: 50
+        wait-duration-in-open-state: 30000
+        permitted-number-of-calls-in-half-open-state: 3
+        registerHealthIndicator: true
+        ignoreExceptions:
+          - org.springframework.web.client.HttpClientErrorException
