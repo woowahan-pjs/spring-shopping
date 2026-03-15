@@ -1,5 +1,6 @@
 package shopping.util;
 
+import java.security.MessageDigest;
 import java.util.Base64;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -12,6 +13,20 @@ public class CryptoUtil {
 	public static String encrypt(String plainText) {
 		try {
 			SecretKeySpec keySpec = new SecretKeySpec(SECRET_KEY.getBytes(), ALGORITHM);
+			Cipher cipher = Cipher.getInstance(ALGORITHM);
+			cipher.init(Cipher.ENCRYPT_MODE, keySpec);
+			byte[] encrypted = cipher.doFinal(plainText.getBytes());
+			return Base64.getEncoder().encodeToString(encrypted);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static String encrypt(String plainText, String salt) {
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] derivedKey = digest.digest((SECRET_KEY + salt).getBytes());
+			SecretKeySpec keySpec = new SecretKeySpec(derivedKey, ALGORITHM);
 			Cipher cipher = Cipher.getInstance(ALGORITHM);
 			cipher.init(Cipher.ENCRYPT_MODE, keySpec);
 			byte[] encrypted = cipher.doFinal(plainText.getBytes());
