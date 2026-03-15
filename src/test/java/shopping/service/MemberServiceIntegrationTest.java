@@ -40,7 +40,7 @@ class MemberServiceIntegrationTest {
 	@Test
 	void login_로그인_성공_토큰반환() {
 		memberService.signUp(new SignUpMemberRequestDto("테스터", "test@test.com", "password1234"));
-		LoginRequestDto loginRequest = new LoginRequestDto("test@test.com", encrypt("password1234"));
+		LoginRequestDto loginRequest = new LoginRequestDto("test@test.com", encrypt("password1234", "test@test.com"));
 
 		String token = memberService.login(loginRequest);
 
@@ -49,7 +49,7 @@ class MemberServiceIntegrationTest {
 
 	@Test
 	void login_존재하지_않는_이메일_예외발생() {
-		LoginRequestDto loginRequest = new LoginRequestDto("none@test.com", encrypt("password1234"));
+		LoginRequestDto loginRequest = new LoginRequestDto("none@test.com", encrypt("password1234", "none@test.com"));
 
 		assertThatThrownBy(() -> memberService.login(loginRequest))
 			.isInstanceOf(NotFoundException.class);
@@ -58,7 +58,7 @@ class MemberServiceIntegrationTest {
 	@Test
 	void login_비밀번호_불일치_예외발생() {
 		memberService.signUp(new SignUpMemberRequestDto("테스터", "test@test.com", "password1234"));
-		LoginRequestDto loginRequest = new LoginRequestDto("test@test.com", encrypt("wrongPassword"));
+		LoginRequestDto loginRequest = new LoginRequestDto("test@test.com", encrypt("wrongPassword", "test@test.com"));
 
 		assertThatThrownBy(() -> memberService.login(loginRequest))
 			.isInstanceOf(NotValidException.class);

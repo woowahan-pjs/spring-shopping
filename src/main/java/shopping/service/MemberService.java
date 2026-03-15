@@ -23,7 +23,7 @@ public class MemberService {
 	}
 
 	public void signUp(SignUpMemberRequestDto requestDto) {
-		String encryptPassword = encrypt(requestDto.getPassword());
+		String encryptPassword = encrypt(requestDto.getPassword(), requestDto.getEmail());
 		Member member = Member.create(requestDto.getEmail(), encryptPassword, requestDto.getName());
 		memberRepository.save(member);
 	}
