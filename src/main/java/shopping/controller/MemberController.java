@@ -1,5 +1,6 @@
 package shopping.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,7 +21,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/sign-up")
-	public ResponseEntity<Object> signUp(@RequestBody SignUpMemberRequestDto requestDto) {
+	public ResponseEntity<Object> signUp(@RequestBody @Valid SignUpMemberRequestDto requestDto) {
 		memberService.signUp(requestDto);
 		return ResponseEntity.ok().build();
 	}
