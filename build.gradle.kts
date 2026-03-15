@@ -6,6 +6,7 @@ plugins {
     id("io.spring.dependency-management") version "1.1.7"
     id("org.jlleitschuh.gradle.ktlint") version "14.0.1"
     id("org.flywaydb.flyway") version "12.0.1"
+    id("org.asciidoctor.jvm.convert") version "3.3.2"
 }
 
 group = "camp.nextstep.edu"
@@ -19,6 +20,10 @@ java {
 
 repositories {
     mavenCentral()
+}
+
+configurations {
+    create("asciidoctorExtensions")
 }
 
 dependencies {
@@ -44,9 +49,12 @@ dependencies {
     compileOnly("org.projectlombok:lombok")
     annotationProcessor("org.projectlombok:lombok")
 
+    testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    "asciidoctorExtensions"("org.springframework.restdocs:spring-restdocs-asciidoctor")
 }
 
 kotlin {
@@ -67,4 +75,24 @@ ktlint {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+val snippetsDir = file("build/generated-snippets")
+
+tasks.test {
+    outputs.dir(snippetsDir)
+}
+
+tasks.asciidoctor {
+    configurations("asciidoctorExtensions")
+    inputs.dir(snippetsDir)
+    dependsOn(tasks.test)
+    baseDirFollowsSourceDir()
+}
+
+tasks.bootJar {
+    dependsOn(tasks.asciidoctor)
+    from("build/docs/asciidoc") {
+        into("static/docs")
+    }
 }

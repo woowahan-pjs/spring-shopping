@@ -1,36 +1,42 @@
 package shopping.product.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.assertj.MockMvcTester;
+import org.springframework.test.web.servlet.MockMvc;
 import shopping.auth.JwtTokenProvider;
 import shopping.product.domain.Product;
 import shopping.product.controller.dto.ProductRequest;
-import shopping.product.controller.dto.ProductResponse;
 import shopping.product.service.ProductService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static shopping.product.domain.ProductFixture.*;
 
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
+
+
 @WebMvcTest(ProductController.class)
+@AutoConfigureRestDocs
 class ProductControllerTest {
 
     @Autowired
-    MockMvcTester mockMvcTester;
+    MockMvc mockMvc;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -43,97 +49,136 @@ class ProductControllerTest {
 
     @Test
     @DisplayName("상품을 추가한다.")
-    void addProduct() throws JsonProcessingException {
+    void addProduct() throws Exception {
         Product product = createWithId(1L);
         ProductRequest request = new ProductRequest(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
 
         given(service.save(any())).willReturn(product);
 
-        assertThat(mockMvcTester.post().uri("/products")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .hasStatus(HttpStatus.CREATED)
-                .bodyJson()
-                .convertTo(ProductResponse.class)
-                .satisfies(response -> {
-                    assertThat(response.getId()).isEqualTo(1L);
-                    assertThat(response.getName()).isEqualTo(VALID_NAME);
-                    assertThat(response.getPrice()).isEqualTo(VALID_PRICE);
-                    assertThat(response.getImageUrl()).isEqualTo(VALID_IMAGE_URL);
-                });
+        mockMvc.perform(post("/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                        .andExpect(status().isCreated())
+                        .andDo(document("products/add",
+                                requestFields(
+                                    fieldWithPath("name").description("상품명"),
+                                    fieldWithPath("price").description("상품가격"),
+                                    fieldWithPath("imageUrl").description("상품이미지URL")
+                                )
+                        ));
     }
 
     @Test
     @DisplayName("상품 목록을 가져온다.")
-    void findAll() {
+    void findAll() throws Exception {
         given(service.findProducts()).willReturn(List.of(createWithId(1L), createWithId(2L), createWithId(3L)));
 
-        assertThat(mockMvcTester.get().uri("/products"))
-                .hasStatus(HttpStatus.OK)
-                .bodyJson()
-                .convertTo(InstanceOfAssertFactories.list(ProductResponse.class))
-                .hasSize(3);
+        mockMvc.perform(get("/products"))
+                .andExpectAll(status().isOk(),
+                        jsonPath("$.length()").value(3))
+                .andDo(document("products/find-all",
+                        responseFields(
+                                fieldWithPath("[].id").description("상품 ID"),
+                                fieldWithPath("[].name").description("상품명"),
+                                fieldWithPath("[].price").description("상품가격"),
+                                fieldWithPath("[].imageUrl").description("상품이미지경로")
+                        )
+                ));
     }
 
     @Test
     @DisplayName("특정 상품을 조회한다")
-    void findById() {
+    void findById() throws Exception {
         given(service.findProductById(1L)).willReturn(createWithId(1L));
 
-        assertThat(mockMvcTester.get().uri("/products/1"))
-                .hasStatus(HttpStatus.OK)
-                .bodyJson()
-                .hasPathSatisfying("$.id", id -> assertThat(id).isEqualTo(1));
+        mockMvc.perform(get("/products/{id}", 1L))
+                .andExpectAll(status().isOk(),
+                        jsonPath("$.id").value(1L))
+                .andDo(document("products/find-by-id",
+                        pathParameters(
+                                parameterWithName("id").description("조회할 상품 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("상품 ID"),
+                                fieldWithPath("name").description("상품명"),
+                                fieldWithPath("price").description("상품가격"),
+                                fieldWithPath("imageUrl").description("상품이미지경로")
+                        )
+                ));
     }
 
     @Test
     @DisplayName("상품을 수정한다")
-    void update() throws JsonProcessingException {
-        Product product = createWithId(1L);
-        product.changeName("치킨");
+    void update() throws Exception {
+        String changeName = "치킨";
+        String changeImageUrl = "http://pizzanara.com/a.jpg";
+        BigDecimal changePrice = new BigDecimal(100000);
 
-        ProductRequest request = new ProductRequest( "치킨", VALID_PRICE, VALID_IMAGE_URL);
+        Product product = createWithId(1L);
+        product.changeName(changeName);
+        product.changePrice(changePrice);
+        product.changeImageUrl(changeImageUrl);
+
+        ProductRequest request = new ProductRequest( "치킨", changePrice, changeImageUrl);
 
         given(service.update(eq(1L), any())).willReturn(product);
 
-        assertThat(mockMvcTester.put().uri("/products/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(request)))
-                .hasStatus(HttpStatus.OK)
-                .bodyJson()
-                .convertTo(ProductResponse.class)
-                .satisfies(res -> {
-                   assertThat(res.getId()).isEqualTo(1L);
-                   assertThat(res.getName()).isEqualTo("치킨");
-                });
+        mockMvc.perform(put("/products/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpectAll(status().isOk(),
+                        jsonPath("$.name").value(changeName),
+                        jsonPath("$.price").value(changePrice),
+                        jsonPath("$.imageUrl").value(changeImageUrl))
+                .andDo(document("products/update",
+                        requestFields(
+                                fieldWithPath("name").description("상품명"),
+                                fieldWithPath("price").description("상품가격"),
+                                fieldWithPath("imageUrl").description("상품이미지경로")
+                        ),
+                        pathParameters(
+                                parameterWithName("id").description("수정할 상품 ID")
+                        ),
+                        responseFields(
+                                fieldWithPath("id").description("상품 ID"),
+                                fieldWithPath("name").description("상품명"),
+                                fieldWithPath("price").description("상품가격"),
+                                fieldWithPath("imageUrl").description("상품이미지경로")
+                        )
+                ));
     }
 
     @Test
     @DisplayName("상품을 삭제한다")
-    void delete() {
+    void deleteProduct() throws Exception {
         willDoNothing().given(service).deleteById(1L);
 
-        assertThat(mockMvcTester.delete().uri("/products/1"))
-                .hasStatus(HttpStatus.NO_CONTENT);
+        mockMvc.perform(delete("/products/{id}", 1L))
+                .andExpect(status().isNoContent())
+                .andDo(document("products/delete",
+                        pathParameters(
+                                parameterWithName("id").description("삭제할 상품 ID")
+                        )
+                ));
     }
 
     @Test
     @DisplayName("유효하지 않은 상품 추가 시 예외 발생")
-    void addProduct_InvalidName() throws JsonProcessingException {
+    void addProduct_InvalidName() throws Exception {
         ProductRequest request = new ProductRequest("", VALID_PRICE, VALID_IMAGE_URL);
 
-        assertThat(mockMvcTester.post().uri("/products")
+        mockMvc.perform(post("/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-                .hasStatus(HttpStatus.BAD_REQUEST);
+                .andExpect(status().isBadRequest());
     }
 
     @Test
     @DisplayName("존재하지 않은 상품을 조회 시 예외 발생")
-    void findById_notFound() {
+    void findById_notFound() throws Exception {
         willThrow(new NoSuchElementException()).given(service).findProductById(1L);
 
-        assertThat(mockMvcTester.get().uri("/products/1"))
-                .hasStatus(HttpStatus.NOT_FOUND);
+        mockMvc.perform(get("/products/{id}", 1))
+                        .andExpect(status().isNotFound());
     }
 }
