@@ -4,23 +4,23 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import shopping.domain.Product
 import shopping.domain.ProductRepository
-import shopping.support.error.CoreException
-import shopping.support.error.ErrorType
 
 @Repository
 class ProductRepositoryImpl(
     private val productJpaRepository: ProductJpaRepository,
 ) : ProductRepository {
     override fun save(product: Product): Product {
-        if (product.id != 0L) {
-            val entity =
-                productJpaRepository.findByIdOrNull(product.id)
-                    ?: throw CoreException(ErrorType.PRODUCT_NOT_FOUND)
-            entity.update(product)
-            return entity.toDomain()
-        }
         val entity = ProductEntity.from(product)
         return productJpaRepository.save(entity).toDomain()
+    }
+
+    override fun update(product: Product): Product {
+        val entity =
+            checkNotNull(productJpaRepository.findByIdOrNull(product.id)) {
+                "Product with id ${product.id} not found"
+            }
+        entity.update(product)
+        return entity.toDomain()
     }
 
     override fun findById(id: Long): Product? {

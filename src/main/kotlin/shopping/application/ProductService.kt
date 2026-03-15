@@ -43,7 +43,7 @@ class ProductService(
             price = command.price,
             imageUrl = command.imageUrl,
         )
-        productRepository.save(product)
+        productRepository.update(product)
     }
 
     fun getProduct(id: Long): ProductResult {
