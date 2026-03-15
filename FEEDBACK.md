@@ -1445,3 +1445,53 @@ README.md                # 진입점 + docs/ 링크
 
 용어 사전은 코드 구조가 아닌 **비즈니스 개념**을 정의하는 문서다. `accessToken`은 "로그인"이라는 비즈니스 행위의 결과물이며, 기획자/프론트엔드 모두가 알아야 할 핵심 개념이다. `LoginResponse`라는 클래스명은 개발자만 아는 구현 세부사항이다.
 
+---
+
+## 빌드 / 배포
+
+### [설계] Spring REST Docs 문서 생성은 `bootJar`에만 연결됨
+
+`build.gradle.kts`의 기본 설정에서 문서 복사가 `bootJar`에만 의존하고 있어 `bootRun`으로 실행 시 `static/docs/index.html`이 생성되지 않는다.
+
+```
+현재 흐름:
+test → (snippets 생성) → asciidoctor → (HTML 생성) → bootJar → static/docs/ 복사
+
+bootRun은 위 흐름과 무관 → static/docs/index.html 없음
+```
+
+개발 환경에서 REST Docs 페이지를 확인하려면 `./gradlew build` 후 JAR로 실행해야 한다.
+
+```bash
+./gradlew build
+java -jar build/libs/*-SNAPSHOT.jar
+```
+
+---
+
+### [코드품질] ktlint `standard:final-newline` — 파일 끝 개행 필수
+
+UNIX 계열 텍스트 파일은 마지막 줄도 `\n`으로 끝나야 한다는 관례가 있다.
+ktlint가 `standard:final-newline` 규칙으로 이를 강제하므로 파일 끝 개행이 없으면 빌드가 실패한다.
+
+AI 도구(Claude 등)가 파일을 편집할 때 마지막 개행을 빠뜨리는 경우가 종종 있다.
+
+**IntelliJ 자동 방지 설정:**
+```
+Settings → Editor → General
+→ "Ensure every saved file ends with a line break" 체크
+```
+
+---
+
+### [설계] Gradle 빌드 시 JAR 파일 2개 생성
+
+`./gradlew build` 시 `build/libs/`에 JAR 파일이 2개 생성된다.
+
+| 파일 | 설명 | 실행 가능 여부 |
+|------|------|--------------|
+| `*-SNAPSHOT.jar` | Spring Boot Fat JAR (의존성 + 내장 톰캣 포함) | ✅ |
+| `*-SNAPSHOT-plain.jar` | Gradle 기본 `jar` 태스크 결과물 (의존성 없음) | ❌ |
+
+`-plain.jar`는 라이브러리 배포용이며, 실행 목적이라면 반드시 `-SNAPSHOT.jar`를 사용한다.
+

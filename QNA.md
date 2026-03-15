@@ -1200,3 +1200,47 @@ README.md  ← docs/ 링크만 포함
 4. **정책/제약사항 연결** — 단어 정의에서 끝내지 않고 비즈니스 규칙까지 연결
 
 최소한 ① 바운디드 컨텍스트 경계 + ② 용어 테이블 + ③ 정책 연결 세 가지는 갖춰야 "DDD 용어 사전을 이해하고 작성했다"는 인상을 준다.
+
+---
+
+## 빌드 / 배포
+
+### Q. `bootRun`으로 실행하면 `static/docs/index.html`이 없는 이유는?
+
+Spring REST Docs 문서 생성 흐름이 `bootJar`에만 연결되어 있기 때문이다.
+
+```
+test → asciidoctor → bootJar → static/docs/ 복사
+```
+
+`bootRun`은 이 흐름과 무관하므로 HTML 파일이 복사되지 않는다.
+REST Docs 문서를 확인하려면 `./gradlew build` 후 JAR로 실행해야 한다.
+
+```bash
+./gradlew build
+java -jar build/libs/*-SNAPSHOT.jar
+```
+
+---
+
+### Q. ktlint 빌드 시 `File must end with a newline` 오류가 나는 이유는?
+
+UNIX 계열 텍스트 파일은 마지막 줄도 `\n`으로 끝나야 한다는 관례 때문이다.
+ktlint의 `standard:final-newline` 규칙이 이를 강제한다.
+
+AI 도구가 파일을 편집할 때 마지막 개행을 빠뜨리는 경우가 종종 발생한다.
+
+IntelliJ에서 `Settings → Editor → General → "Ensure every saved file ends with a line break"`를 활성화하면 재발을 방지할 수 있다.
+
+---
+
+### Q. `./gradlew build` 시 JAR 파일이 2개 생기는데 어떤 것을 실행해야 하나?
+
+`*-SNAPSHOT.jar`를 실행해야 한다.
+
+| 파일 | 설명 |
+|------|------|
+| `*-SNAPSHOT.jar` | Spring Boot Fat JAR — 의존성 + 내장 톰캣 포함, 실행 가능 |
+| `*-SNAPSHOT-plain.jar` | Gradle 기본 `jar` 태스크 산출물 — 의존성 없음, 실행 불가 |
+
+`-plain.jar`는 라이브러리 배포용이다. 일반적으로 `bootJar { enabled = true }`, `jar { enabled = false }` 설정으로 plain JAR 생성을 비활성화하기도 한다.
