@@ -24,6 +24,7 @@ class ProductNameTest {
     void shouldThrowException_whenNameIsNullOrEmpty() {
         assertThrows(ProductNameBlankException.class, () -> new ProductName(null));
         assertThrows(ProductNameBlankException.class, () -> new ProductName(""));
+        assertThrows(ProductNameBlankException.class, () -> new ProductName("   "));
     }
 
     @Test

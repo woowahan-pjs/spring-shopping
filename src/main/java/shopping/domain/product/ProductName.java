@@ -21,7 +21,7 @@ public class ProductName {
     }
 
     public ProductName(String name) {
-        if(Strings.isEmpty(name)) {
+        if(Strings.isBlank(name)) {
             throw new ProductNameBlankException();
         }
 

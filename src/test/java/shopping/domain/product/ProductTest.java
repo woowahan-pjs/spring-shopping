@@ -2,6 +2,8 @@ package shopping.domain.product;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import shopping.domain.product.exception.InvalidPriceException;
+import shopping.domain.product.exception.ProductNameBlankException;
 
 import java.math.BigDecimal;
 
@@ -10,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductTest {
 
     @Test
-    @DisplayName("Should create product with valid details")
+    @DisplayName("상품 생성")
     void shouldCreateProduct() {
         String name = "T-Shirt";
         BigDecimal price = new BigDecimal("19.99");
@@ -25,19 +27,15 @@ class ProductTest {
     }
 
     @Test
-    @DisplayName("Should throw exception when creating product with invalid data")
+    @DisplayName("상품에 유효하지 않은 값을 넣을 경우 exception")
     void shouldThrowExceptionForInvalidData() {
         // Name validation
-        assertThrows(IllegalArgumentException.class, () -> new Product(null, BigDecimal.TEN, "img.jpg"));
-        assertThrows(IllegalArgumentException.class, () -> new Product("", BigDecimal.TEN, "img.jpg"));
-        assertThrows(IllegalArgumentException.class, () -> new Product("   ", BigDecimal.TEN, "img.jpg"));
+        assertThrows(ProductNameBlankException.class, () -> new Product(null, BigDecimal.TEN, "img.jpg"));
+        assertThrows(ProductNameBlankException.class, () -> new Product("", BigDecimal.TEN, "img.jpg"));
+        assertThrows(ProductNameBlankException.class, () -> new Product("   ", BigDecimal.TEN, "img.jpg"));
 
         // Price validation
-        assertThrows(IllegalArgumentException.class, () -> new Product("Name", null, "img.jpg"));
-        assertThrows(IllegalArgumentException.class, () -> new Product("Name", new BigDecimal("-1"), "img.jpg"));
-
-        // Image validation
-        assertThrows(IllegalArgumentException.class, () -> new Product("Name", BigDecimal.TEN, null));
-        assertThrows(IllegalArgumentException.class, () -> new Product("Name", BigDecimal.TEN, ""));
+        assertThrows(InvalidPriceException.class, () -> new Product("Name", null, "img.jpg"));
+        assertThrows(InvalidPriceException.class, () -> new Product("Name", new BigDecimal("-1"), "img.jpg"));
     }
 }
