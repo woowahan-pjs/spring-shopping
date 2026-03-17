@@ -20,7 +20,7 @@ class PurgoMalumClientTest {
     private MockRestServiceServer serviceServer;
 
     @Test
-    @DisplayName("")
+    @DisplayName("비속어 없이 유효한 text면 true 반환")
     void should_return_true_when_api_responds_success() {
         serviceServer.expect(requestTo("https://www.purgomalum.com/service/containsprofanity?text=badword"))
                 .andRespond(withSuccess("true", MediaType.TEXT_PLAIN));
