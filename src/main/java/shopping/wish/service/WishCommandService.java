@@ -20,6 +20,8 @@ public class WishCommandService {
     public WishAddOutput add(WishAddInput input) {
         ProductOutput product = productQueryService.findProduct(input.productId())
                                                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
+        wishRepository.findByMemberIdAndProductIdAndDeletedFalse(input.memberId(), product.id())
+                      .ifPresent(w -> { throw new IllegalArgumentException("이미 위시리스트에 있는 상품입니다."); });
         Wish wish = wishRepository.save(createWish(product, input.memberId()));
         return WishAddOutput.of(wish, product);
     }

@@ -9,9 +9,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.auth.AuthService;
+import shopping.auth.service.AuthService;
 import shopping.member.domain.Member;
 import shopping.member.repository.MemberRepository;
+import shopping.product.domain.Price;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
 import shopping.wish.domain.Wish;
@@ -50,10 +51,10 @@ class WishQueryControllerTest {
                 .password("password123")
                 .build());
         Product firstProduct = productRepository.save(
-                Product.builder().name("상품1").price(10000L).imageUrl("https://example.com/1.jpg").build()
+                Product.builder().name("상품1").price(new Price(10000L)).imageUrl("https://example.com/1.jpg").build()
         );
         Product secondProduct = productRepository.save(
-                Product.builder().name("상품2").price(20000L).imageUrl("https://example.com/2.jpg").build()
+                Product.builder().name("상품2").price(new Price(20000L)).imageUrl("https://example.com/2.jpg").build()
         );
         wishRepository.save(Wish.builder().memberId(member.getId()).productId(firstProduct.getId()).build());
         wishRepository.save(Wish.builder().memberId(member.getId()).productId(secondProduct.getId()).build());
@@ -98,7 +99,7 @@ class WishQueryControllerTest {
                 .password("password123")
                 .build());
         Product product = productRepository.save(
-                Product.builder().name("상품명").price(10000L).imageUrl("https://example.com/image.jpg").build()
+                Product.builder().name("상품명").price(new Price(10000L)).imageUrl("https://example.com/image.jpg").build()
         );
         wishRepository.save(Wish.builder().memberId(member.getId()).productId(product.getId()).build());
         product.delete();

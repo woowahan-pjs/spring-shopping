@@ -10,9 +10,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.auth.AuthService;
+import shopping.auth.service.AuthService;
 import shopping.member.domain.Member;
 import shopping.member.repository.MemberRepository;
+import shopping.product.domain.Price;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
 import shopping.wish.api.command.dto.WishAddRequest;
@@ -57,7 +58,7 @@ class WishCommandControllerTest {
                 .password("password123")
                 .build());
         Product product = productRepository.save(
-                Product.builder().name("상품명").price(10000L).imageUrl("https://example.com/image.jpg").build()
+                Product.builder().name("상품명").price(new Price(10000L)).imageUrl("https://example.com/image.jpg").build()
         );
         String token = authService.createToken(member.getId());
         WishAddRequest request = new WishAddRequest(product.getId());
@@ -116,7 +117,7 @@ class WishCommandControllerTest {
                 .password("password123")
                 .build());
         Product product = productRepository.save(
-                Product.builder().name("상품명").price(10000L).imageUrl("https://example.com/image.jpg").build()
+                Product.builder().name("상품명").price(new Price(10000L)).imageUrl("https://example.com/image.jpg").build()
         );
         Wish wish = wishRepository.save(Wish.builder()
                 .memberId(member.getId())

@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.common.client.ProfanityClient;
+import shopping.product.domain.Price;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
 import shopping.product.service.FakeProfanityClient;
@@ -57,13 +58,13 @@ class WishQueryServiceTest {
     void test01() {
         // arrange
         Product firstProduct = productRepository.save(
-                Product.builder().name("상품1").price(10000L).imageUrl("https://example.com/1.jpg").build()
+                Product.builder().name("상품1").price(new Price(10000L)).imageUrl("https://example.com/1.jpg").build()
         );
         Product deletedProduct = productRepository.save(
-                Product.builder().name("삭제상품").price(20000L).imageUrl("https://example.com/deleted.jpg").build()
+                Product.builder().name("삭제상품").price(new Price(20000L)).imageUrl("https://example.com/deleted.jpg").build()
         );
         Product secondProduct = productRepository.save(
-                Product.builder().name("상품2").price(30000L).imageUrl("https://example.com/2.jpg").build()
+                Product.builder().name("상품2").price(new Price(30000L)).imageUrl("https://example.com/2.jpg").build()
         );
         wishRepository.save(Wish.builder().memberId(1L).productId(firstProduct.getId()).build());
         wishRepository.save(Wish.builder().memberId(1L).productId(secondProduct.getId()).build());

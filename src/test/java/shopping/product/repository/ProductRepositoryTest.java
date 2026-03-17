@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import shopping.product.domain.Price;
 import shopping.product.domain.Product;
 
 import java.util.List;
@@ -23,7 +24,7 @@ class ProductRepositoryTest {
         // given
         Product product = Product.builder()
                                  .name("상품명")
-                                 .price(10000L)
+                                 .price(new Price(10000L))
                                  .imageUrl("https://example.com/image.jpg")
                                  .build();
 
@@ -40,8 +41,8 @@ class ProductRepositoryTest {
     @DisplayName("전체 상품 목록을 조회할 수 있다")
     void test02() {
         // given
-        productRepository.save(Product.builder().name("상품1").price(1000L).imageUrl("https://example.com/1.jpg").build());
-        productRepository.save(Product.builder().name("상품2").price(2000L).imageUrl("https://example.com/2.jpg").build());
+        productRepository.save(Product.builder().name("상품1").price(new Price(1000L)).imageUrl("https://example.com/1.jpg").build());
+        productRepository.save(Product.builder().name("상품2").price(new Price(2000L)).imageUrl("https://example.com/2.jpg").build());
 
         // when
         List<Product> products = productRepository.findAll();
