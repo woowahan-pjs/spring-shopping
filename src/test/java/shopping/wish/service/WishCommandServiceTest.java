@@ -9,13 +9,13 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.common.client.ProfanityClient;
+import shopping.common.client.ProfanityChecker;
 import shopping.member.domain.Member;
 import shopping.member.repository.MemberRepository;
 import shopping.product.domain.Price;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
-import shopping.product.service.FakeProfanityClient;
+import shopping.product.service.FakeProfanityChecker;
 import shopping.wish.domain.Wish;
 import shopping.wish.repository.WishRepository;
 import shopping.wish.service.dto.WishAddInput;
@@ -32,8 +32,8 @@ class WishCommandServiceTest {
     static class TestConfig {
         @Bean
         @Primary
-        public ProfanityClient fakeProfanityClient() {
-            return new FakeProfanityClient();
+        public ProfanityChecker fakeProfanityClient() {
+            return new FakeProfanityChecker();
         }
     }
 

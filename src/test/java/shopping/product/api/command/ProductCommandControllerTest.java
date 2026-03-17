@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.common.client.ProfanityClient;
+import shopping.common.client.ProfanityChecker;
 import shopping.product.api.command.dto.ProductRegisterRequest;
-import shopping.product.service.FakeProfanityClient;
+import shopping.product.service.FakeProfanityChecker;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,8 +32,8 @@ class ProductCommandControllerTest {
     static class TestConfig {
         @Bean
         @Primary
-        public ProfanityClient fakeProfanityClient() {
-            return new FakeProfanityClient();
+        public ProfanityChecker fakeProfanityClient() {
+            return new FakeProfanityChecker();
         }
     }
 
@@ -44,7 +44,7 @@ class ProductCommandControllerTest {
     private ObjectMapper objectMapper;
 
     @Autowired
-    private FakeProfanityClient profanityClient;
+    private FakeProfanityChecker profanityClient;
 
     @BeforeEach
     void setUp() {

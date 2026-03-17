@@ -7,7 +7,7 @@ import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
-public class PurgoMalumClient implements ProfanityClient {
+public class PurgoMalumChecker implements ProfanityChecker {
     private final RestTemplate restTemplate;
 
     @Value("${purgomalum.url}")

@@ -11,11 +11,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.common.client.ProfanityClient;
+import shopping.common.client.ProfanityChecker;
 import shopping.product.domain.Price;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
-import shopping.product.service.FakeProfanityClient;
+import shopping.product.service.FakeProfanityChecker;
 import shopping.product.service.ProductCommandService;
 import shopping.product.service.dto.ProductOutput;
 import shopping.product.service.dto.ProductRegisterInput;
@@ -33,8 +33,8 @@ class WishQueryServiceTest {
     static class TestConfig {
         @Bean
         @Primary
-        public ProfanityClient fakeProfanityClient() {
-            return new FakeProfanityClient();
+        public ProfanityChecker fakeProfanityClient() {
+            return new FakeProfanityChecker();
         }
     }
 
@@ -51,7 +51,7 @@ class WishQueryServiceTest {
     private ProductRepository productRepository;
 
     @Autowired
-    private FakeProfanityClient profanityClient;
+    private FakeProfanityChecker profanityClient;
 
     @Test
     @DisplayName("회원의 활성 위시리스트 목록을 페이징으로 조회한다")

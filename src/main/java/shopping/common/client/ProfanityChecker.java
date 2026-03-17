@@ -1,5 +1,5 @@
 package shopping.common.client;
 
-public interface ProfanityClient {
+public interface ProfanityChecker {
     boolean containsProfanity(String text);
 }

@@ -1,8 +1,8 @@
 package shopping.product.service;
 
-import shopping.common.client.ProfanityClient;
+import shopping.common.client.ProfanityChecker;
 
-public class FakeProfanityClient implements ProfanityClient {
+public class FakeProfanityChecker implements ProfanityChecker {
     private boolean profane = false;
 
     public void setProfane(boolean profane) {
