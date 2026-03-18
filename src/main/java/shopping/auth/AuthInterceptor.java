@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import java.io.IOException;
+
 @Component
 @Slf4j
 public class AuthInterceptor implements HandlerInterceptor {
@@ -16,11 +18,11 @@ public class AuthInterceptor implements HandlerInterceptor {
         this.provider = provider;
     }
 
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws IOException {
         String authorization = request.getHeader("Authorization");
 
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            response.setStatus(401);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             log.warn("로그인 정보가 없습니다.");
             return false;
         }
@@ -32,7 +34,7 @@ public class AuthInterceptor implements HandlerInterceptor {
             request.setAttribute("memberId", memberId);
             return true;
         } catch (IllegalArgumentException e) {
-            response.setStatus(401);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             log.warn(e.getMessage());
             return false;
         }
