@@ -5,3 +5,7 @@ spring:
 jwt:
   secret: dGVzdC1zZWNyZXQta2V5LWZvci10ZXN0aW5nLW9ubHk=
   expiration-ms: 3600000
+
+purgomalum:
+  connect-timeout-seconds: 3
+  read-timeout-seconds: 5

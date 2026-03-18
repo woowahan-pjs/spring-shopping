@@ -19,3 +19,7 @@ spring:
 jwt:
   secret: ${JWT_SECRET:bG9jYWwtZGV2LXNlY3JldC1rZXktbWluaW11bS0zMi1jaGFyYWN0ZXJz}
   expiration-ms: 3600000
+
+purgomalum:
+  connect-timeout-seconds: 3
+  read-timeout-seconds: 5
