@@ -22,7 +22,7 @@ public class WishCommandService {
                                                    .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
         wishRepository.findByMemberIdAndProductIdAndDeletedFalse(input.memberId(), product.id())
                       .ifPresent(w -> { throw new IllegalArgumentException("이미 위시리스트에 있는 상품입니다."); });
-        Wish wish = wishRepository.save(Wish.create(input.memberId(), product.id()));
+        Wish wish = wishRepository.save(input.toDomain());
         return WishAddOutput.of(wish, product);
     }
 

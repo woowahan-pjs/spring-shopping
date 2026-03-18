@@ -66,11 +66,11 @@ class WishQueryServiceTest {
         Product secondProduct = productRepository.save(
                 Product.builder().name("상품2").price(new Price(30000L)).imageUrl("https://example.com/2.jpg").build()
         );
-        wishRepository.save(Wish.create(1L, firstProduct.getId()));
-        wishRepository.save(Wish.create(1L, secondProduct.getId()));
-        Wish deletedWish = wishRepository.save(Wish.create(1L, deletedProduct.getId()));
+        wishRepository.save(Wish.builder().memberId(1L).productId(firstProduct.getId()).build());
+        wishRepository.save(Wish.builder().memberId(1L).productId(secondProduct.getId()).build());
+        Wish deletedWish = wishRepository.save(Wish.builder().memberId(1L).productId(deletedProduct.getId()).build());
         deletedWish.delete();
-        wishRepository.save(Wish.create(2L, firstProduct.getId()));
+        wishRepository.save(Wish.builder().memberId(2L).productId(firstProduct.getId()).build());
 
         // act
         Page<WishOutput> result = wishQueryService.findWishWithPage(
@@ -111,7 +111,7 @@ class WishQueryServiceTest {
         profanityClient.setProfane(false);
         ProductOutput product = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
-        wishRepository.save(Wish.create(1L, product.id()));
+        wishRepository.save(Wish.builder().memberId(1L).productId(product.id()).build());
         productCommandService.delete(product.id());
 
         // act

@@ -56,8 +56,8 @@ class WishQueryControllerTest {
         Product secondProduct = productRepository.save(
                 Product.builder().name("상품2").price(new Price(20000L)).imageUrl("https://example.com/2.jpg").build()
         );
-        wishRepository.save(Wish.create(member.getId(), firstProduct.getId()));
-        wishRepository.save(Wish.create(member.getId(), secondProduct.getId()));
+        wishRepository.save(Wish.builder().memberId(member.getId()).productId(firstProduct.getId()).build());
+        wishRepository.save(Wish.builder().memberId(member.getId()).productId(secondProduct.getId()).build());
         String token = authService.createToken(member.getId());
 
         // act & assert
@@ -101,7 +101,7 @@ class WishQueryControllerTest {
         Product product = productRepository.save(
                 Product.builder().name("상품명").price(new Price(10000L)).imageUrl("https://example.com/image.jpg").build()
         );
-        wishRepository.save(Wish.create(member.getId(), product.getId()));
+        wishRepository.save(Wish.builder().memberId(member.getId()).productId(product.getId()).build());
         product.delete();
         String token = authService.createToken(member.getId());
 

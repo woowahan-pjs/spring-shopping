@@ -50,13 +50,6 @@ public class Wish extends BaseEntity {
         this.createdBy = String.valueOf(memberId);
     }
 
-    public static Wish create(Long memberId, Long productId) {
-        return Wish.builder()
-                   .memberId(memberId)
-                   .productId(productId)
-                   .build();
-    }
-
     public void delete() {
         this.deleted = true;
         this.deletedAt = LocalDateTime.now();
