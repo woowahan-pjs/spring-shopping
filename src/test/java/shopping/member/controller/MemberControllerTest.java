@@ -89,7 +89,7 @@ class MemberControllerTest {
         MemberRequest request = createMemberRequest();
         String token = "mock-token";
 
-        given(service.login(request.getEmail(), request.getPassword())).willReturn(member);
+        given(service.login(request.email(), request.password())).willReturn(member);
         given(provider.generate(member)).willReturn(token);
 
         mockMvc.perform(post("/login")
@@ -113,7 +113,7 @@ class MemberControllerTest {
     void notFoundEmail() throws Exception {
         MemberRequest request = new MemberRequest("test", "password");
 
-        willThrow(new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요.")).given(service).login(request.getEmail(), request.getPassword());
+        willThrow(new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요.")).given(service).login(request.email(), request.password());
 
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -126,7 +126,7 @@ class MemberControllerTest {
     void invalidPassword() throws Exception {
         MemberRequest request = new MemberRequest("test@gmail.com", "pass");
 
-        willThrow(new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요.")).given(service).login(request.getEmail(), request.getPassword());
+        willThrow(new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요.")).given(service).login(request.email(), request.password());
 
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)

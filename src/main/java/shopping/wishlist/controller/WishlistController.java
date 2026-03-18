@@ -21,7 +21,7 @@ public class WishlistController {
     @PostMapping("/wishlist")
     public ResponseEntity<Void> create(@RequestAttribute("memberId") Long memberId,
             @RequestBody WishlistRequest request) {
-        service.addWishlist(new Wishlist(memberId, request.getProductId()));
+        service.addWishlist(new Wishlist(memberId, request.productId()));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

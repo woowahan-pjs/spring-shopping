@@ -5,11 +5,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import shopping.auth.AdminInterceptor;
 import shopping.auth.JwtTokenProvider;
 import shopping.member.domain.MemberRole;
 import shopping.product.domain.Product;
@@ -23,6 +25,8 @@ import java.util.NoSuchElementException;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static shopping.product.domain.ProductFixture.*;
@@ -31,10 +35,10 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
-import static shopping.wishlist.domain.WishlistFixture.VALID_MEMBER_ID;
 
 
 @WebMvcTest(ProductController.class)
+@Import(AdminInterceptor.class)
 @AutoConfigureRestDocs
 class ProductControllerTest {
 
@@ -69,6 +73,9 @@ class ProductControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                         .andExpect(status().isCreated())
                         .andDo(document("products/add",
+                                requestHeaders(
+                                        headerWithName("Authorization").description("Bearer JWT 토큰")
+                                ),
                                 requestFields(
                                     fieldWithPath("name").description("상품명"),
                                     fieldWithPath("price").description("상품가격"),
@@ -141,6 +148,9 @@ class ProductControllerTest {
                         jsonPath("$.price").value(changePrice),
                         jsonPath("$.imageUrl").value(changeImageUrl))
                 .andDo(document("products/update",
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer JWT 토큰")
+                        ),
                         requestFields(
                                 fieldWithPath("name").description("상품명"),
                                 fieldWithPath("price").description("상품가격"),
