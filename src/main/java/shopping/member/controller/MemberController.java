@@ -27,16 +27,21 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/admin/members")
-    public ResponseEntity<Void> adminRegister(@RequestBody MemberRequest request) {
-        service.adminRegister(request.toMember());
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody MemberRequest request) {
         Member member = service.login(request.getEmail(), request.getPassword());
         String accessToken = provider.generate(member);
         return ResponseEntity.ok(new LoginResponse(accessToken));
+    }
+
+    /**
+     * 관리자 계정 생성은 본래 AdminController로 분리하는 게 맞지만
+     * 현재는 회원 도메인의 단일 진입점 유지를 위해 MemberController에서 함께 처리함
+     * 관리자 기능이 확장될 경우 AdminController로 분리한다
+    **/
+    @PostMapping("/admin/members")
+    public ResponseEntity<Void> adminRegister(@RequestBody MemberRequest request) {
+        service.adminRegister(request.toMember());
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

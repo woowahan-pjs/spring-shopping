@@ -33,8 +33,11 @@ operation::products/delete[snippets='http-request,http-response']
 
 
 == 회원 API
-=== 회원 가입
+=== 일반 사용자 회원 가입
 operation::members/register[snippets='http-request,http-response']
 
 === 로그인
 operation::members/login[snippets='http-request,http-response,response-fields']
+
+=== 관리자 계정 추가
+operation::admin/members/register[snippets='http-request,http-response']

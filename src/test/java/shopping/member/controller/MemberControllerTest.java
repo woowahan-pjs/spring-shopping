@@ -1,20 +1,26 @@
 package shopping.member.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import shopping.auth.AdminInterceptor;
 import shopping.auth.JwtTokenProvider;
 import shopping.member.controller.dto.MemberRequest;
 import shopping.member.domain.Member;
+import shopping.member.domain.MemberRole;
 import shopping.member.service.MemberService;
 
 import static org.mockito.BDDMockito.*;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static shopping.member.domain.MemberFixture.*;
@@ -22,8 +28,8 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
-
 @WebMvcTest(MemberController.class)
+@Import(AdminInterceptor.class)
 @AutoConfigureRestDocs
 class MemberControllerTest {
 
@@ -41,6 +47,11 @@ class MemberControllerTest {
 
     public MemberRequest createMemberRequest() {
         return new MemberRequest("test@gmail.com", "password");
+    }
+
+    @BeforeEach
+    void setUp() {
+        given(provider.extractRole(any())).willReturn(MemberRole.ADMIN);
     }
 
     @Test
@@ -126,6 +137,44 @@ class MemberControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("관리자를 추가한다.")
+    void addAdmin() throws Exception {
+        MemberRequest request = createMemberRequest();
+        Member member = createMember();
+
+        willDoNothing().given(service).adminRegister(any());
+
+        mockMvc.perform(post("/admin/members")
+                        .header("Authorization", "Bearer valid-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andDo(document("admin/members/register",
+                        requestHeaders(
+                                headerWithName("Authorization").description("Bearer JWT 토큰")
+                        ),
+                        requestFields(
+                                fieldWithPath("email").description("로그인 시 입력할 이메일"),
+                                fieldWithPath("password").description("로그인 시 입력할 비밀번호")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("관리자가 아니면 관리자 추가에 실패")
+    void addAdmin_forbidden() throws Exception {
+        given(provider.extractRole(any())).willReturn(MemberRole.USER);
+
+        willDoNothing().given(service).adminRegister(any());
+
+        mockMvc.perform(post("/admin/members")
+                        .header("Authorization", "Bearer valid-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createMemberRequest())))
+                .andExpect(status().isForbidden());
     }
 
 }
