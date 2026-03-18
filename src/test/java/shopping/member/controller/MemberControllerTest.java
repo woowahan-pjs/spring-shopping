@@ -164,8 +164,6 @@ class MemberControllerTest {
     void addAdmin_forbidden() throws Exception {
         given(provider.extractRole(any())).willReturn(MemberRole.USER);
 
-        willDoNothing().given(service).adminRegister(any());
-
         mockMvc.perform(post("/admin/members")
                         .header("Authorization", "Bearer valid-token")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -176,8 +174,6 @@ class MemberControllerTest {
     @Test
     @DisplayName("로그인 안하면 관리자 추가에 예외가 발생")
     void addAdmin_notLogin() throws Exception {
-        willDoNothing().given(service).adminRegister(any());
-
         mockMvc.perform(post("/admin/members")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createMemberRequest())))
