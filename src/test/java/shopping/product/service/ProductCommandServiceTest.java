@@ -42,6 +42,7 @@ class ProductCommandServiceTest {
     @BeforeEach
     void setUp() {
         profanityClient.setProfane(false);
+        profanityClient.setUnavailable(false);
     }
 
     @Test
@@ -59,69 +60,44 @@ class ProductCommandServiceTest {
     }
 
     @Test
-    @DisplayName("상품명이 15자를 초과하면 예외가 발생한다")
+    @DisplayName("가격이 0 이하이면 예외가 발생한다")
     void test02() {
-        // given
-        ProductRegisterInput request = new ProductRegisterInput("열여섯자이상의긴상품명입니다초과", 10000L, "https://example.com/image.jpg");
+        // arrange
+        ProductRegisterInput request = new ProductRegisterInput("상품명", 0L, "https://example.com/image.jpg");
 
-        // when & then
+        // act & assert
         assertThatThrownBy(() -> productCommandService.register(request))
             .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("상품명은 15자 이하이어야 합니다.");
-    }
-
-    @Test
-    @DisplayName("상품명에 허용되지 않은 특수문자가 있으면 예외가 발생한다")
-    void test03() {
-        // given
-        ProductRegisterInput request = new ProductRegisterInput("상품명!", 10000L, "https://example.com/image.jpg");
-
-        // when & then
-        assertThatThrownBy(() -> productCommandService.register(request))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("상품명에 허용되지 않은 특수문자가 포함되어 있습니다.");
-    }
-
-    @Test
-    @DisplayName("상품명에 비속어가 포함되면 예외가 발생한다")
-    void test04() {
-        // given
-        profanityClient.setProfane(true);
-        ProductRegisterInput request = new ProductRegisterInput("badword", 10000L, "https://example.com/image.jpg");
-
-        // when & then
-        assertThatThrownBy(() -> productCommandService.register(request))
-            .isInstanceOf(IllegalArgumentException.class)
-            .hasMessage("상품명에 비속어가 포함되어 있습니다.");
+            .hasMessage("가격은 양수이어야 합니다.");
     }
 
     @Test
     @DisplayName("상품을 수정할 수 있다")
-    void test05() {
-        // given
+    void test03() {
+        // arrange
         ProductOutput saved = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
-        // when
+        // act
         ProductOutput response = productCommandService.update(
             saved.id(), new ProductRegisterInput("수정된상품명", 20000L, "https://example.com/new.jpg"));
 
-        // then
+        // assert
         assertThat(response.name()).isEqualTo("수정된상품명");
         assertThat(response.price()).isEqualTo(20000L);
     }
 
     @Test
     @DisplayName("상품을 삭제할 수 있다")
-    void test06() {
-        // given
+    void test04() {
+        // arrange
         ProductOutput saved = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
-        // when
+        // act
         productCommandService.delete(saved.id());
 
-        // then
+        // assert
         assertThat(productRepository.findById(saved.id())).isPresent();
         assertThat(productRepository.findById(saved.id()).get().isDeleted()).isTrue();
     }

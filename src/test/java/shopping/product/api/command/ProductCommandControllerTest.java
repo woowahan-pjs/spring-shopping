@@ -49,6 +49,7 @@ class ProductCommandControllerTest {
     @BeforeEach
     void setUp() {
         profanityClient.setProfane(false);
+        profanityClient.setUnavailable(false);
     }
 
     @Test
@@ -169,9 +170,27 @@ class ProductCommandControllerTest {
     @Test
     @DisplayName("존재하지 않는 상품 삭제 시 400을 반환한다")
     void test09() throws Exception {
+        // arrange
+
+        // act & assert
         mockMvc.perform(delete("/api/products/999"))
                .andExpect(status().isBadRequest())
                .andExpect(jsonPath("$.message").value("존재하지 않는 상품입니다."));
+    }
+
+    @Test
+    @DisplayName("비속어 검증 서비스 장애 시 503을 반환한다")
+    void test10() throws Exception {
+        // arrange
+        profanityClient.setUnavailable(true);
+        ProductRegisterRequest request = new ProductRegisterRequest("상품명", 10000L, "https://example.com/image.jpg");
+
+        // act & assert
+        mockMvc.perform(post("/api/products")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+               .andExpect(status().isServiceUnavailable())
+               .andExpect(jsonPath("$.message").value("비속어 검증 서비스를 사용할 수 없습니다."));
     }
 
     private Long register(ProductRegisterRequest request) throws Exception {
