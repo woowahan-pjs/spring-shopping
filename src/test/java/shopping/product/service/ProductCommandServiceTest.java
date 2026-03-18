@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.common.client.ProfanityChecker;
 import shopping.product.repository.ProductRepository;
 import shopping.product.service.dto.ProductOutput;
 import shopping.product.service.dto.ProductRegisterInput;
@@ -25,7 +24,7 @@ class ProductCommandServiceTest {
     static class TestConfig {
         @Bean
         @Primary
-        public ProfanityChecker fakeProfanityClient() {
+        public FakeProfanityChecker fakeProfanityClient() {
             return new FakeProfanityChecker();
         }
     }

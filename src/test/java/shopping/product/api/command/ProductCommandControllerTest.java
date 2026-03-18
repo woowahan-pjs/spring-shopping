@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.common.client.ProfanityChecker;
 import shopping.product.api.command.dto.ProductRegisterRequest;
 import shopping.product.service.FakeProfanityChecker;
 
@@ -32,7 +31,7 @@ class ProductCommandControllerTest {
     static class TestConfig {
         @Bean
         @Primary
-        public ProfanityChecker fakeProfanityClient() {
+        public FakeProfanityChecker fakeProfanityClient() {
             return new FakeProfanityChecker();
         }
     }
