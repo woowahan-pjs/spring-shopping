@@ -16,11 +16,7 @@ public class ProductCommandService {
     private final ProductRepository productRepository;
 
     public ProductOutput register(ProductRegisterInput input) {
-        Product saved = productRepository.save(Product.builder()
-                                                      .name(input.name())
-                                                      .price(new Price(input.price()))
-                                                      .imageUrl(input.imageUrl())
-                                                      .build());
+        Product saved = productRepository.save(input.toDomain());
         return ProductOutput.from(saved);
     }
 
