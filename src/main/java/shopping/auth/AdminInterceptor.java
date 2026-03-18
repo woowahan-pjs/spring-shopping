@@ -24,17 +24,21 @@ public class AdminInterceptor implements HandlerInterceptor {
             return true;
         }
 
-        String token = request.getHeader("Authorization")
-                .substring(7);
+        String authHeader = request.getHeader("Authorization");
+
+        if (authHeader == null || authHeader.isEmpty()) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            return false;
+        }
 
         try {
-            MemberRole role = provider.extractRole(token);
+            MemberRole role = provider.extractRole(authHeader.substring(7));
             if (role != MemberRole.ADMIN) {
-                response.sendError(403);
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
                 return false;
             }
         } catch (IllegalArgumentException e) {
-            response.setStatus(401);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
             log.warn(e.getMessage());
             return false;
         }
