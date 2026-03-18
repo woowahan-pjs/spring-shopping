@@ -119,10 +119,7 @@ class WishCommandControllerTest {
         Product product = productRepository.save(
                 Product.builder().name("상품명").price(new Price(10000L)).imageUrl("https://example.com/image.jpg").build()
         );
-        Wish wish = wishRepository.save(Wish.builder()
-                .memberId(member.getId())
-                .productId(product.getId())
-                .build());
+        Wish wish = wishRepository.save(Wish.create(member.getId(), product.getId()));
         String token = authService.createToken(member.getId());
 
         // act
