@@ -49,11 +49,6 @@ class MemberControllerTest {
         return new MemberRequest("test@gmail.com", "password");
     }
 
-    @BeforeEach
-    void setUp() {
-        given(provider.extractRole(any())).willReturn(MemberRole.ADMIN);
-    }
-
     @Test
     @DisplayName("회원 가입한다.")
     void register() throws Exception {
@@ -143,7 +138,8 @@ class MemberControllerTest {
     @DisplayName("관리자를 추가한다.")
     void addAdmin() throws Exception {
         MemberRequest request = createMemberRequest();
-        Member member = createMember();
+
+        given(provider.extractRole(any())).willReturn(MemberRole.ADMIN);
 
         willDoNothing().given(service).adminRegister(any());
 
@@ -175,6 +171,20 @@ class MemberControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(createMemberRequest())))
                 .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("로그인 안하면 관리자 추가에 예외가 발생")
+    void addAdmin_notLogin() throws Exception {
+        given(provider.extractRole(any())).willReturn(MemberRole.USER);
+
+        willDoNothing().given(service).adminRegister(any());
+
+        mockMvc.perform(post("/admin/members")
+                        .header("Authorization", "Bearer valid-token")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createMemberRequest())))
+                .andExpect(status().is4xxClientError());
     }
 
 }
