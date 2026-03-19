@@ -14,7 +14,7 @@ class ProductNameTest {
 
     @ParameterizedTest
     @ValueSource(strings = {"ValidName", "한글이름", "Name 123", "Option(1)", "[New]Item", "A+B", "A-B", "A&B", "A/B", "A_B"})
-    @DisplayName("Should create ProductName with valid characters")
+    @DisplayName("유효한 상품명인 경우")
     void shouldCreateProductName(String name) {
         assertDoesNotThrow(() -> new ProductName(name));
     }
