@@ -1,5 +1,13 @@
 # spring-shopping-product
 
+## 기술 스택
+- **Language**: Java 21
+- **Framework**: Spring Boot 3.3.1
+- **Database**: H2 (In-memory, 로컬/테스트), MySQL (운영)
+- **ORM / DB Migration**: Spring Data JPA, Flyway
+- **Security**: Spring Security, JWT (JSON Web Token)
+- **Build Tool**: Gradle (Kotlin DSL)
+
 ## 요구사항 정리
 
 ----
@@ -66,52 +74,39 @@
 ## 구현 전략
 
 ----
-```text
-src/main/java/com/shop
-│
-├── domain
-│   ├── common
-│   │   └── exception: DomainException
-│   ├── user
-│   │   ├── Entity: User, Password
-│   │   └── Repository Interface: UserRepository
-│   ├── product
-│   │   ├── exception: ProductNameBlankException, ProductNameInvalidCharacterException, ProductNameLengthExceededException
-│   │   ├── Entity: Product, ProductName, ProfanityChecker
-│   │   └── Repository Interface: ProductRepository
-│   └── wishlist
-│       └── Entity: WishList
-│
-├── application
-│   ├── user
-│   │   ├── Service: LoginService, RegistrationService
-│   │   └── DTO: LoginRequest, TokenResponse
-│   ├── product
-│   │   ├── Service: ProductCommandService
-│   │   └── DTO: ProductRequest
-│   ├── wishlist
-│   │   └── Service: WishListService
-│   └── profanity
-│       └── Service: ProfanityChecker
-│
-├── infrastructure
-│   ├── persistence
-│   │   ├── JpaUserRepository
-│   │   └── JpaProductRepository
-│   ├── security
-│   │   ├── JwtTokenProvider
-│   │   ├── JwtAuthenticationFilter
-│   │   └── PasswordEncoder
-│   └── external_api
-│       ├── exception: ProfanityCheckException
-│       └── PurgoMalumClient
-│
-└── ui
-    ├── AuthController
-    ├── ProductController
-    └── WishlistController
+애플리케이션은 역할과 책임을 명확히 분리하기 위해 4개의 계층으로 구성되었습니다.
 
+```text
+src/main/java/shopping
+│
+├── domain          // 핵심 비즈니스 로직 및 도메인 엔티티 (가장 높은 응집도)
+├── application     // 유스케이스 구현, 트랜잭션 관리 및 도메인 객체 조율
+├── infrastructure  // DB 연동(JPA), 외부 API 통신(RestClient), 보안(JWT) 등 기술적 세부사항
+└── ui              // HTTP 요청 처리(Controller) 및 전역 예외 처리
 ```
+
+## 실행방법
+
+----
+### 요구사항
+- Java 21 이상
+- Gradle
+
+```bash
+git clone https://github.com/songsimo/spring-shopping.git
+cd spring-shopping
+```
+
+### Build & Run
+```text
+# 프로젝트 빌드
+$ ./gradlew build
+
+# 애플리케이션 실행 (기본 포트: 8080)
+$ ./gradlew bootRun
+```
+> 서버가 http://localhost:8080으로 실행됩니다.
+
 
 ## 개인적인 작업 목표
 
