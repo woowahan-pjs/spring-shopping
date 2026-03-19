@@ -1,5 +1,6 @@
 package shopping.ui;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,7 +22,7 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Long> register(@RequestBody SignUpRequest request) {
+    public ResponseEntity<Long> register(@Valid @RequestBody SignUpRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(memberService.signUp(request));
     }
