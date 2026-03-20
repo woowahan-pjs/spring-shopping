@@ -1,5 +1,6 @@
 package shopping.wish.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,13 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.common.client.ProfanityClient;
+import shopping.common.client.ProfanityChecker;
+import shopping.member.domain.Member;
+import shopping.member.repository.MemberRepository;
+import shopping.product.domain.Price;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
-import shopping.product.service.FakeProfanityClient;
+import shopping.product.service.FakeProfanityChecker;
 import shopping.wish.domain.Wish;
 import shopping.wish.repository.WishRepository;
 import shopping.wish.service.dto.WishAddInput;
@@ -28,8 +32,8 @@ class WishCommandServiceTest {
     static class TestConfig {
         @Bean
         @Primary
-        public ProfanityClient fakeProfanityClient() {
-            return new FakeProfanityClient();
+        public ProfanityChecker fakeProfanityClient() {
+            return new FakeProfanityChecker();
         }
     }
 
@@ -37,19 +41,31 @@ class WishCommandServiceTest {
     private WishCommandService wishCommandService;
 
     @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
     private ProductRepository productRepository;
 
     @Autowired
     private WishRepository wishRepository;
+
+    private Member member;
+
+    @BeforeEach
+    void setUp() {
+        member = memberRepository.save(
+                Member.builder().email("test@test.com").password("password").build()
+        );
+    }
 
     @Test
     @DisplayName("정상 위시리스트 추가 시 WishAddOutput을 반환한다")
     void test01() {
         // given
         Product product = productRepository.save(
-                Product.builder().name("상품명").price(10000L).imageUrl("https://example.com/image.jpg").build()
+                Product.builder().name("상품명").price(new Price(10000L)).imageUrl("https://example.com/image.jpg").build()
         );
-        WishAddInput input = new WishAddInput(1L, product.getId());
+        WishAddInput input = new WishAddInput(member.getId(), product.getId());
 
         // when
         WishAddOutput result = wishCommandService.add(input);
@@ -64,7 +80,7 @@ class WishCommandServiceTest {
     @DisplayName("존재하지 않는 상품을 위시리스트에 추가하면 예외가 발생한다")
     void test02() {
         // given
-        WishAddInput input = new WishAddInput(1L, 999L);
+        WishAddInput input = new WishAddInput(member.getId(), 999L);
 
         // when & then
         assertThatThrownBy(() -> wishCommandService.add(input))
@@ -77,12 +93,12 @@ class WishCommandServiceTest {
     void test03() {
         // given
         Product product = productRepository.save(
-                Product.builder().name("상품명").price(10000L).imageUrl("https://example.com/image.jpg").build()
+                Product.builder().name("상품명").price(new Price(10000L)).imageUrl("https://example.com/image.jpg").build()
         );
-        WishAddOutput added = wishCommandService.add(new WishAddInput(1L, product.getId()));
+        WishAddOutput added = wishCommandService.add(new WishAddInput(member.getId(), product.getId()));
 
         // when
-        wishCommandService.delete(added.id(), 1L);
+        wishCommandService.delete(added.id(), member.getId());
 
         // then
         Wish wish = wishRepository.findById(added.id()).get();
@@ -94,22 +110,41 @@ class WishCommandServiceTest {
     @DisplayName("존재하지 않는 위시리스트를 삭제하면 예외가 발생한다")
     void test04() {
         // when & then
-        assertThatThrownBy(() -> wishCommandService.delete(999L, 1L))
+        assertThatThrownBy(() -> wishCommandService.delete(999L, member.getId()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 위시리스트입니다.");
     }
 
     @Test
-    @DisplayName("타인의 위시리스트를 삭제하면 예외가 발생한다")
+    @DisplayName("이미 위시리스트에 있는 상품을 추가하면 예외가 발생한다")
     void test05() {
         // given
         Product product = productRepository.save(
-                Product.builder().name("상품명").price(10000L).imageUrl("https://example.com/image.jpg").build()
+                Product.builder().name("상품명").price(new Price(10000L)).imageUrl("https://example.com/image.jpg").build()
         );
-        WishAddOutput added = wishCommandService.add(new WishAddInput(1L, product.getId()));
+        wishCommandService.add(new WishAddInput(member.getId(), product.getId()));
 
         // when & then
-        assertThatThrownBy(() -> wishCommandService.delete(added.id(), 2L))
+        assertThatThrownBy(() -> wishCommandService.add(new WishAddInput(member.getId(), product.getId())))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("이미 위시리스트에 있는 상품입니다.");
+    }
+
+    @Test
+    @DisplayName("타인의 위시리스트를 삭제하면 예외가 발생한다")
+    void test06() {
+        // given
+        Product product = productRepository.save(
+                Product.builder().name("상품명").price(new Price(10000L)).imageUrl("https://example.com/image.jpg").build()
+        );
+        WishAddOutput added = wishCommandService.add(new WishAddInput(member.getId(), product.getId()));
+
+        Member other = memberRepository.save(
+                Member.builder().email("other@test.com").password("password").build()
+        );
+
+        // when & then
+        assertThatThrownBy(() -> wishCommandService.delete(added.id(), other.getId()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("존재하지 않는 위시리스트입니다.");
     }

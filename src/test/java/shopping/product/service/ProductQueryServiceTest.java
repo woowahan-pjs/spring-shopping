@@ -11,7 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
-import shopping.common.client.ProfanityClient;
+import shopping.common.client.ProfanityChecker;
 import shopping.product.service.dto.ProductOutput;
 import shopping.product.service.dto.ProductRegisterInput;
 
@@ -26,8 +26,8 @@ class ProductQueryServiceTest {
     static class TestConfig {
         @Bean
         @Primary
-        public ProfanityClient fakeProfanityClient() {
-            return new FakeProfanityClient();
+        public ProfanityChecker fakeProfanityClient() {
+            return new FakeProfanityChecker();
         }
     }
 
@@ -38,7 +38,7 @@ class ProductQueryServiceTest {
     private ProductQueryService productQueryService;
 
     @Autowired
-    private FakeProfanityClient profanityClient;
+    private FakeProfanityChecker profanityClient;
 
     @BeforeEach
     void setUp() {

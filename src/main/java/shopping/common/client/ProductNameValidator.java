@@ -12,7 +12,7 @@ public class ProductNameValidator {
     private static final Pattern ALLOWED_NAME_PATTERN =
         Pattern.compile("^[a-zA-Z0-9가-힣 ()\\[\\]+\\-&/_]*$");
 
-    private final ProfanityClient profanityClient;
+    private final ProfanityChecker profanityChecker;
 
     public void validate(String name) {
         if (name.length() > MAX_NAME_LENGTH) {
@@ -21,7 +21,7 @@ public class ProductNameValidator {
         if (!ALLOWED_NAME_PATTERN.matcher(name).matches()) {
             throw new IllegalArgumentException("상품명에 허용되지 않은 특수문자가 포함되어 있습니다.");
         }
-        if (profanityClient.containsProfanity(name)) {
+        if (profanityChecker.containsProfanity(name)) {
             throw new IllegalArgumentException("상품명에 비속어가 포함되어 있습니다.");
         }
     }
