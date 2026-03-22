@@ -61,8 +61,13 @@ Feature: Product CRUD
     When I create a product with name "Laptop" price 1000000 and imageUrl "https://example.com/laptop.png" using idempotency key "idem-key-1"
     Then the product should be created
     When I create a product with name "Laptop" price 1000000 and imageUrl "https://example.com/laptop.png" using idempotency key "idem-key-1"
-    Then the response status should be 409
+    Then the response status should be 200
     And the response should have message "이미 처리된 요청입니다."
+
+  Scenario: Create a product without idempotency key is rejected
+    When I create a product with name "NoKey" price 10000 and imageUrl "https://example.com/nokey.png" without idempotency key
+    Then the response status should be 400
+    And the response should have message "Idempotency-Key 헤더가 필요합니다."
 
   Scenario: Different idempotency key creates separate product
     When I create a product with name "ItemA" price 10000 and imageUrl "https://example.com/a.png" using idempotency key "key-a"
