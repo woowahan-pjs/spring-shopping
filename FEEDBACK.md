@@ -1484,6 +1484,181 @@ Settings → Editor → General
 
 ---
 
+## 권한(Role) 설계
+
+### [버그] `@Enumerated` 누락 — 기본값 ORDINAL로 데이터 깨짐
+
+```java
+// 버그 - 기본값 ORDINAL: USER=0, ADMIN=1 로 저장
+private MemberRole role;
+
+// 수정 - 문자열로 저장
+@Enumerated(EnumType.STRING)
+private MemberRole role;
+```
+
+ORDINAL은 enum 순서 변경 또는 중간에 값 추가 시 기존 DB 데이터 전체가 깨진다.
+`EnumType.STRING`을 사용하면 "USER", "ADMIN" 문자열로 저장되어 enum 변경에 안전하다.
+
+---
+
+### [버그] `MemberEntity.from()` / `toDomain()` — role 누락
+
+```java
+// 버그 - role 세팅 없음
+public static MemberEntity from(Member member) {
+    return new MemberEntity(member.getEmail(), member.getPassword());
+    // member.getRole() 빠짐 → DB에 null 저장
+}
+
+public Member toDomain() {
+    return Member.of(id, email, password);
+    // role 빠짐 → Member.role == null
+}
+```
+
+도메인 ↔ Entity 변환 시 모든 필드가 누락 없이 변환되는지 반드시 확인한다.
+
+---
+
+### [버그] `AdminInterceptor` — Authorization 헤더 null 체크 누락
+
+```java
+// 버그 - 헤더가 없으면 NPE → 500 응답
+String token = request.getHeader("Authorization").substring(7);
+
+// 수정 - null 체크 먼저
+String authHeader = request.getHeader("Authorization");
+if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+    response.sendError(401);
+    return false;
+}
+String token = authHeader.substring(7);
+```
+
+`catch (IllegalArgumentException)`으로는 `NullPointerException`을 잡을 수 없다.
+반드시 null 체크를 선행해야 한다.
+
+---
+
+### [설계] `AdminInterceptor` HTTP 메서드 내부 분기
+
+Spring `InterceptorRegistry`는 HTTP 메서드 필터링을 지원하지 않는다.
+`addPathPatterns("/products/**")`로 등록하면 GET도 인터셉터를 통과한다.
+
+```java
+// 내부에서 분기
+public boolean preHandle(...) {
+    if (request.getMethod().equals("GET")) {
+        return true;  // 누구나 조회 가능
+    }
+    // 나머지(POST/PUT/DELETE)는 ADMIN 검증
+}
+```
+
+---
+
+### [설계] Service 테스트 InMemory 유지의 진짜 이유
+
+"인터페이스에만 의존하니 구현체가 무엇이든 무관하다"는 DI의 기술적 설명일 뿐, 이유가 되지 못한다.
+
+진짜 이유: **Service 테스트의 관심사는 비즈니스 규칙**이다.
+
+- "중복 이메일로 가입하면 예외가 발생하는가?"
+- "본인 소유가 아닌 위시리스트는 삭제할 수 없는가?"
+
+이 질문들에 JPA, DB, Spring 컨텍스트는 전혀 관계없다.
+JPA Repository를 쓰면 실패 시 "비즈니스 로직 버그인가, JPA 매핑 문제인가"를 구분하기 어려워진다.
+
+| 계층 | 테스트 관심사 | 도구 |
+|------|-------------|------|
+| Service | 비즈니스 규칙 | InMemory (순수 Java) |
+| Repository | JPA 쿼리/매핑/soft delete | `@DataJpaTest` |
+| Controller | HTTP 직렬화/상태코드/인터셉터 | `@WebMvcTest` |
+
+---
+
+### [설계] `@BeforeEach` stub을 특정 테스트에서 오버라이드
+
+403 케이스처럼 기본 stub(ADMIN)을 다른 값으로 교체해야 할 때, Mockito는 마지막으로 설정된 stub을 우선 적용한다.
+
+```java
+@BeforeEach
+void setUp() {
+    given(provider.extractRole(any())).willReturn(MemberRole.ADMIN);  // 기본 stub
+}
+
+@Test
+void addProduct_forbidden() {
+    given(provider.extractRole(any())).willReturn(MemberRole.USER);  // 해당 테스트에서만 오버라이드
+    ...
+}
+```
+
+---
+
+### [설계] JWT custom claim 추가
+
+`subject`는 JWT 표준 스펙상 하나만 존재한다. role 등 추가 정보는 custom claim으로 넣는다.
+
+```java
+// 발급 - .claim("role", role.name())으로 추가
+Jwts.builder()
+    .subject(memberId.toString())
+    .claim("role", role.name())   // custom claim
+    ...
+
+// 추출 - Claims.get()으로 꺼내기
+claims.get("role", String.class)
+```
+
+`Claims`는 `Map<String, Object>`를 상속하며, JJWT가 타입 변환 메서드를 오버로딩으로 제공한다.
+
+---
+
+### [코드품질] `parseClaims()` private 메서드 추출
+
+`extractMemberId()`와 `extractRole()`이 `Jwts.parser()...parseSignedClaims()` 블록을 중복으로 갖는다.
+파싱과 예외 처리를 private 메서드로 추출하면 새 claim을 추가해도 한 곳만 유지하면 된다.
+
+```java
+private Claims parseClaims(String token) { ... }
+public Long extractMemberId(String token) { return Long.parseLong(parseClaims(token).getSubject()); }
+public MemberRole extractRole(String token) { return MemberRole.valueOf(parseClaims(token).get("role", String.class)); }
+```
+
+---
+
+### [설계] Flyway 초기 데이터 — BCrypt 해시 사전 계산
+
+SQL에 평문 비밀번호를 넣으면 `BCryptPasswordEncryptor.matches()`가 실패한다.
+Flyway 초기 데이터에는 BCrypt 해시값을 직접 넣어야 한다.
+
+```java
+// 임시 코드로 한 번 실행해 해시값 획득
+BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+System.out.println(encoder.encode("admin1234!"));
+// 출력된 $2a$10$... 를 SQL에 복사
+```
+
+---
+
+### [설계] Spring REST Docs — MockMvcTester 롤백 감수 이유
+
+MockMvcTester는 REST Docs snippets 생성을 미지원하여 MockMvc로 롤백이 필요했다.
+이 비용을 감수하면서까지 REST Docs를 선택한 이유는 **문서 신뢰성**이다.
+
+Swagger: 애노테이션 기반 → 코드와 문서가 따로 놀 수 있음
+REST Docs: 테스트 통과 시에만 문서 생성 → 코드/문서 동기화를 빌드가 강제
+
+```
+테스트 실패 → 스니펫 없음 → 문서 빌드 실패
+```
+
+문서가 실제 API와 다르면 클라이언트 개발자가 잘못된 정보로 개발하게 되는 비용이 훨씬 크다.
+
+---
+
 ### [설계] Gradle 빌드 시 JAR 파일 2개 생성
 
 `./gradlew build` 시 `build/libs/`에 JAR 파일이 2개 생성된다.

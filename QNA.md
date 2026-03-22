@@ -658,6 +658,63 @@ catch (ExpiredJwtException e) { ... }  // 절대 실행되지 않음
 
 ## 인증 / JWT
 
+### Q. JWT에서 subject 외에 추가 정보(role 등)를 넣으려면?
+
+`subject`는 단일 값(주로 userId)만 담는다. 추가 정보는 `.claim(key, value)`으로 커스텀 클레임에 넣는다.
+
+```java
+// 토큰 발급
+Jwts.builder()
+    .subject(member.getId().toString())
+    .claim("role", member.getRole().name())  // 커스텀 클레임
+    ...
+
+// 토큰 파싱 - Claims는 Map<String, Object>를 구현
+Claims claims = parseClaims(token);
+Long memberId = Long.parseLong(claims.getSubject());
+MemberRole role = MemberRole.valueOf(claims.get("role", String.class));  // 타입 지정 오버로드
+```
+
+`claims.get("role", String.class)`는 JJWT `Claims`(extends `Map<String, Object>`)의 타입 안전 오버로드다.
+`(String) claims.get("role")` 캐스팅보다 null 안전하고 명확하다.
+
+---
+
+### Q. parseClaims()를 private 메서드로 추출해야 하는 이유?
+
+`extractMemberId()`와 `extractRole()` 둘 다 파싱 + 파싱 후 값 추출 패턴이 동일하다.
+
+```java
+// 중복 제거 전
+public Long extractMemberId(String token) {
+    return Long.parseLong(Jwts.parser().verifyWith(key).build()
+        .parseSignedClaims(token).getPayload().getSubject());
+}
+
+public MemberRole extractRole(String token) {
+    return MemberRole.valueOf(Jwts.parser().verifyWith(key).build()
+        .parseSignedClaims(token).getPayload().get("role", String.class));
+}
+
+// parseClaims() 추출 후
+private Claims parseClaims(String token) {
+    return Jwts.parser().verifyWith(key).build()
+        .parseSignedClaims(token).getPayload();
+}
+
+public Long extractMemberId(String token) {
+    return Long.parseLong(parseClaims(token).getSubject());
+}
+
+public MemberRole extractRole(String token) {
+    return MemberRole.valueOf(parseClaims(token).get("role", String.class));
+}
+```
+
+예외 처리도 `parseClaims()`에 한 번만 작성하면 된다.
+
+---
+
 ### Q. Session 방식과 JWT 방식의 차이는?
 
 | | Session | JWT |
@@ -828,6 +885,161 @@ public ResponseEntity<Void> register(@RequestBody MemberRequest request) {
     return ResponseEntity.status(HttpStatus.CREATED).build();  // 빈 바디
 }
 ```
+
+---
+
+### Q. `@Enumerated` 없이 enum 필드를 JPA Entity에 쓰면 어떻게 저장되나?
+
+기본값인 `EnumType.ORDINAL`로 저장된다. enum 선언 순서의 정수값(0, 1, 2...)이 DB에 저장된다.
+
+```java
+public enum MemberRole { USER, ADMIN }
+// USER → 0, ADMIN → 1
+```
+
+문제: enum 중간에 새 값을 추가하면 기존 데이터가 모두 잘못된 값으로 해석된다.
+
+```java
+// ORDINAL 기준 - BEFORE
+public enum MemberRole { USER, ADMIN }   // 0, 1
+
+// 중간에 GUEST 추가 후
+public enum MemberRole { USER, GUEST, ADMIN }  // 0, 1, 2
+// 기존 DB에 저장된 1(ADMIN)이 이제 GUEST로 읽힘 → 데이터 오염
+```
+
+`@Enumerated(EnumType.STRING)`을 항상 명시해야 한다.
+
+```java
+@Enumerated(EnumType.STRING)
+private MemberRole role;  // "USER", "ADMIN" 문자열로 저장
+```
+
+---
+
+### Q. AdminInterceptor에서 HTTP 메서드별 분기는 어떻게 하나?
+
+Spring `InterceptorRegistry`는 URL 패턴만 지원하고 HTTP 메서드 필터링을 지원하지 않는다.
+인터셉터 내부에서 `request.getMethod()`로 직접 분기해야 한다.
+
+```java
+@Override
+public boolean preHandle(HttpServletRequest request, ...) throws IOException {
+    if (request.getMethod().equals("GET")) {
+        return true;  // GET은 인증 없이 통과
+    }
+
+    String authHeader = request.getHeader("Authorization");
+    if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        return false;
+    }
+
+    try {
+        String token = authHeader.substring(7);
+        MemberRole role = provider.extractRole(token);
+        if (role != MemberRole.ADMIN) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return false;
+        }
+    } catch (IllegalArgumentException e) {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        return false;
+    }
+    return true;
+}
+```
+
+null 체크 없이 바로 `substring(7)`하면 NPE → 500 응답이 된다. 반드시 null/prefix 체크 먼저.
+
+---
+
+### Q. `@BeforeEach` stub을 특정 테스트에서만 다른 값으로 재설정하는 방법?
+
+Mockito는 **마지막에 설정된 stub이 이긴다**. 테스트 메서드 내부에서 재정의하면 `@BeforeEach` 설정을 덮어쓴다.
+
+```java
+@BeforeEach
+void setUp() {
+    given(provider.extractRole(any())).willReturn(MemberRole.ADMIN);  // 기본 설정
+}
+
+@Test
+void addProduct_forbidden() throws Exception {
+    given(provider.extractRole(any())).willReturn(MemberRole.USER);  // 이 테스트만 USER로 재정의
+    // ...
+}
+```
+
+`@BeforeEach` stub이 "전역 기본값", 테스트 내부 stub이 "테스트별 오버라이드"라고 이해하면 된다.
+
+---
+
+### Q. Spring REST Docs를 MockMvcTester 대신 MockMvc로 롤백하면서까지 적용하는 이유?
+
+**문서 신뢰성** 때문이다. Swagger는 코드 어노테이션으로 문서를 작성하므로 실제 동작과 문서가 불일치할 수 있다. REST Docs는 테스트가 통과해야만 문서가 생성된다.
+
+```
+테스트 실패 → 문서 생성 불가
+즉, 문서가 존재한다 = 테스트가 통과했다 = API가 실제로 동작한다
+```
+
+MockMvcTester는 Spring Framework 6.2/Boot 3.4+에서 도입된 AssertJ 기반 래퍼다.
+현재 Spring REST Docs는 MockMvcTester와 연동되지 않아 기존 MockMvc API(`.andDo(document(...))`)로 롤백이 필요하다.
+
+프로젝트 우선순위:
+- 문서 신뢰성 → REST Docs 필수
+- MockMvcTester Fluent API → 편의성이지만 REST Docs와 양립 불가 (현재)
+
+---
+
+### Q. Flyway 초기 데이터에 BCrypt 비밀번호를 넣으려면?
+
+BCrypt는 실행 시마다 다른 해시를 생성하므로 SQL에서 직접 계산할 수 없다.
+해시를 **미리 계산**해서 SQL에 하드코딩해야 한다.
+
+```bash
+# Spring Security CLI 또는 간단한 Java 코드로 미리 생성
+String hash = new BCryptPasswordEncoder().encode("admin1234!");
+// 예: $2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBpwTTyI2MJOYG
+```
+
+```sql
+-- V3__init_data.sql
+INSERT INTO member (email, password, role, created_at, updated_at)
+VALUES ('admin@example.com', '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iAt6Z5EHsM8lE9lBpwTTyI2MJOYG', 'ADMIN', NOW(), NOW());
+```
+
+BCrypt 해시는 60자 고정이므로 컬럼이 `VARCHAR(60)` 이상이면 저장 가능하다.
+
+---
+
+### Q. MemberService.register()와 adminRegister()를 분리해야 하는 이유?
+
+**역할과 권한 흐름이 다르기 때문이다.**
+
+일반 회원가입은 누구나 호출할 수 있고, 역할은 항상 `USER`다.
+어드민 등록은 이미 인증된 어드민만 호출해야 하고, 역할이 `ADMIN`이다.
+
+```java
+// 회원가입 - 공개 엔드포인트, USER 역할 고정
+public void register(Member member) {
+    validationMember(member);
+    member.changePassword(passwordEncryptor.encrypt(member.getPassword()));
+    repository.save(member);
+}
+
+// 어드민 등록 - 어드민 전용 엔드포인트(/admin/**), ADMIN 역할 부여
+public void adminRegister(Member member) {
+    validationMember(member);
+    member.changePassword(passwordEncryptor.encrypt(member.getPassword()));
+    member.changeRole(MemberRole.ADMIN);
+    repository.save(member);
+}
+```
+
+하나의 메서드에 `isAdmin` 파라미터를 추가하는 방식은 메서드 책임이 흐려지고,
+호출 측이 역할 결정권을 갖게 되어 보안 실수가 발생하기 쉽다.
 
 ---
 
@@ -1011,23 +1223,19 @@ List<MemberEntity> findByMemberId(Long memberId);
 
 ---
 
-### Q. 서비스 계층 테스트를 JPA 전환 후에도 InMemory로 유지하는 이유?
+### Q. 서비스 계층 테스트를 JPA 전환 후에도 InMemory로 유지하는 진짜 이유는?
 
-Service는 Repository 인터페이스에만 의존하기 때문이다.
+"인터페이스에 의존하니 구현체가 무엇이든 무관하다"는 설명은 DI 메커니즘 얘기일 뿐이다.
+핵심은 **비즈니스 규칙 테스트와 인프라를 분리**하는 것이다.
 
-```
-ProductService → ProductRepository (interface)
-                    ↙              ↘
-   InMemoryProductRepository    ProductRepositoryImpl
-   (테스트용)                    (운영용)
-```
+Service 테스트에서 검증하는 것은 "중복 이메일이면 예외를 던지는가", "비밀번호가 일치해야 로그인되는가" 같은 비즈니스 로직이다.
+`@DataJpaTest`나 `@SpringBootTest`를 쓰면:
+- JPA/DB 설정 오류 → Service 비즈니스 테스트가 실패 (원인이 다름)
+- DB 연결, 트랜잭션, 영속성 컨텍스트 등 인프라 요소가 테스트 결과에 영향
+- Spring 컨텍스트 로딩으로 피드백 루프가 느려짐
 
-Service 테스트에 `@DataJpaTest`나 `@SpringBootTest`를 쓰면:
-- Spring 컨텍스트 로딩 → 느림
-- DB 연결 필요 → 환경 의존성 생김
-- 비즈니스 로직 테스트에 인프라가 끼어듦
-
-Service 테스트는 순수 Java 단위 테스트여야 한다.
+InMemory로 유지하면 "DB가 없어도 비즈니스 규칙이 올바른지" 독립적으로 검증할 수 있다.
+Repository 구현체(InMemory vs JPA)는 Service 비즈니스 로직 테스트의 관심사가 아니다.
 
 ---
 
