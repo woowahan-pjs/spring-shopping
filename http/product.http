@@ -1,7 +1,7 @@
 ### 상품 추가
 POST http://localhost:8080/products
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczNTcwOTcxLCJleHAiOjE3NzM1NzQ1NzF9.GTmKmYLl-uwumfigPPbSrW9CsScUArBPEqjoFX4NgaY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczOTkwOTE1LCJleHAiOjE3NzM5OTQ1MTV9.5BOe03ED8hRpGwkV_x8t9VV9FEffoFq0U_g2I-bLmT8
 
 {
   "name" : "피자",
@@ -10,20 +10,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwia
 }
 
 ### 상품 조회
-GET http://localhost:8080/products
+GET http://localhost:8080/products?page=0&size=10
 
 ### 상품 단건 조회
-GET http://localhost:8080/products/1
+GET http://localhost:8080/products/4
 
 ### 상품 수정
-PUT http://localhost:8080/products/1
+PUT http://localhost:8080/products/4
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczNTcwOTcxLCJleHAiOjE3NzM1NzQ1NzF9.GTmKmYLl-uwumfigPPbSrW9CsScUArBPEqjoFX4NgaY
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczOTkwOTE1LCJleHAiOjE3NzM5OTQ1MTV9.5BOe03ED8hRpGwkV_x8t9VV9FEffoFq0U_g2I-bLmT8
 
 {
-    "name" : "치킨",
-    "price" : 15000,
-    "imageUrl": "https://a.com/chicken.jpg"
+    "name" : "골뱅이무침",
+    "price" : 19000,
+    "imageUrl": "https://a.com/SpicyWhelkSalad.jpg"
 }
 
 ### 상품 삭제

@@ -1,7 +1,9 @@
 package shopping.product.domain;
 
 
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.Optional;
 
 public interface ProductRepository {
@@ -10,9 +12,7 @@ public interface ProductRepository {
 
     Optional<Product> findById(Long id);
 
-    Product update(Long id, Product product);
-
     void deleteById(Long id);
 
-    List<Product> findAll();
+    Page<Product> findAll(Pageable pageable);
 }

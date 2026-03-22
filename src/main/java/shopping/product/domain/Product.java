@@ -73,6 +73,12 @@ public class Product {
         return imageUrl;
     }
 
+    public void update(Product product) {
+        changeImageUrl(product.getImageUrl());
+        changeName(product.getName());
+        changePrice(product.getPrice());
+    }
+
     private void validateName(String name) {
         if (!StringUtils.hasText(name)) {
             throw new IllegalArgumentException("상품명은 필수입니다.");

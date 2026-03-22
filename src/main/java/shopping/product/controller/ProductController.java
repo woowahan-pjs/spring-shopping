@@ -1,14 +1,16 @@
 package shopping.product.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import shopping.common.PageResponse;
 import shopping.product.domain.Product;
 import shopping.product.controller.dto.ProductRequest;
 import shopping.product.controller.dto.ProductResponse;
 import shopping.product.service.ProductService;
-
-import java.util.List;
 
 @RestController
 public class ProductController {
@@ -25,9 +27,9 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public ResponseEntity<List<ProductResponse>> getProducts() {
-        List<Product> products = service.findProducts();
-        return ResponseEntity.ok(products.stream().map(ProductResponse::from).toList());
+    public ResponseEntity<PageResponse<ProductResponse>> getProducts(@PageableDefault(size = 20) Pageable pageable) {
+        Page<ProductResponse> page = service.findProducts(pageable).map(ProductResponse::from);
+        return ResponseEntity.ok(PageResponse.of(page));
     }
 
     @GetMapping("/products/{id}")

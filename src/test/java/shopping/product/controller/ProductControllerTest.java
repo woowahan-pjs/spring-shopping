@@ -6,6 +6,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -87,17 +90,32 @@ class ProductControllerTest {
     @Test
     @DisplayName("상품 목록을 가져온다.")
     void findAll() throws Exception {
-        given(service.findProducts()).willReturn(List.of(createWithId(1L), createWithId(2L), createWithId(3L)));
+        List<Product> products = List.of(createWithId(1L), createWithId(2L), createWithId(3L));
+        Pageable pageable = PageRequest.of(0, 20);
+        PageImpl<Product> page = new PageImpl<>(products, pageable, products.size());
 
-        mockMvc.perform(get("/products"))
+        given(service.findProducts(any())).willReturn(page);
+
+        mockMvc.perform(get("/products")
+                        .param("page", "0")
+                        .param("size", "20"))
                 .andExpectAll(status().isOk(),
-                        jsonPath("$.length()").value(3))
+                        jsonPath("$.totalElements").value(3))
                 .andDo(document("products/find-all",
+                        queryParameters(
+                                parameterWithName("page").description("페이지 번호 (0부터 시작, 기본값: 0)").optional(),
+                                parameterWithName("size").description("페이지 크기 (기본값: 20)").optional()
+                        ),
                         responseFields(
-                                fieldWithPath("[].id").description("상품 ID"),
-                                fieldWithPath("[].name").description("상품명"),
-                                fieldWithPath("[].price").description("상품가격"),
-                                fieldWithPath("[].imageUrl").description("상품이미지경로")
+                                fieldWithPath("contents[].id").description("상품 ID"),
+                                fieldWithPath("contents[].name").description("상품명"),
+                                fieldWithPath("contents[].price").description("상품가격"),
+                                fieldWithPath("contents[].imageUrl").description("상품이미지경로"),
+                                fieldWithPath("page").description("현재 페이지 번호"),
+                                fieldWithPath("size").description("페이지 크기"),
+                                fieldWithPath("totalElements").description("전체 상품 수"),
+                                fieldWithPath("totalPages").description("전체 페이지 수"),
+                                fieldWithPath("hasNext").description("다음 페이지 존재 여부")
                         )
                 ));
     }

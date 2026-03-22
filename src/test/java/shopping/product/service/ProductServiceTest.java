@@ -3,11 +3,12 @@ package shopping.product.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import shopping.product.domain.InMemoryProductRepository;
 import shopping.product.domain.Product;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -64,9 +65,9 @@ class ProductServiceTest {
         productService.save(product2);
         productService.save(product3);
 
-        List<Product> products = productService.findProducts();
+        Page<Product> products = productService.findProducts(PageRequest.of(0, 20));
 
-        assertThat(products.size()).isEqualTo(3);
+        assertThat(products.getContent()).hasSize(3);
     }
 
     @Test
@@ -93,8 +94,8 @@ class ProductServiceTest {
 
         productService.deleteById(product.getId());
 
-        List<Product> products = productService.findProducts();
+        Page<Product> products = productService.findProducts(PageRequest.of(0, 20));
 
-        assertThat(products).isEmpty();
+        assertThat(products.isEmpty()).isTrue();
     }
 }

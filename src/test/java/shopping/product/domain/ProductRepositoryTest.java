@@ -5,10 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import shopping.product.infrastructure.ProductRepositoryImpl;
-
-
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,7 +50,7 @@ public class ProductRepositoryTest {
         Product found = repository.findById(saved.getId()).get();
         found.changeName(name);
 
-        Product updated = repository.update(found.getId(), found);
+        Product updated = repository.save(found);
 
         assertThat(updated.getName()).isEqualTo(name);
     }
@@ -69,9 +68,8 @@ public class ProductRepositoryTest {
     @Test
     @DisplayName("상품 목록을 조회한다")
     void findAll() {
+        Page<Product> productList = repository.findAll(PageRequest.of(0, 20));
 
-        List<Product> productList = repository.findAll();
-
-        assertThat(productList.size()).isEqualTo(3);
+        assertThat(productList.getContent().size()).isEqualTo(3);
     }
 }

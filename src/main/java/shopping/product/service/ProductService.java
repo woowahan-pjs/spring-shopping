@@ -1,11 +1,12 @@
 package shopping.product.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductRepository;
 
-import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -30,14 +31,17 @@ public class ProductService {
                 .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
     }
 
-    public List<Product> findProducts() {
-        return productRepository.findAll();
+    public Page<Product> findProducts(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Transactional
     public Product update(Long id, Product product) {
         validateProductName(product);
-        return productRepository.update(id, product);
+        Product found = productRepository.findById(id)
+                .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
+        found.update(product);
+        return productRepository.save(found);
     }
 
     public void deleteById(Long id) {
