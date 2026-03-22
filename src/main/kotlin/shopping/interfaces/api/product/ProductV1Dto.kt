@@ -9,13 +9,13 @@ class ProductV1Dto {
     data class CreateProductRequest(
         val name: String,
         val price: BigDecimal,
-        val imageUrl: String
+        val imageUrl: String,
     )
 
     data class UpdateProductRequest(
         val name: String,
         val price: BigDecimal,
-        val imageUrl: String
+        val imageUrl: String,
     )
 
     data class ViewResponse(
@@ -23,22 +23,21 @@ class ProductV1Dto {
         val name: String,
         val price: BigDecimal,
         val imageUrl: String,
-        val createdAt: ZonedDateTime
+        val createdAt: ZonedDateTime,
     ) {
         companion object {
-            fun from(product: Product): ViewResponse {
-                return ViewResponse(
+            fun from(product: Product): ViewResponse =
+                ViewResponse(
                     id = product.id,
                     name = product.name,
                     price = product.price,
                     imageUrl = product.imageUrl,
-                    createdAt = product.createdAt
+                    createdAt = product.createdAt,
                 )
-            }
         }
     }
 
     data class ProductSearchRequest(
-        val paging: Paging.PagingRequest
+        val paging: Paging.PagingRequest,
     )
 }

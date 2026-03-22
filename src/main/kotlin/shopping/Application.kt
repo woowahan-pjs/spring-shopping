@@ -9,7 +9,6 @@ import java.util.TimeZone
 @ConfigurationPropertiesScan
 @SpringBootApplication
 class Application {
-
     @PostConstruct
     fun started() {
         // set timezone

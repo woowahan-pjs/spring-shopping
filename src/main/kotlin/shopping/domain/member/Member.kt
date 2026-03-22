@@ -12,7 +12,7 @@ import shopping.support.error.ErrorType
 @SQLDelete(sql = "UPDATE members SET deleted_at = NOW() WHERE id = ?")
 class Member(
     email: String,
-    password: String
+    password: String,
 ) : BaseEntity() {
     var email: String = email
         protected set
@@ -25,8 +25,5 @@ class Member(
         if (password.isBlank()) throw CoreException(ErrorType.BAD_REQUEST, "비밀번호는 비어있을 수 없습니다.")
     }
 
-    fun checkPassword(password: String): Boolean {
-        return password.equals(this.password)
-    }
-
+    fun checkPassword(password: String): Boolean = password.equals(this.password)
 }

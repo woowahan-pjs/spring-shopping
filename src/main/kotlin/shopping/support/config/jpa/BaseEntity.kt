@@ -29,7 +29,6 @@ class BaseEntity {
     var deletedAt: ZonedDateTime? = null
         protected set
 
-
     open fun guard() = Unit
 
     @PrePersist
@@ -48,5 +47,4 @@ class BaseEntity {
         val now = ZonedDateTime.now()
         updatedAt = now
     }
-
 }

@@ -6,14 +6,13 @@ import shopping.domain.product.ProductBadWordClient
 
 @Component
 class ProductBadWordClientAdapter(
-    private val profanityWebClient: WebClient
+    private val profanityWebClient: WebClient,
 ) : ProductBadWordClient {
-
-    override fun containsProfanity(text: String): Boolean {
-        return profanityWebClient.get()
+    override fun containsProfanity(text: String): Boolean =
+        profanityWebClient
+            .get()
             .uri("/service/containsprofanity?text={text}", text)
             .retrieve()
             .bodyToMono(Boolean::class.java)
             .block() ?: false
-    }
 }

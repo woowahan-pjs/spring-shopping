@@ -14,12 +14,15 @@ class TokenService {
         Keys.hmacShaKeyFor("very-secret-key-for-jwt-token-example-123456".toByteArray())
     private val expirationMillis = 1000 * 60 * 60 // 1시간
 
-    fun generateToken(memberId: Long, email: String): String {
-
+    fun generateToken(
+        memberId: Long,
+        email: String,
+    ): String {
         val now = Date()
         val expiry = Date(now.time + expirationMillis)
 
-        return Jwts.builder()
+        return Jwts
+            .builder()
             .setSubject(memberId.toString())
             .claim("email", email)
             .setIssuedAt(now)
@@ -28,41 +31,36 @@ class TokenService {
             .compact()
     }
 
-    fun validateToken(token: String): Boolean {
-        return try {
-
-            Jwts.parserBuilder()
+    fun validateToken(token: String): Boolean =
+        try {
+            Jwts
+                .parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
 
             true
-
         } catch (e: Exception) {
             false
         }
-    }
 
     fun getMemberId(token: String): Long {
-
         val claims = getClaims(token)
 
         return claims.subject.toLong()
     }
 
     fun getEmail(token: String): String {
-
         val claims = getClaims(token)
 
         return claims["email"] as String
     }
 
-    private fun getClaims(token: String): Claims {
-
-        return Jwts.parserBuilder()
+    private fun getClaims(token: String): Claims =
+        Jwts
+            .parserBuilder()
             .setSigningKey(secretKey)
             .build()
             .parseClaimsJws(token)
             .body
-    }
 }

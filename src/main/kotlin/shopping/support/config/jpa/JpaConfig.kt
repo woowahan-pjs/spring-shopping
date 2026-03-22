@@ -9,5 +9,4 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 @EnableTransactionManagement
 @EntityScan(basePackages = ["shopping"])
 @EnableJpaRepositories(basePackages = ["shopping"])
-class JpaConfig {
-}
+class JpaConfig

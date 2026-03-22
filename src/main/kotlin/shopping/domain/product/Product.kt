@@ -14,7 +14,7 @@ import java.math.BigDecimal
 class Product(
     name: String,
     price: BigDecimal,
-    imageUrl: String
+    imageUrl: String,
 ) : BaseEntity() {
     var name: String = name
         protected set
@@ -27,7 +27,11 @@ class Product(
         validateName(name)
     }
 
-    fun update(name: String, price: BigDecimal, imageUrl: String) {
+    fun update(
+        name: String,
+        price: BigDecimal,
+        imageUrl: String,
+    ) {
         validateName(name)
         this.name = name
         this.price = price

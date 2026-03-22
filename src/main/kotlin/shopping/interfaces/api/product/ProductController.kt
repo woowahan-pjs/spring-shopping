@@ -15,49 +15,49 @@ import shopping.interfaces.api.Paging
 @RestController
 @RequestMapping("/api/products")
 class ProductController(
-    private val productFacade: ProductFacade
+    private val productFacade: ProductFacade,
 ) {
     @GetMapping
     fun getProducts(
-        @RequestBody request: ProductV1Dto.ProductSearchRequest
-    ): ApiResponse<Paging.PageResponse<ProductV1Dto.ViewResponse>> {
-        return productFacade.getProducts(request.paging)
+        @RequestBody request: ProductV1Dto.ProductSearchRequest,
+    ): ApiResponse<Paging.PageResponse<ProductV1Dto.ViewResponse>> =
+        productFacade
+            .getProducts(request.paging)
             .map { ProductV1Dto.ViewResponse.from(it) }
             .let { Paging.PageResponse.from(it) }
             .let { ApiResponse.success(it) }
-    }
 
     @PostMapping
     fun createProduct(
-        @RequestBody request: ProductV1Dto.CreateProductRequest
-    ): ApiResponse<ProductV1Dto.ViewResponse> {
-        return productFacade.createProduct(request)
+        @RequestBody request: ProductV1Dto.CreateProductRequest,
+    ): ApiResponse<ProductV1Dto.ViewResponse> =
+        productFacade
+            .createProduct(request)
             .let { ProductV1Dto.ViewResponse.from(it) }
             .let { ApiResponse.success(it) }
-    }
 
     @GetMapping("/{productId}")
     fun getProduct(
-        @PathVariable productId: Long
-    ): ApiResponse<ProductV1Dto.ViewResponse> {
-        return productFacade.getProduct(productId)
+        @PathVariable productId: Long,
+    ): ApiResponse<ProductV1Dto.ViewResponse> =
+        productFacade
+            .getProduct(productId)
             .let { ProductV1Dto.ViewResponse.from(it) }
             .let { ApiResponse.success(it) }
-    }
 
     @PutMapping("/{productId}")
     fun updateProduct(
         @PathVariable productId: Long,
-        @RequestBody request: ProductV1Dto.UpdateProductRequest
-    ): ApiResponse<ProductV1Dto.ViewResponse> {
-        return productFacade.updateProduct(productId, request)
+        @RequestBody request: ProductV1Dto.UpdateProductRequest,
+    ): ApiResponse<ProductV1Dto.ViewResponse> =
+        productFacade
+            .updateProduct(productId, request)
             .let { ProductV1Dto.ViewResponse.from(it) }
             .let { ApiResponse.success(it) }
-    }
 
     @DeleteMapping("/{productId}")
     fun deleteProduct(
-        @PathVariable productId: Long
+        @PathVariable productId: Long,
     ): ApiResponse<Any> {
         productFacade.deleteProduct(productId)
         return ApiResponse.success()

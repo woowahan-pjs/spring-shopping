@@ -14,7 +14,10 @@ data class ApiResponse<T>(
         companion object {
             fun success() = Metadata(Result.SUCCESS, null, null)
 
-            fun fail(errorCode: String, errorMessage: String) = Metadata(Result.FAIL, errorCode, errorMessage)
+            fun fail(
+                errorCode: String,
+                errorMessage: String,
+            ) = Metadata(Result.FAIL, errorCode, errorMessage)
         }
     }
 
@@ -23,7 +26,10 @@ data class ApiResponse<T>(
 
         fun <T> success(data: T? = null) = ApiResponse(Metadata.success(), data)
 
-        fun fail(errorCode: String, errorMessage: String): ApiResponse<Any?> =
+        fun fail(
+            errorCode: String,
+            errorMessage: String,
+        ): ApiResponse<Any?> =
             ApiResponse(
                 meta = Metadata.fail(errorCode = errorCode, errorMessage = errorMessage),
                 data = null,

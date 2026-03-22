@@ -6,18 +6,11 @@ import shopping.domain.member.MemberRepository
 
 @Component
 class MemberRepositoryImpl(
-    private val memberJpaRepository: MemberJpaRepository
+    private val memberJpaRepository: MemberJpaRepository,
 ) : MemberRepository {
+    override fun findByEmail(email: String): Member? = memberJpaRepository.findByEmail(email)
 
-    override fun findByEmail(email: String): Member? {
-        return memberJpaRepository.findByEmail(email)
-    }
+    override fun existsByEmail(email: String): Boolean = memberJpaRepository.existsByEmail(email)
 
-    override fun existsByEmail(email: String): Boolean {
-        return memberJpaRepository.existsByEmail(email);
-    }
-
-    override fun save(member: Member): Member {
-        return memberJpaRepository.save(member)
-    }
+    override fun save(member: Member): Member = memberJpaRepository.save(member)
 }
