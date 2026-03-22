@@ -2,6 +2,7 @@ package shopping.wish.domain;
 
 import jakarta.persistence.*;
 import shopping.member.domain.Member;
+import shopping.product.domain.Product;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -35,5 +36,10 @@ public class WishList {
 
     public Long getId() {
         return id;
+    }
+
+    public void addItem(Product product) {
+        WishListItem item = WishListItem.create(this, product);
+        items.add(item);
     }
 }
