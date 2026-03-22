@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Wishes - Shopping</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">Shopping</a>
+        <div class="navbar-actions">
+            <a href="/wishes" class="btn-wish-nav">My Wishes</a>
+            <span class="user-email" id="userEmail" style="display:none"></span>
+            <a href="/login" class="btn-login" id="loginBtn">Login</a>
+            <button class="btn-logout" id="logoutBtn" style="display:none" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">My Wishes</h1>
+        <div class="wish-empty" id="wishEmpty" style="display:none">
+            <p>No wishes yet. <a href="/">Browse products</a> and add some!</p>
+        </div>
+        <div class="product-grid" id="wishGrid"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        function updateAuthUI() {
+            var token = getToken();
+            var loginBtn = document.getElementById('loginBtn');
+            var logoutBtn = document.getElementById('logoutBtn');
+            var userEmail = document.getElementById('userEmail');
+            var email = localStorage.getItem('email');
+
+            if (token) {
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'inline-block';
+                if (email) {
+                    userEmail.style.display = 'inline';
+                    userEmail.textContent = email;
+                }
+            } else {
+                window.location.href = '/login';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('email');
+            window.location.href = '/login';
+        }
+
+        function showToast(message, type) {
+            var toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(function() {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        function formatPrice(price) {
+            return '\u20A9 ' + price.toLocaleString();
+        }
+
+        async function removeWish(productId, card) {
+            var token = getToken();
+            try {
+                var response = await fetch('/api/wishes/' + productId, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (response.ok) {
+                    card.style.transition = 'opacity 0.3s, transform 0.3s';
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.9)';
+                    setTimeout(function() {
+                        card.remove();
+                        if (document.getElementById('wishGrid').children.length === 0) {
+                            document.getElementById('wishEmpty').style.display = 'block';
+                        }
+                    }, 300);
+                    showToast('Removed from wishes', 'success');
+                } else if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('email');
+                    window.location.href = '/login';
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            }
+        }
+
+        async function loadWishes() {
+            var token = getToken();
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            try {
+                var response = await fetch('/api/wishes', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('email');
+                    window.location.href = '/login';
+                    return;
+                }
+                if (!response.ok) return;
+
+                var wishes = await response.json();
+                var grid = document.getElementById('wishGrid');
+                var empty = document.getElementById('wishEmpty');
+
+                if (wishes.length === 0) {
+                    empty.style.display = 'block';
+                    return;
+                }
+
+                wishes.forEach(function(wish) {
+                    var card = document.createElement('div');
+                    card.className = 'product-card';
+
+                    var imageHtml;
+                    if (wish.imageUrl) {
+                        imageHtml = '<img src="' + wish.imageUrl + '" alt="Product image" class="product-image">';
+                    } else {
+                        imageHtml = '<div class="product-image-placeholder">&#128722;</div>';
+                    }
+
+                    card.innerHTML =
+                        '<a href="/products/' + wish.productId + '">' +
+                            imageHtml +
+                            '<div class="product-info">' +
+                                '<div class="product-name">' + wish.name + '</div>' +
+                                '<div class="product-price">' + formatPrice(wish.price) + '</div>' +
+                            '</div>' +
+                        '</a>' +
+                        '<div class="product-actions">' +
+                            '<button class="btn-wish wished" data-product-id="' + wish.productId + '">&#9829; Remove</button>' +
+                        '</div>';
+
+                    var btn = card.querySelector('.btn-wish');
+                    btn.addEventListener('click', function() {
+                        removeWish(wish.productId, card);
+                    });
+
+                    grid.appendChild(card);
+                });
+            } catch (e) {
+                showToast('Failed to load wishes', 'error');
+            }
+        }
+
+        updateAuthUI();
+        loadWishes();
+    </script>
+</body>
+</html>

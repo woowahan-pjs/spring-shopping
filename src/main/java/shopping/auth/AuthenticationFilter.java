@@ -24,8 +24,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
+        String method = request.getMethod();
         return path.equals("/api/members/register") || path.equals("/api/members/login")
-                || path.startsWith("/health");
+                || path.startsWith("/health") || !path.startsWith("/api")
+                || (path.startsWith("/api/products") && "GET".equalsIgnoreCase(method));
     }
 
     @Override

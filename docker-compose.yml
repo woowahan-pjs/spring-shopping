@@ -11,13 +11,5 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
 
-  mongodb:
-    image: mongo:7.0
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo-data:/data/db
-
 volumes:
   mysql-data:
-  mongo-data:

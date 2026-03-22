@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">Shopping</a>
+        <div class="navbar-actions">
+            <a href="/wishes" class="btn-wish-nav" id="wishNavBtn" style="display:none">My Wishes</a>
+            <span class="user-email" id="userEmail" style="display:none"></span>
+            <a href="/login" class="btn-login" id="loginBtn">Login</a>
+            <button class="btn-logout" id="logoutBtn" style="display:none" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="page-title">Products</h1>
+        <div class="product-grid">
+            <div class="product-card" th:each="product : ${products}">
+                <a th:href="@{'/products/' + ${product.id()}}">
+                    <img th:if="${product.imageUrl() != null and !product.imageUrl().isEmpty()}"
+                         th:src="${product.imageUrl()}" alt="Product image" class="product-image">
+                    <div th:if="${product.imageUrl() == null or product.imageUrl().isEmpty()}"
+                         class="product-image-placeholder">&#128722;</div>
+                    <div class="product-info">
+                        <div class="product-name" th:text="${product.name()}">Product Name</div>
+                        <div class="product-price" th:text="'&#8361; ' + ${#numbers.formatInteger(product.price(), 1, 'COMMA')}">&#8361; 0</div>
+                    </div>
+                </a>
+                <div class="product-actions">
+                    <button class="btn-wish"
+                            th:data-product-id="${product.id()}"
+                            onclick="toggleWish(this)">&#9825; Add to Wish</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        function updateAuthUI() {
+            const token = getToken();
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const userEmail = document.getElementById('userEmail');
+            const email = localStorage.getItem('email');
+
+            var wishNavBtn = document.getElementById('wishNavBtn');
+            if (token) {
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'inline-block';
+                wishNavBtn.style.display = 'inline-block';
+                if (email) {
+                    userEmail.style.display = 'inline';
+                    userEmail.textContent = email;
+                }
+            } else {
+                loginBtn.style.display = 'inline-block';
+                logoutBtn.style.display = 'none';
+                wishNavBtn.style.display = 'none';
+                userEmail.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('email');
+            updateAuthUI();
+            showToast('Logged out', 'success');
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(function() {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        async function toggleWish(button) {
+            const token = getToken();
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const productId = button.dataset.productId;
+            const isWished = button.classList.contains('wished');
+
+            button.disabled = true;
+            try {
+                if (isWished) {
+                    const response = await fetch('/api/wishes/' + productId, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    if (response.ok) {
+                        button.classList.remove('wished');
+                        button.innerHTML = '&#9825; Add to Wish';
+                        showToast('Removed from wishes', 'success');
+                    } else if (response.status === 401) {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('email');
+                        window.location.href = '/login';
+                    }
+                } else {
+                    const response = await fetch('/api/wishes/' + productId, {
+                        method: 'POST',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+                    if (response.ok) {
+                        button.classList.add('wished');
+                        button.innerHTML = '&#9829; Wished';
+                        showToast('Added to wishes!', 'success');
+                    } else if (response.status === 401) {
+                        localStorage.removeItem('token');
+                        localStorage.removeItem('email');
+                        window.location.href = '/login';
+                    } else {
+                        const data = await response.json();
+                        showToast(data.message || 'Failed to add wish', 'error');
+                    }
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            } finally {
+                button.disabled = false;
+            }
+        }
+
+        async function loadWishStatus() {
+            const token = getToken();
+            if (!token) return;
+
+            try {
+                const response = await fetch('/api/wishes', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (response.ok) {
+                    const wishes = await response.json();
+                    const wishedProductIds = new Set(wishes.map(function(w) { return w.productId; }));
+                    document.querySelectorAll('.btn-wish').forEach(function(btn) {
+                        if (wishedProductIds.has(btn.dataset.productId)) {
+                            btn.classList.add('wished');
+                            btn.innerHTML = '&#9829; Wished';
+                        }
+                    });
+                }
+            } catch (e) {
+                // silently fail
+            }
+        }
+
+        updateAuthUI();
+        loadWishStatus();
+    </script>
+</body>
+</html>
