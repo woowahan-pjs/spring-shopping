@@ -1,10 +1,11 @@
 package shopping.wish.service;
 
 import org.springframework.stereotype.Service;
+import shopping.common.exception.ProductNotFoundException;
+import shopping.common.exception.WishListNotFoundException;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
 import shopping.wish.domain.WishList;
-import shopping.wish.domain.WishListItem;
 import shopping.wish.dto.WishProductResponse;
 import shopping.wish.repository.WishListItemRepository;
 import shopping.wish.repository.WishListRepository;
@@ -31,10 +32,10 @@ public class WishService {
     public void addWish(Long memberId, Long productId) {
 
         WishList wishList = wishListRepository.findByMemberId(memberId)
-                .orElseThrow();
+                .orElseThrow(WishListNotFoundException::new);
 
         Product product = productRepository.findById(productId)
-                .orElseThrow();
+                .orElseThrow(ProductNotFoundException::new);
 
         wishList.addItem(product);
 
@@ -49,7 +50,7 @@ public class WishService {
     public List<WishProductResponse> getWishList(Long memberId) {
 
         WishList wishList = wishListRepository.findByMemberId(memberId)
-                .orElseThrow();
+                .orElseThrow(WishListNotFoundException::new);
 
         return wishListItemRepository.findByWishListId(wishList.getId())
                 .stream()

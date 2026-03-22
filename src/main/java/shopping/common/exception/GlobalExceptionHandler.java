@@ -28,4 +28,18 @@ public class GlobalExceptionHandler {
                 .badRequest()
                 .body(new ErrorResponse("EMAIL_ALREADY_EXISTS", e.getMessage()));
     }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleProductNotFound(ProductNotFoundException  e) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse("PRODUCT_NOT_FOUND", e.getMessage()));
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> WishListNotFoundException(WishListNotFoundException  e) {
+        return ResponseEntity
+                .badRequest()
+                .body(new ErrorResponse("WISHLIST_NOT_FOUND", e.getMessage()));
+    }
 }
