@@ -16,5 +16,7 @@ public interface ProductRepository {
 
     List<Product> findAllByStatus(ProductStatus status);
 
+    List<Product> findAllByIdInAndStatus(List<UUID> ids, ProductStatus status);
+
     void deleteById(UUID id);
 }

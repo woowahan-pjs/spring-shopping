@@ -40,6 +40,12 @@ public class InMemoryProductRepository implements ProductRepository {
     }
 
     @Override
+    public List<Product> findAllByIdInAndStatus(List<UUID> ids, ProductStatus status) {
+        return ids.stream().map(store::get).filter(p -> p != null && p.getStatus() == status)
+                .toList();
+    }
+
+    @Override
     public void deleteById(UUID id) {
         store.remove(id);
     }

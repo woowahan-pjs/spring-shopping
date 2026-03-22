@@ -8,4 +8,6 @@ public interface FindProduct {
     Product execute(UUID id);
 
     List<Product> execute();
+
+    List<Product> execute(List<UUID> ids);
 }

@@ -27,4 +27,9 @@ public class FindProductService implements FindProduct {
     public List<Product> execute() {
         return productRepository.findAllByStatus(ProductStatus.CREATED);
     }
+
+    @Override
+    public List<Product> execute(List<UUID> ids) {
+        return productRepository.findAllByIdInAndStatus(ids, ProductStatus.CREATED);
+    }
 }
