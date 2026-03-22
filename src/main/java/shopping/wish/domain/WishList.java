@@ -30,16 +30,26 @@ public class WishList {
 
     }
 
-    public static WishList create(Long id) {
-        return new WishList();
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public static WishList create(Member member) {
+        WishList wishList = new WishList();
+        wishList.setMember(member);
+        return wishList;
     }
 
     public void addItem(Product product) {
         WishListItem item = WishListItem.create(this, product);
         items.add(item);
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+
+        if (member.getWishList() != this) {
+            member.setWishList(this);
+        }
     }
 }

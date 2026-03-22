@@ -1,12 +1,6 @@
 package shopping.member.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.*;
 import shopping.wish.domain.WishList;
 
 import java.time.LocalDateTime;
@@ -26,6 +20,9 @@ public class Member {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private WishList wishList;
 
     protected Member() {
     }
@@ -47,7 +44,9 @@ public class Member {
     }
 
     public static Member create(String email, String password) {
-        return new Member(email, password);
+        Member member = new Member(email, password);
+        WishList.create(member);
+        return member;
     }
 
     public Long getId() {
@@ -62,6 +61,11 @@ public class Member {
         return password;
     }
 
-    @OneToOne(mappedBy = "member")
-    private WishList wishList;
+    public WishList getWishList() {
+        return wishList;
+    }
+
+    public void setWishList(WishList wishList) {
+        this.wishList = wishList;
+    }
 }
