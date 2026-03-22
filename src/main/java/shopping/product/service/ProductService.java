@@ -1,6 +1,7 @@
 package shopping.product.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shopping.product.domain.Product;
 import shopping.product.dto.ProductCreateRequest;
 import shopping.product.dto.ProductResponse;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional(readOnly = true)
 public class ProductService {
 
     private final ProductNameValidator productNameValidator;
@@ -39,6 +41,7 @@ public class ProductService {
         return ProductResponse.from(product);
     }
 
+    @Transactional
     public void updateProduct(Long productId, ProductUpdateRequest request) {
 
         productNameValidator.validate(request.getName());
@@ -49,6 +52,7 @@ public class ProductService {
         product.update(request.getName(), request.getPrice(), request.getImageUrl());
     }
 
+    @Transactional
     public void deleteProduct(Long productId) {
 
         Product product = productRepository.findById(productId)

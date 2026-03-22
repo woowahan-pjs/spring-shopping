@@ -1,6 +1,7 @@
 package shopping.wish.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shopping.common.exception.ProductNotFoundException;
 import shopping.common.exception.WishListNotFoundException;
 import shopping.product.domain.Product;
@@ -13,6 +14,7 @@ import shopping.wish.repository.WishListRepository;
 import java.util.List;
 
 @Service
+@Transactional(readOnly = true)
 public class WishService {
 
     private final WishListRepository wishListRepository;
@@ -29,6 +31,7 @@ public class WishService {
         this.productRepository = productRepository;
     }
 
+    @Transactional
     public void addWish(Long memberId, Long productId) {
 
         WishList wishList = wishListRepository.findByMemberId(memberId)
@@ -42,6 +45,7 @@ public class WishService {
         wishListRepository.save(wishList);
     }
 
+    @Transactional
     public void deleteWish(Long memberId, Long wishId) {
 
         wishListItemRepository.deleteById(wishId);

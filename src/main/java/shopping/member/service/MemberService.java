@@ -2,6 +2,7 @@ package shopping.member.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shopping.auth.JwtProvider;
 import shopping.common.exception.EmailAlreadyExistsException;
 import shopping.common.exception.LoginFailedException;
@@ -12,6 +13,7 @@ import shopping.member.dto.RegisterRequest;
 import shopping.member.repository.MemberRepository;
 
 @Service
+@Transactional(readOnly = true)
 public class MemberService {
 
     private final MemberRepository memberRepository;
@@ -24,6 +26,7 @@ public class MemberService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
 
         if (memberRepository.existsByEmail(request.getEmail())) {
