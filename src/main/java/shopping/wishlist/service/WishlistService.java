@@ -1,6 +1,9 @@
 package shopping.wishlist.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shopping.product.domain.ProductRepository;
 import shopping.wishlist.domain.Wishlist;
 import shopping.wishlist.domain.WishlistRepository;
@@ -9,6 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 public class WishlistService {
     private final WishlistRepository wishlistRepository;
     private final ProductRepository productRepository;
@@ -30,8 +34,9 @@ public class WishlistService {
         wishlistRepository.save(wishlist);
     }
 
-    public List<Wishlist> findWishlistItems(long memberId) {
-        return wishlistRepository.findAllByMemberId(memberId);
+    @Transactional(readOnly = true)
+    public Page<Wishlist> findWishlistItems(long memberId, Pageable pageable) {
+        return wishlistRepository.findAllByMemberId(memberId, pageable);
     }
 
     public void deleteWishlistItem(Long memberId, Long id) {

@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import shopping.config.JpaConfig;
 import shopping.member.infrastructure.MemberRepositoryImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-@Import(MemberRepositoryImpl.class)
+@Import({MemberRepositoryImpl.class, JpaConfig.class})
 public class MemberRepositoryTest {
     @Autowired
     private MemberRepository repository;

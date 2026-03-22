@@ -10,6 +10,7 @@ import shopping.product.domain.ProductRepository;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 public class ProductService {
 
     private final ProductRepository productRepository;
@@ -26,16 +27,17 @@ public class ProductService {
         return productRepository.save(product);
     }
 
+    @Transactional(readOnly = true)
     public Product findProductById(Long id) {
         return productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
     }
 
+    @Transactional(readOnly = true)
     public Page<Product> findProducts(Pageable pageable) {
         return productRepository.findAll(pageable);
     }
 
-    @Transactional
     public Product update(Long id, Product product) {
         validateProductName(product);
         Product found = productRepository.findById(id)

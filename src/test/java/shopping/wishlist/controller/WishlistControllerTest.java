@@ -8,12 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import shopping.auth.AuthInterceptor;
 import shopping.auth.JwtTokenProvider;
+import shopping.product.domain.Product;
 import shopping.wishlist.controller.dto.WishlistRequest;
+import shopping.wishlist.domain.Wishlist;
 import shopping.wishlist.service.WishlistService;
 
 import java.util.List;
@@ -24,6 +29,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static shopping.product.domain.ProductFixture.createWithId;
 import static shopping.wishlist.domain.WishlistFixture.*;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -80,20 +86,34 @@ class WishlistControllerTest {
     @Test
     @DisplayName("위시리스트를 조회한다")
     void findAllByMemberId() throws Exception {
-        given(service.findWishlistItems(eq(VALID_MEMBER_ID))).willReturn(List.of(createWish(1L, 1L), createWish(2L, 2L)));
+        Pageable pageable = PageRequest.of(0, 20);
+        List<Wishlist> wishlist = List.of(createWish(1L, 1L), createWish(2L, 2L));
+        PageImpl<Wishlist> page = new PageImpl<>(wishlist, pageable, wishlist.size());
+
+        given(service.findWishlistItems(eq(VALID_MEMBER_ID), any())).willReturn(page);
 
         mockMvc.perform(get("/wishlist")
+                        .param("page", "0")
+                        .param("size", "20")
                 .header("Authorization", "Bearer valid-token"))
-                .andExpectAll(
-                        status().isOk()
-                        , jsonPath("$", hasSize(2))
+                .andExpectAll(status().isOk(),
+                        jsonPath("$.totalElements").value(2)
                 ).andDo(document("wishlist/find-all",
+                        queryParameters(
+                                parameterWithName("page").description("페이지 번호 (0부터 시작, 기본값: 0)").optional(),
+                                parameterWithName("size").description("페이지 크기 (기본값: 20)").optional()
+                        ),
                         requestHeaders(
                                 headerWithName("Authorization").description("Bearer JWT 토큰")
                         ),
                         responseFields(
-                                fieldWithPath("[].id").description("위시리스트 항목 ID"),
-                                fieldWithPath("[].productId").description("상품 ID")
+                                fieldWithPath("contents[].id").description("위시리스트 항목 ID"),
+                                fieldWithPath("contents[].productId").description("상품 ID"),
+                                fieldWithPath("page").description("현재 페이지 번호"),
+                                fieldWithPath("size").description("페이지 크기"),
+                                fieldWithPath("totalElements").description("전체 항목 수"),
+                                fieldWithPath("totalPages").description("전체 페이지 수"),
+                                fieldWithPath("hasNext").description("다음 페이지 존재 여부")
                         )
                 ));
     }

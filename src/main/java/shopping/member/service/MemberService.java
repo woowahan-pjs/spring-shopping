@@ -1,10 +1,12 @@
 package shopping.member.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shopping.member.domain.Member;
 import shopping.member.domain.MemberRepository;
 import shopping.member.domain.MemberRole;
 
+@Transactional
 @Service
 public class MemberService {
     private final MemberRepository repository;

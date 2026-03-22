@@ -7,6 +7,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import shopping.config.JpaConfig;
 import shopping.product.infrastructure.ProductRepositoryImpl;
 
 import static org.assertj.core.api.Assertions.*;
@@ -14,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static shopping.product.domain.ProductFixture.*;
 
 @DataJpaTest
-@Import(ProductRepositoryImpl.class)
+@Import({ProductRepositoryImpl.class, JpaConfig.class})
 public class ProductRepositoryTest {
 
     @Autowired

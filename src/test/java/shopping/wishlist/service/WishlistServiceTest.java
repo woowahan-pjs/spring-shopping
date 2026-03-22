@@ -3,6 +3,8 @@ package shopping.wishlist.service;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import shopping.product.domain.InMemoryProductRepository;
 import shopping.product.domain.Product;
 import shopping.product.domain.ProductRepository;
@@ -18,6 +20,8 @@ import static org.assertj.core.api.Assertions.*;
 class WishlistServiceTest {
 
     private WishlistService service;
+
+    private PageRequest default_page = PageRequest.of(0, 20);
 
     @BeforeEach
     void setUp() {
@@ -63,9 +67,9 @@ class WishlistServiceTest {
         Wishlist wishlist = new Wishlist(1L, 1L);
         service.addWishlist(wishlist);
 
-        List<Wishlist> items = service.findWishlistItems(1L);
+        Page<Wishlist> items = service.findWishlistItems(1L, default_page);
 
-        assertThat(items.size()).isEqualTo(1);
+        assertThat(items.getContent()).hasSize(1);
     }
 
     @Test
@@ -76,7 +80,7 @@ class WishlistServiceTest {
 
         service.deleteWishlistItem(wishlist.getMemberId(), wishlist.getId());
 
-        List<Wishlist> items = service.findWishlistItems(1L);
+        Page<Wishlist> items = service.findWishlistItems(1L, default_page);
 
         assertThat(items).isEmpty();
     }

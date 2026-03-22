@@ -1,10 +1,10 @@
 package shopping.wishlist.infrastructure;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import shopping.wishlist.domain.Wishlist;
 import shopping.wishlist.domain.WishlistRepository;
-
-import java.util.List;
 
 @Repository
 public class WishlistRepositoryImpl implements WishlistRepository {
@@ -20,10 +20,8 @@ public class WishlistRepositoryImpl implements WishlistRepository {
     }
 
     @Override
-    public List<Wishlist> findAllByMemberId(Long memberId) {
-        return repository.findAllByMemberId(memberId).stream()
-                .map(WishlistEntity::toDomain)
-                .toList();
+    public Page<Wishlist> findAllByMemberId(Long memberId, Pageable pageable) {
+        return repository.findAllByMemberId(memberId, pageable).map(WishlistEntity::toDomain);
     }
 
     @Override

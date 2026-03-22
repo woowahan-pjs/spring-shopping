@@ -1,8 +1,13 @@
 package shopping.wishlist.controller;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import shopping.common.PageResponse;
+import shopping.product.controller.dto.ProductResponse;
 import shopping.wishlist.controller.dto.WishlistRequest;
 import shopping.wishlist.controller.dto.WishlistResponse;
 import shopping.wishlist.domain.Wishlist;
@@ -26,11 +31,12 @@ public class WishlistController {
     }
 
     @GetMapping("/wishlist")
-    public ResponseEntity<List<WishlistResponse>> getWish(@RequestAttribute("memberId") Long memberId) {
-        List<Wishlist> items = service.findWishlistItems(memberId);
-        return ResponseEntity.ok(items.stream()
-                .map(WishlistResponse::from)
-                .toList());
+    public ResponseEntity<PageResponse<WishlistResponse>> getWish(
+            @RequestAttribute("memberId") Long memberId,
+            @PageableDefault(size = 20) Pageable pageable) {
+        Page<WishlistResponse> page = service.findWishlistItems(memberId, pageable)
+                .map(WishlistResponse::from);
+        return ResponseEntity.ok(PageResponse.of(page));
     }
 
     @DeleteMapping("/wishlist/{id}")

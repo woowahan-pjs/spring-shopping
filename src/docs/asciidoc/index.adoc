@@ -9,7 +9,7 @@
 operation::wishlist/add[snippets='http-request,http-response']
 
 === 위시리스트 조회
-operation::wishlist/find-all[snippets='http-request,http-response,response-fields']
+operation::wishlist/find-all[snippets='query-parameters,http-request,http-response,response-fields']
 
 === 위시리스트 삭제
 operation::wishlist/delete[snippets='http-request,http-response']
@@ -20,7 +20,7 @@ operation::wishlist/delete[snippets='http-request,http-response']
 operation::products/add[snippets='http-request,http-response']
 
 === 상품 목록 조회
-operation::products/find-all[snippets='http-request,http-response,response-fields']
+operation::products/find-all[snippets='query-parameters,http-request,http-response,response-fields']
 
 === 상품 단건 조회
 operation::products/find-by-id[snippets='http-request,http-response,response-fields']

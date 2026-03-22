@@ -1,5 +1,9 @@
 package shopping.wishlist.domain;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,10 +22,14 @@ public class InMemoryWishlistRepository implements WishlistRepository {
     }
 
     @Override
-    public List<Wishlist> findAllByMemberId(Long memberId) {
-        return wisilistItemMap.values().stream()
+    public Page<Wishlist> findAllByMemberId(Long memberId, Pageable pageable) {
+        List<Wishlist> list = wisilistItemMap.values().stream()
                 .filter(w -> w.getMemberId().equals(memberId))
                 .toList();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), list.size());
+        return new PageImpl<>(list.subList(start, end), pageable, list.size());
     }
 
     @Override

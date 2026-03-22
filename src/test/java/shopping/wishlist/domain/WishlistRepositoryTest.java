@@ -5,15 +5,19 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.PageRequest;
+import shopping.config.JpaConfig;
 import shopping.wishlist.infrastructure.WishlistRepositoryImpl;
 
 import static org.assertj.core.api.Assertions.*;
 
 @DataJpaTest
-@Import(WishlistRepositoryImpl.class)
+@Import({WishlistRepositoryImpl.class, JpaConfig.class})
 class WishlistRepositoryTest {
     @Autowired
     WishlistRepository repository;
+
+    private PageRequest default_page = PageRequest.of(0, 20);
 
     @Test
     @DisplayName("위시리스트를 저장한다")
@@ -33,7 +37,7 @@ class WishlistRepositoryTest {
         repository.save(new Wishlist(memberId, 2L));
         repository.save(new Wishlist(memberId, 3L));
 
-        assertThat(repository.findAllByMemberId(memberId).size()).isEqualTo(3);
+        assertThat(repository.findAllByMemberId(memberId, default_page)).hasSize(3);
     }
 
     @Test
@@ -44,7 +48,7 @@ class WishlistRepositoryTest {
 
         repository.deleteById(save.getId());
 
-        assertThat(repository.findAllByMemberId(memberId)).isEmpty();
+        assertThat(repository.findAllByMemberId(memberId, default_page)).isEmpty();
     }
 
     @Test
