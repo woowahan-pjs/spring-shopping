@@ -4,5 +4,5 @@ import java.util.UUID;
 
 public interface UpdateProduct {
 
-    Product execute(UUID id, String name, long price, String imageUrl);
+    void execute(UUID id, String name, long price, String imageUrl);
 }

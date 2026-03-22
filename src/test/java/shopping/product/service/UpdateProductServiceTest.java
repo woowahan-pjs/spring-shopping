@@ -30,9 +30,9 @@ class UpdateProductServiceTest {
         Product saved = productRepository
                 .save(new Product(nameFactory.create("상품"), 1000, "http://img.png"));
 
-        Product updated = service.execute(saved.getId(), "수정상품", 2000, "http://new.png");
+        service.execute(saved.getId(), "수정상품", 2000, "http://new.png");
 
-        assertEquals(saved.getId(), updated.getId());
+        Product updated = productRepository.findById(saved.getId()).orElseThrow();
         assertEquals("수정상품", updated.getName().getValue());
         assertEquals(2000, updated.getPrice());
         assertEquals("http://new.png", updated.getImageUrl());
