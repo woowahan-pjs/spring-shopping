@@ -26,7 +26,7 @@ public class ProductController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<Object> add(@RequestBody AddProductRequestDto requestDto) {
+	public ResponseEntity<Void> add(@RequestBody AddProductRequestDto requestDto) {
 		productService.addProduct(requestDto);
 		return ResponseEntity.ok().build();
 	}
@@ -44,13 +44,13 @@ public class ProductController {
 	}
 
 	@PutMapping("/update")
-	public ResponseEntity<Object> update(@RequestBody UpdateProductRequestDto requestDto) {
+	public ResponseEntity<Void> update(@RequestBody UpdateProductRequestDto requestDto) {
 		productService.updateProduct(requestDto);
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Object> delete(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		productService.deleteProduct(id);
 		return ResponseEntity.ok().build();
 	}

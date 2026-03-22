@@ -29,13 +29,13 @@ public class WishController {
 	}
 
 	@PostMapping("/add")
-	public ResponseEntity<Object> add(@RequestBody Long productId) {
+	public ResponseEntity<Void> add(@RequestBody Long productId) {
 		wishService.addWish(productId);
 		return ResponseEntity.ok().build();
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public ResponseEntity<Object> delete(@PathVariable Long id) {
+	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		wishService.delete(id);
 		return ResponseEntity.ok().build();
 	}

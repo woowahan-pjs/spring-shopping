@@ -21,13 +21,13 @@ public class MemberController {
 	}
 
 	@PostMapping("/sign-up")
-	public ResponseEntity<Object> signUp(@RequestBody @Valid SignUpMemberRequestDto requestDto) {
+	public ResponseEntity<Void> signUp(@RequestBody @Valid SignUpMemberRequestDto requestDto) {
 		memberService.signUp(requestDto);
 		return ResponseEntity.ok().build();
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<Object> login(@RequestBody LoginRequestDto requestDto) {
+	public ResponseEntity<Void> login(@RequestBody LoginRequestDto requestDto) {
 		String token = memberService.login(requestDto);
 		return ResponseEntity.ok()
 			.header("Authorization", token)
