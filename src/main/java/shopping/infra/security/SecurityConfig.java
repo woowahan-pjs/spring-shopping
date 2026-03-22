@@ -40,7 +40,7 @@ class SecurityConfig {
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated())
-                .csrf(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler))
