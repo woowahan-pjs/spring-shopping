@@ -118,7 +118,7 @@ public class ProductServiceTest {
                 .willReturn(List.of(product1, product2));
 
         //when
-        List<ProductResponse> result = productService.getProduct();
+        List<ProductResponse> result = productService.getProducts();
 
         //then
         assertThat(result).hasSize(2);

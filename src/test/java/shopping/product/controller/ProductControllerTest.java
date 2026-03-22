@@ -101,12 +101,12 @@ public class ProductControllerTest {
                 new ProductResponse(2L, "맥북", 2_000_000, "image2.jpg")
         );
 
-        given(productService.getProduct()).willReturn(products);
+        given(productService.getProducts()).willReturn(products);
 
         mockMvc.perform(get("/api/products"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()").value(2));  //응답 배열 크기
 
-        verify(productService).getProduct();
+        verify(productService).getProducts();
     }
 }

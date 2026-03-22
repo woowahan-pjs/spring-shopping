@@ -57,7 +57,7 @@ public class ProductService {
         productRepository.delete(product);
     }
 
-    public List<ProductResponse> getProduct() {
+    public List<ProductResponse> getProducts() {
 
         List<Product> products = productRepository.findAll();
 
