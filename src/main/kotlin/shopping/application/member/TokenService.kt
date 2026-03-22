@@ -4,14 +4,16 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
 import java.security.Key
 import java.util.Date
 
 @Service
-class TokenService {
-    private val secretKey: Key =
-        Keys.hmacShaKeyFor("very-secret-key-for-jwt-token-example-123456".toByteArray())
+class TokenService(
+    @Value("\${jwt.secret-key}") secretKeyString: String,
+) {
+    private val secretKey: Key = Keys.hmacShaKeyFor(secretKeyString.toByteArray())
     private val expirationMillis = 1000 * 60 * 60 // 1시간
 
     fun generateToken(
