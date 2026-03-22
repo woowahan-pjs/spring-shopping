@@ -6,6 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import shopping.common.exception.ProductNotFoundException;
+import shopping.common.exception.WishListNotFoundException;
+import shopping.member.domain.Member;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
 import shopping.wish.domain.WishList;
@@ -18,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -76,8 +80,9 @@ public class WishServiceTest {
 
         //given
         Long memberId = 1L;
+        Member member = Member.create("test@test.com", "123456");
 
-        WishList wishList = WishList.create(1L);
+        WishList wishList = WishList.create(member);
 
         ReflectionTestUtils.setField(wishList, "id", 1L);
 
@@ -98,5 +103,23 @@ public class WishServiceTest {
         //then
         assertThat(result).hasSize(1);
         assertThat(result.getFirst().getProductId()).isEqualTo(1L);
+    }
+
+    @Test
+    void 위시리스트가_없으면_예외가_발생한다() {
+        //given
+        Long memberId = 1L;
+
+        //when & then
+        assertThrows(WishListNotFoundException.class, () -> wishService.getWishList(memberId));
+    }
+
+    @Test
+    void 존재하지_않는_상품이면_예외가_발생한다() {
+        // given
+        Long productId = 999L;
+
+        // when & then
+        assertThrows(ProductNotFoundException.class, () -> wishService.addWish(1L, productId));
     }
 }
