@@ -37,7 +37,7 @@ public class WishListRepositoryTest {
         Member member = Member.create("test@test.com", "12345678");
         em.persist(member);
 
-        WishList wishList = WishList.create(1L);
+        WishList wishList = WishList.create(member);
         ReflectionTestUtils.setField(wishList, "member", member);
 
         em.persist(wishList);
@@ -50,31 +50,35 @@ public class WishListRepositoryTest {
     @Test
     void 위시리스트_아이템을_삭제한다() {
 
-         WishList wishList = WishList.create(1L);
-         em.persist(wishList);
+        Member member = Member.create("test@test.com", "12345678");
 
-         Product product = Product.create("아이폰", 1_000_000);
-         em.persist(product);
+        WishList wishList = WishList.create(member);
+        em.persist(wishList);
 
-         WishListItem item = WishListItem.create(wishList, product);
-         em.persist(item);
+        Product product = Product.create("아이폰", 1_000_000);
+        em.persist(product);
 
-         Long id = item.getId();
+        WishListItem item = WishListItem.create(wishList, product);
+        em.persist(item);
 
-         wishListItemRepository.deleteById(id);
+        Long id = item.getId();
 
-         em.flush();
-         em.clear();
+        wishListItemRepository.deleteById(id);
 
-         WishListItem result = em.find(WishListItem.class, id);
+        em.flush();
+        em.clear();
 
-         assertThat(result).isNull();
+        WishListItem result = em.find(WishListItem.class, id);
+
+        assertThat(result).isNull();
     }
 
     @Test
     void 위시리스트_아이템을_조회한다() {
 
-        WishList wishList = wishListRepository.save(WishList.create(1L));
+        Member member = Member.create("test@test.com", "12345678");
+
+        WishList wishList = wishListRepository.save(WishList.create(member));
         Product product = productRepository.save(Product.create("아이폰", 1_000_000));
 
         WishListItem item = WishListItem.create(wishList, product);
