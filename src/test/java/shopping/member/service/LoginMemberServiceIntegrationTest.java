@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.util.UUID;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ class LoginMemberServiceIntegrationTest {
     @Autowired
     private TokenProvider tokenProvider;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
     @BeforeEach
     void setUp() {
         try {
@@ -36,7 +41,9 @@ class LoginMemberServiceIntegrationTest {
         String token = loginMember.execute("login-test@test.com", "password123");
 
         assertNotNull(token);
-        assertEquals("login-test@test.com", tokenProvider.extractEmail(token));
+        UUID memberId = tokenProvider.extractMemberId(token);
+        Member member = memberRepository.findByEmail("login-test@test.com").orElseThrow();
+        assertEquals(member.getId(), memberId);
     }
 
     @Test

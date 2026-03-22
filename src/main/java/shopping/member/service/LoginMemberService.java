@@ -23,6 +23,6 @@ public class LoginMemberService implements LoginMember {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다."));
         member.login(password, passwordEncoder);
-        return tokenProvider.createToken(member.getEmail());
+        return tokenProvider.createToken(member.getId());
     }
 }

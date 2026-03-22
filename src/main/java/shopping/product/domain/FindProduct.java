@@ -1,13 +1,15 @@
 package shopping.product.domain;
 
+import shopping.product.dto.ProductResponse;
+
 import java.util.List;
 import java.util.UUID;
 
 public interface FindProduct {
 
-    Product execute(UUID id);
+    ProductResponse execute(UUID id);
 
-    List<Product> execute();
+    List<ProductResponse> execute();
 
-    List<Product> execute(List<UUID> ids);
+    List<ProductResponse> execute(List<UUID> ids);
 }

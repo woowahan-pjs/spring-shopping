@@ -3,6 +3,7 @@ package shopping.member;
 import shopping.member.domain.TokenProvider;
 
 import java.util.Date;
+import java.util.UUID;
 
 import javax.crypto.SecretKey;
 
@@ -19,16 +20,17 @@ public class JwtTokenProvider implements TokenProvider {
     }
 
     @Override
-    public String createToken(String email) {
+    public String createToken(UUID memberId) {
         Date now = new Date();
         Date expiration = new Date(now.getTime() + expirationMillis);
-        return Jwts.builder().subject(email).issuedAt(now).expiration(expiration).signWith(key)
-                .compact();
+        return Jwts.builder().subject(memberId.toString()).issuedAt(now).expiration(expiration)
+                .signWith(key).compact();
     }
 
     @Override
-    public String extractEmail(String token) {
-        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload()
+    public UUID extractMemberId(String token) {
+        String subject = Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload()
                 .getSubject();
+        return UUID.fromString(subject);
     }
 }

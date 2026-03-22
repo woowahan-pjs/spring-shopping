@@ -22,6 +22,8 @@ public class ProductNameFactory {
             }
         } catch (IllegalArgumentException e) {
             throw e;
+        } catch (ProfanityCheckTimeoutException e) {
+            return new ProductName(name, false);
         } catch (Exception e) {
             throw new ProfanityCheckException(e);
         }

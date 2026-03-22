@@ -1,6 +1,8 @@
 package shopping.product.domain;
 
+import shopping.product.dto.CreateProductResponse;
+
 public interface CreateProduct {
 
-    Product execute(String name, long price, String imageUrl);
+    CreateProductResponse execute(String name, long price, String imageUrl);
 }

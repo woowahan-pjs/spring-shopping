@@ -13,6 +13,7 @@ class LoginMemberServiceTest {
     private InMemoryMemberRepository memberRepository;
     private FakeTokenProvider tokenProvider;
     private FakePasswordEncoder passwordEncoder;
+    private PasswordFactory passwordFactory;
     private LoginMemberService service;
 
     @BeforeEach
@@ -20,16 +21,18 @@ class LoginMemberServiceTest {
         memberRepository = new InMemoryMemberRepository();
         tokenProvider = new FakeTokenProvider();
         passwordEncoder = new FakePasswordEncoder();
+        passwordFactory = new PasswordFactory(passwordEncoder);
         service = new LoginMemberService(memberRepository, tokenProvider, passwordEncoder);
     }
 
     @Test
     void 로그인에_성공하면_토큰을_반환한다() {
-        memberRepository.save(new Member("test@test.com", passwordEncoder.encode("password123")));
+        Member member = memberRepository
+                .save(new Member("test@test.com", passwordFactory.create("password123")));
 
         String token = service.execute("test@test.com", "password123");
 
-        assertEquals("token:test@test.com", token);
+        assertEquals("token:" + member.getId(), token);
     }
 
     @Test
@@ -42,7 +45,7 @@ class LoginMemberServiceTest {
 
     @Test
     void 비밀번호가_틀리면_예외가_발생한다() {
-        memberRepository.save(new Member("test@test.com", passwordEncoder.encode("password123")));
+        memberRepository.save(new Member("test@test.com", passwordFactory.create("password123")));
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> service.execute("test@test.com", "wrongpassword"));

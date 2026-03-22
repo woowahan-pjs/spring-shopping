@@ -12,24 +12,29 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import shopping.member.service.FakePasswordEncoder;
 import shopping.member.service.InMemoryMemberRepository;
 import shopping.member.domain.Member;
+import shopping.member.domain.PasswordFactory;
 
 class AddWishServiceTest {
 
     private InMemoryMemberRepository memberRepository;
+    private PasswordFactory passwordFactory;
     private AddWishService service;
 
     @BeforeEach
     void setUp() {
         memberRepository = new InMemoryMemberRepository();
+        passwordFactory = new PasswordFactory(new FakePasswordEncoder());
         service = new AddWishService(memberRepository);
     }
 
     @Test
     void 위시리스트에_상품을_추가한다() {
         UUID productId = UUID.randomUUID();
-        Member member = memberRepository.save(new Member("test@test.com", "password"));
+        Member member = memberRepository
+                .save(new Member("test@test.com", passwordFactory.create("password1234")));
 
         Wish wish = service.execute(member.getId(), productId, 50000L);
 
@@ -49,7 +54,8 @@ class AddWishServiceTest {
     @Test
     void 이미_추가된_상품이면_기존_위시를_반환한다() {
         UUID productId = UUID.randomUUID();
-        Member member = memberRepository.save(new Member("test@test.com", "password"));
+        Member member = memberRepository
+                .save(new Member("test@test.com", passwordFactory.create("password1234")));
         Wish first = service.execute(member.getId(), productId, 50000L);
 
         Wish second = service.execute(member.getId(), productId, 60000L);

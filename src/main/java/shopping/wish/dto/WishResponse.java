@@ -4,12 +4,11 @@ import shopping.wish.domain.Wish;
 
 import java.util.UUID;
 
-import shopping.product.domain.Product;
+import shopping.product.dto.ProductResponse;
 
 public record WishResponse(UUID productId, String name, long price, String imageUrl) {
 
-    public static WishResponse of(Wish wish, Product product) {
-        return new WishResponse(product.getId(), product.getName().getValue(), product.getPrice(),
-                product.getImageUrl());
+    public static WishResponse of(Wish wish, ProductResponse product) {
+        return new WishResponse(product.id(), product.name(), product.price(), product.imageUrl());
     }
 }

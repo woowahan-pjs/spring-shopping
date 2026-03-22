@@ -13,24 +13,29 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import shopping.member.service.FakePasswordEncoder;
 import shopping.member.service.InMemoryMemberRepository;
 import shopping.member.domain.Member;
+import shopping.member.domain.PasswordFactory;
 
 class RemoveWishServiceTest {
 
     private InMemoryMemberRepository memberRepository;
+    private PasswordFactory passwordFactory;
     private RemoveWishService service;
 
     @BeforeEach
     void setUp() {
         memberRepository = new InMemoryMemberRepository();
+        passwordFactory = new PasswordFactory(new FakePasswordEncoder());
         service = new RemoveWishService(memberRepository);
     }
 
     @Test
     void 위시리스트에서_상품을_제거한다() {
         UUID productId = UUID.randomUUID();
-        Member member = memberRepository.save(new Member("test@test.com", "password"));
+        Member member = memberRepository
+                .save(new Member("test@test.com", passwordFactory.create("password1234")));
         member.wish(productId, 50000L);
         memberRepository.save(member);
 
@@ -49,7 +54,8 @@ class RemoveWishServiceTest {
 
     @Test
     void 존재하지_않는_상품을_제거해도_예외가_발생하지_않는다() {
-        Member member = memberRepository.save(new Member("test@test.com", "password"));
+        Member member = memberRepository
+                .save(new Member("test@test.com", passwordFactory.create("password1234")));
 
         service.execute(member.getId(), UUID.randomUUID());
 

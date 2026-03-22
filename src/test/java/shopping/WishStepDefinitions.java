@@ -94,4 +94,13 @@ public class WishStepDefinitions {
     public void theWishShouldBeRemoved() {
         assertThat(context.getResponse().statusCode()).isEqualTo(204);
     }
+
+    @When("I log in as member {string} with password {string}")
+    public void iLogInAsMember(String email, String password) {
+        var loginResponse = RestAssured.given().spec(context.spec()).contentType(ContentType.JSON)
+                .body("{\"email\":\"" + email + "\",\"password\":\"" + password + "\"}").when()
+                .post("/api/members/login").then().statusCode(200).extract();
+        token = loginResponse.jsonPath().getString("token");
+        context.setToken(token);
+    }
 }

@@ -1,8 +1,10 @@
 package shopping.member.domain;
 
+import java.util.UUID;
+
 public interface TokenProvider {
 
-    String createToken(String email);
+    String createToken(UUID memberId);
 
-    String extractEmail(String token);
+    UUID extractMemberId(String token);
 }

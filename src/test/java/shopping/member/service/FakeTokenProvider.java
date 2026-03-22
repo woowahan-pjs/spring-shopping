@@ -2,17 +2,19 @@ package shopping.member.service;
 
 import shopping.member.domain.*;
 
+import java.util.UUID;
+
 public class FakeTokenProvider implements TokenProvider {
 
     private static final String PREFIX = "token:";
 
     @Override
-    public String createToken(String email) {
-        return PREFIX + email;
+    public String createToken(UUID memberId) {
+        return PREFIX + memberId;
     }
 
     @Override
-    public String extractEmail(String token) {
-        return token.substring(PREFIX.length());
+    public UUID extractMemberId(String token) {
+        return UUID.fromString(token.substring(PREFIX.length()));
     }
 }

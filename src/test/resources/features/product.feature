@@ -8,6 +8,8 @@ Feature: Product CRUD
   Scenario: Create a product
     When I create a product with name "Keyboard" price 50000 and imageUrl "https://example.com/kb.png"
     Then the product should be created
+    When I find the product by id
+    Then the product should be found
     And the product response should have name "Keyboard"
 
   Scenario: Find a product by id

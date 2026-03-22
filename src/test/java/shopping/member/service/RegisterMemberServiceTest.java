@@ -20,15 +20,16 @@ class RegisterMemberServiceTest {
     void setUp() {
         memberRepository = new InMemoryMemberRepository();
         tokenProvider = new FakeTokenProvider();
-        service = new RegisterMemberService(memberRepository, new FakePasswordEncoder(),
-                tokenProvider);
+        PasswordFactory passwordFactory = new PasswordFactory(new FakePasswordEncoder());
+        service = new RegisterMemberService(memberRepository, passwordFactory, tokenProvider);
     }
 
     @Test
     void 회원을_등록하면_토큰을_반환한다() {
         String token = service.execute("test@test.com", "password123");
 
-        assertEquals("token:test@test.com", token);
+        assertNotNull(token);
+        assertTrue(token.startsWith("token:"));
         assertTrue(memberRepository.existsByEmail("test@test.com"));
     }
 

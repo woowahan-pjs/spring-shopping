@@ -1,6 +1,7 @@
 package shopping.product.service;
 
 import shopping.product.domain.*;
+import shopping.product.dto.ProductResponse;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -18,18 +19,21 @@ public class FindProductService implements FindProduct {
     }
 
     @Override
-    public Product execute(UUID id) {
-        return productRepository.findByIdAndStatus(id, ProductStatus.CREATED)
+    public ProductResponse execute(UUID id) {
+        Product product = productRepository.findByIdAndStatus(id, ProductStatus.CREATED)
                 .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
+        return ProductResponse.from(product);
     }
 
     @Override
-    public List<Product> execute() {
-        return productRepository.findAllByStatus(ProductStatus.CREATED);
+    public List<ProductResponse> execute() {
+        return productRepository.findAllByStatus(ProductStatus.CREATED).stream()
+                .map(ProductResponse::from).toList();
     }
 
     @Override
-    public List<Product> execute(List<UUID> ids) {
-        return productRepository.findAllByIdInAndStatus(ids, ProductStatus.CREATED);
+    public List<ProductResponse> execute(List<UUID> ids) {
+        return productRepository.findAllByIdInAndStatus(ids, ProductStatus.CREATED).stream()
+                .map(ProductResponse::from).toList();
     }
 }

@@ -1,10 +1,7 @@
 package shopping.page;
 
 import shopping.product.domain.FindProduct;
-import shopping.product.domain.Product;
-import shopping.product.dto.ProductResponse;
 
-import java.util.List;
 import java.util.UUID;
 
 import org.springframework.stereotype.Controller;
@@ -23,9 +20,7 @@ public class PageController {
 
     @GetMapping("/")
     public String home(Model model) {
-        List<ProductResponse> products =
-                findProduct.execute().stream().map(ProductResponse::from).toList();
-        model.addAttribute("products", products);
+        model.addAttribute("products", findProduct.execute());
         return "index";
     }
 
@@ -36,8 +31,7 @@ public class PageController {
 
     @GetMapping("/products/{id}")
     public String productDetail(@PathVariable UUID id, Model model) {
-        Product product = findProduct.execute(id);
-        model.addAttribute("product", ProductResponse.from(product));
+        model.addAttribute("product", findProduct.execute(id));
         return "product-detail";
     }
 

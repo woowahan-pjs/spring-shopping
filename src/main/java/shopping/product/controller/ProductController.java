@@ -38,17 +38,15 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> create(@RequestBody ProductRequest request) {
-        Product product =
+    public ResponseEntity<CreateProductResponse> create(@RequestBody ProductRequest request) {
+        CreateProductResponse response =
                 createProduct.execute(request.name(), request.price(), request.imageUrl());
-        return ResponseEntity.created(URI.create("/api/products/" + product.getId()))
-                .body(ProductResponse.from(product));
+        return ResponseEntity.created(URI.create("/api/products/" + response.id())).body(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductResponse> findById(@PathVariable UUID id) {
-        Product product = findProduct.execute(id);
-        return ResponseEntity.ok(ProductResponse.from(product));
+        return ResponseEntity.ok(findProduct.execute(id));
     }
 
     @PutMapping("/{id}")
@@ -65,9 +63,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductResponse>> findAll() {
-        List<ProductResponse> products =
-                findProduct.execute().stream().map(ProductResponse::from).toList();
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(findProduct.execute());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -78,5 +74,11 @@ public class ProductController {
     @ExceptionHandler(NoSuchElementException.class)
     public ResponseEntity<Void> handleNotFound(NoSuchElementException e) {
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(ProfanityCheckException.class)
+    public ResponseEntity<Map<String, String>> handleProfanityCheckFailure(
+            ProfanityCheckException e) {
+        return ResponseEntity.internalServerError().body(Map.of("message", e.getMessage()));
     }
 }

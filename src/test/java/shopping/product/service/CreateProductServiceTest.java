@@ -1,6 +1,7 @@
 package shopping.product.service;
 
 import shopping.product.domain.*;
+import shopping.product.dto.CreateProductResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -23,22 +24,21 @@ class CreateProductServiceTest {
     }
 
     @Test
-    void 상품을_생성한다() {
-        Product product = service.execute("상품", 1000, "http://image.png");
+    void 상품을_생성하면_ID를_반환한다() {
+        CreateProductResponse response = service.execute("상품", 1000, "http://image.png");
 
-        assertNotNull(product.getId());
-        assertEquals("상품", product.getName().getValue());
-        assertEquals(1000, product.getPrice());
-        assertEquals("http://image.png", product.getImageUrl());
-        assertEquals(ProductStatus.CREATED, product.getStatus());
+        assertNotNull(response.id());
     }
 
     @Test
     void 생성된_상품이_저장소에_저장된다() {
-        Product product = service.execute("상품", 1000, "http://image.png");
+        CreateProductResponse response = service.execute("상품", 1000, "http://image.png");
 
-        Product found = productRepository.findById(product.getId()).orElseThrow();
-        assertEquals(product.getId(), found.getId());
+        Product found = productRepository.findById(response.id()).orElseThrow();
+        assertEquals("상품", found.getName().getValue());
+        assertEquals(1000, found.getPrice());
+        assertEquals("http://image.png", found.getImageUrl());
+        assertEquals(ProductStatus.CREATED, found.getStatus());
     }
 
     @Test
@@ -68,8 +68,9 @@ class CreateProductServiceTest {
         CreateProductService serviceWithFailure =
                 new CreateProductService(nameFactory, saveProductService);
 
-        Product product = serviceWithFailure.execute("상품", 1000, "http://image.png");
+        CreateProductResponse response = serviceWithFailure.execute("상품", 1000, "http://image.png");
 
-        assertEquals(ProductStatus.PENDING, product.getStatus());
+        Product found = productRepository.findById(response.id()).orElseThrow();
+        assertEquals(ProductStatus.PENDING, found.getStatus());
     }
 }

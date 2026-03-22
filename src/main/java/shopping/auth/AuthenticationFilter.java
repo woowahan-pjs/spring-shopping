@@ -40,7 +40,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
         try {
             String token = authorization.substring(7);
-            tokenProvider.extractEmail(token);
+            tokenProvider.extractMemberId(token);
         } catch (Exception e) {
             sendUnauthorized(response, "유효하지 않은 인증 토큰입니다.");
             return;

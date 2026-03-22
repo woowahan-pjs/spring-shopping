@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -29,8 +31,9 @@ public class Member {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false)
-    private String password;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "password", nullable = false))
+    private Password password;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "member_id", nullable = false)
@@ -38,13 +41,13 @@ public class Member {
 
     protected Member() {}
 
-    public Member(UUID id, String email, String password) {
+    public Member(UUID id, String email, Password password) {
         this.id = id;
         this.email = email;
         this.password = password;
     }
 
-    public Member(String email, String password) {
+    public Member(String email, Password password) {
         this(UUID.randomUUID(), email, password);
     }
 
@@ -61,7 +64,7 @@ public class Member {
     }
 
     public void login(String rawPassword, PasswordEncoder passwordEncoder) {
-        if (!passwordEncoder.matches(rawPassword, this.password)) {
+        if (!passwordEncoder.matches(rawPassword, this.password.getValue())) {
             throw new IllegalArgumentException("이메일 또는 비밀번호가 잘못되었습니다.");
         }
     }

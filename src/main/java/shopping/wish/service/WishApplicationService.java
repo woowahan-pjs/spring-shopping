@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 import shopping.auth.AuthenticationService;
 import shopping.product.domain.FindProduct;
-import shopping.product.domain.Product;
+import shopping.product.dto.ProductResponse;
 
 @Service
 public class WishApplicationService {
@@ -39,8 +39,8 @@ public class WishApplicationService {
 
     public WishResponse add(String authorization, UUID productId) {
         UUID memberId = authenticationService.extractMemberId(authorization);
-        Product product = findProduct.execute(productId);
-        Wish wish = addWish.execute(memberId, productId, product.getPrice());
+        ProductResponse product = findProduct.execute(productId);
+        Wish wish = addWish.execute(memberId, productId, product.price());
         return WishResponse.of(wish, product);
     }
 
@@ -53,8 +53,8 @@ public class WishApplicationService {
         UUID memberId = authenticationService.extractMemberId(authorization);
         List<Wish> wishes = findWish.execute(memberId);
         List<UUID> productIds = wishes.stream().map(Wish::getProductId).toList();
-        Map<UUID, Product> productMap = findProduct.execute(productIds).stream()
-                .collect(Collectors.toMap(Product::getId, Function.identity()));
+        Map<UUID, ProductResponse> productMap = findProduct.execute(productIds).stream()
+                .collect(Collectors.toMap(ProductResponse::id, Function.identity()));
         return wishes.stream().filter(wish -> {
             if (!productMap.containsKey(wish.getProductId())) {
                 log.warn("Wish {} references non-existent product {}", wish.getId(),

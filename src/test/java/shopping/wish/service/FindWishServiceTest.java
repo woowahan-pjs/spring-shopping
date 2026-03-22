@@ -14,23 +14,28 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import shopping.member.service.FakePasswordEncoder;
 import shopping.member.service.InMemoryMemberRepository;
 import shopping.member.domain.Member;
+import shopping.member.domain.PasswordFactory;
 
 class FindWishServiceTest {
 
     private InMemoryMemberRepository memberRepository;
+    private PasswordFactory passwordFactory;
     private FindWishService service;
 
     @BeforeEach
     void setUp() {
         memberRepository = new InMemoryMemberRepository();
+        passwordFactory = new PasswordFactory(new FakePasswordEncoder());
         service = new FindWishService(memberRepository);
     }
 
     @Test
     void 위시리스트를_조회한다() {
-        Member member = memberRepository.save(new Member("test@test.com", "password"));
+        Member member = memberRepository
+                .save(new Member("test@test.com", passwordFactory.create("password1234")));
         member.wish(UUID.randomUUID(), 50000L);
         member.wish(UUID.randomUUID(), 30000L);
         memberRepository.save(member);
@@ -42,7 +47,8 @@ class FindWishServiceTest {
 
     @Test
     void 위시리스트가_비어있으면_빈_리스트를_반환한다() {
-        Member member = memberRepository.save(new Member("test@test.com", "password"));
+        Member member = memberRepository
+                .save(new Member("test@test.com", passwordFactory.create("password1234")));
 
         List<Wish> wishes = service.execute(member.getId());
 

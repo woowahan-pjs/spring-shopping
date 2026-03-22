@@ -22,9 +22,14 @@ public class MemberConfiguration {
     }
 
     @Bean
+    public PasswordFactory passwordFactory(PasswordEncoder passwordEncoder) {
+        return new PasswordFactory(passwordEncoder);
+    }
+
+    @Bean
     public RegisterMember registerMember(MemberRepository memberRepository,
-            PasswordEncoder passwordEncoder, TokenProvider tokenProvider) {
-        return new RegisterMemberService(memberRepository, passwordEncoder, tokenProvider);
+            PasswordFactory passwordFactory, TokenProvider tokenProvider) {
+        return new RegisterMemberService(memberRepository, passwordFactory, tokenProvider);
     }
 
     @Bean
