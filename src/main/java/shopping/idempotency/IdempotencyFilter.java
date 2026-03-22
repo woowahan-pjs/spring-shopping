@@ -22,18 +22,24 @@ public class IdempotencyFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         return !"POST".equalsIgnoreCase(request.getMethod())
-                || request.getHeader("Idempotency-Key") == null;
+                || !request.getRequestURI().startsWith("/api/products");
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
             FilterChain filterChain) throws ServletException, IOException {
         String key = request.getHeader("Idempotency-Key");
+        if (key == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"message\":\"Idempotency-Key 헤더가 필요합니다.\"}");
+            return;
+        }
         IdempotencyKey entry = new IdempotencyKey(key);
         var existing = repository.putIfAbsent(entry);
 
         if (existing.isPresent()) {
-            sendConflict(existing.get(), response);
+            sendDuplicateResponse(existing.get(), response);
             return;
         }
 
@@ -51,13 +57,18 @@ public class IdempotencyFilter extends OncePerRequestFilter {
         }
     }
 
-    private void sendConflict(IdempotencyKey entry, HttpServletResponse response)
+    private void sendDuplicateResponse(IdempotencyKey entry, HttpServletResponse response)
             throws IOException {
-        response.setStatus(HttpServletResponse.SC_CONFLICT);
         response.setContentType("application/json;charset=UTF-8");
         switch (entry.getStatus()) {
-            case PENDING -> response.getWriter().write("{\"message\":\"요청이 처리 중입니다.\"}");
-            case COMPLETED -> response.getWriter().write("{\"message\":\"이미 처리된 요청입니다.\"}");
+            case PENDING -> {
+                response.setStatus(HttpServletResponse.SC_CONFLICT);
+                response.getWriter().write("{\"message\":\"요청이 처리 중입니다.\"}");
+            }
+            case COMPLETED -> {
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.getWriter().write("{\"message\":\"이미 처리된 요청입니다.\"}");
+            }
         }
     }
 }

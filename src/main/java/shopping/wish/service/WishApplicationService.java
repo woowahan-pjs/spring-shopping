@@ -4,10 +4,13 @@ import shopping.wish.domain.*;
 import shopping.wish.dto.WishResponse;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Objects;
+import java.util.Map;
 import java.util.UUID;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import shopping.auth.AuthenticationService;
@@ -16,6 +19,8 @@ import shopping.product.domain.Product;
 
 @Service
 public class WishApplicationService {
+
+    private static final Logger log = LoggerFactory.getLogger(WishApplicationService.class);
 
     private final AddWish addWish;
     private final RemoveWish removeWish;
@@ -46,12 +51,17 @@ public class WishApplicationService {
 
     public List<WishResponse> findAll(String authorization) {
         UUID memberId = authenticationService.extractMemberId(authorization);
-        return findWish.execute(memberId).stream().map(wish -> {
-            try {
-                return WishResponse.of(wish, findProduct.execute(wish.getProductId()));
-            } catch (NoSuchElementException e) {
-                return null;
+        List<Wish> wishes = findWish.execute(memberId);
+        List<UUID> productIds = wishes.stream().map(Wish::getProductId).toList();
+        Map<UUID, Product> productMap = findProduct.execute(productIds).stream()
+                .collect(Collectors.toMap(Product::getId, Function.identity()));
+        return wishes.stream().filter(wish -> {
+            if (!productMap.containsKey(wish.getProductId())) {
+                log.warn("Wish {} references non-existent product {}", wish.getId(),
+                        wish.getProductId());
+                return false;
             }
-        }).filter(Objects::nonNull).toList();
+            return true;
+        }).map(wish -> WishResponse.of(wish, productMap.get(wish.getProductId()))).toList();
     }
 }

@@ -1,8 +1,13 @@
 package shopping.product.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import shopping.product.domain.*;
 
 public class CreateProductService implements CreateProduct {
+
+    private static final Logger log = LoggerFactory.getLogger(CreateProductService.class);
 
     private final ProductNameFactory productNameFactory;
     private final SaveProductService saveProductService;
@@ -16,11 +21,20 @@ public class CreateProductService implements CreateProduct {
     @Override
     public Product execute(String name, long price, String imageUrl) {
         try {
+            log.info("[CreateProduct] profanity check start for name='{}'", name);
             ProductName productName = productNameFactory.create(name);
-            return saveProductService.execute(productName, price, imageUrl);
+            log.info("[CreateProduct] profanity check done, verified={}", productName.isVerified());
+            log.info("[CreateProduct] calling save (transaction begins here)");
+            Product product = saveProductService.execute(productName, price, imageUrl);
+            log.info("[CreateProduct] save returned (transaction ended)");
+            return product;
         } catch (ProfanityCheckException e) {
+            log.warn("[CreateProduct] profanity check failed, saving as unverified", e);
             ProductName productName = productNameFactory.createUnverified(name);
-            return saveProductService.execute(productName, price, imageUrl);
+            log.info("[CreateProduct] calling save (transaction begins here)");
+            Product product = saveProductService.execute(productName, price, imageUrl);
+            log.info("[CreateProduct] save returned (transaction ended)");
+            return product;
         }
     }
 }

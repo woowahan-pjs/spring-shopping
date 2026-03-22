@@ -158,6 +158,15 @@ public class ProductStepDefinitions {
         assertThat(context.getResponse().jsonPath().getString("message")).isEqualTo(message);
     }
 
+    @When("I create a product with name {string} price {long} and imageUrl {string} without idempotency key")
+    public void iCreateAProductWithoutIdempotencyKey(String name, long price, String imageUrl) {
+        context.setResponse(RestAssured.given().spec(context.spec())
+                .header("Authorization", "Bearer " + context.getToken())
+                .contentType(ContentType.JSON).body("{\"name\":\"" + name + "\",\"price\":" + price
+                        + ",\"imageUrl\":\"" + imageUrl + "\"}")
+                .when().post("/api/products").then().extract());
+    }
+
     @When("I create a product with name {string} price {long} and imageUrl {string} using idempotency key {string}")
     public void iCreateAProductWithIdempotencyKey(String name, long price, String imageUrl,
             String idempotencyKey) {
