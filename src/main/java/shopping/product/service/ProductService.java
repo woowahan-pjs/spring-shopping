@@ -22,7 +22,7 @@ public class ProductService {
     }
 
     public Product save(Product product) {
-        validateProductName(product);
+        validateProfanity(product);
 
         return productRepository.save(product);
     }
@@ -39,7 +39,7 @@ public class ProductService {
     }
 
     public Product update(Long id, Product product) {
-        validateProductName(product);
+        validateProfanity(product);
         Product found = productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("상품을 찾을 수 없습니다."));
         found.update(product);
@@ -50,7 +50,7 @@ public class ProductService {
         productRepository.deleteById(id);
     }
 
-    private void validateProductName(Product product) {
+    private void validateProfanity(Product product) {
         if (profanityValidator.containsProfanity(product.getName())) {
             throw new IllegalArgumentException("비속어가 포함되어 있습니다.");
         }
