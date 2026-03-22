@@ -19,40 +19,40 @@ class ProductController(
 ) {
     @GetMapping
     fun getProducts(
-        @RequestBody request: ProductV1Dto.ProductSearchRequest,
-    ): ApiResponse<Paging.PageResponse<ProductV1Dto.ViewResponse>> =
+        @RequestBody request: ProductDto.ProductSearchRequest,
+    ): ApiResponse<Paging.PageResponse<ProductDto.ViewResponse>> =
         productFacade
             .getProducts(request.paging)
-            .map { ProductV1Dto.ViewResponse.from(it) }
+            .map { ProductDto.ViewResponse.from(it) }
             .let { Paging.PageResponse.from(it) }
             .let { ApiResponse.success(it) }
 
     @PostMapping
     fun createProduct(
-        @RequestBody request: ProductV1Dto.CreateProductRequest,
-    ): ApiResponse<ProductV1Dto.ViewResponse> =
+        @RequestBody request: ProductDto.CreateProductRequest,
+    ): ApiResponse<ProductDto.ViewResponse> =
         productFacade
             .createProduct(request)
-            .let { ProductV1Dto.ViewResponse.from(it) }
+            .let { ProductDto.ViewResponse.from(it) }
             .let { ApiResponse.success(it) }
 
     @GetMapping("/{productId}")
     fun getProduct(
         @PathVariable productId: Long,
-    ): ApiResponse<ProductV1Dto.ViewResponse> =
+    ): ApiResponse<ProductDto.ViewResponse> =
         productFacade
             .getProduct(productId)
-            .let { ProductV1Dto.ViewResponse.from(it) }
+            .let { ProductDto.ViewResponse.from(it) }
             .let { ApiResponse.success(it) }
 
     @PutMapping("/{productId}")
     fun updateProduct(
         @PathVariable productId: Long,
-        @RequestBody request: ProductV1Dto.UpdateProductRequest,
-    ): ApiResponse<ProductV1Dto.ViewResponse> =
+        @RequestBody request: ProductDto.UpdateProductRequest,
+    ): ApiResponse<ProductDto.ViewResponse> =
         productFacade
             .updateProduct(productId, request)
-            .let { ProductV1Dto.ViewResponse.from(it) }
+            .let { ProductDto.ViewResponse.from(it) }
             .let { ApiResponse.success(it) }
 
     @DeleteMapping("/{productId}")

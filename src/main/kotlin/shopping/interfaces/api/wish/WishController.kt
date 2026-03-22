@@ -21,12 +21,12 @@ class WishController(
     @PostMapping
     fun addWish(
         @RequestHeader("Authorization") token: String,
-        @RequestBody request: WishV1Dto.AddWishRequest,
-    ): ApiResponse<WishV1Dto.WishResponse> {
+        @RequestBody request: WishDto.AddWishRequest,
+    ): ApiResponse<WishDto.WishResponse> {
         val memberId = tokenService.getMemberId(extractToken(token))
         return wishFacade
             .addWish(memberId, request)
-            .let { WishV1Dto.WishResponse.from(it) }
+            .let { WishDto.WishResponse.from(it) }
             .let { ApiResponse.success(it) }
     }
 
@@ -43,11 +43,11 @@ class WishController(
     @GetMapping
     fun getWishes(
         @RequestHeader("Authorization") token: String,
-    ): ApiResponse<List<WishV1Dto.WishResponse>> {
+    ): ApiResponse<List<WishDto.WishResponse>> {
         val memberId = tokenService.getMemberId(extractToken(token))
         return wishFacade
             .getWishes(memberId)
-            .map { WishV1Dto.WishResponse.from(it) }
+            .map { WishDto.WishResponse.from(it) }
             .let { ApiResponse.success(it) }
     }
 

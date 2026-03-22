@@ -3,7 +3,7 @@ package shopping.interfaces.api.wish
 import shopping.domain.wish.Wish
 import java.time.ZonedDateTime
 
-class WishV1Dto {
+class WishDto {
     data class AddWishRequest(
         val productId: Long,
     )

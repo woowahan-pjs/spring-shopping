@@ -9,24 +9,24 @@ import shopping.application.member.MemberFacade
 
 @RestController
 @RequestMapping("/api/members")
-class MemberV1Controller(
+class MemberController(
     private val memberFacade: MemberFacade,
 ) {
     @PostMapping("/register")
     fun register(
-        @RequestBody request: MemberV1Dto.RegisterRequest,
-    ): ApiResponse<MemberV1Dto.RegisterResponse> =
+        @RequestBody request: MemberDto.RegisterRequest,
+    ): ApiResponse<MemberDto.RegisterResponse> =
         memberFacade
             .register(request)
-            .let { MemberV1Dto.RegisterResponse.from(it) }
+            .let { MemberDto.RegisterResponse.from(it) }
             .let { ApiResponse.success(it) }
 
     @PostMapping("/login")
     fun login(
-        @RequestBody request: MemberV1Dto.LoginRequest,
-    ): ApiResponse<MemberV1Dto.LoginResponse> =
+        @RequestBody request: MemberDto.LoginRequest,
+    ): ApiResponse<MemberDto.LoginResponse> =
         memberFacade
             .login(request)
-            .let { MemberV1Dto.LoginResponse.from(it) }
+            .let { MemberDto.LoginResponse.from(it) }
             .let { ApiResponse.success(it) }
 }

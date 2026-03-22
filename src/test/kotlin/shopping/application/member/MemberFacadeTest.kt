@@ -7,7 +7,7 @@ import io.mockk.mockk
 import org.instancio.Instancio
 import org.instancio.Select.field
 import shopping.domain.member.Member
-import shopping.interfaces.api.member.MemberV1Dto
+import shopping.interfaces.api.member.MemberDto
 
 class MemberFacadeTest :
     FunSpec({
@@ -18,7 +18,7 @@ class MemberFacadeTest :
 
         test("회원가입 요청을 MemberService에 위임한다") {
             val request =
-                MemberV1Dto.RegisterRequest(
+                MemberDto.RegisterRequest(
                     email = "test@test.com",
                     password = "password123",
                 )
@@ -38,7 +38,7 @@ class MemberFacadeTest :
 
         test("로그인 성공 시 토큰을 반환한다") {
             val request =
-                MemberV1Dto.LoginRequest(
+                MemberDto.LoginRequest(
                     email = "test@test.com",
                     password = "password123",
                 )

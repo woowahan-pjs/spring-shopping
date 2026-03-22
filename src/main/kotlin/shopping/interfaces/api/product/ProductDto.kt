@@ -5,7 +5,7 @@ import shopping.interfaces.api.Paging
 import java.math.BigDecimal
 import java.time.ZonedDateTime
 
-class ProductV1Dto {
+class ProductDto {
     data class CreateProductRequest(
         val name: String,
         val price: BigDecimal,

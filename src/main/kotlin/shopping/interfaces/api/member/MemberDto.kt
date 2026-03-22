@@ -2,7 +2,7 @@ package shopping.interfaces.api.member
 
 import shopping.domain.member.Member
 
-class MemberV1Dto {
+class MemberDto {
     data class RegisterResponse(
         val id: Long,
     ) {
