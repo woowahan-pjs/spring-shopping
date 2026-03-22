@@ -12,7 +12,7 @@ class MemberService(
 ) {
     fun register(email: String, password: String): Member {
         if (memberRepository.existsByEmail(email)) {
-            throw CoreException(ErrorType.INTERNAL_ERROR, "사용자가 이미 존재합니다.")
+            throw CoreException(ErrorType.CONFLICT, "사용자가 이미 존재합니다.")
         }
         return memberRepository.save(
             Member(
@@ -24,10 +24,10 @@ class MemberService(
 
     fun login(email: String, password: String) : Long {
         val member = memberRepository.findByEmail(email)
-        ?: throw CoreException(ErrorType.INTERNAL_ERROR, "사용자 존재하지 않습니다.")
+        ?: throw CoreException(ErrorType.BAD_REQUEST, "사용자 존재하지 않습니다.")
 
         if (!member.checkPassword(password)) {
-            throw CoreException(ErrorType.INTERNAL_ERROR, "비밀번호가 틀렸습니다.")
+            throw CoreException(ErrorType.BAD_REQUEST, "비밀번호가 틀렸습니다.")
         }
         return member.id;
     }

@@ -7,9 +7,11 @@ import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
 import jakarta.persistence.PrePersist
 import jakarta.persistence.PreUpdate
+import org.hibernate.annotations.SQLRestriction
 import java.time.ZonedDateTime
 
 @MappedSuperclass
+@SQLRestriction("deleted_at IS NULL")
 class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,6 +2,7 @@ package shopping.domain.product
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import org.hibernate.annotations.SQLDelete
 import shopping.support.config.jpa.BaseEntity
 import shopping.support.error.CoreException
 import shopping.support.error.ErrorType
@@ -9,6 +10,7 @@ import java.math.BigDecimal
 
 @Table(name = "products")
 @Entity
+@SQLDelete(sql = "UPDATE products SET deleted_at = NOW() WHERE id = ?")
 class Product(
     name: String,
     price: BigDecimal,

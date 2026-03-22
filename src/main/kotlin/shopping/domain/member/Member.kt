@@ -2,12 +2,14 @@ package shopping.domain.member
 
 import jakarta.persistence.Entity
 import jakarta.persistence.Table
+import org.hibernate.annotations.SQLDelete
 import shopping.support.config.jpa.BaseEntity
 import shopping.support.error.CoreException
 import shopping.support.error.ErrorType
 
 @Table(name = "members")
 @Entity
+@SQLDelete(sql = "UPDATE members SET deleted_at = NOW() WHERE id = ?")
 class Member(
     email: String,
     password: String
