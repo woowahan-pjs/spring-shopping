@@ -1,53 +1,88 @@
-# spring-shopping
+# Spring Shopping
 
-## 상품
-상품을 조회, 추가, 수정, 삭제하는 기능을 구현한다.
+상품, 회원, 위시리스트 기능을 제공하는 Spring Boot 애플리케이션
 
-* [ ] /api/products POST 상품 생성 새 상품을 등록한다.
-* [ ] /api/products/{productId} GET 상품 조회 특정 상품의 정보를 조회한다.
-* [ ] /api/products/{productId} PUT 상품 수정기존 상품의 정보를 수정한다.
-* [ ] /api/products/{productId} DELETE 상품 삭제 특정 상품을 삭제한다.
-* [ ] /api/products GET 상품 목록 조회 모든 상품의 목록을 조회한다.
+## 기술 스택
 
-### 상품속성
-* 이름
-  * 공백포함 15자이다.
-  * 특수문자는 괄호, +, - 만 허용한다.
-  * PurgoMalum API 로 비속어 검사한다. (https://www.purgomalum.com/)
-    * https://www.purgomalum.com/service/xml?text=this is some test input
-* 가격
-* 이미지URL (파일업로드는 아직 구현하지 않는다)
+- Java 21, Spring Boot 3.5.9, Gradle (Kotlin DSL)
+- MySQL 8.0 (상품), MongoDB 7.0 (회원 + 위시)
+- Flyway (DB 마이그레이션)
+- JWT (JJWT 0.12.6) 인증
+- Spring Security Crypto (BCrypt)
+- Thymeleaf (프론트엔드)
+- Cucumber 7.20.1 (BDD 테스트) + Spring REST Docs (API 문서)
 
-## 회원
-로그인은 이메일과 비밀번호로 가입한다
-인증 토큰을 발급한다
-[ ] /api/members/register POST 회원가입 
-    * 이메일과 비밀번호로 회원가입한다. 
-    * 이메일은 고유해야 한다. 
-    * 비밀번호는 8자 이상이어야 한다. 
-    * 회원가입이 성공하면 토큰을 발급한다.
-[ ] /api/members/login POST 로그인 회원
+## 패키지 구조
 
-# 구현 전략
+```
+shopping/
+├── product/          # 상품 (도메인, 서비스, 컨트롤러, DTO)
+├── member/           # 회원 (도메인, 서비스, 컨트롤러, DTO)
+├── wish/             # 위시리스트 (서비스, 컨트롤러, DTO)
+├── auth/             # 인증 (JWT 필터)
+├── config/           # Spring 설정, 글로벌 예외 처리
+├── idempotency/      # 멱등성 필터
+├── health/           # 헬스체크
+└── page/             # Thymeleaf 페이지
+```
 
-* 상품, 회원은 각각 별도의 모듈로 구현한다
-  * 상품 worktree, 회원 worktree 로 병렬로 개발한다
-  * 각 모듈엔 spring dependency 를 넣지 않고 최대한 pojo 로 구현한다
-  * spring dependency 가 필요한 부분은 메인으로 가져온다
-  * 현재 stage 에선 디비는 고려하지 않고 in memory repository 로 구현한다
-* ai 로 동작하는 코드를 먼저 생성한다.
-  * 구현하면 pr 을 만들도록 하여 리뷰를 통해 머지한다
-  * 테스트코드를 작성한다
-* 기능개발과 별도의 리팩토링 스텝을 갖는다
+## API
 
-# 작업 순서
-1. 디비 종속성없이 상품과 회원 도메인 모델을 구현한다
-2. 상품과 회원 기능에 대한 ai 구현코드를 작성한다
-3. 상품과 회원 도메인 모델에 대한 ai 테스트코드를 작성한다
-4. 상품과 회원 기능에 대한 ai 구현코드를 리팩토링한다
-5. 적당한 디비를 선택해서 추가한다
+### 상품
 
-# 기능 구현 세부사항
-* [x] 패스워드는 평문으로 저장되지 않게 한다
-* [ ] 헬스체크를 추가한다
-* 
+| Method | URL | 설명 | 인증 |
+|--------|-----|------|------|
+| POST | `/api/products` | 상품 생성 | O (+ Idempotency-Key) |
+| GET | `/api/products` | 상품 목록 조회 | X |
+| GET | `/api/products/{id}` | 상품 단건 조회 | X |
+| PUT | `/api/products/{id}` | 상품 수정 | O |
+| DELETE | `/api/products/{id}` | 상품 삭제 | O |
+
+- 상품 이름: 공백 포함 15자 이하, 특수문자는 `( ) [ ] + - &` 만 허용
+- [PurgoMalum API](https://www.purgomalum.com/)로 비속어 검사 (타임아웃 시 graceful degradation)
+- 상품 생성 시 `Idempotency-Key` 헤더 필수 (중복 요청 방지)
+
+### 회원
+
+| Method | URL | 설명 |
+|--------|-----|------|
+| POST | `/api/members/register` | 회원가입 (이메일 + 비밀번호) |
+| POST | `/api/members/login` | 로그인 (JWT 토큰 발급) |
+
+- 이메일 고유, 비밀번호 8자 이상, BCrypt 해싱
+
+### 위시리스트
+
+| Method | URL | 설명 | 인증 |
+|--------|-----|------|------|
+| POST | `/api/wishes/{productId}` | 위시 추가 | O |
+| GET | `/api/wishes` | 위시 목록 조회 | O |
+| DELETE | `/api/wishes/{productId}` | 위시 삭제 | O |
+
+- 상품 삭제 시 전체 회원의 위시리스트에서 자동 제거
+
+### 헬스체크
+
+| Method | URL | 설명 |
+|--------|-----|------|
+| GET | `/health/liveness` | Liveness probe |
+| GET | `/health/readiness` | Readiness probe (MySQL 연결 확인) |
+
+## 로컬 실행
+
+```bash
+docker compose up -d          # MySQL 8.0 + MongoDB 7.0 실행
+./gradlew bootRun             # 애플리케이션 실행
+./setup.sh                    # 테스트 계정 + 샘플 데이터 생성
+```
+
+테스트 계정: `user@test.com` / `password1234`
+
+## 빌드 & 테스트
+
+```bash
+./gradlew build               # 빌드 + 테스트 + spotless 검사
+./gradlew test                # Cucumber BDD 테스트
+./gradlew spotlessApply       # Google Java Style 자동 포맷
+./gradlew asciidoctor         # REST API 문서 생성 (build/docs/asciidoc/)
+```

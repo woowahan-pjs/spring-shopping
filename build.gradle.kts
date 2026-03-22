@@ -17,7 +17,10 @@ java {
     }
 }
 
+val asciidoctorExt: Configuration by configurations.creating
+
 dependencies {
+    asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-validation")
@@ -92,6 +95,7 @@ pitest {
 tasks.named("asciidoctor", org.asciidoctor.gradle.jvm.AsciidoctorTask::class) {
     dependsOn("test")
     inputs.dir(file("build/generated-snippets"))
+    configurations("asciidoctorExt")
     baseDirFollowsSourceDir()
     sources {
         include("*.adoc")

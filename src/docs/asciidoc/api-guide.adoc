@@ -9,30 +9,84 @@
 
 === Register
 
-operation::member-register[]
+==== Request
+include::{snippets}/member-register/http-request.adoc[]
+
+==== Response
+include::{snippets}/member-register/http-response.adoc[]
 
 === Login
 
-operation::member-login[]
+==== Request
+include::{snippets}/member-login/http-request.adoc[]
+
+==== Response
+include::{snippets}/member-login/http-response.adoc[]
 
 == Product API
 
 === Create
 
-operation::product-create[]
+==== Request
+include::{snippets}/product-create/http-request.adoc[]
+
+==== Response
+include::{snippets}/product-create/http-response.adoc[]
 
 === Find by ID
 
-operation::product-find[]
+==== Request
+include::{snippets}/product-find/http-request.adoc[]
+
+==== Response
+include::{snippets}/product-find/http-response.adoc[]
 
 === Find all
 
-operation::product-find-all[]
+==== Request
+include::{snippets}/product-find-all/http-request.adoc[]
+
+==== Response
+include::{snippets}/product-find-all/http-response.adoc[]
 
 === Update
 
-operation::product-update[]
+==== Request
+include::{snippets}/product-update/http-request.adoc[]
+
+==== Response
+include::{snippets}/product-update/http-response.adoc[]
 
 === Delete
 
-operation::product-delete[]
+==== Request
+include::{snippets}/product-delete/http-request.adoc[]
+
+==== Response
+include::{snippets}/product-delete/http-response.adoc[]
+
+== Wish API
+
+=== Add
+
+==== Request
+include::{snippets}/wish-add/http-request.adoc[]
+
+==== Response
+include::{snippets}/wish-add/http-response.adoc[]
+
+=== Find all
+
+==== Request
+include::{snippets}/wish-find-all/http-request.adoc[]
+
+==== Response
+include::{snippets}/wish-find-all/http-response.adoc[]
+
+=== Remove
+
+==== Request
+include::{snippets}/wish-remove/http-request.adoc[]
+
+==== Response
+include::{snippets}/wish-remove/http-response.adoc[]
