@@ -1,8 +1,10 @@
 package shopping.application.wish
 
 import shopping.domain.wish.Wish
+import org.springframework.stereotype.Service
 import shopping.interfaces.api.wish.WishV1Dto
 
+@Service
 class WishFacade(
     private val wishService: WishService
 ) {

@@ -3,8 +3,10 @@ package shopping.application.product
 import org.springframework.data.domain.Page
 import shopping.domain.product.Product
 import shopping.interfaces.api.Paging
+import org.springframework.stereotype.Service
 import shopping.interfaces.api.product.ProductV1Dto
 
+@Service
 class ProductFacade(
     private val productService: ProductService
 ) {

@@ -4,8 +4,10 @@ import shopping.domain.product.ProductRepository
 import shopping.domain.wish.Wish
 import shopping.domain.wish.WishRepository
 import shopping.support.error.CoreException
+import org.springframework.stereotype.Service
 import shopping.support.error.ErrorType
 
+@Service
 class WishService(
     private val wishRepository: WishRepository,
     private val productRepository: ProductRepository

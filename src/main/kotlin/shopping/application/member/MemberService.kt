@@ -3,8 +3,10 @@ package shopping.application.member
 import shopping.domain.member.Member
 import shopping.domain.member.MemberRepository
 import shopping.support.error.CoreException
+import org.springframework.stereotype.Service
 import shopping.support.error.ErrorType
 
+@Service
 class MemberService(
     private val memberRepository: MemberRepository
 ) {

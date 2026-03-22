@@ -7,8 +7,10 @@ import shopping.domain.product.ProductBadWordClient
 import shopping.domain.product.ProductRepository
 import shopping.support.error.CoreException
 import shopping.support.error.ErrorType
+import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
+@Service
 class ProductService(
     private val productRepository: ProductRepository,
     private val productBadWordClient: ProductBadWordClient

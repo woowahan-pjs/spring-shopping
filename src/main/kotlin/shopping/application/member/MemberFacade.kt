@@ -1,8 +1,10 @@
 package shopping.application.member
 
 import shopping.domain.member.Member
+import org.springframework.stereotype.Service
 import shopping.interfaces.api.member.MemberV1Dto
 
+@Service
 class MemberFacade(
     private val memberService: MemberService,
     private val tokenService: TokenService
