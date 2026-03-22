@@ -52,11 +52,9 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> update(@PathVariable UUID id,
-            @RequestBody ProductRequest request) {
-        Product product =
-                updateProduct.execute(id, request.name(), request.price(), request.imageUrl());
-        return ResponseEntity.ok(ProductResponse.from(product));
+    public ResponseEntity<Void> update(@PathVariable UUID id, @RequestBody ProductRequest request) {
+        updateProduct.execute(id, request.name(), request.price(), request.imageUrl());
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")

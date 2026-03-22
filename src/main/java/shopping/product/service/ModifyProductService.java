@@ -16,10 +16,9 @@ public class ModifyProductService {
         this.productRepository = productRepository;
     }
 
-    public Product execute(UUID id, ProductName productName, long price, String imageUrl) {
+    public void execute(UUID id, ProductName productName, long price, String imageUrl) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다."));
         product.update(productName, price, imageUrl);
-        return productRepository.save(product);
     }
 }

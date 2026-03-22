@@ -16,8 +16,8 @@ public class UpdateProductService implements UpdateProduct {
     }
 
     @Override
-    public Product execute(UUID id, String name, long price, String imageUrl) {
+    public void execute(UUID id, String name, long price, String imageUrl) {
         ProductName productName = productNameFactory.create(name);
-        return modifyProductService.execute(id, productName, price, imageUrl);
+        modifyProductService.execute(id, productName, price, imageUrl);
     }
 }

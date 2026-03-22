@@ -20,7 +20,6 @@ Feature: Product CRUD
     Given a product exists with name "Old Name" price 10000 and imageUrl "https://example.com/old.png"
     When I update the product with name "New Name" price 20000 and imageUrl "https://example.com/new.png"
     Then the product should be updated
-    And the product response should have name "New Name"
 
   Scenario: Delete a product
     Given a product exists with name "ToDelete" price 10000 and imageUrl "https://example.com/del.png"
