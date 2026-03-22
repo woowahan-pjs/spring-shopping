@@ -36,9 +36,9 @@ public class WishService {
         Product product = productRepository.findById(productId)
                 .orElseThrow();
 
-        WishListItem item = WishListItem.create(wishList, product);
+        wishList.addItem(product);
 
-        wishListItemRepository.save(item);
+        wishListRepository.save(wishList);
     }
 
     public void deleteWish(Long wishId) {
