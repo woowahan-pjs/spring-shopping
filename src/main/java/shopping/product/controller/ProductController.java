@@ -5,13 +5,10 @@ import shopping.product.dto.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,19 +63,4 @@ public class ProductController {
         return ResponseEntity.ok(findProduct.execute());
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalArgument(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<Void> handleNotFound(NoSuchElementException e) {
-        return ResponseEntity.notFound().build();
-    }
-
-    @ExceptionHandler(ProfanityCheckException.class)
-    public ResponseEntity<Map<String, String>> handleProfanityCheckFailure(
-            ProfanityCheckException e) {
-        return ResponseEntity.internalServerError().body(Map.of("message", e.getMessage()));
-    }
 }
