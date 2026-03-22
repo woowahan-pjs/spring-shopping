@@ -47,7 +47,7 @@ public class WishControllerTest {
         mockMvc.perform(delete("/api/wishes/{wishId}", 1L))
                 .andExpect(status().isOk());
 
-        verify(wishService).deleteWish(1L);
+        verify(wishService).deleteWish(1L, 1L);
     }
 
     @Test

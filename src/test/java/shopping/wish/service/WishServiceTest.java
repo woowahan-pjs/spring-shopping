@@ -68,9 +68,10 @@ public class WishServiceTest {
     @Test
     void 위시리스트_아이템을_삭제한다() {
 
+        Long memberId = 1L;
         Long wishId = 1L;
 
-        wishService.deleteWish(wishId);
+        wishService.deleteWish(memberId, wishId);
 
         verify(wishListItemRepository).deleteById(wishId);
     }

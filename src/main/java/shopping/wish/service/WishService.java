@@ -42,7 +42,7 @@ public class WishService {
         wishListRepository.save(wishList);
     }
 
-    public void deleteWish(Long wishId) {
+    public void deleteWish(Long memberId, Long wishId) {
 
         wishListItemRepository.deleteById(wishId);
     }
