@@ -11,12 +11,9 @@ import shopping.product.domain.Product;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.*;
+import static shopping.product.domain.ProductFixture.*;
 
 class ProductServiceTest {
-    public static final String VALID_NAME = "피자";
-    public static final BigDecimal VALID_PRICE = BigDecimal.ZERO;
-    public static final String VALID_IMAGE_URL = "http://a.com/a.jpg";
-
     ProductService productService;
 
     @BeforeEach
@@ -27,7 +24,7 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품명 비속어를 확인하고 저장한다.")
     void save() {
-        Product product = new Product("pizza", VALID_PRICE, VALID_IMAGE_URL);
+        Product product = createProduct();
 
         Product saved = productService.save(product);
 
@@ -38,7 +35,7 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품명이 비속어면 예외발생")
     void invalidName() {
-        Product product = new Product("dickhead", VALID_PRICE, VALID_IMAGE_URL);
+        Product product = createProduct("dickhead");
 
         assertThatThrownBy(() -> productService.save(product))
                 .isInstanceOf(IllegalArgumentException.class);
@@ -47,7 +44,7 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품 조회한다")
     void findProductById() {
-        Product product = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
+        Product product = createProduct();
         Product saved = productService.save(product);
 
         Product found = productService.findProductById(saved.getId());
@@ -57,9 +54,9 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품 목록을 조회한다")
     void findProducts() {
-        Product product1 = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
-        Product product2 = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
-        Product product3 = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
+        Product product1 = createProduct();
+        Product product2 = createProduct();
+        Product product3 = createProduct();
 
         productService.save(product1);
         productService.save(product2);
@@ -73,7 +70,7 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품 정보를 변경한다")
     void update() {
-        Product product = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
+        Product product = createProduct();
         productService.save(product);
 
         product.changeName("의자");
@@ -89,7 +86,7 @@ class ProductServiceTest {
     @Test
     @DisplayName("상품을 삭제한다")
     void delete() {
-        Product product = new Product(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
+        Product product = createProduct();
         productService.save(product);
 
         productService.deleteById(product.getId());

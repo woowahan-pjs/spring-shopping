@@ -12,13 +12,6 @@ import static org.assertj.core.api.Assertions.*;
 import static shopping.product.domain.ProductFixture.*;
 
 class ProductTest {
-    private Product createProduct(String name) {
-        return new Product(name, VALID_PRICE, VALID_IMAGE_URL);
-    }
-
-    private Product createProduct(BigDecimal price) {
-        return new Product(VALID_NAME, price, VALID_IMAGE_URL);
-    }
 
     @Test
     @DisplayName("상품은 이름을 가진다")
