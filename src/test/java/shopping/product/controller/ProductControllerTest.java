@@ -20,6 +20,7 @@ import shopping.member.domain.MemberRole;
 import shopping.product.domain.Product;
 import shopping.product.controller.dto.ProductRequest;
 import shopping.product.service.ProductService;
+import shopping.support.ControllerTestSupport;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -40,22 +41,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 
-@WebMvcTest(ProductController.class)
-@Import(AdminInterceptor.class)
-@AutoConfigureRestDocs
-class ProductControllerTest {
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @MockitoBean
-    ProductService service;
-
-    @MockitoBean
-    JwtTokenProvider provider;
+class ProductControllerTest extends ControllerTestSupport {
 
     @BeforeEach
     void setUp() {
@@ -68,7 +54,7 @@ class ProductControllerTest {
         Product product = createWithId(1L);
         ProductRequest request = new ProductRequest(VALID_NAME, VALID_PRICE, VALID_IMAGE_URL);
 
-        given(service.save(any())).willReturn(product);
+        given(productService.save(any())).willReturn(product);
 
         mockMvc.perform(post("/products")
                         .header("Authorization", "Bearer valid-token")
@@ -94,7 +80,7 @@ class ProductControllerTest {
         Pageable pageable = PageRequest.of(0, 20);
         PageImpl<Product> page = new PageImpl<>(products, pageable, products.size());
 
-        given(service.findProducts(any())).willReturn(page);
+        given(productService.findProducts(any())).willReturn(page);
 
         mockMvc.perform(get("/products")
                         .param("page", "0")
@@ -123,7 +109,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("특정 상품을 조회한다")
     void findById() throws Exception {
-        given(service.findProductById(1L)).willReturn(createWithId(1L));
+        given(productService.findProductById(1L)).willReturn(createWithId(1L));
 
         mockMvc.perform(get("/products/{id}", 1L))
                 .andExpectAll(status().isOk(),
@@ -155,7 +141,7 @@ class ProductControllerTest {
 
         ProductRequest request = new ProductRequest( "치킨", changePrice, changeImageUrl);
 
-        given(service.update(eq(1L), any())).willReturn(product);
+        given(productService.update(eq(1L), any())).willReturn(product);
 
         mockMvc.perform(put("/products/{id}", 1L)
                         .header("Authorization", "Bearer valid-token")
@@ -189,7 +175,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("상품을 삭제한다")
     void deleteProduct() throws Exception {
-        willDoNothing().given(service).deleteById(1L);
+        willDoNothing().given(productService).deleteById(1L);
 
         mockMvc.perform(delete("/products/{id}", 1L)
                         .header("Authorization", "Bearer valid-token"))
@@ -216,7 +202,7 @@ class ProductControllerTest {
     @Test
     @DisplayName("존재하지 않은 상품을 조회 시 예외 발생")
     void findById_notFound() throws Exception {
-        willThrow(new NoSuchElementException()).given(service).findProductById(1L);
+        willThrow(new NoSuchElementException()).given(productService).findProductById(1L);
 
         mockMvc.perform(get("/products/{id}", 1))
                         .andExpect(status().isNotFound());

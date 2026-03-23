@@ -1,22 +1,14 @@
 package shopping.member.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import shopping.auth.AdminInterceptor;
-import shopping.auth.JwtTokenProvider;
 import shopping.member.controller.dto.MemberRequest;
 import shopping.member.domain.Member;
 import shopping.member.domain.MemberRole;
 import shopping.member.service.MemberService;
+import shopping.support.ControllerTestSupport;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
@@ -28,22 +20,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
-@WebMvcTest(MemberController.class)
-@Import(AdminInterceptor.class)
-@AutoConfigureRestDocs
-class MemberControllerTest {
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @Autowired
-    ObjectMapper objectMapper;
-
-    @MockitoBean
-    JwtTokenProvider provider;
-
-    @MockitoBean
-    private MemberService service;
+class MemberControllerTest extends ControllerTestSupport {
 
     public MemberRequest createMemberRequest() {
         return new MemberRequest("test@gmail.com", "password");
@@ -55,7 +32,7 @@ class MemberControllerTest {
         MemberRequest request = createMemberRequest();
         Member member = createMember();
 
-        willDoNothing().given(service).register(member);
+        willDoNothing().given(memberService).register(member);
 
         mockMvc.perform(post("/members")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -74,7 +51,7 @@ class MemberControllerTest {
     void invalidDuplicateEmail() throws Exception {
         MemberRequest request = createMemberRequest();
 
-        willThrow(new IllegalArgumentException("이미 존재하는 이메일입니다.")).given(service).register(any());
+        willThrow(new IllegalArgumentException("이미 존재하는 이메일입니다.")).given(memberService).register(any());
 
         mockMvc.perform(post("/members")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -89,7 +66,7 @@ class MemberControllerTest {
         MemberRequest request = createMemberRequest();
         String token = "mock-token";
 
-        given(service.login(request.email(), request.password())).willReturn(member);
+        given(memberService.login(request.email(), request.password())).willReturn(member);
         given(provider.generate(member)).willReturn(token);
 
         mockMvc.perform(post("/login")
@@ -113,7 +90,7 @@ class MemberControllerTest {
     void notFoundEmail() throws Exception {
         MemberRequest request = new MemberRequest("test", "password");
 
-        willThrow(new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요.")).given(service).login(request.email(), request.password());
+        willThrow(new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요.")).given(memberService).login(request.email(), request.password());
 
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -126,7 +103,7 @@ class MemberControllerTest {
     void invalidPassword() throws Exception {
         MemberRequest request = new MemberRequest("test@gmail.com", "pass");
 
-        willThrow(new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요.")).given(service).login(request.email(), request.password());
+        willThrow(new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요.")).given(memberService).login(request.email(), request.password());
 
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -141,7 +118,7 @@ class MemberControllerTest {
 
         given(provider.extractRole(any())).willReturn(MemberRole.ADMIN);
 
-        willDoNothing().given(service).adminRegister(any());
+        willDoNothing().given(memberService).adminRegister(any());
 
         mockMvc.perform(post("/admin/members")
                         .header("Authorization", "Bearer valid-token")

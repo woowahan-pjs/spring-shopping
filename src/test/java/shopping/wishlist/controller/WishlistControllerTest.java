@@ -1,35 +1,25 @@
 package shopping.wishlist.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import shopping.auth.AuthInterceptor;
-import shopping.auth.JwtTokenProvider;
-import shopping.product.domain.Product;
+import shopping.support.ControllerTestSupport;
 import shopping.wishlist.controller.dto.WishlistRequest;
 import shopping.wishlist.domain.Wishlist;
 import shopping.wishlist.service.WishlistService;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static shopping.product.domain.ProductFixture.createWithId;
 import static shopping.wishlist.domain.WishlistFixture.*;
 
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
@@ -39,26 +29,11 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 
-@WebMvcTest(WishlistController.class)
-@Import(AuthInterceptor.class)
-@AutoConfigureRestDocs
-class WishlistControllerTest {
-
-    @Autowired
-    MockMvc mockMvc;
-
-    @MockitoBean
-    WishlistService service;
-
-    @MockitoBean
-    JwtTokenProvider tokenProvider;
-
-    @Autowired
-    ObjectMapper objectMapper;
+class WishlistControllerTest extends ControllerTestSupport {
 
     @BeforeEach
     void setUp() {
-        given(tokenProvider.extract(any())).willReturn(VALID_MEMBER_ID);
+        given(provider.extract(any())).willReturn(VALID_MEMBER_ID);
     }
 
     @Test
@@ -66,7 +41,7 @@ class WishlistControllerTest {
     void addWishlistItem() throws Exception {
         WishlistRequest request = new WishlistRequest(1L);
 
-        willDoNothing().given(service).addWishlist(any());
+        willDoNothing().given(wishlistService).addWishlist(any());
 
         mockMvc.perform(post("/wishlist")
                 .header("Authorization", "Bearer valid-token")
@@ -90,7 +65,7 @@ class WishlistControllerTest {
         List<Wishlist> wishlist = List.of(createWish(1L, 1L), createWish(2L, 2L));
         PageImpl<Wishlist> page = new PageImpl<>(wishlist, pageable, wishlist.size());
 
-        given(service.findWishlistItems(eq(VALID_MEMBER_ID), any())).willReturn(page);
+        given(wishlistService.findWishlistItems(eq(VALID_MEMBER_ID), any())).willReturn(page);
 
         mockMvc.perform(get("/wishlist")
                         .param("page", "0")
@@ -121,7 +96,7 @@ class WishlistControllerTest {
     @Test
     @DisplayName("위시리스트 상품을 삭제한다")
     void deleteWishlistItemById() throws Exception {
-        willDoNothing().given(service).deleteWishlistItem(1L, 1L);
+        willDoNothing().given(wishlistService).deleteWishlistItem(1L, 1L);
 
         mockMvc.perform(delete("/wishlist/{id}", 1L)
                 .header("Authorization", "Bearer valid-token"))
@@ -139,7 +114,7 @@ class WishlistControllerTest {
     @Test
     @DisplayName("위시리스트 존재하지않으면 예외 발생")
     void deleteWishlistItemById_invalidMemberId() throws Exception {
-        willThrow(new IllegalArgumentException()).given(service).deleteWishlistItem(1L, 1L);
+        willThrow(new IllegalArgumentException()).given(wishlistService).deleteWishlistItem(1L, 1L);
 
         mockMvc.perform(delete("/wishlist/{id}", 1L)
                 .header("Authorization", "Bearer valid-token"))
