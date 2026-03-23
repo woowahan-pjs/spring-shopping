@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import static org.assertj.core.api.Assertions.*;
 import static shopping.product.domain.ProductFixture.*;
 
+@DisplayName("상품 도메인")
 class ProductTest {
 
     @Test

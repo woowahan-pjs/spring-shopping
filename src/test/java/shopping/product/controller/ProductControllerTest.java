@@ -1,25 +1,15 @@
 package shopping.product.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
-import shopping.auth.AdminInterceptor;
-import shopping.auth.JwtTokenProvider;
 import shopping.member.domain.MemberRole;
 import shopping.product.domain.Product;
 import shopping.product.controller.dto.ProductRequest;
-import shopping.product.service.ProductService;
 import shopping.support.ControllerTestSupport;
 
 import java.math.BigDecimal;
@@ -40,7 +30,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 
-
+@DisplayName("상품 API")
 class ProductControllerTest extends ControllerTestSupport {
 
     @BeforeEach

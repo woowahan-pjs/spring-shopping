@@ -10,6 +10,7 @@ import shopping.member.infrastructure.MemberRepositoryImpl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@DisplayName("회원 레포지토리")
 @DataJpaTest
 @Import({MemberRepositoryImpl.class, JpaConfig.class})
 public class MemberRepositoryTest {

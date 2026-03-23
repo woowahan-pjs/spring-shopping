@@ -12,11 +12,11 @@ import shopping.wishlist.domain.InMemoryWishlistRepository;
 import shopping.wishlist.domain.Wishlist;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.*;
 
+@DisplayName("위시리스트 서비스")
 class WishlistServiceTest {
 
     private WishlistService service;

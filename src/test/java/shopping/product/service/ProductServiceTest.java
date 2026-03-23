@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import static org.assertj.core.api.Assertions.*;
 import static shopping.product.domain.ProductFixture.*;
 
+@DisplayName("상품 서비스")
 class ProductServiceTest {
     ProductService productService;
 

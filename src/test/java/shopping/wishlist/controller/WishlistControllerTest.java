@@ -7,11 +7,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import shopping.support.ControllerTestSupport;
 import shopping.wishlist.controller.dto.WishlistRequest;
 import shopping.wishlist.domain.Wishlist;
-import shopping.wishlist.service.WishlistService;
 
 import java.util.List;
 
@@ -28,7 +26,7 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 
-
+@DisplayName("위시리스트 API")
 class WishlistControllerTest extends ControllerTestSupport {
 
     @BeforeEach

@@ -14,6 +14,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static shopping.product.domain.ProductFixture.*;
 
+@DisplayName("상품 레포지토리")
 @DataJpaTest
 @Import({ProductRepositoryImpl.class, JpaConfig.class})
 public class ProductRepositoryTest {

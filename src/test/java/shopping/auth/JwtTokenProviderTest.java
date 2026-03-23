@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.*;
 import static shopping.member.domain.MemberFixture.*;
 
+@DisplayName("JWT 토큰 프로바이더")
 class JwtTokenProviderTest {
     private final String secret = "dGVzdC1zZWNyZXQta2V5LWZvci10ZXN0aW5nLW9ubHk=";
     private JwtTokenProvider provider;

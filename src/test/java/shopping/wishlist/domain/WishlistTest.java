@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.*;
 
+@DisplayName("위시리스트 도메인")
 public class WishlistTest {
 
     @Test

@@ -11,6 +11,7 @@ import shopping.wishlist.infrastructure.WishlistRepositoryImpl;
 
 import static org.assertj.core.api.Assertions.*;
 
+@DisplayName("위시리스트 레포지토리")
 @DataJpaTest
 @Import({WishlistRepositoryImpl.class, JpaConfig.class})
 class WishlistRepositoryTest {

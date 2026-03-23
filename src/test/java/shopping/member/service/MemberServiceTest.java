@@ -8,6 +8,7 @@ import shopping.member.domain.Member;
 
 import static org.assertj.core.api.Assertions.*;
 
+@DisplayName("회원 서비스")
 class MemberServiceTest {
     private MemberService service;
 

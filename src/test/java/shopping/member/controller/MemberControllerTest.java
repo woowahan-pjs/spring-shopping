@@ -3,11 +3,9 @@ package shopping.member.controller;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import shopping.member.controller.dto.MemberRequest;
 import shopping.member.domain.Member;
 import shopping.member.domain.MemberRole;
-import shopping.member.service.MemberService;
 import shopping.support.ControllerTestSupport;
 
 import static org.mockito.BDDMockito.*;
@@ -20,6 +18,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 
+@DisplayName("회원 API")
 class MemberControllerTest extends ControllerTestSupport {
 
     public MemberRequest createMemberRequest() {
