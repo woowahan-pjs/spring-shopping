@@ -29,9 +29,8 @@ class MemberControllerTest extends ControllerTestSupport {
     @DisplayName("회원 가입한다.")
     void register() throws Exception {
         MemberRequest request = createMemberRequest();
-        Member member = createMember();
 
-        willDoNothing().given(memberService).register(member);
+        willDoNothing().given(memberService).register(any());
 
         mockMvc.perform(post("/members")
                         .contentType(MediaType.APPLICATION_JSON)

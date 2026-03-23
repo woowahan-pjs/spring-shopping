@@ -12,6 +12,7 @@ import shopping.wishlist.controller.dto.WishlistRequest;
 import shopping.wishlist.domain.Wishlist;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -112,17 +113,17 @@ class WishlistControllerTest extends ControllerTestSupport {
     @Test
     @DisplayName("위시리스트 존재하지않으면 예외 발생")
     void deleteWishlistItemById_invalidMemberId() throws Exception {
-        willThrow(new IllegalArgumentException()).given(wishlistService).deleteWishlistItem(1L, 1L);
+        willThrow(new NoSuchElementException()).given(wishlistService).deleteWishlistItem(1L, 1L);
 
         mockMvc.perform(delete("/wishlist/{id}", 1L)
                 .header("Authorization", "Bearer valid-token"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isNotFound());
     }
 
     @Test
     @DisplayName("로그인 안하면 예외 발생")
     void notLogin() throws Exception {
         mockMvc.perform(get("/wishlist"))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isUnauthorized());
     }
 }
