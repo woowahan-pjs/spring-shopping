@@ -396,6 +396,80 @@ body {
     text-decoration: underline;
 }
 
+/* Product Detail Buttons */
+.product-detail-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.btn-edit {
+    display: inline-block;
+    padding: 0.8rem 2rem;
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-edit:hover {
+    background-color: #545b62;
+}
+
+/* Product Edit Page */
+.edit-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem;
+}
+
+.edit-title {
+    font-size: 1.6rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.edit-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.edit-actions .btn-submit {
+    flex: 1;
+}
+
+.btn-delete {
+    flex: 0 0 auto;
+    padding: 0.8rem 2rem;
+    background-color: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-delete:hover {
+    background-color: #c82333;
+}
+
+.btn-delete:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .product-detail {

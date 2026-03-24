@@ -35,6 +35,12 @@ public class PageController {
         return "product-detail";
     }
 
+    @GetMapping("/products/{id}/edit")
+    public String productEdit(@PathVariable UUID id, Model model) {
+        model.addAttribute("product", findProduct.execute(id));
+        return "product-edit";
+    }
+
     @GetMapping("/wishes")
     public String wishes() {
         return "wishes";

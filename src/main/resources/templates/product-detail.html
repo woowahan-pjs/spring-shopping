@@ -27,9 +27,12 @@
             <div class="product-detail-info">
                 <h1 class="product-detail-name" th:text="${product.name()}">Product Name</h1>
                 <div class="product-detail-price" th:text="'&#8361; ' + ${#numbers.formatInteger(product.price(), 1, 'COMMA')}">&#8361; 0</div>
-                <button class="btn-wish"
-                        th:data-product-id="${product.id()}"
-                        onclick="toggleWish(this)">&#9825; Add to Wish</button>
+                <div class="product-detail-buttons">
+                    <button class="btn-wish"
+                            th:data-product-id="${product.id()}"
+                            onclick="toggleWish(this)">&#9825; Add to Wish</button>
+                    <a th:href="@{'/products/' + ${product.id()} + '/edit'}" class="btn-edit">Edit / Delete</a>
+                </div>
             </div>
         </div>
     </div>
