@@ -2,18 +2,22 @@ package shopping.common;
 
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
 @RestControllerAdvice
-public class GlobalExceptionHandler {
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ErrorResponse> handleApiException(ApiException exception) {
         if (exception.getStatus().is5xxServerError()) {
@@ -25,11 +29,16 @@ public class GlobalExceptionHandler {
                     exception
             );
         }
-        return errorResponse(exception.getErrorCode(), exception.getMessage());
+        return apiErrorResponse(exception.getErrorCode(), exception.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException exception) {
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(
+            MethodArgumentNotValidException exception,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request
+    ) {
         String message = exception.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -41,31 +50,60 @@ public class GlobalExceptionHandler {
         return errorResponse(ErrorCode.INVALID_INPUT, message);
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse> handleInvalidBody(HttpMessageNotReadableException exception) {
+    @Override
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException exception,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request
+    ) {
         return errorResponse(ErrorCode.INVALID_INPUT);
     }
 
-    @ExceptionHandler({NoResourceFoundException.class, NoHandlerFoundException.class})
-    public ResponseEntity<ErrorResponse> handleNotFound(Exception exception) {
+    @Override
+    protected ResponseEntity<Object> handleNoResourceFoundException(
+            NoResourceFoundException exception,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request
+    ) {
+        return errorResponse(ErrorCode.RESOURCE_NOT_FOUND);
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleNoHandlerFoundException(
+            NoHandlerFoundException exception,
+            HttpHeaders headers,
+            HttpStatusCode status,
+            WebRequest request
+    ) {
         return errorResponse(ErrorCode.RESOURCE_NOT_FOUND);
     }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleUnexpected(Exception exception) {
         log.error("Unexpected exception occurred.", exception);
-        return errorResponse(ErrorCode.INTERNAL_ERROR);
+        return apiErrorResponse(ErrorCode.INTERNAL_ERROR);
     }
 
     private String toMessage(FieldError error) {
         return error.getField() + ": " + error.getDefaultMessage();
     }
 
-    private ResponseEntity<ErrorResponse> errorResponse(ErrorCode errorCode) {
+    private ResponseEntity<ErrorResponse> apiErrorResponse(ErrorCode errorCode) {
+        return apiErrorResponse(errorCode, errorCode.message());
+    }
+
+    private ResponseEntity<ErrorResponse> apiErrorResponse(ErrorCode errorCode, String message) {
+        ErrorResponse response = new ErrorResponse(errorCode.code(), message);
+        return ResponseEntity.status(errorCode.status()).body(response);
+    }
+
+    private ResponseEntity<Object> errorResponse(ErrorCode errorCode) {
         return errorResponse(errorCode, errorCode.message());
     }
 
-    private ResponseEntity<ErrorResponse> errorResponse(ErrorCode errorCode, String message) {
+    private ResponseEntity<Object> errorResponse(ErrorCode errorCode, String message) {
         ErrorResponse response = new ErrorResponse(errorCode.code(), message);
         return ResponseEntity.status(errorCode.status()).body(response);
     }

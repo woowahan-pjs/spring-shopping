@@ -11,9 +11,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.context.request.ServletWebRequest;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -45,10 +48,15 @@ class GlobalExceptionHandlerTest {
         bindingResult.addError(new FieldError("request", "password", "must not be blank"));
         Method method = TestRequest.class.getMethod("request", String.class);
         MethodParameter parameter = new MethodParameter(method, 0);
+        WebRequest webRequest = new ServletWebRequest(new MockHttpServletRequest());
 
         // when
-        ResponseEntity<ErrorResponse> response =
-                handler.handleValidation(new MethodArgumentNotValidException(parameter, bindingResult));
+        ResponseEntity<Object> response = handler.handleMethodArgumentNotValid(
+                new MethodArgumentNotValidException(parameter, bindingResult),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                webRequest
+        );
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -64,10 +72,15 @@ class GlobalExceptionHandlerTest {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(new Object(), "request");
         Method method = TestRequest.class.getMethod("request", String.class);
         MethodParameter parameter = new MethodParameter(method, 0);
+        WebRequest webRequest = new ServletWebRequest(new MockHttpServletRequest());
 
         // when
-        ResponseEntity<ErrorResponse> response =
-                handler.handleValidation(new MethodArgumentNotValidException(parameter, bindingResult));
+        ResponseEntity<Object> response = handler.handleMethodArgumentNotValid(
+                new MethodArgumentNotValidException(parameter, bindingResult),
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                webRequest
+        );
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -81,10 +94,15 @@ class GlobalExceptionHandlerTest {
     void handleInvalidBodyReturnInvalidInput() {
         // given
         HttpMessageNotReadableException exception = new HttpMessageNotReadableException("invalid body");
+        WebRequest webRequest = new ServletWebRequest(new MockHttpServletRequest());
 
         // when
-        ResponseEntity<ErrorResponse> response =
-                handler.handleInvalidBody(exception);
+        ResponseEntity<Object> response = handler.handleHttpMessageNotReadable(
+                exception,
+                new HttpHeaders(),
+                HttpStatus.BAD_REQUEST,
+                webRequest
+        );
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
@@ -98,9 +116,15 @@ class GlobalExceptionHandlerTest {
     void handleNoResourceFoundReturnNotFound() {
         // given
         NoResourceFoundException exception = new NoResourceFoundException(HttpMethod.GET, "/actuator/metrics");
+        WebRequest webRequest = new ServletWebRequest(new MockHttpServletRequest());
 
         // when
-        ResponseEntity<ErrorResponse> response = handler.handleNotFound(exception);
+        ResponseEntity<Object> response = handler.handleNoResourceFoundException(
+                exception,
+                new HttpHeaders(),
+                HttpStatus.NOT_FOUND,
+                webRequest
+        );
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -114,9 +138,15 @@ class GlobalExceptionHandlerTest {
     void handleNoHandlerFoundReturnNotFound() {
         // given
         NoHandlerFoundException exception = new NoHandlerFoundException("GET", "/missing", new HttpHeaders());
+        WebRequest webRequest = new ServletWebRequest(new MockHttpServletRequest());
 
         // when
-        ResponseEntity<ErrorResponse> response = handler.handleNotFound(exception);
+        ResponseEntity<Object> response = handler.handleNoHandlerFoundException(
+                exception,
+                new HttpHeaders(),
+                HttpStatus.NOT_FOUND,
+                webRequest
+        );
 
         // then
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
