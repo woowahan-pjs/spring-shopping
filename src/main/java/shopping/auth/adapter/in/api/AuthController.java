@@ -3,7 +3,6 @@ package shopping.auth.adapter.in.api;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,10 +18,10 @@ public class AuthController {
     private final RefreshTokenCookieManager refreshTokenCookieManager;
 
     @PostMapping("/refresh")
-    public ResponseEntity<TokenResponse> refresh(HttpServletRequest request, HttpServletResponse response) {
+    public TokenResponse refresh(HttpServletRequest request, HttpServletResponse response) {
         String refreshToken = refreshTokenCookieManager.resolve(request);
         AuthTokens tokens = authService.refresh(refreshToken);
         refreshTokenCookieManager.write(response, tokens.refreshToken());
-        return ResponseEntity.ok(TokenResponse.from(tokens));
+        return TokenResponse.from(tokens);
     }
 }

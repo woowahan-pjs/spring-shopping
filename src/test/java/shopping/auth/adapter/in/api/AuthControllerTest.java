@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import shopping.auth.adapter.in.web.RefreshTokenCookieManager;
@@ -37,11 +35,10 @@ class AuthControllerTest {
         when(authService.refresh("refresh-token")).thenReturn(new AuthTokens("new-access-token", "new-refresh-token"));
 
         // when
-        ResponseEntity<TokenResponse> result = authController.refresh(request, response);
+        TokenResponse result = authController.refresh(request, response);
 
         // then
-        assertThat(result.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(result.getBody()).isEqualTo(TokenResponse.from(new AuthTokens("new-access-token", "new-refresh-token")));
+        assertThat(result).isEqualTo(TokenResponse.from(new AuthTokens("new-access-token", "new-refresh-token")));
         verify(refreshTokenCookieManager).resolve(request);
         verify(refreshTokenCookieManager).write(response, "new-refresh-token");
     }
