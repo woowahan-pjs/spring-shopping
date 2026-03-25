@@ -27,7 +27,8 @@ public class MemberController {
             HttpServletResponse response
     ) {
         AuthTokens tokens = memberService.register(request);
-        return buildTokenResponse(response, tokens, HttpStatus.CREATED);
+        refreshTokenCookieManager.write(response, tokens.refreshToken());
+        return ResponseEntity.status(HttpStatus.CREATED).body(TokenResponse.from(tokens));
     }
 
     @PostMapping("/login")
@@ -36,19 +37,7 @@ public class MemberController {
             HttpServletResponse response
     ) {
         AuthTokens tokens = memberService.login(request);
-        return buildTokenResponse(response, tokens, HttpStatus.OK);
-    }
-
-    private ResponseEntity<TokenResponse> buildTokenResponse(
-            HttpServletResponse response,
-            AuthTokens tokens,
-            HttpStatus status
-    ) {
         refreshTokenCookieManager.write(response, tokens.refreshToken());
-        TokenResponse tokenResponse = TokenResponse.from(tokens);
-        if (status == HttpStatus.OK) {
-            return ResponseEntity.ok(tokenResponse);
-        }
-        return ResponseEntity.status(status).body(tokenResponse);
+        return ResponseEntity.ok(TokenResponse.from(tokens));
     }
 }
