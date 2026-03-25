@@ -24,7 +24,7 @@ public class RefreshTokenManager {
 
     public RefreshTokenManager(RefreshTokenRepository refreshTokenRepository, AuthProperties authProperties) {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.refreshTokenValidityDays = authProperties.getRefreshTokenValidityDays();
+        this.refreshTokenValidityDays = authProperties.refreshTokenValidityDays();
     }
 
     public String issue(Long memberId) {

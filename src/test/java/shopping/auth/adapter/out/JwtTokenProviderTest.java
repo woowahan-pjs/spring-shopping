@@ -98,9 +98,6 @@ class JwtTokenProviderTest {
     }
 
     private AuthProperties authProperties(String secret, long tokenValidityMinutes) {
-        AuthProperties authProperties = new AuthProperties();
-        authProperties.setJwtSecret(secret);
-        authProperties.setTokenValidityMinutes(tokenValidityMinutes);
-        return authProperties;
+        return new AuthProperties(secret, tokenValidityMinutes, 0L, "refreshToken", false);
     }
 }

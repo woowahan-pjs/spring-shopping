@@ -20,8 +20,8 @@ public class JwtTokenProvider {
     private final long tokenValidityMinutes;
 
     public JwtTokenProvider(AuthProperties authProperties) {
-        this.signingKey = Keys.hmacShaKeyFor(authProperties.getJwtSecret().getBytes(StandardCharsets.UTF_8));
-        this.tokenValidityMinutes = authProperties.getTokenValidityMinutes();
+        this.signingKey = Keys.hmacShaKeyFor(authProperties.jwtSecret().getBytes(StandardCharsets.UTF_8));
+        this.tokenValidityMinutes = authProperties.tokenValidityMinutes();
     }
 
     public String create(Long memberId) {

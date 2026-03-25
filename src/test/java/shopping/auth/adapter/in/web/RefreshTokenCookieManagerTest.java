@@ -49,10 +49,6 @@ class RefreshTokenCookieManagerTest {
     }
 
     private AuthProperties authProperties() {
-        AuthProperties authProperties = new AuthProperties();
-        authProperties.setRefreshTokenCookieName("refreshToken");
-        authProperties.setRefreshTokenValidityDays(7L);
-        authProperties.setRefreshTokenCookieSecure(false);
-        return authProperties;
+        return new AuthProperties("unused-secret", 0L, 7L, "refreshToken", false);
     }
 }

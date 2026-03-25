@@ -18,9 +18,9 @@ public class RefreshTokenCookieManager {
     private final boolean secure;
 
     public RefreshTokenCookieManager(AuthProperties authProperties) {
-        this.cookieName = authProperties.getRefreshTokenCookieName();
-        this.refreshTokenValidityDays = authProperties.getRefreshTokenValidityDays();
-        this.secure = authProperties.isRefreshTokenCookieSecure();
+        this.cookieName = authProperties.refreshTokenCookieName();
+        this.refreshTokenValidityDays = authProperties.refreshTokenValidityDays();
+        this.secure = authProperties.refreshTokenCookieSecure();
     }
 
     public void write(HttpServletResponse response, String refreshToken) {

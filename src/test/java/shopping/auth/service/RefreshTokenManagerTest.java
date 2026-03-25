@@ -120,8 +120,6 @@ class RefreshTokenManagerTest {
     }
 
     private AuthProperties authProperties(long refreshTokenValidityDays) {
-        AuthProperties authProperties = new AuthProperties();
-        authProperties.setRefreshTokenValidityDays(refreshTokenValidityDays);
-        return authProperties;
+        return new AuthProperties("unused-secret", 0L, refreshTokenValidityDays, "refreshToken", false);
     }
 }
