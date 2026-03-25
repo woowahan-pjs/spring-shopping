@@ -2,55 +2,84 @@ package shopping.common.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
-@DisplayName("[공통] 기본 날짜 엔티티 단위 테스트")
+@DataJpaTest
+@DisplayName("[공통] 기본 날짜 엔티티 JPA 테스트")
 class BaseDateEntityTest {
+    @Autowired
+    private TestEntityManager entityManager;
+
     @Test
-    @DisplayName("생성 시 createdAt과 updatedAt을 함께 채운다")
-    void prePersistSetCreatedAtAndUpdatedAt() {
-        TestEntity entity = new TestEntity();
+    @DisplayName("저장 시 createdAt과 updatedAt을 함께 채운다")
+    void persistSetCreatedAtAndUpdatedAt() {
+        AuditedEntity entity = new AuditedEntity("first");
 
-        entity.callPrePersist();
+        AuditedEntity saved = entityManager.persistFlushFind(entity);
 
-        assertThat(entity.getCreatedAt()).isNotNull();
-        assertThat(entity.getUpdatedAt()).isEqualTo(entity.getCreatedAt());
+        assertThat(saved.getCreatedAt()).isNotNull();
+        assertThat(saved.getUpdatedAt()).isEqualTo(saved.getCreatedAt());
     }
 
     @Test
     @DisplayName("수정 시 updatedAt을 다시 채운다")
-    void preUpdateRefreshUpdatedAt() {
-        TestEntity entity = new TestEntity();
-        entity.callPrePersist();
+    void updateRefreshUpdatedAt() {
+        AuditedEntity entity = entityManager.persistFlushFind(new AuditedEntity("first"));
         LocalDateTime previousUpdatedAt = entity.getUpdatedAt();
 
-        entity.callPreUpdate();
+        entity.rename("second");
+        entityManager.flush();
+        entityManager.clear();
 
-        assertThat(entity.getUpdatedAt()).isAfterOrEqualTo(previousUpdatedAt);
+        AuditedEntity updated = entityManager.find(AuditedEntity.class, entity.getId());
+        assertThat(updated.getUpdatedAt()).isAfterOrEqualTo(previousUpdatedAt);
     }
 
     @Test
     @DisplayName("삭제 표시를 하면 deletedAt을 채운다")
     void markDeletedSetDeletedAt() {
-        TestEntity entity = new TestEntity();
+        AuditedEntity entity = new AuditedEntity("first");
 
-        entity.callMarkDeleted();
+        entity.markAsDeleted();
 
         assertThat(entity.getDeletedAt()).isNotNull();
     }
 
-    static class TestEntity extends BaseDateEntity {
-        void callPrePersist() {
-            prePersist();
+    @Entity
+    @Table(name = "audited_entity")
+    static class AuditedEntity extends BaseDateEntity {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
+
+        private String name;
+
+        protected AuditedEntity() {
         }
 
-        void callPreUpdate() {
-            preUpdate();
+        AuditedEntity(String name) {
+            this.name = name;
         }
 
-        void callMarkDeleted() {
+        Long getId() {
+            return id;
+        }
+
+        void rename(String name) {
+            this.name = name;
+        }
+
+        void markAsDeleted() {
             markDeleted();
         }
     }
