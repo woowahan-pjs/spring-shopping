@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpHeaders;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.method.HandlerMethod;
@@ -66,7 +67,7 @@ class AuthInterceptorTest {
         // given
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        request.addHeader("Authorization", "Bearer token");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer token");
         when(accessPolicyResolver.resolve(controllerHandler)).thenReturn(AccessType.MEMBER);
         when(authService.authenticate("Bearer token")).thenReturn(1L);
 
@@ -85,7 +86,7 @@ class AuthInterceptorTest {
         // given
         MockHttpServletRequest request = new MockHttpServletRequest();
         MockHttpServletResponse response = new MockHttpServletResponse();
-        request.addHeader("Authorization", "Bearer seller-token");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "Bearer seller-token");
         when(accessPolicyResolver.resolve(controllerHandler)).thenReturn(AccessType.SELLER);
         when(authService.authenticate("Bearer seller-token")).thenReturn(7L);
 

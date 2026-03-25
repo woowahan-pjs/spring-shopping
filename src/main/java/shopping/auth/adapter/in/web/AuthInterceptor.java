@@ -3,6 +3,7 @@ package shopping.auth.adapter.in.web;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -14,8 +15,6 @@ import shopping.member.service.MemberService;
 @Component
 @RequiredArgsConstructor
 public class AuthInterceptor implements HandlerInterceptor {
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-
     private final AuthService authService;
     private final MemberService memberService;
     private final AccessPolicyResolver accessPolicyResolver;
@@ -60,7 +59,7 @@ public class AuthInterceptor implements HandlerInterceptor {
     }
 
     private Long authenticateWithAuthorizationHeader(HttpServletRequest request) {
-        String authorizationHeader = request.getHeader(AUTHORIZATION_HEADER);
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         return authService.authenticate(authorizationHeader);
     }
 
