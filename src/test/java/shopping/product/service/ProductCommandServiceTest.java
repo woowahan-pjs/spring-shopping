@@ -9,8 +9,8 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
-import shopping.product.service.dto.ProductOutput;
 import shopping.product.service.dto.ProductRegisterInput;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,11 +51,11 @@ class ProductCommandServiceTest {
         ProductRegisterInput request = new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg");
 
         // when
-        ProductOutput response = productCommandService.register(request);
+        Product response = productCommandService.register(request);
 
         // then
-        assertThat(response.id()).isNotNull();
-        assertThat(response.name()).isEqualTo("상품명");
+        assertThat(response.getId()).isNotNull();
+        assertThat(response.getName()).isEqualTo("상품명");
     }
 
     @Test
@@ -74,30 +74,30 @@ class ProductCommandServiceTest {
     @DisplayName("상품을 수정할 수 있다")
     void test03() {
         // arrange
-        ProductOutput saved = productCommandService.register(
+        Product saved = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
         // act
-        ProductOutput response = productCommandService.update(
-            saved.id(), new ProductRegisterInput("수정된상품명", 20000L, "https://example.com/new.jpg"));
+        Product response = productCommandService.update(
+            saved.getId(), new ProductRegisterInput("수정된상품명", 20000L, "https://example.com/new.jpg"));
 
         // assert
-        assertThat(response.name()).isEqualTo("수정된상품명");
-        assertThat(response.price()).isEqualTo(20000L);
+        assertThat(response.getName()).isEqualTo("수정된상품명");
+        assertThat(response.getPrice().value()).isEqualTo(20000L);
     }
 
     @Test
     @DisplayName("상품을 삭제할 수 있다")
     void test04() {
         // arrange
-        ProductOutput saved = productCommandService.register(
+        Product saved = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
         // act
-        productCommandService.delete(saved.id());
+        productCommandService.delete(saved.getId());
 
         // assert
-        assertThat(productRepository.findById(saved.id())).isPresent();
-        assertThat(productRepository.findById(saved.id()).get().isDeleted()).isTrue();
+        assertThat(productRepository.findById(saved.getId())).isPresent();
+        assertThat(productRepository.findById(saved.getId()).get().isDeleted()).isTrue();
     }
 }

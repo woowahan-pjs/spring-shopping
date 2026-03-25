@@ -5,8 +5,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shopping.product.domain.Product;
 import shopping.product.service.ProductQueryService;
-import shopping.product.service.dto.ProductOutput;
 import shopping.wish.domain.Wish;
 import shopping.wish.repository.WishRepository;
 import shopping.wish.service.dto.WishOutput;
@@ -23,19 +23,19 @@ public class WishQueryService {
 
     public Page<WishOutput> findWishWithPage(Long memberId, Pageable pageable) {
         Page<Wish> wishes = wishRepository.findByMemberIdAndDeletedFalse(memberId, pageable);
-        Map<Long, ProductOutput> productMap = findProductMap(wishes);
+        Map<Long, Product> productMap = findProductMap(wishes);
         return wishes.map(wish -> toOutput(wish, productMap));
     }
 
-    private Map<Long, ProductOutput> findProductMap(Page<Wish> wishes) {
+    private Map<Long, Product> findProductMap(Page<Wish> wishes) {
         List<Long> productIds = wishes.stream()
                                       .map(Wish::getProductId)
                                       .toList();
         return productQueryService.findProductMap(productIds);
     }
 
-    private WishOutput toOutput(Wish wish, Map<Long, ProductOutput> productMap) {
-        ProductOutput product = productMap.get(wish.getProductId());
+    private WishOutput toOutput(Wish wish, Map<Long, Product> productMap) {
+        Product product = productMap.get(wish.getProductId());
         return product != null ? WishOutput.of(wish, product) : WishOutput.deleted(wish);
     }
 }

@@ -20,10 +20,7 @@ public class MemberCommandService {
 
     public TokenOutput register(MemberRegisterInput input) {
         verifyEmail(input.email());
-        Member saved = memberRepository.save(Member.builder()
-                                                   .email(input.email())
-                                                   .password(authService.encodePassword(input.password()))
-                                                   .build());
+        Member saved = memberRepository.save(Member.create(input.email(), authService.encodePassword(input.password())));
         String token = authService.createToken(saved.getId());
         return new TokenOutput(token);
     }

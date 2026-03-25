@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import shopping.product.domain.Price;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
-import shopping.product.service.dto.ProductOutput;
 import shopping.product.service.dto.ProductRegisterInput;
 
 @Service
@@ -15,15 +14,14 @@ import shopping.product.service.dto.ProductRegisterInput;
 public class ProductCommandService {
     private final ProductRepository productRepository;
 
-    public ProductOutput register(ProductRegisterInput input) {
-        Product saved = productRepository.save(input.toDomain());
-        return ProductOutput.from(saved);
+    public Product register(ProductRegisterInput input) {
+        return productRepository.save(Product.create(input.name(), input.price(), input.imageUrl()));
     }
 
-    public ProductOutput update(Long id, ProductRegisterInput input) {
+    public Product update(Long id, ProductRegisterInput input) {
         Product product = getProduct(id);
         product.update(input.name(), new Price(input.price()), input.imageUrl());
-        return ProductOutput.from(product);
+        return product;
     }
 
     public void delete(Long id) {

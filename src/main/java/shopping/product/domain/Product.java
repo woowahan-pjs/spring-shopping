@@ -56,6 +56,14 @@ public class Product extends BaseEntity {
         this.imageUrl = imageUrl;
     }
 
+    public static Product create(String name, Long price, String imageUrl) {
+        return Product.builder()
+                      .name(name)
+                      .price(new Price(price))
+                      .imageUrl(imageUrl)
+                      .build();
+    }
+
     public void update(String name, Price price, String imageUrl) {
         this.name = name;
         this.price = price;

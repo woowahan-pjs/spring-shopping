@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.common.exception.ProfanityServiceUnavailableException;
+import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
-import shopping.product.service.dto.ProductOutput;
 import shopping.product.service.dto.ProductRegisterInput;
 
 @SpringBootTest
@@ -52,11 +52,11 @@ class ProductRegistrationServiceTest {
         ProductRegisterInput request = new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg");
 
         // act
-        ProductOutput response = productRegistrationService.register(request);
+        Product response = productRegistrationService.register(request);
 
         // assert
-        assertThat(response.id()).isNotNull();
-        assertThat(response.name()).isEqualTo("상품명");
+        assertThat(response.getId()).isNotNull();
+        assertThat(response.getName()).isEqualTo("상품명");
     }
 
     @Test
@@ -114,15 +114,15 @@ class ProductRegistrationServiceTest {
     @DisplayName("상품을 수정할 수 있다")
     void test06() {
         // arrange
-        ProductOutput saved = productRegistrationService.register(
+        Product saved = productRegistrationService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
         // act
-        ProductOutput response = productRegistrationService.update(
-            saved.id(), new ProductRegisterInput("수정된상품명", 20000L, "https://example.com/new.jpg"));
+        Product response = productRegistrationService.update(
+            saved.getId(), new ProductRegisterInput("수정된상품명", 20000L, "https://example.com/new.jpg"));
 
         // assert
-        assertThat(response.name()).isEqualTo("수정된상품명");
-        assertThat(response.price()).isEqualTo(20000L);
+        assertThat(response.getName()).isEqualTo("수정된상품명");
+        assertThat(response.getPrice().value()).isEqualTo(20000L);
     }
 }

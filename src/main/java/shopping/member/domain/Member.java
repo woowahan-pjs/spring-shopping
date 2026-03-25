@@ -40,4 +40,11 @@ public class Member extends BaseEntity {
         this.password = password;
         this.createdBy = "system";
     }
+
+    public static Member create(String email, String encodedPassword) {
+        return Member.builder()
+                     .email(email)
+                     .password(encodedPassword)
+                     .build();
+    }
 }

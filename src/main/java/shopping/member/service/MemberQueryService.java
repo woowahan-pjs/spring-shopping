@@ -20,4 +20,9 @@ public class MemberQueryService {
         return memberRepository.findByEmail(email)
                                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
     }
+
+    public Member getMember(Long id) {
+        return memberRepository.findById(id)
+                               .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 회원입니다."));
+    }
 }

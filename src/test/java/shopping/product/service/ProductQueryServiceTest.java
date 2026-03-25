@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.common.client.ProfanityChecker;
-import shopping.product.service.dto.ProductOutput;
+import shopping.product.domain.Product;
 import shopping.product.service.dto.ProductRegisterInput;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,14 +49,14 @@ class ProductQueryServiceTest {
     @DisplayName("상품 단건 조회가 가능하다")
     void test01() {
         // given
-        ProductOutput saved = productCommandService.register(
+        Product saved = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
         // when
-        ProductOutput response = productQueryService.getProduct(saved.id());
+        Product response = productQueryService.getProduct(saved.getId());
 
         // then
-        assertThat(response.name()).isEqualTo("상품명");
+        assertThat(response.getName()).isEqualTo("상품명");
     }
 
     @Test
@@ -75,12 +75,12 @@ class ProductQueryServiceTest {
         productCommandService.register(new ProductRegisterInput("상품2", 2000L, "https://example.com/2.jpg"));
 
         // act
-        Page<ProductOutput> responses = productQueryService.findProductWithPage(
+        Page<Product> responses = productQueryService.findProductWithPage(
             PageRequest.of(0, 1, Sort.by(Sort.Direction.DESC, "id")));
 
         // assert
         assertThat(responses.getContent()).hasSize(1);
-        assertThat(responses.getContent().getFirst().name()).isEqualTo("상품2");
+        assertThat(responses.getContent().getFirst().getName()).isEqualTo("상품2");
         assertThat(responses.getTotalElements()).isEqualTo(2);
         assertThat(responses.getTotalPages()).isEqualTo(2);
     }
@@ -89,12 +89,12 @@ class ProductQueryServiceTest {
     @DisplayName("삭제한 상품은 단건 조회할 수 없다")
     void test04() {
         // given
-        ProductOutput saved = productCommandService.register(
+        Product saved = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
-        productCommandService.delete(saved.id());
+        productCommandService.delete(saved.getId());
 
         // when & then
-        assertThatThrownBy(() -> productQueryService.getProduct(saved.id()))
+        assertThatThrownBy(() -> productQueryService.getProduct(saved.getId()))
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("존재하지 않는 상품입니다.");
     }
@@ -103,46 +103,46 @@ class ProductQueryServiceTest {
     @DisplayName("삭제한 상품은 상품 목록 조회에서 제외된다")
     void test05() {
         // arrange
-        ProductOutput active = productCommandService.register(
+        Product active = productCommandService.register(
             new ProductRegisterInput("상품1", 1000L, "https://example.com/1.jpg"));
-        ProductOutput deleted = productCommandService.register(
+        Product deleted = productCommandService.register(
             new ProductRegisterInput("상품2", 2000L, "https://example.com/2.jpg"));
-        productCommandService.delete(deleted.id());
+        productCommandService.delete(deleted.getId());
 
         // act
-        Page<ProductOutput> responses = productQueryService.findProductWithPage(
+        Page<Product> responses = productQueryService.findProductWithPage(
             PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id")));
 
         // assert
         assertThat(responses.getContent()).hasSize(1);
-        assertThat(responses.getContent().getFirst().id()).isEqualTo(active.id());
+        assertThat(responses.getContent().getFirst().getId()).isEqualTo(active.getId());
     }
 
     @Test
     @DisplayName("활성 상품 조회는 Optional로 반환한다")
     void test06() {
         // given
-        ProductOutput saved = productCommandService.register(
+        Product saved = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
 
         // when
-        var product = productQueryService.findProduct(saved.id());
+        var product = productQueryService.findProduct(saved.getId());
 
         // then
         assertThat(product).isPresent();
-        assertThat(product.get().id()).isEqualTo(saved.id());
+        assertThat(product.get().getId()).isEqualTo(saved.getId());
     }
 
     @Test
     @DisplayName("삭제한 상품 조회는 빈 Optional을 반환한다")
     void test07() {
         // given
-        ProductOutput saved = productCommandService.register(
+        Product saved = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
-        productCommandService.delete(saved.id());
+        productCommandService.delete(saved.getId());
 
         // when
-        var product = productQueryService.findProduct(saved.id());
+        var product = productQueryService.findProduct(saved.getId());
 
         // then
         assertThat(product).isEmpty();

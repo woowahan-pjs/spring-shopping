@@ -11,6 +11,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import shopping.common.entity.BaseEntity;
+import shopping.member.domain.Member;
+import shopping.product.domain.Product;
 
 import java.time.LocalDateTime;
 
@@ -48,6 +50,13 @@ public class Wish extends BaseEntity {
         this.memberId = memberId;
         this.productId = productId;
         this.createdBy = String.valueOf(memberId);
+    }
+
+    public static Wish create(Member member, Product product) {
+        return Wish.builder()
+                   .memberId(member.getId())
+                   .productId(product.getId())
+                   .build();
     }
 
     public void delete() {
