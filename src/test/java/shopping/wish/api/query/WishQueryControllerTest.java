@@ -1,0 +1,118 @@
+package shopping.wish.api.query;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
+import shopping.auth.service.AuthService;
+import shopping.member.domain.Member;
+import shopping.member.repository.MemberRepository;
+import shopping.product.domain.Price;
+import shopping.product.domain.Product;
+import shopping.product.repository.ProductRepository;
+import shopping.wish.domain.Wish;
+import shopping.wish.repository.WishRepository;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@SpringBootTest
+@AutoConfigureMockMvc
+@Transactional
+class WishQueryControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
+
+    @Autowired
+    private WishRepository wishRepository;
+
+    @Autowired
+    private AuthService authService;
+
+    @Test
+    @DisplayName("유효한 토큰으로 위시리스트 페이징 목록을 조회할 수 있다")
+    void test01() throws Exception {
+        // arrange
+        Member member = memberRepository.save(Member.builder()
+                .email("user@example.com")
+                .password("password123")
+                .build());
+        Product firstProduct = productRepository.save(
+                Product.builder().name("상품1").price(new Price(10000L)).imageUrl("https://example.com/1.jpg").build()
+        );
+        Product secondProduct = productRepository.save(
+                Product.builder().name("상품2").price(new Price(20000L)).imageUrl("https://example.com/2.jpg").build()
+        );
+        wishRepository.save(Wish.builder().memberId(member.getId()).productId(firstProduct.getId()).build());
+        wishRepository.save(Wish.builder().memberId(member.getId()).productId(secondProduct.getId()).build());
+        String token = authService.createToken(member.getId());
+
+        // act & assert
+        mockMvc.perform(get("/api/wishes")
+                        .param("page", String.valueOf(PageRequest.of(0, 1).getPageNumber()))
+                        .param("size", String.valueOf(PageRequest.of(0, 1).getPageSize()))
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].productId").value(secondProduct.getId()))
+                .andExpect(jsonPath("$.content[0].productName").value("상품2"))
+                .andExpect(jsonPath("$.content[0].price").value(20000))
+                .andExpect(jsonPath("$.content[0].imageUrl").value("https://example.com/2.jpg"))
+                .andExpect(jsonPath("$.page").value(0))
+                .andExpect(jsonPath("$.size").value(1))
+                .andExpect(jsonPath("$.totalElements").value(2))
+                .andExpect(jsonPath("$.totalPages").value(2))
+                .andExpect(jsonPath("$.hasNext").value(true))
+                .andExpect(jsonPath("$.hasPrevious").value(false));
+    }
+
+    @Test
+    @DisplayName("토큰 없이 위시리스트 목록을 조회하면 401을 반환한다")
+    void test02() throws Exception {
+        // arrange
+
+        // act & assert
+        mockMvc.perform(get("/api/wishes"))
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.message").value("인증 토큰이 없습니다."));
+    }
+
+    @Test
+    @DisplayName("삭제된 상품이 포함된 위시리스트는 삭제 안내 문구로 조회된다")
+    void test03() throws Exception {
+        // arrange
+        Member member = memberRepository.save(Member.builder()
+                .email("user@example.com")
+                .password("password123")
+                .build());
+        Product product = productRepository.save(
+                Product.builder().name("상품명").price(new Price(10000L)).imageUrl("https://example.com/image.jpg").build()
+        );
+        wishRepository.save(Wish.builder().memberId(member.getId()).productId(product.getId()).build());
+        product.delete();
+        String token = authService.createToken(member.getId());
+
+        // act & assert
+        mockMvc.perform(get("/api/wishes")
+                        .header(HttpHeaders.AUTHORIZATION, "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content.length()").value(1))
+                .andExpect(jsonPath("$.content[0].productId").value(product.getId()))
+                .andExpect(jsonPath("$.content[0].productName").value("삭제된 상품입니다."))
+                .andExpect(jsonPath("$.content[0].price").isEmpty())
+                .andExpect(jsonPath("$.content[0].imageUrl").isEmpty());
+    }
+}

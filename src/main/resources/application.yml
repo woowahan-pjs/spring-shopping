@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: spring-shopping
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    open-in-view: false
+  flyway:
+    enabled: false
+
+jwt:
+  secret: spring-shopping-jwt-secret-key-must-be-long-enough
+  expiration-ms: 1800000
+
+purgomalum:
+  url: https://www.purgomalum.com/service/containsprofanity?text={text}
