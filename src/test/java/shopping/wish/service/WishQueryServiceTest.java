@@ -17,7 +17,6 @@ import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
 import shopping.product.service.FakeProfanityChecker;
 import shopping.product.service.ProductCommandService;
-import shopping.product.service.dto.ProductOutput;
 import shopping.product.service.dto.ProductRegisterInput;
 import shopping.wish.domain.Wish;
 import shopping.wish.repository.WishRepository;
@@ -109,10 +108,10 @@ class WishQueryServiceTest {
     void test03() {
         // arrange
         profanityClient.setProfane(false);
-        ProductOutput product = productCommandService.register(
+        Product product = productCommandService.register(
             new ProductRegisterInput("상품명", 10000L, "https://example.com/image.jpg"));
-        wishRepository.save(Wish.builder().memberId(1L).productId(product.id()).build());
-        productCommandService.delete(product.id());
+        wishRepository.save(Wish.builder().memberId(1L).productId(product.getId()).build());
+        productCommandService.delete(product.getId());
 
         // act
         Page<WishOutput> result = wishQueryService.findWishWithPage(
@@ -122,7 +121,7 @@ class WishQueryServiceTest {
 
         // assert
         assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().getFirst().productId()).isEqualTo(product.id());
+        assertThat(result.getContent().getFirst().productId()).isEqualTo(product.getId());
         assertThat(result.getContent().getFirst().productName()).isEqualTo("삭제된 상품입니다.");
         assertThat(result.getContent().getFirst().price()).isNull();
         assertThat(result.getContent().getFirst().imageUrl()).isNull();

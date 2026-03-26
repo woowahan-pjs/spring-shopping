@@ -1,11 +1,11 @@
 package shopping.wish.service.dto;
 
+import shopping.product.domain.Product;
 import shopping.wish.domain.Wish;
-import shopping.product.service.dto.ProductOutput;
 
 public record WishAddOutput(Long id, Long productId, String productName) {
 
-    public static WishAddOutput of(Wish wish, ProductOutput product) {
-        return new WishAddOutput(wish.getId(), product.id(), product.name());
+    public static WishAddOutput of(Wish wish, Product product) {
+        return new WishAddOutput(wish.getId(), product.getId(), product.getName());
     }
 }

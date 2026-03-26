@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shopping.product.domain.Product;
 import shopping.product.repository.ProductRepository;
-import shopping.product.service.dto.ProductOutput;
 
 import java.util.List;
 import java.util.Map;
@@ -20,27 +19,25 @@ import java.util.stream.Collectors;
 public class ProductQueryService {
     private final ProductRepository productRepository;
 
-    public ProductOutput getProduct(Long id) {
+    public Product getProduct(Long id) {
         return findProduct(id)
             .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 상품입니다."));
     }
 
-    public Page<ProductOutput> findProductWithPage(Pageable pageable) {
-        return productRepository.findAllByDeletedFalse(pageable)
-                                .map(ProductOutput::from);
+    public Page<Product> findProductWithPage(Pageable pageable) {
+        return productRepository.findAllByDeletedFalse(pageable);
     }
 
-    public Optional<ProductOutput> findProduct(Long id) {
-        return productRepository.findByIdAndDeletedFalse(id)
-                                .map(ProductOutput::from);
+    public Optional<Product> findProduct(Long id) {
+        return productRepository.findByIdAndDeletedFalse(id);
     }
 
-    public Map<Long, ProductOutput> findProductMap(List<Long> ids) {
+    public Map<Long, Product> findProductMap(List<Long> ids) {
         return productRepository.findAllByIdInAndDeletedFalse(ids)
                                 .stream()
                                 .collect(Collectors.toMap(
                                         Product::getId,
-                                        ProductOutput::from
+                                        product -> product
                                 ));
     }
 }
