@@ -23,14 +23,15 @@ public class MemberEntity extends BaseEntity {
 
     protected MemberEntity() {}
 
-    public MemberEntity(String email, String password, MemberRole role) {
+    private MemberEntity(Long id, String email, String password, MemberRole role) {
+        this.id = id;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
     public static MemberEntity from(Member member) {
-        return new MemberEntity(member.getEmail(), member.getPassword(), member.getRole());
+        return new MemberEntity(member.getId(), member.getEmail(), member.getPassword(), member.getRole());
     }
 
     public Member toDomain() {
