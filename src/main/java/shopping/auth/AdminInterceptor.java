@@ -26,8 +26,9 @@ public class AdminInterceptor implements HandlerInterceptor {
 
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || authHeader.isEmpty()) {
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            log.warn("로그인 정보가 없습니다.");
             return false;
         }
 
@@ -35,6 +36,7 @@ public class AdminInterceptor implements HandlerInterceptor {
             MemberRole role = provider.extractRole(authHeader.substring(7));
             if (role != MemberRole.ADMIN) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
+                log.warn("관리자 권한이 없습니다.");
                 return false;
             }
         } catch (IllegalArgumentException e) {
