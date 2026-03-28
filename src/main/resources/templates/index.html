@@ -33,6 +33,7 @@
                 </a>
                 <div class="product-actions">
                     <button class="btn-wish"
+                            style="visibility:hidden"
                             th:data-product-id="${product.id()}"
                             onclick="toggleWish(this)">&#9825; Add to Wish</button>
                 </div>
@@ -140,7 +141,11 @@
 
         async function loadWishStatus() {
             const token = getToken();
-            if (!token) return;
+            const buttons = document.querySelectorAll('.btn-wish');
+            if (!token) {
+                buttons.forEach(function(btn) { btn.style.visibility = 'visible'; });
+                return;
+            }
 
             try {
                 const response = await fetch('/api/wishes', {
@@ -149,7 +154,7 @@
                 if (response.ok) {
                     const wishes = await response.json();
                     const wishedProductIds = new Set(wishes.map(function(w) { return w.productId; }));
-                    document.querySelectorAll('.btn-wish').forEach(function(btn) {
+                    buttons.forEach(function(btn) {
                         if (wishedProductIds.has(btn.dataset.productId)) {
                             btn.classList.add('wished');
                             btn.innerHTML = '&#9829; Wished';
@@ -158,6 +163,8 @@
                 }
             } catch (e) {
                 // silently fail
+            } finally {
+                buttons.forEach(function(btn) { btn.style.visibility = 'visible'; });
             }
         }
 

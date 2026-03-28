@@ -15,8 +15,8 @@ import org.springframework.web.client.RestClient;
 @Component
 public class PurgoMalumProfanityChecker implements ProfanityChecker {
 
-    private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(1);
-    private static final Duration READ_TIMEOUT = Duration.ofSeconds(1);
+    private static final Duration CONNECT_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration READ_TIMEOUT = Duration.ofSeconds(5);
 
     private final RestClient restClient;
 

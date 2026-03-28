@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import shopping.member.domain.MemberRepository;
+import shopping.product.domain.ProductRepository;
 
 @Configuration
 public class WishConfiguration {
@@ -24,6 +25,12 @@ public class WishConfiguration {
     @Bean
     public FindWish findWish(MemberRepository memberRepository) {
         return new FindWishService(memberRepository);
+    }
+
+    @Bean
+    public FindWishWithProductService findWishWithProductService(MemberRepository memberRepository,
+            ProductRepository productRepository) {
+        return new FindWishWithProductService(memberRepository, productRepository);
     }
 
     @Bean
