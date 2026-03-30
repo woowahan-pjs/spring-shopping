@@ -1,0 +1,22 @@
+package shopping.product.domain;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface ProductRepository {
+
+    Product save(Product product);
+
+    Optional<Product> findById(UUID id);
+
+    List<Product> findAll();
+
+    Optional<Product> findByIdAndStatus(UUID id, ProductStatus status);
+
+    List<Product> findAllByStatus(ProductStatus status);
+
+    List<Product> findAllByIdInAndStatus(List<UUID> ids, ProductStatus status);
+
+    void deleteById(UUID id);
+}

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Shopping</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">Shopping</a>
+    </nav>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h1>Login</h1>
+            <form id="loginForm" onsubmit="return handleLogin(event)">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                </div>
+                <div class="error-message" id="errorMessage"></div>
+                <button type="submit" class="btn-submit" id="submitBtn">Login</button>
+            </form>
+            <div class="login-footer">
+                Don't have an account? <a href="#" onclick="toggleMode(event)">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        let isRegisterMode = false;
+
+        function toggleMode(e) {
+            e.preventDefault();
+            isRegisterMode = !isRegisterMode;
+            const title = document.querySelector('.login-card h1');
+            const submitBtn = document.getElementById('submitBtn');
+            const footer = document.querySelector('.login-footer');
+
+            if (isRegisterMode) {
+                title.textContent = 'Register';
+                submitBtn.textContent = 'Register';
+                footer.innerHTML = 'Already have an account? <a href="#" onclick="toggleMode(event)">Login</a>';
+            } else {
+                title.textContent = 'Login';
+                submitBtn.textContent = 'Login';
+                footer.innerHTML = 'Don\'t have an account? <a href="#" onclick="toggleMode(event)">Register</a>';
+            }
+            hideError();
+        }
+
+        function showError(message) {
+            const el = document.getElementById('errorMessage');
+            el.textContent = message;
+            el.classList.add('visible');
+        }
+
+        function hideError() {
+            document.getElementById('errorMessage').classList.remove('visible');
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(function() {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            hideError();
+
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const submitBtn = document.getElementById('submitBtn');
+
+            const url = isRegisterMode ? '/api/members/register' : '/api/members/login';
+
+            submitBtn.disabled = true;
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: email, password: password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('email', email);
+                    window.location.href = '/';
+                } else {
+                    const data = await response.json();
+                    showError(data.message || (isRegisterMode ? 'Registration failed' : 'Login failed'));
+                }
+            } catch (e) {
+                showError('Network error. Please try again.');
+            } finally {
+                submitBtn.disabled = false;
+            }
+            return false;
+        }
+    </script>
+</body>
+</html>

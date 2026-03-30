@@ -1,0 +1,20 @@
+services:
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: shopping
+      MYSQL_USER: shopping
+      MYSQL_PASSWORD: shopping
+      MYSQL_ROOT_PASSWORD: root
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 3s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:

@@ -1,0 +1,92 @@
+= Spring Shopping API Guide
+:doctype: book
+:toc: left
+:toclevels: 2
+:sectlinks:
+:snippets: {snippets}
+
+== Member API
+
+=== Register
+
+==== Request
+include::{snippets}/member-register/http-request.adoc[]
+
+==== Response
+include::{snippets}/member-register/http-response.adoc[]
+
+=== Login
+
+==== Request
+include::{snippets}/member-login/http-request.adoc[]
+
+==== Response
+include::{snippets}/member-login/http-response.adoc[]
+
+== Product API
+
+=== Create
+
+==== Request
+include::{snippets}/product-create/http-request.adoc[]
+
+==== Response
+include::{snippets}/product-create/http-response.adoc[]
+
+=== Find by ID
+
+==== Request
+include::{snippets}/product-find/http-request.adoc[]
+
+==== Response
+include::{snippets}/product-find/http-response.adoc[]
+
+=== Find all
+
+==== Request
+include::{snippets}/product-find-all/http-request.adoc[]
+
+==== Response
+include::{snippets}/product-find-all/http-response.adoc[]
+
+=== Update
+
+==== Request
+include::{snippets}/product-update/http-request.adoc[]
+
+==== Response
+include::{snippets}/product-update/http-response.adoc[]
+
+=== Delete
+
+==== Request
+include::{snippets}/product-delete/http-request.adoc[]
+
+==== Response
+include::{snippets}/product-delete/http-response.adoc[]
+
+== Wish API
+
+=== Add
+
+==== Request
+include::{snippets}/wish-add/http-request.adoc[]
+
+==== Response
+include::{snippets}/wish-add/http-response.adoc[]
+
+=== Find all
+
+==== Request
+include::{snippets}/wish-find-all/http-request.adoc[]
+
+==== Response
+include::{snippets}/wish-find-all/http-response.adoc[]
+
+=== Remove
+
+==== Request
+include::{snippets}/wish-remove/http-request.adoc[]
+
+==== Response
+include::{snippets}/wish-remove/http-response.adoc[]

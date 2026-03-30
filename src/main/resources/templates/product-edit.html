@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${product.name()} + ' - Edit'">Edit Product</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="/" class="navbar-brand">Shopping</a>
+        <div class="navbar-actions">
+            <a href="/wishes" class="btn-wish-nav" id="wishNavBtn" style="display:none">My Wishes</a>
+            <span class="user-email" id="userEmail" style="display:none"></span>
+            <a href="/login" class="btn-login" id="loginBtn">Login</a>
+            <button class="btn-logout" id="logoutBtn" style="display:none" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <a th:href="@{'/products/' + ${product.id()}}" class="back-link">&larr; Back to Product</a>
+        <div class="edit-card">
+            <h1 class="edit-title">Edit Product</h1>
+            <form id="editForm" onsubmit="return submitEdit(event)">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" th:value="${product.name()}" required maxlength="15">
+                </div>
+                <div class="form-group">
+                    <label for="price">Price</label>
+                    <input type="number" id="price" th:value="${product.price()}" required min="0">
+                </div>
+                <div class="form-group">
+                    <label for="imageUrl">Image URL</label>
+                    <input type="url" id="imageUrl" th:value="${product.imageUrl()}">
+                </div>
+                <div class="error-message" id="editError"></div>
+                <div class="edit-actions">
+                    <button type="submit" class="btn-submit" id="saveBtn">Save</button>
+                    <button type="button" class="btn-delete" id="deleteBtn" onclick="deleteProduct()">Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script th:inline="javascript">
+        const productId = [[${product.id()}]];
+
+        function getToken() {
+            return localStorage.getItem('token');
+        }
+
+        function updateAuthUI() {
+            const token = getToken();
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const userEmail = document.getElementById('userEmail');
+            const email = localStorage.getItem('email');
+
+            var wishNavBtn = document.getElementById('wishNavBtn');
+            if (token) {
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'inline-block';
+                wishNavBtn.style.display = 'inline-block';
+                if (email) {
+                    userEmail.style.display = 'inline';
+                    userEmail.textContent = email;
+                }
+            } else {
+                loginBtn.style.display = 'inline-block';
+                logoutBtn.style.display = 'none';
+                wishNavBtn.style.display = 'none';
+                userEmail.style.display = 'none';
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('email');
+            updateAuthUI();
+            showToast('Logged out', 'success');
+        }
+
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type + ' show';
+            setTimeout(function() {
+                toast.className = 'toast';
+            }, 3000);
+        }
+
+        async function submitEdit(event) {
+            event.preventDefault();
+            const token = getToken();
+            if (!token) {
+                window.location.href = '/login';
+                return false;
+            }
+
+            const saveBtn = document.getElementById('saveBtn');
+            const errorEl = document.getElementById('editError');
+            saveBtn.disabled = true;
+            errorEl.className = 'error-message';
+
+            try {
+                const response = await fetch('/api/products/' + productId, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        name: document.getElementById('name').value,
+                        price: parseInt(document.getElementById('price').value),
+                        imageUrl: document.getElementById('imageUrl').value || null
+                    })
+                });
+
+                if (response.ok) {
+                    showToast('Product updated!', 'success');
+                    setTimeout(function() {
+                        window.location.href = '/products/' + productId;
+                    }, 1000);
+                } else if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('email');
+                    window.location.href = '/login';
+                } else {
+                    const data = await response.json();
+                    errorEl.textContent = data.message || 'Failed to update product';
+                    errorEl.className = 'error-message visible';
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            } finally {
+                saveBtn.disabled = false;
+            }
+            return false;
+        }
+
+        async function deleteProduct() {
+            if (!confirm('Are you sure you want to delete this product?')) {
+                return;
+            }
+
+            const token = getToken();
+            if (!token) {
+                window.location.href = '/login';
+                return;
+            }
+
+            const deleteBtn = document.getElementById('deleteBtn');
+            deleteBtn.disabled = true;
+
+            try {
+                const response = await fetch('/api/products/' + productId, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+
+                if (response.ok) {
+                    showToast('Product deleted!', 'success');
+                    setTimeout(function() {
+                        window.location.href = '/';
+                    }, 1000);
+                } else if (response.status === 401) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('email');
+                    window.location.href = '/login';
+                } else {
+                    const data = await response.json();
+                    showToast(data.message || 'Failed to delete product', 'error');
+                }
+            } catch (e) {
+                showToast('Network error', 'error');
+            } finally {
+                deleteBtn.disabled = false;
+            }
+        }
+
+        updateAuthUI();
+    </script>
+</body>
+</html>
