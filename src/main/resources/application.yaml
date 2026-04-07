@@ -1,0 +1,27 @@
+spring:
+  application:
+    name: spring-shopping
+  datasource:
+    url: jdbc:h2:mem:shopping;MODE=MySQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:   # 빈 문자열.
+  h2:
+    console:
+      enabled: true
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  flyway:
+    enabled: true
+
+jwt:
+  access-secret: ${JWT_SECRET:bG9jYWwtZGV2LXNlY3JldC1rZXktbWluaW11bS0zMi1jaGFyYWN0ZXJz}
+  access-expiration-ms: 3600000
+  refresh-secret: ${JWT_REFRESH_SECRET:c2hvcHBpbmctcmVmcmVzaC1zZWNyZXQta2V5LWZvci1obWFjLXNoYTI1Ng==}
+  refresh-expiration-ms: 604800000 # 7일
+
+purgomalum:
+  connect-timeout-seconds: 3
+  read-timeout-seconds: 5
