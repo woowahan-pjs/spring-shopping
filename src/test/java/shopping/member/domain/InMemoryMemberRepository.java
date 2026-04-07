@@ -22,4 +22,9 @@ public class InMemoryMemberRepository implements MemberRepository {
                 .filter(m -> m.getEmail().equals(email))
                 .findFirst();
     }
+
+    @Override
+    public Optional<Member> findById(Long memberId) {
+        return Optional.ofNullable(memberMap.get(memberId));
+    }
 }

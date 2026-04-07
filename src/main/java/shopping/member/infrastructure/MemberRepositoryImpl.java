@@ -24,4 +24,9 @@ public class MemberRepositoryImpl implements MemberRepository {
         return repository.findByEmail(email)
                 .map(MemberEntity::toDomain);
     }
+
+    @Override
+    public Optional<Member> findById(Long memberId) {
+        return repository.findById(memberId).map(MemberEntity::toDomain);
+    }
 }

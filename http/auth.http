@@ -1,0 +1,31 @@
+### 리프레쉬 토큰
+POST localhost:8080/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwiaWF0IjoxNzc1NTU5MDU0LCJleHAiOjE3NzYxNjM4NTR9.RzUwGP9mZbH80wdV0kV_h-9AoUJreHlgBWPzXA9nkAE"
+}
+
+### 리프레쉬 토큰 만료 상황
+POST localhost:8080/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzU1NTk0MjUsImV4cCI6MTc3NTU1OTQyNX0.piVDaVDZGF5X3iY9uc_Zut3IaPHmaNh-eEAvlaFqv6U"
+}
+
+### 리프레쉬 토큰 위조
+POST localhost:8080/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1Ni89.eyJzdWIiOiIyIiwicm9sZSI6IlVTRVIiLCJpYXQiOjE3NzU1NTk0MjUsImV4cCI6MTc3NTU1OTQyNX0.piVDaVDZGF5X3iY9uc_Zut3IaPHmaNh-eEAvlaFqv6U"
+}
+
+### access Token 을 refresh Token 넣기
+POST localhost:8080/auth/refresh
+Content-Type: application/json
+
+{
+  "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwicm9sZSI6IkFETUlOIiwiaWF0IjoxNzczOTkwOTE1LCJleHAiOjE3NzM5OTQ1MTV9.5BOe03ED8hRpGwkV_x8t9VV9FEffoFq0U_g2I-bLmT8"
+}

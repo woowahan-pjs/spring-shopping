@@ -17,8 +17,10 @@ spring:
     enabled: true
 
 jwt:
-  secret: ${JWT_SECRET:bG9jYWwtZGV2LXNlY3JldC1rZXktbWluaW11bS0zMi1jaGFyYWN0ZXJz}
-  expiration-ms: 3600000
+  access-secret: ${JWT_SECRET:bG9jYWwtZGV2LXNlY3JldC1rZXktbWluaW11bS0zMi1jaGFyYWN0ZXJz}
+  access-expiration-ms: 3600000
+  refresh-secret: ${JWT_REFRESH_SECRET:c2hvcHBpbmctcmVmcmVzaC1zZWNyZXQta2V5LWZvci1obWFjLXNoYTI1Ng==}
+  refresh-expiration-ms: 604800000 # 7일
 
 purgomalum:
   connect-timeout-seconds: 3

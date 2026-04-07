@@ -62,23 +62,27 @@ class MemberControllerTest extends ControllerTestSupport {
     void login() throws Exception {
         Member member = createWithId(1L);
         MemberRequest request = createMemberRequest();
-        String token = "mock-token";
+        String accessToken = "mock-token";
+        String refreshToken = "mock-token";
 
         given(memberService.login(request.email(), request.password())).willReturn(member);
-        given(provider.generate(member)).willReturn(token);
+        given(provider.generateAccessToken(member)).willReturn(accessToken);
+        given(provider.generateRefreshToken(member)).willReturn(refreshToken);
 
         mockMvc.perform(post("/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpectAll(status().isOk()
-                        , jsonPath("$.accessToken").value(token))
+                        , jsonPath("$.accessToken").value(accessToken)
+                        , jsonPath("$.refreshToken").value(refreshToken))
                 .andDo(document("members/login",
                         requestFields(
                                 fieldWithPath("email").description("로그인 시 입력할 이메일"),
                                 fieldWithPath("password").description("로그인 시 입력할 비밀번호")
                         ),
                         responseFields(
-                                fieldWithPath("accessToken").description("발급된 JWT 토큰")
+                                fieldWithPath("accessToken").description("발급된 JWT 토큰"),
+                                fieldWithPath("refreshToken").description("발급된 JWT 시간 토큰")
                         )
                 ));
     }

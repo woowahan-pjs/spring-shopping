@@ -6,6 +6,8 @@ import shopping.member.domain.Member;
 import shopping.member.domain.MemberRepository;
 import shopping.member.domain.MemberRole;
 
+import java.util.NoSuchElementException;
+
 @Transactional
 @Service
 public class MemberService {
@@ -27,6 +29,7 @@ public class MemberService {
         repository.save(member);
     }
 
+    @Transactional(readOnly = true)
     public Member login(String email, String password) {
         Member member = repository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("이메일 또는 비밀번호를 확인해주세요"));
@@ -45,6 +48,12 @@ public class MemberService {
         member.changeRole(MemberRole.ADMIN);
 
         repository.save(member);
+    }
+
+    @Transactional(readOnly = true)
+    public Member findMember(Long memberId) {
+        return repository.findById(memberId)
+                .orElseThrow(() -> new NoSuchElementException("회원을 찾을 수 없습니다."));
     }
 
     private void validationMember(Member member) {
